@@ -31,14 +31,14 @@ module VirtualBox
 
       def changed?(attribute = nil)
         if attribute.nil?
-          !@changed_attributes.empty?
+          !changes.empty?
         else
-          @changed_attributes.has_key?(attribute)
+          changes.has_key?(attribute)
         end
       end
 
       def changes
-        @changed_attributes
+        @changed_attributes ||= {}
       end
       
       def method_missing(meth, *args)
