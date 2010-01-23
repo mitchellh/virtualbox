@@ -1,3 +1,18 @@
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "virtualbox"
+    gemspec.summary = "Manage virtual machines in VirtualBox from Ruby"
+    gemspec.description = "Manage virtual machines in VirtualBox from Ruby"
+    gemspec.email = "mitchell.hashimoto@gmail.com"
+    gemspec.homepage = "http://github.com/mitchellh/virtualbox"
+    gemspec.authors = ["Mitchell Hashimoto"]
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+end
+
 require 'rake/testtask'
 
 task :default => :test
