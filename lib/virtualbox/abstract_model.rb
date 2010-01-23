@@ -3,7 +3,7 @@ module VirtualBox
   # items represented by a virtual machine. It allows the gem to
   # define fields on data items which are validated and later can 
   # be persisted. 
-  class Model
+  class AbstractModel
     class <<self
       # Defines an attribute on the model. Specify a name, which will
       # be used automatically for reading/writing.

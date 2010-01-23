@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class ModelTest < Test::Unit::TestCase
-  class FakeModel < VirtualBox::Model
+class AbstractModelTest < Test::Unit::TestCase
+  class FakeModel < VirtualBox::AbstractModel
     attribute :foo
     attribute :bar
     

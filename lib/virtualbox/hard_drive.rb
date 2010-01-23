@@ -1,5 +1,5 @@
 module VirtualBox
-  class HardDrive < Model
+  class HardDrive < AbstractModel
     attribute :uuid, :readonly => true
     attribute :format, :readonly => true
     attribute :location, :readonly => true
