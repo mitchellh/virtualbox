@@ -16,6 +16,25 @@ class AbstractModelTest < Test::Unit::TestCase
   end
   
   context "attribute options" do
+    context "custom populate keys" do
+      class CustomPopulateModel < VirtualBox::AbstractModel
+        attribute :foo, :populate_key => :foo_key
+      end
+      
+      setup do
+        @model = CustomPopulateModel.new
+      end
+      
+      should "use the populate key instead of the attribute name" do
+        @model.populate_attributes({
+          :foo => "not me!",
+          :foo_key => "bar"
+        })
+        
+        assert_equal "bar", @model.foo
+      end
+    end
+    
     context "readonly attributes" do
       class ReadonlyModel < VirtualBox::AbstractModel
         attribute :foo, :readonly => :readonly

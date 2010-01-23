@@ -28,7 +28,8 @@ module VirtualBox
     def populate_attributes(attribs)
       ignore_dirty do
         self.class.attributes.each do |key, options|
-          write_attribute(key, attribs[key])
+          value_key = options[:populate_key] || key
+          write_attribute(key, attribs[value_key])
         end
       end
     end
