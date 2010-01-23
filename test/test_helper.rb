@@ -20,3 +20,6 @@ rescue LoadError; end
 
 require 'contest'
 require 'mocha'
+
+# The actual library
+require File.join(File.dirname(__FILE__), '..', 'lib', 'virtualbox')
