@@ -70,7 +70,7 @@ valid
         assert expected_hd
         
         expected_hd.each do |k,v|
-          assert_equal v, hd.send(k)
+          assert_equal v, hd.read_attribute(k)
         end
       end
     end
@@ -104,7 +104,7 @@ block
       assert !result.nil?
       
       expected.each do |k,v|
-        assert_equal v, result.send(k)
+        assert_equal v, result.read_attribute(k)
       end
     end
   end

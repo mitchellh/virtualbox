@@ -1,8 +1,10 @@
 module VirtualBox
-  class HardDrive
-    REQUIRED_FIELDS = [:uuid, :format, :location, :accessible]
-    attr_reader :uuid, :format, :location, :accessible
-
+  class HardDrive < Model
+    attribute :uuid, :readonly => true
+    attribute :format, :readonly => true
+    attribute :location, :readonly => true
+    attribute :accessible, :readonly => true
+    
     class <<self
       # Returns an array of all available hard drives as HardDrive
       # objects
@@ -25,7 +27,7 @@ module VirtualBox
         end
         
         # Make sure we got all the required keys
-        return nil unless (REQUIRED_FIELDS - hd.keys).empty?
+        return nil unless (attributes.keys - hd.keys).empty?
         
         # Create the object
         new(hd)
@@ -33,9 +35,9 @@ module VirtualBox
     end
     
     def initialize(info)
-      REQUIRED_FIELDS.each do |field|
-        instance_variable_set("@#{field}".to_sym, info[field])
-      end
+      super()
+      
+      populate_attributes(info)
     end
   end
 end
