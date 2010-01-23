@@ -15,6 +15,35 @@ class AbstractModelTest < Test::Unit::TestCase
     end
   end
   
+  context "attribute options" do
+    context "readonly attributes" do
+      class ReadonlyModel < VirtualBox::AbstractModel
+        attribute :foo, :readonly => :readonly
+        
+        def initialize
+          super
+          populate_attributes({ :foo => "foo" })
+        end
+      end
+      
+      setup do
+        @model = ReadonlyModel.new
+      end
+      
+      should "be readonly" do
+        assert @model.readonly_attribute?(:foo)
+      end
+      
+      should "allow reading" do
+        assert_equal "foo", @model.foo
+      end
+      
+      should "not allow writing" do
+        assert_raises(NoMethodError) { @model.foo = "YO" }
+      end
+    end
+  end
+  
   context "populating attributes" do
     setup do
       @model = FakeModel.new

@@ -46,6 +46,11 @@ module VirtualBox
       self.class.attributes.has_key?(name.to_sym)
     end
     
+    def readonly_attribute?(name)
+      name = name.to_sym
+      has_attribute?(name) && self.class.attributes[name][:readonly]
+    end
+    
     def set_dirty!(name, value)
       current = @attribute_values[name]
       
@@ -91,7 +96,7 @@ module VirtualBox
       
       if has_attribute?(meth)
         read_attribute(meth)
-      elsif meth_string =~ /^(.+?)=$/ && has_attribute?($1)
+      elsif meth_string =~ /^(.+?)=$/ && has_attribute?($1) && !readonly_attribute?($1)
         write_attribute($1.to_sym, *args)
       elsif meth_string =~ /^(.+?)_changed\?$/ && has_attribute?($1)
         changed?($1.to_sym)
