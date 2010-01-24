@@ -6,7 +6,7 @@ class RelatableTest < Test::Unit::TestCase
       # Nothing?
     end
     
-    def self.save_relationship(caller, data)
+    def self.save_relationship(caller, data, *args)
       # Nothing?
     end
   end
@@ -29,6 +29,11 @@ class RelatableTest < Test::Unit::TestCase
     should "call save_relationship on the related class" do
       Relatee.expects(:save_relationship).with(@model, @model.foos).once
       @model.save_relationships
+    end
+    
+    should "forward parameters through" do
+      Relatee.expects(:save_relationship).with(@model, @model.foos, "YES").once
+      @model.save_relationships("YES")
     end
   end
   

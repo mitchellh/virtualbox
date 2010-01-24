@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class AbstractModelTest < Test::Unit::TestCase
   class Foo
     def self.populate_relationship(caller, data); end
-    def self.save_relationship(caller, data); end
+    def self.save_relationship(caller, data, *args); end
   end
   
   class FakeModel < VirtualBox::AbstractModel
@@ -39,6 +39,14 @@ class AbstractModelTest < Test::Unit::TestCase
       assert @model.foo_changed?
       @model.save
       assert !@model.foo_changed?
+    end
+    
+    should "forward parameters through" do
+      @model.expects(:save_attribute).with(:foo, "foo2", "YES").once
+      Foo.expects(:save_relationship).with(@model, anything, "YES").once
+      
+      @model.foo = "foo2"
+      @model.save("YES")
     end
   end
   

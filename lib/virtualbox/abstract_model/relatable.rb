@@ -32,9 +32,9 @@ module VirtualBox
       
       # Saves the model, calls save_relation on all relations. It is up to
       # the relation to determine whether anything changed, etc.
-      def save_relationships
+      def save_relationships(*args)
         self.class.relationships.each do |name, options|
-          options[:klass].save_relationship(self, relationship_data[name])
+          options[:klass].save_relationship(self, relationship_data[name], *args)
         end
       end
       

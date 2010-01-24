@@ -22,6 +22,10 @@ module VirtualBox
       end
       
       def save_relationship(caller, data)
+        # Just call save on each nic with the VM
+        data.each do |nic|
+          nic.save(caller.name)
+        end
       end
     end
     
@@ -38,6 +42,13 @@ module VirtualBox
       end
       
       populate_attributes(populate_data)
+    end
+    
+    def save_attribute(key, value, vmname)
+      return if key == :type
+      
+      Command.vboxmanage("modifyvm #{vmname} --#{key}#{@index} #{Command.shell_escape(value)}")
+      super
     end
   end
 end

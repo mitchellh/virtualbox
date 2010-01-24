@@ -12,17 +12,17 @@ module VirtualBox
     include Dirty
     include Relatable
     
-    def save
+    def save(*args)
       # Go through changed attributes and call save_attribute for
       # those only
       changes.each do |key, values|
-        save_attribute(key, values[1])
+        save_attribute(key, values[1], *args)
       end
 
-      save_relationships
+      save_relationships(*args)
     end
     
-    def save_attribute(key, value)
+    def save_attribute(key, value, *args)
       clear_dirty!(key)
     end
     
