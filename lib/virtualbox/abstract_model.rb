@@ -1,5 +1,6 @@
 require 'virtualbox/abstract_model/attributable'
 require 'virtualbox/abstract_model/dirty'
+require 'virtualbox/abstract_model/relatable'
 
 module VirtualBox
   # A VirtualBox model is an abtraction over the various data
@@ -9,10 +10,16 @@ module VirtualBox
   class AbstractModel
     include Attributable
     include Dirty
+    include Relatable
     
-    # Modify populate_attributes to not set dirtiness
+    # Modify populate_attributes to not set dirtiness and also to
+    # set relationships
     def populate_attributes(attribs)
-      ignore_dirty { super }
+      ignore_dirty do
+        super
+        
+        populate_relationships(attribs)
+      end
     end 
     
     # Modify write_attribute to set dirty for the dirty module

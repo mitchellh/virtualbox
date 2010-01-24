@@ -14,6 +14,7 @@ module VirtualBox
     attribute :nestedpaging
     attribute :accelerate3d
     attribute :biosbootmenu, :populate_key => :bootmenu
+    relationship :nics, Nic
     
     class <<self
       # Finds a VM by UUID or registered name and returns a

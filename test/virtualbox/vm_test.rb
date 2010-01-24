@@ -82,17 +82,22 @@ showvminfo
       }
 
       @name = "foo"
+      
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).once
+      @vm = VirtualBox::VM.find(@name)
+      assert @vm
     end
     
-    should "return a VM object with proper attributes" do
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).once
-      vm = VirtualBox::VM.find(@name)
-      
-      assert vm
-      
+    should "return a VM object with proper attributes" do      
       @expected.each do |k,v|
-        assert_equal v, vm.read_attribute(k)
+        assert_equal v, @vm.read_attribute(k)
       end
+    end
+    
+    should "properly load nic relationship" do
+      assert @vm.nics
+      assert @vm.nics.is_a?(Array)
+      assert_equal 8, @vm.nics.length
     end
   end
   

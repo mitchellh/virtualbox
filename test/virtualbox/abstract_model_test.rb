@@ -1,8 +1,24 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class AbstractModelTest < Test::Unit::TestCase
+  class Foo
+    def self.populate_relationship(caller, data); end
+  end
+  
   class FakeModel < VirtualBox::AbstractModel
     attribute :foo
+    relationship :foos, Foo
+  end
+  
+  context "populating relationships and attributes" do
+    setup do
+      @model = FakeModel.new
+    end
+    
+    should "populate relationships at the same time as attributes" do
+      Foo.expects(:populate_relationship).once
+      @model.populate_attributes({})
+    end
   end
   
   context "integrating attributable and dirty" do
