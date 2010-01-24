@@ -1,11 +1,11 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class CommandTest < Test::Unit::TestCase
-  context "executing command results" do
-    should "return the return value of a successful command" do
-      Kernel.expects(:`).with("foo").returns("bar")
-      
-      assert_equal "bar", VirtualBox::Command.execute("foo")
+  context "shell escaping" do
+    should "convert value to string" do
+      assert_nothing_raised do
+        assert_equal "400", VirtualBox::Command.shell_escape(400)
+      end
     end
   end
   
