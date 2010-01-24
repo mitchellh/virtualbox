@@ -77,6 +77,41 @@ showvminfo
     @name = "foo"
   end
   
+  context "importing a VM" do
+    setup do
+      @raw = <<-raw
+VirtualBox Command Line Management Interface Version 3.1.2
+(C) 2005-2009 Sun Microsystems, Inc.
+All rights reserved.
+
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Interpreting /Users/mitchellh/base.ovf...
+OK.
+Disks:  vmdisk1 21474836480     -1      http://www.vmware.com/specifications/vmdk.html#sparse   HoboBase.vmdk   379268096 -1       <NULL>
+Virtual system 0:
+ 0: Suggested OS type: "Ubuntu"
+    (change with "--vsys 0 --ostype <type>"; use "list ostypes" to list all possible values)
+ 1: Suggested VM name "Base_1"
+    (change with "--vsys 0 --vmname <name>")
+ 2: Number of CPUs: 1      
+raw
+    end
+    
+    should "attempt to find the imported VM" do
+      VirtualBox::Command.expects(:vboxmanage).with("import whatever").returns(@raw)
+      VirtualBox::VM.expects(:find).with("Base_1").once
+      VirtualBox::VM.import("whatever")
+    end
+
+    should "parse the VM name from the raw string" do      
+      assert_equal "Base_1", VirtualBox::VM.parse_vm_name(@raw)
+    end
+    
+    should "return nil on parsing the VM name if its invalid" do
+      assert_nil VirtualBox::VM.parse_vm_name("Name foo")
+    end
+  end
+  
   context "saving a changed VM" do
     setup do
       VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).once

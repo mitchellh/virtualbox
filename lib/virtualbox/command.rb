@@ -27,7 +27,8 @@ module VirtualBox
       # change the way commands are run (replace the backticks), plus it
       # makes testingn easier.
       def execute(command)
-        `#{command}`
+        return_value = `#{command}`
+        $?.to_i == 0 ? return_value : nil
       end
       
       # Shell escapes a string. Got it from the ruby mailing list. To be

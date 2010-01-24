@@ -1,6 +1,14 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class CommandTest < Test::Unit::TestCase
+  context "executing command results" do
+    should "return the return value of a successful command" do
+      Kernel.expects(:`).with("foo").returns("bar")
+      
+      assert_equal "bar", VirtualBox::Command.execute("foo")
+    end
+  end
+  
   context "testing command results" do
     setup do
       @command = "foo"

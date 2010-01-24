@@ -24,6 +24,17 @@ module VirtualBox
         new(parse_vm_info(raw))
       end
       
+      # Imports a VM, blocking the entire thread during this time. 
+      # When finished, on success, will return the VM object. This
+      # VM object can be used to make any modifications necessary
+      # (RAM, cpus, etc.)
+      def import(source_path)
+        raw = Command.vboxmanage("import #{Command.shell_escape(source_path)}")
+        return nil unless raw
+        
+        find(parse_vm_name(raw))
+      end
+      
       # Parses the machine-readable format outputted by VBoxManage showvminfo
       # into a hash. Ignores lines which don't match the format.
       def parse_vm_info(raw)
@@ -35,6 +46,12 @@ module VirtualBox
         end
 
         parsed
+      end
+      
+      # Parses the vm name from the import results
+      def parse_vm_name(raw)
+        return nil unless raw =~ /VM name "(.+?)"/
+        $1.to_s
       end
     end
     
