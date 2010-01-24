@@ -7,5 +7,12 @@ module VirtualBox
         parse_raw(raw)
       end
     end
+    
+    # Deletes the DVD from VBox managed list, but not actually from
+    # disk itself.
+    def destroy
+      Command.vboxmanage("closemedium dvd #{uuid} --delete")
+      return $?.to_i == 0
+    end
   end
 end

@@ -10,5 +10,10 @@ module VirtualBox
         parse_raw(raw)
       end
     end
+    
+    def destroy
+      Command.vboxmanage("closemedium disk #{uuid} --delete")
+      return $?.to_i == 0
+    end
   end
 end
