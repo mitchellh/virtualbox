@@ -12,6 +12,27 @@ class AbstractModelTest < Test::Unit::TestCase
     relationship :foos, Foo
   end
   
+  context "subclasses" do
+    class FakeTwoModel < FakeModel
+      attribute :baz
+    end
+    
+    setup do
+      @model = FakeTwoModel.new
+      @model.populate_attributes({
+        :foo => "foo",
+        :bar => "bar",
+        :baz => "baz"
+      })
+    end
+    
+    should "have access to parents attributes" do
+      assert_nothing_raised do
+        assert_equal "foo", @model.foo
+      end
+    end
+  end
+  
   context "saving" do
     setup do
       @model = FakeModel.new

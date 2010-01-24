@@ -13,13 +13,22 @@ module VirtualBox
         # Defines an attribute on the model. Specify a name, which will
         # be used automatically for reading/writing.
         def attribute(name, options = {})
-          @attributes ||= {}
-          @attributes[name.to_sym] = options
+          attributes[name.to_sym] = options
         end
 
         # Returns the hash of attributes and their associated options
         def attributes
-          @attributes
+          @attributes ||= {}
+          @attributes.merge(super) rescue @attributes
+        end
+        
+        # Make sure subclasses inherit attributes
+        def inherited(subclass)
+          super rescue NoMethodError
+          
+          attributes.each do |name, option|
+            subclass.attribute(name, option)
+          end
         end
       end
 

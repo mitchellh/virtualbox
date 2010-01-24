@@ -21,6 +21,25 @@ class RelatableTest < Test::Unit::TestCase
     @data = {}
   end
   
+  context "subclasses" do
+    class SubRelatableModel < RelatableModel
+      relationship :bars, Relatee
+    end
+    
+    setup do
+      @relationships = SubRelatableModel.relationships
+    end
+    
+    should "inherit relationships of parent" do
+      assert @relationships.has_key?(:foos)
+      assert @relationships.has_key?(:bars)
+    end
+    
+    should "inherit options of relationships" do
+      assert_equal Relatee, @relationships[:foos][:klass]
+    end
+  end
+  
   context "saving relationships" do
     setup do
       @model = RelatableModel.new

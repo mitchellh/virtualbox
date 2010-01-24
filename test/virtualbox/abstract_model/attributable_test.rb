@@ -17,6 +17,19 @@ class AttributableTest < Test::Unit::TestCase
     end
   end
   
+  context "subclasses" do
+    class SubModel < AttributeModel
+      attribute :baz
+    end
+    
+    should "have foo bar and baz" do
+      attributes = SubModel.attributes
+      assert attributes.has_key?(:foo)
+      assert attributes.has_key?(:bar)
+      assert attributes.has_key?(:baz)
+    end
+  end
+  
   context "attribute options" do
     context "custom populate keys" do
       class CustomPopulateModel < AttributeModel

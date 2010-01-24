@@ -28,6 +28,15 @@ module VirtualBox
         def relationships
           @relationships ||= {}
         end
+        
+        # Make sure inherited classes inherit relations as well
+        def inherited(subclass)
+          super rescue NoMethodError
+          
+          relationships.each do |name, options|
+            subclass.relationship(name, nil, options)
+          end
+        end
       end
       
       # Saves the model, calls save_relation on all relations. It is up to
