@@ -30,10 +30,10 @@ is an up-to-date feature list:
 * Editing of most simple VM attributes. But no serial ports, storage controllers, etc.
 * Editing of most simple nic attributes for an existing VM.
 * Listing of all hard drives (VirtualBox::HardDrive.all)
+* Importing VMs from OVF
 
 What is not supported, but will be soon:
 
-* Importing VMs from OVF
 * Hard drive cloning
 
 ## Contributing
