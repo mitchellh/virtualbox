@@ -15,6 +15,30 @@ class StorageControllerTest < Test::Unit::TestCase
     @caller = mock("caller")
   end
   
+  context "destroying" do
+    setup do
+      @value = VirtualBox::StorageController.populate_relationship(@caller, @data)
+      @value = @value[0]
+    end
+    
+    should "simply call destroy on each object when destroying the relationship" do
+      obj_one = mock("one")
+      obj_two = mock("two")
+      
+      obj_one.expects(:destroy).once
+      obj_two.expects(:destroy).once
+      
+      VirtualBox::StorageController.destroy_relationship(self, [obj_one, obj_two])
+    end
+
+    should "call destroy_relationship on AttachedDevices when destroyed" do
+      assert !@value.devices.empty?
+      
+      VirtualBox::AttachedDevice.expects(:destroy_relationship).once
+      @value.destroy
+    end
+  end
+  
   context "populating relationships" do
     should "create the correct amount of objects" do
       value = VirtualBox::StorageController.populate_relationship(@caller, @data)

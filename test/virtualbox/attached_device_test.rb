@@ -14,6 +14,9 @@ class AttachedDeviceTest < Test::Unit::TestCase
     @caller = mock("caller")
     @caller.stubs(:parent).returns(@vm)
     @caller.stubs(:name).returns("Foo Controller")
+    
+    # Stub execute to make sure nothing actually happens
+    VirtualBox::Command.stubs(:execute).returns('')
   end
   
   context "destroying" do
@@ -25,6 +28,16 @@ class AttachedDeviceTest < Test::Unit::TestCase
       @value.stubs(:image).returns(@image)
       
       VirtualBox::Command.stubs(:execute)
+    end
+
+    should "simply call destroy on each object when destroying the relationship" do
+      obj_one = mock("one")
+      obj_two = mock("two")
+
+      obj_one.expects(:destroy).once
+      obj_two.expects(:destroy).once
+
+      VirtualBox::AttachedDevice.destroy_relationship(self, [obj_one, obj_two])
     end
     
     should "shell escape VM name and storage controller name" do

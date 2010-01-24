@@ -68,7 +68,7 @@ module VirtualBox
       def destroy_relationship(name, *args)
         options = self.class.relationships[name]
         return unless options && options[:klass].respond_to?(:destroy_relationship)
-        options[:klass].destroy_relationship(self, *args)
+        options[:klass].destroy_relationship(self, relationship_data[name], *args)
       end
       
       def relationship_data

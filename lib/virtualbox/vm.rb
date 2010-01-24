@@ -15,7 +15,7 @@ module VirtualBox
     attribute :accelerate3d
     attribute :biosbootmenu, :populate_key => :bootmenu
     relationship :nics, Nic
-    relationship :storage_controllers, StorageController
+    relationship :storage_controllers, StorageController, :dependent => :destroy
     
     class <<self
       # Returns an array of all available VMs.
@@ -94,6 +94,14 @@ module VirtualBox
     def save_attribute(key, value)
       Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
       super
+    end
+    
+    def destroy(*args)
+      # Call super first to destroy relationships, necessary before
+      # unregistering a VM
+      super
+      
+      Command.vboxmanage("unregistervm #{@original_name} --delete")
     end
   end
 end

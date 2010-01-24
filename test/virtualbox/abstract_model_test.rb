@@ -45,7 +45,7 @@ class AbstractModelTest < Test::Unit::TestCase
     end
     
     should "forward any arguments to the destroy method" do
-      Bar.expects(:destroy_relationship).with(@model, "HELLO").once
+      Bar.expects(:destroy_relationship).with(@model, anything, "HELLO").once
       @model.destroy("HELLO")
     end
   end

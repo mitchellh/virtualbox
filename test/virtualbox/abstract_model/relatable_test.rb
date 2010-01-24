@@ -1,7 +1,11 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'test_helper')
 
 class RelatableTest < Test::Unit::TestCase
-  class Relatee; end
+  class Relatee
+    def self.populate_relationship(caller, data)
+      "FOO"
+    end
+  end
   class BarRelatee; end
   
   class RelatableModel
@@ -40,7 +44,7 @@ class RelatableTest < Test::Unit::TestCase
     end
     
     should "not raise an error if populate_relationship doesn't exist" do
-      assert !Relatee.respond_to?(:populate_relationship)
+      assert !BarRelatee.respond_to?(:populate_relationship)
       assert_nothing_raised { @model.populate_relationships(nil) }
     end
     
@@ -58,6 +62,7 @@ class RelatableTest < Test::Unit::TestCase
   context "destroying" do
     setup do
       @model = RelatableModel.new
+      @model.populate_relationships({})
     end
     
     context "a single relationship" do
@@ -68,19 +73,24 @@ class RelatableTest < Test::Unit::TestCase
       end
       
       should "forward any args passed into destroy_relationship" do
-        Relatee.expects(:destroy_relationship).with(@model, "HELLO").once
+        Relatee.expects(:destroy_relationship).with(@model, anything, "HELLO").once
         @model.destroy_relationship(:foos, "HELLO")
+      end
+      
+      should "pass the data into destroy_relationship" do
+        Relatee.expects(:destroy_relationship).with(@model, "FOO").once
+        @model.destroy_relationship(:foos)
       end
     end
 
     context "all relationships" do
       should "call destroy_relationship on the related class" do
-        Relatee.expects(:destroy_relationship).with(@model).once
+        Relatee.expects(:destroy_relationship).with(@model, anything).once
         @model.destroy_relationships
       end
     
       should "forward any args passed into destroy relationships" do
-        Relatee.expects(:destroy_relationship).with(@model, "HELLO").once
+        Relatee.expects(:destroy_relationship).with(@model, anything, "HELLO").once
         @model.destroy_relationships("HELLO")
       end
     end

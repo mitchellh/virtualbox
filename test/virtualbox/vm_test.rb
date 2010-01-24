@@ -75,6 +75,26 @@ usb="off"
 showvminfo
     
     @name = "foo"
+    
+    # Just to be sure nothing is executed
+    VirtualBox::Command.stubs(:execute)
+  end
+  
+  context "destroying" do
+    setup do
+      command_seq = sequence("command_seq")
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).in_sequence(command_seq)
+      VirtualBox::Command.expects(:vboxmanage).with(anything).returns("").at_least(0).in_sequence(command_seq)
+      @vm = VirtualBox::VM.find(@name)
+      assert @vm
+    end
+
+    should "destroy all storage controllers before destroying VM" do
+      destroy_seq = sequence("destroy_seq")
+      VirtualBox::StorageController.expects(:destroy_relationship).in_sequence(destroy_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("unregistervm #{@name} --delete").in_sequence(destroy_seq)
+      @vm.destroy
+    end
   end
   
   context "finding all VMs" do
@@ -198,8 +218,6 @@ raw
         :ostype => "Ubuntu",
         :uuid   => "8710d3db-d96a-46ed-9004-59fa891fda90"
       }
-
-      @name = "foo"
       
       command_seq = sequence("command_seq)")
       VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).in_sequence(command_seq)

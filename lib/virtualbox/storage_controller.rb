@@ -5,7 +5,7 @@ module VirtualBox
     attribute :type
     attribute :max_ports, :populate_key => :maxportcount
     attribute :ports, :populate_key => :portcount
-    relationship :devices, AttachedDevice
+    relationship :devices, AttachedDevice, :dependent => :destroy
     
     class <<self
       def populate_relationship(caller, data)
@@ -22,7 +22,8 @@ module VirtualBox
         relation
       end
       
-      def save_relationship(caller, data)
+      def destroy_relationship(caller, data)
+        data.each { |v| v.destroy }
       end
     end
     
