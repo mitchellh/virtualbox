@@ -42,7 +42,12 @@ module VirtualBox
         find(parse_vm_name(raw))
       end
       
-      # Gets the VM info for a given VM
+      # Gets the non-machine-readable info for a given VM
+      def human_info(name)
+        Command.vboxmanage("showvminfo #{name}")
+      end
+      
+      # Gets the VM info (machine readable) for a given VM
       def raw_info(name)
         raw = Command.vboxmanage("showvminfo #{name} --machinereadable")
         parse_vm_info(raw)

@@ -77,7 +77,7 @@ showvminfo
     @name = "foo"
     
     # Just to be sure nothing is executed
-    VirtualBox::Command.stubs(:execute)
+    VirtualBox::Command.stubs(:execute).returns('')
   end
   
   def create_vm
@@ -87,6 +87,13 @@ showvminfo
     vm = VirtualBox::VM.find(@name)
     assert vm
     vm
+  end
+  
+  context "human readable info" do
+    should "not pass --machinereadable into the showvminfo command" do
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name}").once
+      VirtualBox::VM.human_info(@name)
+    end
   end
   
   context "reading the VM state" do

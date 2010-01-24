@@ -9,7 +9,6 @@ But they will definitely all make it for version 1.0.
 * Creating new hard drives
 * Cloning hard drives
 * Modifying attached devices
-* Reading and modifying "type" for an NIC
 * Parsing bridged IFs
 * Shared folders
 * Snapshots
