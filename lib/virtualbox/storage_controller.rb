@@ -1,5 +1,6 @@
 module VirtualBox
   class StorageController < AbstractModel
+    attribute :parent, :readonly => true
     attribute :name
     attribute :type
     attribute :max_ports, :populate_key => :maxportcount
@@ -13,7 +14,7 @@ module VirtualBox
         counter = 0
         loop do
           break unless data["storagecontrollername#{counter}".to_sym]
-          nic = new(counter, data)
+          nic = new(counter, caller, data)
           relation.push(nic)
           counter += 1
         end
@@ -25,7 +26,7 @@ module VirtualBox
       end
     end
     
-    def initialize(index, data)
+    def initialize(index, caller, data)
       super()
       
       @index = index
@@ -42,7 +43,9 @@ module VirtualBox
       # setup properly
       populate_data.merge!(extract_devices(index, data))
       
-      populate_attributes(populate_data)
+      populate_attributes(populate_data.merge({
+        :parent => caller
+      }))
     end
     
     def extract_devices(index, data)

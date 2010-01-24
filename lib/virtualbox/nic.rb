@@ -1,5 +1,6 @@
 module VirtualBox
   class Nic < AbstractModel
+    attribute :parent, :readonly => :readonly
     attribute :nic
     attribute :type
     attribute :macaddress
@@ -13,7 +14,7 @@ module VirtualBox
         counter = 1
         loop do
           break unless data["nic#{counter}".to_sym]
-          nic = new(counter, data)
+          nic = new(counter, caller, data)
           relation.push(nic)
           counter += 1
         end
@@ -29,7 +30,7 @@ module VirtualBox
       end
     end
     
-    def initialize(index, data)
+    def initialize(index, caller, data)
       super()
       
       @index = index
@@ -41,7 +42,9 @@ module VirtualBox
         populate_data[name] = value
       end
       
-      populate_attributes(populate_data)
+      populate_attributes(populate_data.merge({
+        :parent => caller
+      }))
     end
     
     def save_attribute(key, value, vmname)

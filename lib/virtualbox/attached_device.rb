@@ -1,5 +1,6 @@
 module VirtualBox
   class AttachedDevice < AbstractModel
+    attribute :parent, :readonly => true
     attribute :uuid
     attribute :medium
     attribute :port
@@ -28,6 +29,7 @@ module VirtualBox
       super()
       
       populate_attributes({
+        :parent => caller,
         :port => index,
         :medium => data["#{caller.name}-#{index}-0".downcase.to_sym],
         :uuid => data["#{caller.name}-ImageUUID-#{index}-0".downcase.to_sym]
