@@ -21,8 +21,8 @@ module VirtualBox
         relation
       end
       
-      def destroy_relationship(caller, data)
-        data.each { |v| v.destroy }
+      def destroy_relationship(caller, data, *args)
+        data.each { |v| v.destroy(*args) }
       end
     end
     
@@ -37,11 +37,11 @@ module VirtualBox
       })
     end
     
-    def destroy(destroy_image=false)
+    def destroy(options={})
       # parent = storagecontroller
       # parent.parent = vm
       Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --medium none")      
-      image.destroy if destroy_image && image
+      image.destroy if options[:destroy_image] && image
     end
   end
 end

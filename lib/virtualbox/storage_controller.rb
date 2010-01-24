@@ -22,8 +22,8 @@ module VirtualBox
         relation
       end
       
-      def destroy_relationship(caller, data)
-        data.each { |v| v.destroy }
+      def destroy_relationship(caller, data, *args)
+        data.each { |v| v.destroy(*args) }
       end
     end
     

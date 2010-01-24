@@ -34,10 +34,10 @@ class AttachedDeviceTest < Test::Unit::TestCase
       obj_one = mock("one")
       obj_two = mock("two")
 
-      obj_one.expects(:destroy).once
-      obj_two.expects(:destroy).once
+      obj_one.expects(:destroy).with("HELLO").once
+      obj_two.expects(:destroy).with("HELLO").once
 
-      VirtualBox::AttachedDevice.destroy_relationship(self, [obj_one, obj_two])
+      VirtualBox::AttachedDevice.destroy_relationship(self, [obj_one, obj_two], "HELLO")
     end
     
     should "shell escape VM name and storage controller name" do
@@ -55,12 +55,16 @@ class AttachedDeviceTest < Test::Unit::TestCase
     
     should "destroy image if flag is set" do
       @image.expects(:destroy).once
-      @value.destroy(true)
+      @value.destroy({
+        :destroy_image => true
+      })
     end
     
     should "ignore destroy image flag if image is nil" do
       @value.expects(:image).once.returns(nil)
-      @value.destroy(true)
+      @value.destroy({
+        :destroy_image => true
+      })
     end
   end
   

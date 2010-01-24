@@ -25,10 +25,10 @@ class StorageControllerTest < Test::Unit::TestCase
       obj_one = mock("one")
       obj_two = mock("two")
       
-      obj_one.expects(:destroy).once
-      obj_two.expects(:destroy).once
+      obj_one.expects(:destroy).with("HELLO").once
+      obj_two.expects(:destroy).with("HELLO").once
       
-      VirtualBox::StorageController.destroy_relationship(self, [obj_one, obj_two])
+      VirtualBox::StorageController.destroy_relationship(self, [obj_one, obj_two], "HELLO")
     end
 
     should "call destroy_relationship on AttachedDevices when destroyed" do
