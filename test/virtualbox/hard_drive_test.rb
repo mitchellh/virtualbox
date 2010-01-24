@@ -75,37 +75,4 @@ valid
       end
     end
   end
-  
-  context "parsing a single block" do
-    should "return nil for an invalid block" do
-      assert VirtualBox::HardDrive.create_from_block("HI").nil?
-    end
-    
-    should "return nil if not all required fields are present" do
-      block = <<-block
-UUID: yes
-FOO: wrong
-block
-      assert VirtualBox::HardDrive.create_from_block(block).nil?        
-    end
-      
-    should "properly parse if all properties are available" do
-      expected = {
-        :uuid => "1234567890",
-        :format => "vdi",
-        :location => "foo",
-        :accessible => "yes"
-      }
-        
-      block = ""
-      expected.each { |k,v| block += "#{k}: #{v}\n" }
-
-      result = VirtualBox::HardDrive.create_from_block(block)
-      assert !result.nil?
-      
-      expected.each do |k,v|
-        assert_equal v, result.read_attribute(k)
-      end
-    end
-  end
 end
