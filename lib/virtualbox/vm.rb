@@ -6,14 +6,25 @@ module VirtualBox
     attribute :memory
     attribute :vram
     attribute :acpi
+    attribute :ioapic
     attribute :cpus
     attribute :synthcpu
     attribute :pae
     attribute :hwvirtex
     attribute :hwvirtexexcl
     attribute :nestedpaging
+    attribute :vtxvpid
     attribute :accelerate3d
     attribute :biosbootmenu, :populate_key => :bootmenu
+    attribute :boot1
+    attribute :boot2
+    attribute :boot3
+    attribute :boot4
+    attribute :clipboard
+    attribute :monitorcount
+    attribute :usb
+    attribute :audio
+    attribute :vrdp
     attribute :state, :populate_key => :vmstate, :readonly => true
     relationship :nics, Nic
     relationship :storage_controllers, StorageController, :dependent => :destroy
