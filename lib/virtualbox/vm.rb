@@ -14,6 +14,7 @@ module VirtualBox
     attribute :nestedpaging
     attribute :accelerate3d
     attribute :biosbootmenu, :populate_key => :bootmenu
+    attribute :state, :populate_key => :vmstate, :readonly => true
     relationship :nics, Nic
     relationship :storage_controllers, StorageController, :dependent => :destroy
     
@@ -27,8 +28,7 @@ module VirtualBox
       # Finds a VM by UUID or registered name and returns a
       # new VM object
       def find(name)
-        raw = Command.vboxmanage("showvminfo #{name} --machinereadable")
-        new(parse_vm_info(raw))
+        new(raw_info(name))
       end
       
       # Imports a VM, blocking the entire thread during this time. 
@@ -40,6 +40,12 @@ module VirtualBox
         return nil unless raw
         
         find(parse_vm_name(raw))
+      end
+      
+      # Gets the VM info for a given VM
+      def raw_info(name)
+        raw = Command.vboxmanage("showvminfo #{name} --machinereadable")
+        parse_vm_info(raw)
       end
       
       # Parses the machine-readable format outputted by VBoxManage showvminfo
@@ -78,6 +84,16 @@ module VirtualBox
       
       populate_attributes(data)
       @original_name = data[:name]
+    end
+    
+    # Reading state is a special case
+    def state(reload=false)
+      if reload
+        info = self.class.raw_info(@original_name)
+        write_attribute(:state, info[:vmstate])
+      end
+      
+      read_attribute(:state)
     end
     
     def save

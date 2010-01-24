@@ -89,6 +89,22 @@ showvminfo
     vm
   end
   
+  context "reading the VM state" do
+    setup do
+      @vm = create_vm
+    end
+    
+    should "read the initial state when loading the VM" do
+      assert_equal "poweroff", @vm.state
+    end
+    
+    should "reload the state if true is passed as a parameter" do
+      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "on" })
+      assert_equal "on", @vm.state(true)
+      assert_equal "on", @vm.state
+    end
+  end
+  
   context "starting and stopping" do
     setup do
       @vm = create_vm
