@@ -18,6 +18,12 @@ module VirtualBox
     relationship :storage_controllers, StorageController
     
     class <<self
+      # Returns an array of all available VMs.
+      def all
+        raw = Command.vboxmanage("list vms")
+        parse_vm_list(raw)
+      end
+      
       # Finds a VM by UUID or registered name and returns a
       # new VM object
       def find(name)
@@ -47,6 +53,17 @@ module VirtualBox
         end
 
         parsed
+      end
+      
+      # Parses the list of VMs
+      def parse_vm_list(raw)
+        results = []
+        raw.lines.each do |line|
+          next unless line =~ /^"(.+?)"\s+\{(.+?)\}$/
+          results.push(find($1.to_s))
+        end
+        
+        results
       end
       
       # Parses the vm name from the import results

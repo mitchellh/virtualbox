@@ -77,6 +77,42 @@ showvminfo
     @name = "foo"
   end
   
+  context "finding all VMs" do
+    setup do
+      @raw = ""
+    end
+    
+    should "list VMs then parse them" do
+      all_seq = sequence("all")
+      VirtualBox::Command.expects(:vboxmanage).with("list vms").returns(@raw).in_sequence(all_seq)
+      VirtualBox::VM.expects(:parse_vm_list).with(@raw).in_sequence(all_seq)
+      VirtualBox::VM.all
+    end
+    
+    context "parser" do
+      should "ignore non-matching lines" do
+        assert VirtualBox::VM.parse_vm_list("HEY YOU").empty?
+      end
+      
+      should "return VM objects for valid lines" do
+        vm_foo = mock("vm_foo")
+        vm_bar = mock("vm_bar")
+        parse_seq = sequence("parse")
+        VirtualBox::VM.expects(:find).with("foo").returns(vm_foo).in_sequence(parse_seq)
+        VirtualBox::VM.expects(:find).with("bar").returns(vm_bar).in_sequence(parse_seq)
+        
+        result = VirtualBox::VM.parse_vm_list(<<-raw)
+"foo" {abcdefg}
+"bar"  {zefaldf}
+raw
+        assert !result.empty?
+        assert_equal 2, result.length
+        assert_equal vm_foo, result[0]
+        assert_equal vm_bar, result[1]
+      end
+    end
+  end
+  
   context "importing a VM" do
     setup do
       @raw = <<-raw
