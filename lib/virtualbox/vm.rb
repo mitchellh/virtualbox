@@ -96,6 +96,15 @@ module VirtualBox
       super
     end
     
+    def start(type=:gui)
+      Command.vboxmanage("startvm #{@original_name} --type #{type}")
+    end
+    
+    # Stops the VM by directly calling "poweroff"
+    def stop
+      Command.vboxmanage("controlvm #{@original_name} poweroff")
+    end
+    
     def destroy(*args)
       # Call super first to destroy relationships, necessary before
       # unregistering a VM
