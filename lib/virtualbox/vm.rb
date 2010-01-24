@@ -74,7 +74,7 @@ module VirtualBox
     end
     
     def save_attribute(key, value)
-      Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value)}")
+      Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
       super
     end
   end

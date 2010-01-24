@@ -133,6 +133,13 @@ raw
       @vm.save
     end
     
+    should "shell escape the string value of a value" do
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --memory 400")
+      
+      @vm.memory = 400
+      assert_nothing_raised { @vm.save }
+    end
+    
     should "save name first if changed, then following values should modify new VM" do
       save_seq = sequence("save_seq")
       new_name = "foo2"
