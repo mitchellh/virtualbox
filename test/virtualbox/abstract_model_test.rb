@@ -11,6 +11,27 @@ class AbstractModelTest < Test::Unit::TestCase
     relationship :bars, Bar, :dependent => :destroy
   end
   
+  context "new/existing records" do
+    setup do
+      @model = FakeModel.new
+    end
+
+    should "be a new record by default" do
+      assert @model.new_record?
+    end
+    
+    should "not be a new record if populate_attributes is called" do
+      @model.populate_attributes({})
+      assert !@model.new_record?
+    end
+    
+    should "not be a new record after saving" do
+      assert @model.new_record?
+      @model.save
+      assert !@model.new_record?
+    end
+  end
+  
   context "subclasses" do
     class FakeTwoModel < FakeModel
       attribute :baz

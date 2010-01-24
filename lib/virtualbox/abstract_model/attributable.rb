@@ -32,11 +32,6 @@ module VirtualBox
         end
       end
 
-      def initialize
-        @changed_attributes = {}
-        @attribute_values = {}
-      end
-
       # Does the initial population of the various attributes. This sets
       # the initial values which the model uses to check which have changed.
       def populate_attributes(attribs)
@@ -47,11 +42,17 @@ module VirtualBox
       end
 
       def write_attribute(name, value)
-        @attribute_values[name] = value
+        attributes[name] = value
       end
 
       def read_attribute(name)
-        @attribute_values[name]
+        if has_attribute?(name)
+          attributes[name] || self.class.attributes[name][:default]
+        end
+      end
+      
+      def attributes
+        @attribute_values ||= {}
       end
 
       def has_attribute?(name)

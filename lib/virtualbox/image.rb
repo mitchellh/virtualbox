@@ -5,12 +5,16 @@ module VirtualBox
     include SubclassListing
     
     attribute :uuid, :readonly => true
-    attribute :location, :readonly => true
+    attribute :location
     attribute :accessible, :readonly => true
     
     class <<self
       def parse_raw(raw)
-        raw.split(/\n\n/).collect { |v| parse_block(v) }.compact
+        parse_blocks(raw).collect { |v| new(v) }
+      end
+      
+      def parse_blocks(raw)
+        raw.split(/\n\n/).collect { |v| parse_block(v.chomp) }.compact
       end
       
       def parse_block(block)
@@ -28,11 +32,7 @@ module VirtualBox
         # are equivalent but not consistent.
         hd[:location] = hd[:path] if hd.has_key?(:path)
         
-        # Make sure we got all the required keys
-        return nil unless (attributes.keys - hd.keys).empty?
-        
-        # Create the object
-        new(hd)
+        hd
       end
       
       # Searches the subclasses which implement all method, searching for
@@ -49,10 +49,10 @@ module VirtualBox
       end
     end
     
-    def initialize(info)
+    def initialize(info=nil)
       super()
       
-      populate_attributes(info)
+      populate_attributes(info) if info
     end
   end
 end

@@ -7,21 +7,21 @@ module VirtualBox
         if current != value
           # If its the first time this attribute has changed, store the
           # original value in the first field
-          @changed_attributes[name] ||= [current, nil]
+          changes[name] ||= [current, nil]
 
           # Then store the changed value
-          @changed_attributes[name][1] = value
+          changes[name][1] = value
 
           # If the value changed back to the original value, remove from the
           # dirty hash
-          if @changed_attributes[name][0] == @changed_attributes[name][1]
-            @changed_attributes.delete(name)
+          if changes[name][0] == changes[name][1]
+            changes.delete(name)
           end
         end
       end
       
       def clear_dirty!(key)
-        @changed_attributes.delete(key)
+        changes.delete(key)
       end
 
       # Runs the block, passing in the object itself. Guarantees the dirty

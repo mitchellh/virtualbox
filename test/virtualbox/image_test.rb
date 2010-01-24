@@ -48,6 +48,37 @@ raw
     end
   end
   
+  context "parsing multiple blocks" do
+    setup do
+      @raw = <<-raw
+one
+
+two
+
+three
+raw
+    end
+    
+    should "call parse block for each multiline" do
+      parse_seq = sequence("parse")
+      VirtualBox::Image.expects(:parse_block).with("one").in_sequence(parse_seq)
+      VirtualBox::Image.expects(:parse_block).with("two").in_sequence(parse_seq)
+      VirtualBox::Image.expects(:parse_block).with("three").in_sequence(parse_seq)
+      VirtualBox::Image.parse_blocks(@raw)
+    end
+    
+    should "return an array of the parses with nil ignored" do
+      parse_seq = sequence("parse")
+      VirtualBox::Image.expects(:parse_block).with("one").returns({}).in_sequence(parse_seq)
+      VirtualBox::Image.expects(:parse_block).with("two").returns(nil).in_sequence(parse_seq)
+      VirtualBox::Image.expects(:parse_block).with("three").returns({}).in_sequence(parse_seq)
+      result = VirtualBox::Image.parse_blocks(@raw)
+      
+      assert result.is_a?(Array)
+      assert_equal 2, result.length
+    end
+  end
+  
   context "parsing a single block" do
     setup do
       @expected = {
@@ -64,17 +95,9 @@ raw
       assert VirtualBox::Image.parse_block("HI").nil?
     end
     
-    should "return nil if not all required fields are present" do
-      block = <<-block
-UUID: yes
-FOO: wrong
-block
-      assert VirtualBox::Image.parse_block(block).nil?        
-    end
-    
     should "mirror location to path" do
       result = VirtualBox::Image.parse_block(@block)
-      assert_equal "foo", result.location
+      assert_equal "foo", result[:location]
     end
       
     should "properly parse if all properties are available" do
@@ -83,7 +106,7 @@ block
       
       @expected.each do |k,v|
         k = :location if k == :path
-        assert_equal v, result.read_attribute(k)
+        assert_equal v, result[k]
       end
     end
   end

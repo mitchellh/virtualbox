@@ -1,9 +1,11 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'test_helper')
 
 class AttributableTest < Test::Unit::TestCase
-  class AttributeModel
-    include VirtualBox::AbstractModel::Attributable
-    
+  class EmptyAttributeModel
+    include VirtualBox::AbstractModel::Attributable    
+  end
+  
+  class AttributeModel < EmptyAttributeModel
     attribute :foo
     attribute :bar
     
@@ -76,6 +78,22 @@ class AttributableTest < Test::Unit::TestCase
         assert_raises(NoMethodError) { @model.foo = "YO" }
       end
     end
+    
+    context "default values" do
+      class DefaultModel < EmptyAttributeModel
+        attribute :foo, :default => "FOO!"
+        attribute :bar
+      end
+      
+      setup do
+        @model = DefaultModel.new
+      end
+      
+      should "read default values" do
+        assert_equal "FOO!", @model.foo
+        assert_nil @model.bar
+      end
+    end
   end
   
   context "populating attributes" do
@@ -100,6 +118,13 @@ class AttributableTest < Test::Unit::TestCase
     setup do
       @model = AttributeModel.new
       @checkstring = "HEY"
+    end
+    
+    should "be able to read an entire hash of attributes" do
+      atts = @model.attributes
+      assert atts.is_a?(Hash)
+      assert atts.has_key?(:foo)
+      assert atts.has_key?(:bar)
     end
     
     should "be able to write defined attributes" do

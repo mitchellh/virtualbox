@@ -12,6 +12,11 @@ module VirtualBox
     include Dirty
     include Relatable
     
+    def new_record?
+      @new_record = true if @new_record.nil?
+      @new_record
+    end
+    
     def save(*args)
       # Go through changed attributes and call save_attribute for
       # those only
@@ -20,6 +25,9 @@ module VirtualBox
       end
 
       save_relationships(*args)
+      
+      # No longer a new record
+      @new_record = false
     end
     
     def save_attribute(key, value, *args)
@@ -29,6 +37,9 @@ module VirtualBox
     # Modify populate_attributes to not set dirtiness and also to
     # set relationships
     def populate_attributes(attribs)
+      # No longer a new record
+      @new_record = false
+      
       ignore_dirty do
         super
         
