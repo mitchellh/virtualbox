@@ -88,11 +88,9 @@ raw
   end
   
   context "finding a single hard drive" do
-    setup do
-      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo #{@name}").returns(@find_raw)
-    end
-    
     should "parse proper fields" do
+      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo #{@name}").returns(@find_raw)
+
       @expected = {
         :uuid => "11dedd14-57a1-4bdb-adeb-dd1d67f066e1",
         :accessible => "yes",
@@ -105,6 +103,14 @@ raw
       
       @expected.each do |k,v|
         assert_equal v, hd.send(k)
+      end
+    end
+    
+    should "return nil if finding a non-existent hard drive" do
+      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo 12").returns("UH OH (VERR_FILE_NOT_FOUND)")
+      
+      assert_nothing_raised do
+        assert_nil VirtualBox::HardDrive.find(12)
       end
     end
   end

@@ -14,6 +14,10 @@ module VirtualBox
       # Finds one specific hard drive by UUID or file name
       def find(id)
         raw = Command.vboxmanage("showhdinfo #{id}")
+        
+        # Return nil if the hard drive doesn't exist
+        return nil if raw =~ /VERR_FILE_NOT_FOUND/
+        
         data = raw.split(/\n\n/).collect { |v| parse_block(v) }.find { |v| !v.nil? }
         
         # Set equivalent fields

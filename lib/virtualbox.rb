@@ -1,4 +1,5 @@
 $:.unshift(File.expand_path(File.dirname(__FILE__)))
+require 'virtualbox/errors'
 require 'virtualbox/command'
 require 'virtualbox/abstract_model'
 require 'virtualbox/image'
