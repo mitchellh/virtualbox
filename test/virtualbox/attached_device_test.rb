@@ -7,9 +7,30 @@ class AttachedDeviceTest < Test::Unit::TestCase
       :"foo controller-imageuuid-0-0" => "322f79fd-7da6-416f-a16f-e70066ccf165",
       :"foo controller-1-0" => "barmedium"
     }
+
+    @vm = mock("vm")
+    @vm.stubs(:name).returns("foo")
     
     @caller = mock("caller")
+    @caller.stubs(:parent).returns(@vm)
     @caller.stubs(:name).returns("Foo Controller")
+  end
+  
+  context "destroying" do
+    setup do
+      @value = VirtualBox::AttachedDevice.populate_relationship(@caller, @data)
+      @value = @value[0]
+      
+      VirtualBox::Command.stubs(:execute)
+    end
+    
+    should "shell escape VM name and storage controller name" do
+      shell_seq = sequence("shell_seq")
+      VirtualBox::Command.expects(:shell_escape).with(@vm.name).in_sequence(shell_seq)
+      VirtualBox::Command.expects(:shell_escape).with(@caller.name).in_sequence(shell_seq)
+      VirtualBox::Command.expects(:vboxmanage).in_sequence(shell_seq)
+      @value.destroy
+    end
   end
   
   context "populating relationships" do

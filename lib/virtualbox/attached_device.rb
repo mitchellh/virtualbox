@@ -35,5 +35,11 @@ module VirtualBox
         :uuid => data["#{caller.name}-ImageUUID-#{index}-0".downcase.to_sym]
       })
     end
+    
+    def destroy
+      # parent = storagecontroller
+      # parent.parent = vm
+      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --medium none")
+    end
   end
 end
