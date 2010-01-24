@@ -21,21 +21,6 @@ users. Examples are best:
 
 Detailed documentation can be found here (TODO).
 
-## Supported Features
-
-VirtualBox has a ton of features! As such, this gem is incomplete. The following list
-is an up-to-date feature list:
-
-* Finding existing Virtual Machines (VirtualBox::VM.find)
-* Editing of most simple VM attributes. But no serial ports, storage controllers, etc.
-* Editing of most simple nic attributes for an existing VM.
-* Listing of all hard drives (VirtualBox::HardDrive.all)
-* Importing VMs from OVF
-
-What is not supported, but will be soon:
-
-* Hard drive cloning
-
 ## Contributing
 
 If you'd like to contribute to VirtualBox, the first step to developing is to

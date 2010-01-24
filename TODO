@@ -1,0 +1,18 @@
+# TODO
+
+Not all these features will make it into initial releases of virtualbox ruby gem.
+But they will definitely all make it for version 1.0.
+
+* Find all VMs
+* Creating a VM from scratch (non-import)
+* Starting/Stopping VMs
+* Destroying a VM
+* Exporting a VM
+* Creating new hard drives
+* Cloning hard drives
+* Modifying attached devices
+* Reading and modifying "type" for an NIC
+* Parsing bridged IFs
+* Shared folders
+* Snapshots
+* Getting/Setting guest properties
