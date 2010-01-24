@@ -179,6 +179,12 @@ raw
       assert @vm.nics.is_a?(Array)
       assert_equal 8, @vm.nics.length
     end
+    
+    should "properly load storage controller relationship" do
+      assert @vm.storage_controllers
+      assert @vm.storage_controllers.is_a?(Array)
+      assert_equal 2, @vm.storage_controllers.length
+    end
   end
   
   context "parsing the showvminfo output" do

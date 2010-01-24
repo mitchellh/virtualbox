@@ -15,6 +15,7 @@ module VirtualBox
     attribute :accelerate3d
     attribute :biosbootmenu, :populate_key => :bootmenu
     relationship :nics, Nic
+    relationship :storage_controllers, StorageController
     
     class <<self
       # Finds a VM by UUID or registered name and returns a
