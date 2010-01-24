@@ -36,10 +36,11 @@ module VirtualBox
       })
     end
     
-    def destroy
+    def destroy(destroy_image=false)
       # parent = storagecontroller
       # parent.parent = vm
-      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --medium none")
+      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --medium none")      
+      image.destroy if destroy_image && image
     end
   end
 end

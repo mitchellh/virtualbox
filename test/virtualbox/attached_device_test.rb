@@ -21,6 +21,9 @@ class AttachedDeviceTest < Test::Unit::TestCase
       @value = VirtualBox::AttachedDevice.populate_relationship(@caller, @data)
       @value = @value[0]
       
+      @image = mock("image")
+      @value.stubs(:image).returns(@image)
+      
       VirtualBox::Command.stubs(:execute)
     end
     
@@ -30,6 +33,21 @@ class AttachedDeviceTest < Test::Unit::TestCase
       VirtualBox::Command.expects(:shell_escape).with(@caller.name).in_sequence(shell_seq)
       VirtualBox::Command.expects(:vboxmanage).in_sequence(shell_seq)
       @value.destroy
+    end
+    
+    should "not destroy image by default" do
+      @image.expects(:destroy).never
+      @value.destroy
+    end
+    
+    should "destroy image if flag is set" do
+      @image.expects(:destroy).once
+      @value.destroy(true)
+    end
+    
+    should "ignore destroy image flag if image is nil" do
+      @value.expects(:image).once.returns(nil)
+      @value.destroy(true)
     end
   end
   
