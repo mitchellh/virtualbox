@@ -1,6 +1,12 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class ImageTest < Test::Unit::TestCase
+  context "recording subclasses" do
+    should "list all subclasses" do
+      assert_nothing_raised { VirtualBox::Image.subclasses }
+    end
+  end
+  
   context "parsing raw" do
     setup do
       @raw = <<-raw

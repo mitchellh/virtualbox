@@ -3,6 +3,7 @@ module VirtualBox
     attribute :uuid
     attribute :medium
     attribute :port
+    relationship :image, Image
     
     class <<self
       def populate_relationship(caller, data)

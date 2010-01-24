@@ -114,7 +114,9 @@ raw
   
   context "saving a changed VM" do
     setup do
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).once
+      command_seq = sequence("command_seq")
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).once.in_sequence(command_seq)
+      VirtualBox::Command.expects(:vboxmanage).with(anything).returns("").at_least(0).in_sequence(command_seq)
       @vm = VirtualBox::VM.find(@name)
       assert @vm
     end
@@ -163,7 +165,9 @@ raw
 
       @name = "foo"
       
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).once
+      command_seq = sequence("command_seq)")
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).in_sequence(command_seq)
+      VirtualBox::Command.expects(:vboxmanage).with(anything).returns("").at_least(0).in_sequence(command_seq)
       @vm = VirtualBox::VM.find(@name)
       assert @vm
     end

@@ -1,5 +1,9 @@
+require 'virtualbox/ext/subclass_listing'
+
 module VirtualBox
   class Image < AbstractModel
+    include SubclassListing
+    
     attribute :uuid, :readonly => true
     attribute :location, :readonly => true
     attribute :accessible, :readonly => true
@@ -29,6 +33,19 @@ module VirtualBox
         
         # Create the object
         new(hd)
+      end
+      
+      # Searches the subclasses which implement all method, searching for
+      # a matching UUID and returning that as the relationship.
+      def populate_relationship(caller, data)
+        return nil if data[:uuid].nil?
+        
+        subclasses.each do |subclass|
+          next unless subclass.respond_to?(:all)
+          
+          matching = subclass.all.find { |obj| obj.uuid == data[:uuid] }
+          return matching unless matching.nil?
+        end
       end
     end
     
