@@ -1,20 +1,14 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'test_helper')
 
 class RelatableTest < Test::Unit::TestCase
-  class Relatee
-    def self.populate_relationship(caller, data)
-      # Nothing?
-    end
-    
-    def self.save_relationship(caller, data, *args)
-      # Nothing?
-    end
-  end
+  class Relatee; end
+  class BarRelatee; end
   
   class RelatableModel
     include VirtualBox::AbstractModel::Relatable
     
     relationship :foos, Relatee
+    relationship :bars, BarRelatee
   end
   
   setup do
@@ -37,6 +31,58 @@ class RelatableTest < Test::Unit::TestCase
     
     should "inherit options of relationships" do
       assert_equal Relatee, @relationships[:foos][:klass]
+    end
+  end
+  
+  context "default callbacks" do
+    setup do
+      @model = RelatableModel.new
+    end
+    
+    should "not raise an error if populate_relationship doesn't exist" do
+      assert !Relatee.respond_to?(:populate_relationship)
+      assert_nothing_raised { @model.populate_relationships(nil) }
+    end
+    
+    should "not raise an error when saving relationships if the callback doesn't exist" do
+      assert !Relatee.respond_to?(:save_relationship)
+      assert_nothing_raised { @model.save_relationships }
+    end
+    
+    should "not raise an error in destroying relationships if the callback doesn't exist" do
+      assert !Relatee.respond_to?(:destroy_relationship)
+      assert_nothing_raised { @model.destroy_relationships }
+    end
+  end
+  
+  context "destroying" do
+    setup do
+      @model = RelatableModel.new
+    end
+    
+    context "a single relationship" do
+      should "call destroy_relationship only for the given relationship" do
+        Relatee.expects(:destroy_relationship).once
+        BarRelatee.expects(:destroy_relationship).never
+        @model.destroy_relationship(:foos)
+      end
+      
+      should "forward any args passed into destroy_relationship" do
+        Relatee.expects(:destroy_relationship).with(@model, "HELLO").once
+        @model.destroy_relationship(:foos, "HELLO")
+      end
+    end
+
+    context "all relationships" do
+      should "call destroy_relationship on the related class" do
+        Relatee.expects(:destroy_relationship).with(@model).once
+        @model.destroy_relationships
+      end
+    
+      should "forward any args passed into destroy relationships" do
+        Relatee.expects(:destroy_relationship).with(@model, "HELLO").once
+        @model.destroy_relationships("HELLO")
+      end
     end
   end
   

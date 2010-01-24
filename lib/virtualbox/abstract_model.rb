@@ -41,5 +41,12 @@ module VirtualBox
       set_dirty!(name, read_attribute(name), value)
       super
     end
+    
+    def destroy(*args)
+      # Destroy dependent relationships
+      self.class.relationships.each do |name, options|
+        destroy_relationship(name, *args) if options[:dependent] == :destroy
+      end
+    end
   end
 end

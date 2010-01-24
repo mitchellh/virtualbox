@@ -43,6 +43,7 @@ module VirtualBox
       # the relation to determine whether anything changed, etc.
       def save_relationships(*args)
         self.class.relationships.each do |name, options|
+          next unless options[:klass].respond_to?(:save_relationship)
           options[:klass].save_relationship(self, relationship_data[name], *args)
         end
       end
@@ -51,8 +52,23 @@ module VirtualBox
       # differently (read above).
       def populate_relationships(data)
         self.class.relationships.each do |name, options|
+          next unless options[:klass].respond_to?(:populate_relationship)
           relationship_data[name] = options[:klass].populate_relationship(self, data)
         end
+      end
+      
+      # Calls destroy_relationship on each of the relationships
+      def destroy_relationships(*args)
+        self.class.relationships.each do |name, options|
+          destroy_relationship(name, *args)
+        end
+      end
+      
+      # Destroys only a single relationship
+      def destroy_relationship(name, *args)
+        options = self.class.relationships[name]
+        return unless options && options[:klass].respond_to?(:destroy_relationship)
+        options[:klass].destroy_relationship(self, *args)
       end
       
       def relationship_data

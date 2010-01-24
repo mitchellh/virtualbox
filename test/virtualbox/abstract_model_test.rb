@@ -1,15 +1,14 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class AbstractModelTest < Test::Unit::TestCase
-  class Foo
-    def self.populate_relationship(caller, data); end
-    def self.save_relationship(caller, data, *args); end
-  end
+  class Foo; end
+  class Bar; end
   
   class FakeModel < VirtualBox::AbstractModel
     attribute :foo
     attribute :bar
     relationship :foos, Foo
+    relationship :bars, Bar, :dependent => :destroy
   end
   
   context "subclasses" do
@@ -30,6 +29,24 @@ class AbstractModelTest < Test::Unit::TestCase
       assert_nothing_raised do
         assert_equal "foo", @model.foo
       end
+    end
+  end
+  
+  context "destroying" do
+    setup do
+      @model = FakeModel.new
+    end
+    
+    should "call destroy_relationship only for dependent relationships" do
+      Foo.expects(:destroy_relationship).never
+      Bar.expects(:destroy_relationship).once
+      
+      @model.destroy
+    end
+    
+    should "forward any arguments to the destroy method" do
+      Bar.expects(:destroy_relationship).with(@model, "HELLO").once
+      @model.destroy("HELLO")
     end
   end
   
