@@ -79,7 +79,10 @@ showvminfo
   
   context "finding all VMs" do
     setup do
-      @raw = ""
+      @raw = <<-raw
+"foo" {abcdefg}
+"bar"  {zefaldf}
+raw
     end
     
     should "list VMs then parse them" do
@@ -101,10 +104,7 @@ showvminfo
         VirtualBox::VM.expects(:find).with("foo").returns(vm_foo).in_sequence(parse_seq)
         VirtualBox::VM.expects(:find).with("bar").returns(vm_bar).in_sequence(parse_seq)
         
-        result = VirtualBox::VM.parse_vm_list(<<-raw)
-"foo" {abcdefg}
-"bar"  {zefaldf}
-raw
+        result = VirtualBox::VM.parse_vm_list(@raw)
         assert !result.empty?
         assert_equal 2, result.length
         assert_equal vm_foo, result[0]

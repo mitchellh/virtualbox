@@ -3,7 +3,6 @@
 Not all these features will make it into initial releases of virtualbox ruby gem.
 But they will definitely all make it for version 1.0.
 
-* Find all VMs
 * Creating a VM from scratch (non-import)
 * Starting/Stopping VMs
 * Destroying a VM
