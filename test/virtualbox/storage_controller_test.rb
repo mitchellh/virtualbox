@@ -26,6 +26,12 @@ class StorageControllerTest < Test::Unit::TestCase
       assert_equal "foo", value.name
       assert_equal 7, value.max_ports
     end
+    
+    should "call populate attributes with the merged populate data" do
+      VirtualBox::StorageController.any_instance.expects(:extract_devices).returns({ :name => "BAR" })
+      value = VirtualBox::StorageController.new(0, @data)
+      assert_equal "BAR", value.name
+    end
   end
   
   context "extracting related device info" do

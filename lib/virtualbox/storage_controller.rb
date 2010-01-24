@@ -4,6 +4,7 @@ module VirtualBox
     attribute :type
     attribute :max_ports, :populate_key => :maxportcount
     attribute :ports, :populate_key => :portcount
+    relationship :devices, AttachedDevice
     
     class <<self
       def populate_relationship(caller, data)
@@ -39,13 +40,13 @@ module VirtualBox
       
       # Make sure to merge in device data so those relationships will be
       # setup properly
-      populate_data.merge(extract_devices(index, data))
+      populate_data.merge!(extract_devices(index, data))
       
       populate_attributes(populate_data)
     end
     
     def extract_devices(index, data)
-      name = data["storagecontrollername#{index}".to_sym]
+      name = data["storagecontrollername#{index}".downcase.to_sym].downcase
       
       device_data = {}
       data.each do |k,v|
