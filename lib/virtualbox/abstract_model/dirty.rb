@@ -19,6 +19,10 @@ module VirtualBox
           end
         end
       end
+      
+      def clear_dirty!(key)
+        @changed_attributes.delete(key)
+      end
 
       # Runs the block, passing in the object itself. Guarantees the dirty
       # state will be the same before and after the method call, but not

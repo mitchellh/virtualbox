@@ -42,6 +42,23 @@ module VirtualBox
       super()
       
       populate_attributes(data)
+      @original_name = data[:name]
+    end
+    
+    def save
+      # Make sure we save the new name first if that was changed, or
+      # we'll get some inconsistencies later
+      if name_changed?
+        save_attribute(:name, name)
+        @original_name = name
+      end
+      
+      super
+    end
+    
+    def save_attribute(key, value)
+      Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value)}")
+      super
     end
   end
 end

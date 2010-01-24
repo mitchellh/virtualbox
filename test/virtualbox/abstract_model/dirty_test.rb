@@ -35,6 +35,14 @@ class DirtyTest < Test::Unit::TestCase
       assert @model.changed?
     end
     
+    should "be able to clear dirty state" do
+      assert !@model.changed?
+      @model.foo = "my value"
+      assert @model.changed?
+      @model.clear_dirty!(:foo)
+      assert !@model.changed?
+    end
+    
     should "show changes on specific field" do
       assert !@model.changed?
       @model.foo = "my value"

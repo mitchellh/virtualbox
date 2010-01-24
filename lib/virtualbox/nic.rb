@@ -20,6 +20,9 @@ module VirtualBox
         
         relation
       end
+      
+      def save_relationship(caller, data)
+      end
     end
     
     def initialize(index, data)

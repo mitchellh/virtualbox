@@ -12,6 +12,20 @@ module VirtualBox
     include Dirty
     include Relatable
     
+    def save
+      # Go through changed attributes and call save_attribute for
+      # those only
+      changes.each do |key, values|
+        save_attribute(key, values[1])
+      end
+
+      save_relationships
+    end
+    
+    def save_attribute(key, value)
+      clear_dirty!(key)
+    end
+    
     # Modify populate_attributes to not set dirtiness and also to
     # set relationships
     def populate_attributes(attribs)

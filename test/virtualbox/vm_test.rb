@@ -1,9 +1,8 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class VMTest < Test::Unit::TestCase
-  context "finding a VM by name" do
-    setup do
-      @raw = <<-showvminfo
+  setup do
+    @raw = <<-showvminfo
 VirtualBox Command Line Management Interface Version 3.1.2
 (C) 2005-2009 Sun Microsystems, Inc.
 All rights reserved.
@@ -74,6 +73,45 @@ clipboard="bidirectional"
 vrdp="off"
 usb="off"      
 showvminfo
+    
+    @name = "foo"
+  end
+  
+  context "saving a changed VM" do
+    setup do
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).once
+      @vm = VirtualBox::VM.find(@name)
+      assert @vm
+    end
+    
+    should "save only the attributes which saved" do
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --ostype Zubuntu")
+      
+      @vm.ostype = "Zubuntu"
+      @vm.save
+    end
+    
+    should "shell escape saved values" do
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --ostype My\\ Value")
+      
+      @vm.ostype = "My Value"
+      @vm.save
+    end
+    
+    should "save name first if changed, then following values should modify new VM" do
+      save_seq = sequence("save_seq")
+      new_name = "foo2"
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --name #{new_name}").in_sequence(save_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{new_name} --ostype Zubuntu").in_sequence(save_seq)
+      
+      @vm.name = new_name
+      @vm.ostype = "Zubuntu"
+      @vm.save
+    end
+  end
+  
+  context "finding a VM by name" do
+    setup do
 
       @expected = {
         :name   => "foo",
