@@ -3,6 +3,42 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class HardDriveTest < Test::Unit::TestCase
   setup do
     VirtualBox::Command.stubs(:execute)
+    
+    @find_raw = <<-raw
+VirtualBox Command Line Management Interface Version 3.1.2
+(C) 2005-2009 Sun Microsystems, Inc.
+All rights reserved.
+
+UUID:                 11dedd14-57a1-4bdb-adeb-dd1d67f066e1
+Accessible:           yes
+Description:          
+Logical size:         20480 MBytes
+Current size on disk: 1218 MBytes
+Type:                 normal (base)
+Storage format:       VDI
+In use by VMs:        FooVM (UUID: 696249ad-00b6-4087-b47f-9b82629efc31)
+Location:             /Users/mitchellh/Library/VirtualBox/HardDisks/foo.vdi
+raw
+    @name = "foo"
+    VirtualBox::Command.stubs(:vboxmanage).with("showhdinfo #{@name}").returns(@find_raw)
+  end
+  
+  context "cloning a hard drive" do
+    setup do
+      @hd = VirtualBox::HardDrive.find(@name)
+      VirtualBox::Command.expects(:vboxmanage).with("clonehd #{@hd.uuid} bar --format VDI --remember").returns(@find_raw)
+    end
+    
+    should "call vboxmanage with the clone command" do
+      VirtualBox::HardDrive.expects(:find).returns(nil)
+      @hd.clone("bar")
+    end
+    
+    should "return the newly cloned hard drive" do
+      @new_hd = mock("hd")
+      VirtualBox::HardDrive.expects(:find).returns(@new_hd)
+      assert_equal @new_hd, @hd.clone("bar")
+    end
   end
   
   context "creating a hard drive" do
@@ -53,24 +89,7 @@ class HardDriveTest < Test::Unit::TestCase
   
   context "finding a single hard drive" do
     setup do
-      @raw = <<-raw
-VirtualBox Command Line Management Interface Version 3.1.2
-(C) 2005-2009 Sun Microsystems, Inc.
-All rights reserved.
-
-UUID:                 11dedd14-57a1-4bdb-adeb-dd1d67f066e1
-Accessible:           yes
-Description:          
-Logical size:         20480 MBytes
-Current size on disk: 1218 MBytes
-Type:                 normal (base)
-Storage format:       VDI
-In use by VMs:        FooVM (UUID: 696249ad-00b6-4087-b47f-9b82629efc31)
-Location:             /Users/mitchellh/Library/VirtualBox/HardDisks/foo.vdi
-raw
-      @name = "foo"
-      
-      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo #{@name}").returns(@raw)
+      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo #{@name}").returns(@find_raw)
     end
     
     should "parse proper fields" do

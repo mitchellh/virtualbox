@@ -6,7 +6,6 @@ But they will definitely all make it for version 1.0.
 * Creating a VM from scratch (non-import)
 * Pause/Resume VMs
 * Exporting a VM
-* Creating new hard drives
 * Cloning hard drives
 * Modifying attached devices
 * Parsing bridged IFs

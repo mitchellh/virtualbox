@@ -25,6 +25,13 @@ module VirtualBox
       end
     end
     
+    def clone(outputfile, format="VDI")
+      raw = Command.vboxmanage("clonehd #{uuid} #{Command.shell_escape(outputfile)} --format #{format} --remember")
+      return nil unless raw =~ /UUID: (.+?)$/
+      
+      self.class.find($1.to_s)
+    end
+    
     def create
       raw = Command.vboxmanage("createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember")
       return nil unless raw =~ /UUID: (.+?)$/
