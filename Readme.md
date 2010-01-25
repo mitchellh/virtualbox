@@ -4,9 +4,17 @@ The VirtualBox ruby gem is a library which allows anyone to control VirtualBox
 from ruby code! Create, destroy, start, stop, suspend, and resume virtual machines.
 Also list virtual machines, list hard drives, network devices, etc.
 
-## Installing
+## Installation and Requirements
+
+First you need to install [VirtualBox](http://www.virtualbox.org/) which is available for
+Windows, Linux, and OS X. After installation, install the gem:
 
     sudo gem install virtualbox
+
+The gem assumes that `VBoxManage` will be available on the `PATH`. If not, before using
+the gem, you must set the path to your `VBoxManage` binary:
+
+    VirtualBox::Command.vboxmanage = "/path/to/my/VBoxManage"
 
 ## Basic Usage
 
