@@ -2,3 +2,4 @@ bin/*
 vendor/gems/*
 doc/*
 .yardoc/*
+pkg/*
