@@ -5,14 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{virtualbox}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
   s.date = %q{2010-01-24}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
-  s.executables = ["rake", "rdebug"]
   s.extra_rdoc_files = [
     "TODO"
   ]
@@ -51,7 +50,8 @@ Gem::Specification.new do |s|
      "test/virtualbox/image_test.rb",
      "test/virtualbox/nic_test.rb",
      "test/virtualbox/storage_controller_test.rb",
-     "test/virtualbox/vm_test.rb"
+     "test/virtualbox/vm_test.rb",
+     "virtualbox.gemspec"
   ]
   s.homepage = %q{http://github.com/mitchellh/virtualbox}
   s.rdoc_options = ["--charset=UTF-8"]
