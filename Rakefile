@@ -7,6 +7,7 @@ begin
     gemspec.email = "mitchell.hashimoto@gmail.com"
     gemspec.homepage = "http://github.com/mitchellh/virtualbox"
     gemspec.authors = ["Mitchell Hashimoto"]
+    gemspec.executables = []
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
