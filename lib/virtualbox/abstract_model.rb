@@ -18,8 +18,15 @@ module VirtualBox
     # is {HardDrive#save} which will create a new hard drive if it didn't
     # previously exist, or save an old one if it did exist.
     def new_record?
-      @new_record = true if @new_record.nil?
+      new_record! if @new_record.nil?
       @new_record
+    end
+    
+    # Explicitly resets the model to a new record. If you're using this
+    # method outside of virtualbox library core, you should really be
+    # asking yourself "why?"
+    def new_record!
+      @new_record = true
     end
     
     # Saves the model attributes and relationships.

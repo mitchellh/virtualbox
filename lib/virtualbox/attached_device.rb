@@ -73,18 +73,52 @@ module VirtualBox
       end
     end
     
-    # Since attached devices can not be created from scratch yet, this
-    # method should never be called. Instead access attached devices
-    # through relationships from other models such as {StorageController}.
-    def initialize(index, caller, data)
+    # @overload initialize(data={})
+    #   Creates a new AttachedDevice which is a new record. This
+    #   should be attached to a storage controller and saved.
+    #   @param [Hash] data (optional) A hash which contains initial attribute
+    #     values for the AttachedDevice.
+    # @overload initialize(index, caller, data)
+    #   Creates an AttachedDevice for a relationship. **This should
+    #   never be called except internally.**
+    #   @param [Integer] index Index of the port
+    #   @param [Object] caller The parent
+    #   @param [Hash] data A hash of data which must be used
+    #     to extract the relationship data.
+    def initialize(*args)
       super()
       
-      populate_attributes({
-        :parent => caller,
-        :port => index,
-        :medium => data["#{caller.name}-#{index}-0".downcase.to_sym],
-        :uuid => data["#{caller.name}-ImageUUID-#{index}-0".downcase.to_sym]
-      })
+      if args.length == 3
+        populate_from_data(*args)
+      elsif args.length == 1
+        populate_attributes(*args)
+        new_record!
+      elsif args.empty?
+        return
+      else
+        raise NoMethodError.new
+      end
+    end
+    
+    # Saves or creates an attached device. If this is a new record,
+    # then {#create} will automatically be called a new record will be
+    # created. Otherwise, nothing will happen since modifying existing
+    # attached devices is not yet supported.
+    def save
+      if new_record?
+        create
+      else
+        super
+      end
+    end
+    
+    # Creates a new attached device. This is called automatically by
+    # {#save} and should only be called by {#save}.
+    #
+    # **Never call this method on its own.**
+    def create
+      raise Exceptions::NoParentException.new if parent.nil?
+      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0")
     end
     
     # Destroys the attached device. By default, this only removes any
@@ -99,6 +133,28 @@ module VirtualBox
       # parent.parent = vm
       Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --medium none")      
       image.destroy if options[:destroy_image] && image
+    end
+    
+    # Relationship callback when added to a collection. This is automatically
+    # called by any relationship collection when this object is added.
+    def added_to_relationship(parent)
+      write_attribute(:parent, parent)
+    end
+    
+    protected
+    
+    # Populates the model based on data from a parsed vminfo. This
+    # method is used to create a model which already exists and is
+    # part of a relationship.
+    #
+    # **This method should never be called except internally.**
+    def populate_from_data(index, caller, data)
+      populate_attributes({
+        :parent => caller,
+        :port => index,
+        :medium => data["#{caller.name}-#{index}-0".downcase.to_sym],
+        :uuid => data["#{caller.name}-ImageUUID-#{index}-0".downcase.to_sym]
+      })
     end
   end
 end

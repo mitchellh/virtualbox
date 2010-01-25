@@ -19,6 +19,55 @@ class AttachedDeviceTest < Test::Unit::TestCase
     VirtualBox::Command.stubs(:execute).returns('')
   end
   
+  context "creating a new attached device" do
+    setup do
+      @ad = VirtualBox::AttachedDevice.new
+      @ad.port = 3
+    end
+    
+    should "call create on save if its a new record" do
+      @ad.expects(:create).once
+      @ad.save
+    end
+    
+    should "raise a NoParentException if it wasn't added to a relationship" do
+      assert_raises(VirtualBox::Exceptions::NoParentException) {
+        @ad.save
+      }
+    end
+    
+    should "call the proper vboxcommand" do
+      VirtualBox::Command.expects(:vboxmanage).with("storageattach #{@vm.name} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port #{@ad.port} --device 0")
+      @ad.added_to_relationship(@caller)
+      @ad.save
+    end
+  end
+  
+  context "constructor" do
+    should "call populate_from_data if 3 args are given" do
+      VirtualBox::AttachedDevice.any_instance.expects(:populate_from_data).with(1,2,3).once
+      VirtualBox::AttachedDevice.new(1,2,3)
+    end
+    
+    should "call populate_attributes if 1 arg is given" do
+      VirtualBox::AttachedDevice.any_instance.expects(:populate_attributes).with(1).once
+      ad = VirtualBox::AttachedDevice.new(1)
+      assert ad.new_record?
+    end
+    
+    should "raise a NoMethodError if anything other than 0,1,or 3 arguments" do
+      # 9 seems like a reasonable max (maybe just a bit unreasonable!)
+      2.upto(9) do |i|
+        next if i == 3
+        args = Array.new(i, "A")
+        
+        assert_raises(NoMethodError) {
+          VirtualBox::AttachedDevice.new(*args)
+        }
+      end
+    end
+  end
+  
   context "destroying" do
     setup do
       @value = VirtualBox::AttachedDevice.populate_relationship(@caller, @data)

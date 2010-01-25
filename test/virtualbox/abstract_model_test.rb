@@ -30,6 +30,14 @@ class AbstractModelTest < Test::Unit::TestCase
       @model.save
       assert !@model.new_record?
     end
+    
+    should "become a new record again if new_record! is called" do
+      assert @model.new_record?
+      @model.save
+      assert !@model.new_record?
+      @model.new_record!
+      assert @model.new_record?
+    end
   end
   
   context "subclasses" do
