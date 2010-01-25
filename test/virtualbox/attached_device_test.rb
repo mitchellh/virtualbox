@@ -19,15 +19,47 @@ class AttachedDeviceTest < Test::Unit::TestCase
     VirtualBox::Command.stubs(:execute).returns('')
   end
   
-  context "creating a new attached device" do
+  context "medium" do
     setup do
       @ad = VirtualBox::AttachedDevice.new
+      @hd = VirtualBox::HardDrive.new
+      @hd.write_attribute(:uuid, @uuid)
+    end
+    
+    should "be 'none' when image is nil" do
+      assert_equal "none", @ad.medium
+    end
+    
+    should "be the uuid of the image if its not nil" do
+      @ad.image = @hd
+      assert_equal @hd.uuid, @ad.medium
+    end
+    
+    should "be 'emptydrive' if the image is an empty drive" do
+      @ad.image = VirtualBox::DVD.empty_drive
+      assert_equal "emptydrive", @ad.medium
+    end
+  end
+  
+  context "creating a new attached device" do
+    setup do
+      @image = VirtualBox::HardDrive.new
+      @ad = VirtualBox::AttachedDevice.new
+      @ad.image = @image
       @ad.port = 3
     end
     
     should "call create on save if its a new record" do
       @ad.expects(:create).once
       @ad.save
+    end
+    
+    should "raise an InvalidObjectException if no image is set" do
+      @ad.added_to_relationship(@caller)
+      @ad.image = nil
+      assert_raises(VirtualBox::Exceptions::InvalidObjectException) {
+        @ad.save
+      }
     end
     
     should "raise a NoParentException if it wasn't added to a relationship" do
@@ -37,7 +69,7 @@ class AttachedDeviceTest < Test::Unit::TestCase
     end
     
     should "call the proper vboxcommand" do
-      VirtualBox::Command.expects(:vboxmanage).with("storageattach #{@vm.name} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port #{@ad.port} --device 0")
+      VirtualBox::Command.expects(:vboxmanage).with("storageattach #{@vm.name} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port #{@ad.port} --device 0 --type #{@image.image_type} --medium #{@ad.medium}")
       @ad.added_to_relationship(@caller)
       @ad.save
     end
@@ -128,12 +160,12 @@ class AttachedDeviceTest < Test::Unit::TestCase
     
     should "create objects with proper values" do
       obj = @value[0]
-      assert_equal "foomedium", obj.medium
+      assert_equal "none", obj.medium
       assert_equal "322f79fd-7da6-416f-a16f-e70066ccf165", obj.uuid
       assert_equal 0, obj.port
       
       obj = @value[1]
-      assert_equal "barmedium", obj.medium
+      assert_equal "none", obj.medium
       assert_nil obj.uuid
       assert_equal 1, obj.port
     end

@@ -1,6 +1,18 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class DVDTest < Test::Unit::TestCase
+  context "empty drive" do
+    should "return an empty drive instance by calling new with :empty_drive" do
+      dvd = VirtualBox::DVD.new(:empty_drive)
+      assert dvd.empty_drive?
+    end
+    
+    should "call new with :empty_drive with empty_drive class method" do
+      dvd = VirtualBox::DVD.empty_drive
+      assert dvd.empty_drive?
+    end
+  end
+  
   context "retrieving all dvds" do
     setup do
       @expectations = {

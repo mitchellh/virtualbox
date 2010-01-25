@@ -1,6 +1,85 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class ImageTest < Test::Unit::TestCase
+  context "image type and empty drive" do
+    setup do
+      @image = VirtualBox::Image.new
+    end
+    
+    should "raise an exception if image_type is called on Image" do
+      assert_raises(RuntimeError) { @image.image_type }
+    end
+    
+    should "return false by default on empty_drive?" do
+      assert !@image.empty_drive?
+    end
+  end
+  
+  context "in a relationship" do
+    class ImageRelationshipModel < VirtualBox::AbstractModel
+      relationship :image, VirtualBox::Image
+    end
+    
+    setup do
+      @model = ImageRelationshipModel.new
+    end
+    
+    context "populating a relationship" do
+      should "return 'emptydrive' if the medium is an empty drive" do
+        result = VirtualBox::Image.populate_relationship(@model, {
+          :medium => "emptydrive"
+        })
+        
+        assert result.is_a?(VirtualBox::DVD)
+        assert result.empty_drive?
+      end
+      
+      should "return nil if uuid is nil and medium isn't empty" do
+        result = VirtualBox::Image.populate_relationship(@model, {})
+        assert result.nil?
+      end
+      
+      should "result a matching image from subclasses if uuid" do
+        uuid = "foo'"
+
+        subobject = mock("subobject")
+        subobject.stubs(:uuid).returns(uuid)
+        
+        subclass = mock("subclass")
+        subclass.stubs(:all).returns([subobject])
+        
+        VirtualBox::Image.expects(:subclasses).returns([subclass])
+        
+        result = VirtualBox::Image.populate_relationship(@model, { :uuid => uuid })
+        assert_equal subobject, result
+      end
+      
+      should "result in nil if suboject can't be found" do
+        VirtualBox::Image.expects(:subclasses).returns([])
+        assert_nil VirtualBox::Image.populate_relationship(@model, { :uuid => "foo" })
+      end
+    end
+    
+    context "setting relationship object" do
+      should "raise an InvalidRelationshipObjectException if new value is not an image" do
+        assert_raises(VirtualBox::Exceptions::InvalidRelationshipObjectException) {
+          @model.image = "foo"
+        }
+      end
+
+      should "not raise an exception if setting to nil" do
+        assert_nothing_raised { @model.image = nil }
+      end
+
+      should "just return the new value if it is an image" do
+        image = VirtualBox::Image.new
+        assert_nil @model.image
+        assert_nothing_raised { @model.image = image }
+        assert_equal image, @model.image
+      end
+    end
+  end
+  
   context "recording subclasses" do
     should "list all subclasses" do
       assert_nothing_raised { VirtualBox::Image.subclasses }

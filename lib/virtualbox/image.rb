@@ -72,6 +72,7 @@ module VirtualBox
       #
       # @return [Array<Image>]
       def populate_relationship(caller, data)
+        return DVD.empty_drive if data[:medium] == "emptydrive"
         return nil if data[:uuid].nil?
         
         subclasses.each do |subclass|
@@ -80,6 +81,22 @@ module VirtualBox
           matching = subclass.all.find { |obj| obj.uuid == data[:uuid] }
           return matching unless matching.nil?
         end
+        
+        nil
+      end
+      
+      # Sets an image onto a relationship and/or removes it from a
+      # relationship. This method is automatically called by {Relatable}.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Image]
+      def set_relationship(caller, old_value, new_value)
+        # We don't actually destroy any images using this method,
+        # so just return the new value as long as its a valid object
+        raise Exceptions::InvalidRelationshipObjectException.new if new_value && !new_value.is_a?(Image)
+        
+        return new_value
       end
     end
     
@@ -89,6 +106,26 @@ module VirtualBox
       super()
       
       populate_attributes(info) if info
+    end
+    
+    # The image type as a string for the virtualbox command line. This
+    # method should be overridden by any subclass and is expected to
+    # return the type which is used in command line parameters for 
+    # attaching to storage controllers.
+    #
+    # @return [String]
+    def image_type
+      raise "This must be implemented by any subclasses"
+    end
+    
+    # Returns boolean showing if empty drive or not. This method should be
+    # overriden by any subclass and is expected to return true of false
+    # showing if this image represents an empty drive of whatever type
+    # the subclass is.
+    #
+    # @return [Boolean]
+    def empty_drive?
+      false
     end
   end
 end

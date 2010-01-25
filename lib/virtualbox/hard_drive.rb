@@ -128,6 +128,11 @@ module VirtualBox
       self.class.find($1.to_s)
     end
     
+    # Override of {Image#image_type}.
+    def image_type
+      "hdd"
+    end
+    
     # Creates a new hard drive. 
     #
     # **This method should NEVER be called. Call {#save} instead.**

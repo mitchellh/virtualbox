@@ -16,6 +16,23 @@ module VirtualBox
         raw = Command.vboxmanage("list dvds")
         parse_raw(raw)
       end
+      
+      # Returns an empty drive.
+      def empty_drive
+        new(:empty_drive)
+      end
+    end
+    
+    def initialize(*args)
+      if args.length == 1 && args[0] == :empty_drive
+        @empty_drive = true
+      else
+        super
+      end
+    end
+    
+    def empty_drive?
+      @empty_drive || false
     end
     
     # Deletes the DVD from VBox managed list and also from disk.

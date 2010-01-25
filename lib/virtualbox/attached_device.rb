@@ -41,7 +41,6 @@ module VirtualBox
   class AttachedDevice < AbstractModel
     attribute :parent, :readonly => true
     attribute :uuid
-    attribute :medium
     attribute :port
     relationship :image, Image
     
@@ -112,13 +111,24 @@ module VirtualBox
       end
     end
     
+    def medium
+      if image.nil?
+        "none"
+      elsif image.empty_drive?
+        "emptydrive"
+      else
+        image.uuid
+      end
+    end
+    
     # Creates a new attached device. This is called automatically by
     # {#save} and should only be called by {#save}.
     #
     # **Never call this method on its own.**
     def create
       raise Exceptions::NoParentException.new if parent.nil?
-      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0")
+      raise Exceptions::InvalidObjectException.new("Image must be set") if image.nil?
+      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}")
     end
     
     # Destroys the attached device. By default, this only removes any
