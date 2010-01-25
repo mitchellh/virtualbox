@@ -266,6 +266,23 @@ module VirtualBox
       Command.vboxmanage("controlvm #{@original_name} poweroff")
     end
     
+    # Pauses the VM, putting it on hold temporarily. The VM can be resumed
+    # again by calling {#resume}
+    def pause
+      Command.vboxmanage("controlvm #{@original_name} pause")
+    end
+    
+    # Resume a paused VM.
+    def resume
+      Command.vboxmanage("controlvm #{@original_name} resume")
+    end
+    
+    # Saves the state of a VM and stops it. The VM can be resumed
+    # again by calling "start" again.
+    def save_state
+      Command.vboxmanage("controlvm #{@original_name} savestate")
+    end
+    
     # Destroys the virtual machine. This method also removes all attached
     # media (required by VirtualBox to destroy a VM). By default,
     # this **will not** destroy attached hard drives, but will if given

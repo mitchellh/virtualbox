@@ -112,7 +112,7 @@ showvminfo
     end
   end
   
-  context "starting and stopping" do
+  context "controlling a VM (start, stop, pause, etc.)" do
     setup do
       @vm = create_vm
     end
@@ -125,6 +125,21 @@ showvminfo
     should "stop a VM with a 'poweroff'" do
       VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} poweroff")
       @vm.stop
+    end
+    
+    should "pause a VM" do
+      VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} pause")
+      @vm.pause
+    end
+    
+    should "resume a VM" do
+      VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} resume")
+      @vm.resume
+    end
+    
+    should "save the state of a VM" do
+      VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} savestate")
+      @vm.save_state
     end
   end
   
