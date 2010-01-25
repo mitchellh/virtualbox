@@ -4,8 +4,6 @@ Not all these features will make it into initial releases of virtualbox ruby gem
 But they will definitely all make it for version 1.0.
 
 * Creating a VM from scratch (non-import)
-* Pause/Resume VMs
-* Exporting a VM
 * Modifying attached devices
 * Parsing bridged IFs
 * Shared folders

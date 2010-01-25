@@ -246,6 +246,38 @@ module VirtualBox
       super
     end
     
+    # Exports a virtual machine. The virtual machine will be exported
+    # to the specified OVF file name. This directory will also have the
+    # `mf` file which contains the file checksums and also the virtual
+    # drives of the machine.
+    #
+    # Export also supports an additional options hash which can contain
+    # information that will be embedded with the virtual machine. View
+    # below for more information on the available options.
+    #
+    # This method will block until the export is complete, which takes about
+    # 60 to 90 seconds on my 2.2 GHz 2009 model MacBook Pro.
+    #
+    # @param [String] filename The file (not directory) to save the exported
+    #   OVF file. This directory will also receive the checksum file and
+    #   virtual disks.
+    # @option options [String] :product (nil) The name of the product
+    # @option options [String] :producturl (nil) The URL of the product
+    # @option options [String] :vendor (nil) The name of the vendor
+    # @option options [String] :vendorurl (nil) The URL for the vendor
+    # @option options [String] :version (nil) The version information
+    # @option options [String] :eula (nil) License text
+    # @option options [String] :eulafile (nil) License file
+    def export(filename, options={})
+      options = options.inject([]) do |acc, kv|
+        acc.push("--#{kv[0]} #{Command.shell_escape(kv[1])}")
+      end
+      
+      options.unshift("--vsys 0") unless options.empty?
+      
+      Command.vboxmanage("export #{@original_name} -o #{Command.shell_escape(filename)} #{options.join(" ")}".strip)
+    end
+    
     # Starts the virtual machine. The virtual machine can be started in a
     # variety of modes:
     #

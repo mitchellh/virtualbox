@@ -112,6 +112,27 @@ showvminfo
     end
   end
   
+  context "exporting a VM" do
+    setup do
+      @vm = create_vm
+    end
+    
+    should "export the VM with no options if none are passed" do
+      VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo")
+      @vm.export("foo")
+    end
+    
+    should "export the VM with specified options" do
+      VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo --vsys 0 --foo bar --bar baz")
+      @vm.export("foo", :foo => :bar, :bar => :baz)
+    end
+    
+    should "shell escape all the options" do
+      VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo --vsys 0 --foo a\\ space")
+      @vm.export("foo", :foo => "a space")
+    end
+  end
+  
   context "controlling a VM (start, stop, pause, etc.)" do
     setup do
       @vm = create_vm
