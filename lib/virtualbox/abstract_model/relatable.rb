@@ -5,31 +5,78 @@ module VirtualBox
     # differentiate between "has many" or "belongs to" or any of that. 
     #
     # The way it works is simple:
-    #   1. Relationships are defined with a relationship name and a
-    #      class of the relationship objects.
-    #   2. Nothing happens initially, since relationships are lazy-loaded.
-    #   3. Once a relationship method is called (by its name), this module
-    #      calls "load_relationship(caller, data)" on the relationship class,
-    #      which is expected to return an array or a single object or
-    #      whatever the relationship is.
+    # 
+    # 1. Relationships are defined with a relationship name and a
+    #    class of the relationship objects.
+    # 2. When {#populate_relationships} is called, `populate_relationship` is
+    #    called on each relationship class (example: {StorageController.populate_relationship}).
+    #    This is expected to return the relationship, which can be any object.
+    # 3. When {#save_relationships} is called, `save_relationship` is
+    #     called on each relationship class, which manages saving its own
+    #     relationship.
+    # 4. When {#destroy_relationships} is called, `destroy_relationship` is
+    #     called on each relationship class, which manages destroying
+    #     its own relationship.
+    #
+    # Be sure to read {ClassMethods} for complete documentation of methods.
+    #
+    # # Defining Relationships
+    #
+    # Every relationship has two mandatory parameters: the name and the class.
+    #
+    #     relationship :bacons, Bacon
+    #
+    # In this case, there is a relationship `bacons` which refers to the `Bacon`
+    # class.
+    #
+    # # Accessing Relationships
+    #
+    # Relatable offers up dynamically generated accessors for every relationship
+    # which simply returns the relationship data.
+    #
+    #     relationship :bacons, Bacon
+    #
+    #     # Accessing through an instance "instance"
+    #     instance.bacons # => whatever Bacon.populate_relationship created
+    #
+    # # Dependent Relationships
+    #
+    # By setting `:dependent => :destroy` on relationships, {AbstractModel}
+    # will automatically call {#destroy_relationships} when {AbstractModel#destroy}
+    # is called.
+    #
+    # This is not a feature built-in to Relatable but figured it should be
+    # mentioned here.
     module Relatable
       def self.included(base)
         base.extend ClassMethods
       end
       
       module ClassMethods
-        # Define a relationship
+        # Define a relationship. The name and class must be specified. This
+        # class will be used to call the `populate_relationship, 
+        # `save_relationship`, etc. methods.
+        #
+        # @param [Symbol] name Relationship name. This will also be used for
+        #   the dynamically generated accessor.
+        # @param [Class] klass Class of the relationship.
+        # @option options [Symbol] :dependent (nil) - If set to `:destroy`
+        #   {AbstractModel#destroy} will propagate through to relationships.
         def relationship(name, klass, options = {})
           @relationships ||= {}
           @relationships[name] = { :klass => klass }.merge(options)
         end
         
-        # Returns a hash of all the relationships
+        # Returns a hash of all the relationships.
+        #
+        # @return [Hash]
         def relationships
           @relationships ||= {}
         end
         
-        # Make sure inherited classes inherit relations as well
+        # Used to propagate relationships to subclasses. This method makes sure that
+        # subclasses of a class with {Relatable} included will inherit the
+        # relationships as well, which would be the expected behaviour.
         def inherited(subclass)
           super rescue NoMethodError
           
@@ -39,8 +86,16 @@ module VirtualBox
         end
       end
       
-      # Saves the model, calls save_relation on all relations. It is up to
-      # the relation to determine whether anything changed, etc.
+      # Saves the model, calls save_relationship on all relations. It is up to
+      # the relation to determine whether anything changed, etc. Simply
+      # calls `save_relationship` on each relationshp class passing in the
+      # following parameters:
+      #
+      # * **caller** - The class which is calling save
+      # * **data** - The data associated with the relationship
+      #
+      # In addition to those two args, any arbitrary args may be tacked on to the
+      # end and they'll be pushed through to the `save_relationship` method.
       def save_relationships(*args)
         self.class.relationships.each do |name, options|
           next unless options[:klass].respond_to?(:save_relationship)
@@ -48,8 +103,8 @@ module VirtualBox
         end
       end
       
-      # The equivalent to Attributable's populate_fields, but works a bit
-      # differently (read above).
+      # The equivalent to {Attributable#populate_attributes}, but with
+      # relationships.
       def populate_relationships(data)
         self.class.relationships.each do |name, options|
           next unless options[:klass].respond_to?(:populate_relationship)
@@ -57,28 +112,43 @@ module VirtualBox
         end
       end
       
-      # Calls destroy_relationship on each of the relationships
+      # Calls `destroy_relationship` on each of the relationships. Any
+      # arbitrary args may be added and they will be forarded to the
+      # relationship's `destroy_relationship` method.
       def destroy_relationships(*args)
         self.class.relationships.each do |name, options|
           destroy_relationship(name, *args)
         end
       end
       
-      # Destroys only a single relationship
+      # Destroys only a single relationship. Any arbitrary args
+      # may be added to the end and they will be pushed through to
+      # the class's `destroy_relationship` method.
+      #
+      # @param [Symbol] name The name of the relationship
       def destroy_relationship(name, *args)
         options = self.class.relationships[name]
         return unless options && options[:klass].respond_to?(:destroy_relationship)
         options[:klass].destroy_relationship(self, relationship_data[name], *args)
       end
       
+      # Hash to data associated with relationships. You should instead
+      # use the accessors created by Relatable.
+      #
+      # @return [Hash]
       def relationship_data
         @relationship_data ||= {}
       end
       
+      # Returns boolean denoting if a relationship exists.
+      #
+      # @return [Boolean]
       def has_relationship?(key)
         self.class.relationships.has_key?(key.to_sym)
       end
       
+      # Method missing is used to add dynamic handlers for relationship
+      # accessors.
       def method_missing(meth, *args)
         meth_string = meth.to_s
 
