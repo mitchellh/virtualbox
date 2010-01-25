@@ -1,4 +1,80 @@
 module VirtualBox
+  # Represents a single VirtualBox virtual machine. All attributes which are
+  # not read-only can be modified and saved. 
+  #
+  # # Finding Virtual Machines
+  #
+  # Two methods are used to find virtual machines: {VM.all} and {VM.find}. Each
+  # return a {VM} object. An example is shown below:
+  #
+  #     vm = VirtualBox::VM.find("MyWindowsXP")
+  #     puts vm.name # => "MyWindowsXP"
+  #
+  # # Modifying Virtual Machines
+  #
+  # Virtual machines can be modified a lot like [ActiveRecord](http://ar.rubyonrails.org/)
+  # objects. This is best shown through example:
+  #
+  #     vm = VirtualBox::VM.find("MyWindowsXP")
+  #     vm.memory = 256
+  #     vm.name = "WindowsXP"
+  #     vm.save
+  #
+  # # Attributes and Relationships
+  # 
+  # Properties of the virtual machine are exposed using standard ruby instance
+  # methods which are generated on the fly. Because of this, they are not listed
+  # below as available instance methods. 
+  #
+  # These attributes can be accessed and modified via standard ruby-style
+  # `instance.attribute` and `instance.attribute=` methods. The attributes are
+  # listed below.
+  #
+  # Relationships are also accessed like attributes but can't be set. Instead,
+  # they are typically references to other objects such as a {HardDrive} which
+  # in turn have their own attributes which can be modified.
+  # 
+  # ## Attributes
+  #
+  # This is copied directly from the class header, but lists all available
+  # attributes. If you don't understand what this means, read {Attributable}.
+  #
+  #     attribute :uuid, :readonly => true
+  #     attribute :name
+  #     attribute :ostype
+  #     attribute :memory
+  #     attribute :vram
+  #     attribute :acpi
+  #     attribute :ioapic
+  #     attribute :cpus
+  #     attribute :synthcpu
+  #     attribute :pae
+  #     attribute :hwvirtex
+  #     attribute :hwvirtexexcl
+  #     attribute :nestedpaging
+  #     attribute :vtxvpid
+  #     attribute :accelerate3d
+  #     attribute :biosbootmenu, :populate_key => :bootmenu
+  #     attribute :boot1
+  #     attribute :boot2
+  #     attribute :boot3
+  #     attribute :boot4
+  #     attribute :clipboard
+  #     attribute :monitorcount
+  #     attribute :usb
+  #     attribute :audio
+  #     attribute :vrdp
+  #     attribute :state, :populate_key => :vmstate, :readonly => true
+  #
+  # ## Relationships
+  #
+  # In addition to the basic attributes, a virtual machine is related
+  # to other things. The relationships are listed below. If you don't
+  # understand this, read {Relatable}.
+  #
+  #     relationship :nics, Nic
+  #     relationship :storage_controllers, StorageController, :dependent => :destroy
+  #
   class VM < AbstractModel
     attribute :uuid, :readonly => true
     attribute :name
@@ -31,13 +107,17 @@ module VirtualBox
     
     class <<self
       # Returns an array of all available VMs.
+      #
+      # @return [Array<VM>]
       def all
         raw = Command.vboxmanage("list vms")
         parse_vm_list(raw)
       end
       
       # Finds a VM by UUID or registered name and returns a
-      # new VM object
+      # new VM object. If the VM doesn't exist, will return `nil`.
+      #
+      # @return [VM]
       def find(name)
         new(raw_info(name))
       end
@@ -45,7 +125,9 @@ module VirtualBox
       # Imports a VM, blocking the entire thread during this time. 
       # When finished, on success, will return the VM object. This
       # VM object can be used to make any modifications necessary
-      # (RAM, cpus, etc.)
+      # (RAM, cpus, etc.).
+      #
+      # @return [VM] The newly imported virtual machine
       def import(source_path)
         raw = Command.vboxmanage("import #{Command.shell_escape(source_path)}")
         return nil unless raw
@@ -53,12 +135,20 @@ module VirtualBox
         find(parse_vm_name(raw))
       end
       
-      # Gets the non-machine-readable info for a given VM
+      # Gets the non-machine-readable info for a given VM and returns
+      # it as a raw string.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [String]
       def human_info(name)
         Command.vboxmanage("showvminfo #{name}")
       end
       
-      # Gets the VM info (machine readable) for a given VM
+      # Gets the VM info (machine readable) for a given VM and returns it
+      # as a hash. 
+      #
+      # @return [Hash] Parsed VM info.
       def raw_info(name)
         raw = Command.vboxmanage("showvminfo #{name} --machinereadable")
         parse_vm_info(raw)
@@ -77,7 +167,12 @@ module VirtualBox
         parsed
       end
       
-      # Parses the list of VMs
+      # Parses the list of VMs returned by the "list vms" command used
+      # in {VM.all}.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Array] Array of virtual machines.
       def parse_vm_list(raw)
         results = []
         raw.lines.each do |line|
@@ -88,13 +183,23 @@ module VirtualBox
         results
       end
       
-      # Parses the vm name from the import results
+      # Parses the vm name from the import results.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [String] Parsed VM name
       def parse_vm_name(raw)
         return nil unless raw =~ /VM name "(.+?)"/
         $1.to_s
       end
     end
     
+    # Creates a new instance of a virtual machine.
+    #
+    # **Currently can NOT be used to create a NEW virtual machine**.
+    # Support for creating new virtual machines will be added shortly.
+    # For now, this is only used by {VM.find} and {VM.all} to
+    # initialize the VMs.
     def initialize(data)
       super()
       
@@ -102,7 +207,13 @@ module VirtualBox
       @original_name = data[:name]
     end
     
-    # Reading state is a special case
+    # State of the virtual machine. Returns the state of the virtual
+    # machine. This state will represent the state that was assigned
+    # when the VM was found unless `reload` is set to `true`.
+    #
+    # @param [Boolean] reload If true, will reload the state to current
+    #   value.
+    # @return [String] Virtual machine state.
     def state(reload=false)
       if reload
         info = self.class.raw_info(@original_name)
@@ -112,6 +223,9 @@ module VirtualBox
       read_attribute(:state)
     end
     
+    # Saves the virtual machine if modified. This method saves any modified
+    # attributes of the virtual machine. If any related attributes were saved
+    # as well (such as storage controllers), those will be saved, too.
     def save
       # Make sure we save the new name first if that was changed, or
       # we'll get some inconsistencies later
@@ -123,20 +237,45 @@ module VirtualBox
       super
     end
     
+    # Saves a single attribute of the virtual machine. This should **not**
+    # be called except interally. Instead, you're probably looking for {#save}.
+    #
+    # **This method typically won't be used except internally.**
     def save_attribute(key, value)
       Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
       super
     end
     
-    def start(type=:gui)
-      Command.vboxmanage("startvm #{@original_name} --type #{type}")
+    # Starts the virtual machine. The virtual machine can be started in a
+    # variety of modes:
+    #
+    # * **gui** -- The VirtualBox GUI will open with the screen of the VM.
+    # * **headless** -- The VM will run in the background. No GUI will be 
+    #   present at all.
+    #
+    # All modes will start their processes and return almost immediately.
+    # Both the GUI and headless mode will not block the ruby process.
+    def start(mode=:gui)
+      Command.vboxmanage("startvm #{@original_name} --type #{mode}")
     end
     
-    # Stops the VM by directly calling "poweroff"
+    # Stops the VM by directly calling "poweroff." Immediately halts the
+    # virtual machine without saving state. This could result in a loss
+    # of data.
     def stop
       Command.vboxmanage("controlvm #{@original_name} poweroff")
     end
     
+    # Destroys the virtual machine. This method also removes all attached
+    # media (required by VirtualBox to destroy a VM). By default,
+    # this **will not** destroy attached hard drives, but will if given
+    # the `destroy_image` option.
+    #
+    # @overload destroy(opts = {})
+    #   Passes options to the destroy method.
+    #   @option opts [Boolean] :destroy_image (false) If true, will
+    #     also destroy all attached images such as hard drives, disk
+    #     images, etc.
     def destroy(*args)
       # Call super first to destroy relationships, necessary before
       # unregistering a VM
