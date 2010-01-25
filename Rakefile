@@ -2,8 +2,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "virtualbox"
-    gemspec.summary = "Manage virtual machines in VirtualBox from Ruby"
-    gemspec.description = "Manage virtual machines in VirtualBox from Ruby"
+    gemspec.summary = "Create and modify virtual machines in VirtualBox using pure ruby."
+    gemspec.description = "Create and modify virtual machines in VirtualBox using pure ruby."
     gemspec.email = "mitchell.hashimoto@gmail.com"
     gemspec.homepage = "http://github.com/mitchellh/virtualbox"
     gemspec.authors = ["Mitchell Hashimoto"]
