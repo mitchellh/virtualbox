@@ -1,4 +1,15 @@
 module VirtualBox
+  # Used by the rest of the virtualbox library to call shell commands.
+  # It also can be used to change the path for your VBoxManage program.
+  #
+  # # Changing VBoxManage Path
+  #
+  # The rest of the library won't work without a proper path to VBoxManage,
+  # so it is crucial to set this properly right away. By default its set
+  # to `VBoxManage` which assumes that it is in your `PATH`.
+  #
+  #     VirtualBox::Command.vboxmanage = "/opt/local/bin/VBoxManage"
+  #
   class Command
     @@vboxmanage = "VBoxManage"
     
@@ -9,7 +20,7 @@ module VirtualBox
         @@vboxmanage = path
       end
       
-      # Runs a VBoxManage command
+      # Runs a VBoxManage command and returns the output.
       def vboxmanage(command)
         execute("#{@@vboxmanage} #{command}")
       end
@@ -25,13 +36,14 @@ module VirtualBox
       # Runs a command and returns the STDOUT result. The reason this is
       # a method at the moment is because in the future we may want to 
       # change the way commands are run (replace the backticks), plus it
-      # makes testingn easier.
+      # makes testing easier.
       def execute(command)
         `#{command}`
       end
       
-      # Shell escapes a string. Got it from the ruby mailing list. To be
-      # honest I'm not sure how well it works.
+      # Shell escapes a string. This is almost a direct copy/paste from
+      # the ruby mailing list. I'm not sure how well it works but so far
+      # it hasn't failed!
       def shell_escape(str)
         str.to_s.gsub(/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/n, '\\').
                  gsub(/\n/, "'\n'").
