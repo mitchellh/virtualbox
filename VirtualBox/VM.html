@@ -1,0 +1,1420 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Class: VirtualBox::VM</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (V)</a> &raquo; 
+    <span class='title'><a href="../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span>
+     &raquo; 
+    <span class="title">VM</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: VirtualBox::VM 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></li>
+          
+            <li class="next">VirtualBox::VM</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/virtualbox/vm.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Represents a single VirtualBox virtual machine. All attributes which are
+not read-only can be modified and saved.</p>
+
+<h1>Finding Virtual Machines</h1>
+
+<p>Two methods are used to find virtual machines: <tt><a href="#all-class_method" title="VirtualBox::VM.all (method)">VM.all</a></tt> and <tt><a href="#find-class_method" title="VirtualBox::VM.find (method)">VM.find</a></tt>. Each
+return a <tt><a href="" title="VirtualBox::VM (class)">VM</a></tt> object. An example is shown below:</p>
+
+<pre class="code"><span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;MyWindowsXP&quot;</span><span class='rparen token'>)</span>
+<span class='puts identifier id'>puts</span> <span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='comment val'># =&gt; &quot;MyWindowsXP&quot;</span>
+</pre>
+
+<h1>Modifying Virtual Machines</h1>
+
+<p>Virtual machines can be modified a lot like <a href="http://ar.rubyonrails.org/">ActiveRecord</a>
+objects. This is best shown through example:</p>
+
+<pre class="code"><span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;MyWindowsXP&quot;</span><span class='rparen token'>)</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='memory identifier id'>memory</span> <span class='assign token'>=</span> <span class='integer val'>256</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;WindowsXP&quot;</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<h1>Attributes and Relationships</h1>
+
+<p>Properties of the virtual machine are exposed using standard ruby instance
+methods which are generated on the fly. Because of this, they are not listed
+below as available instance methods.</p>
+
+<p>These attributes can be accessed and modified via standard ruby-style
+<code>instance.attribute</code> and <code>instance.attribute=</code> methods. The attributes are
+listed below.</p>
+
+<p>Relationships are also accessed like attributes but can't be set. Instead,
+they are typically references to other objects such as a <tt><a href="HardDrive.html" title="VirtualBox::HardDrive (class)">HardDrive</a></tt> which
+in turn have their own attributes which can be modified.</p>
+
+<h2>Attributes</h2>
+
+<p>This is copied directly from the class header, but lists all available
+attributes. If you don't understand what this means, read <tt><a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">Attributable</a></tt>.</p>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:uuid</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:name</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:ostype</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:memory</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:vram</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:acpi</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:ioapic</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:cpus</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:synthcpu</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:pae</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:hwvirtex</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:hwvirtexexcl</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:nestedpaging</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:vtxvpid</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:accelerate3d</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:biosbootmenu</span><span class='comma token'>,</span> <span class='symbol val'>:populate_key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:bootmenu</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:boot1</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:boot2</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:boot3</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:boot4</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:clipboard</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:monitorcount</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:usb</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:audio</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:vrdp</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:state</span><span class='comma token'>,</span> <span class='symbol val'>:populate_key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:vmstate</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+</pre>
+
+<h2>Relationships</h2>
+
+<p>In addition to the basic attributes, a virtual machine is related
+to other things. The relationships are listed below. If you don't
+understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">Relatable</a></tt>.</p>
+
+<pre class="code"><span class='relationship identifier id'>relationship</span> <span class='symbol val'>:nics</span><span class='comma token'>,</span> <span class='Nic constant id'>Nic</span>
+<span class='relationship identifier id'>relationship</span> <span class='symbol val'>:storage_controllers</span><span class='comma token'>,</span> <span class='StorageController constant id'>StorageController</span><span class='comma token'>,</span> <span class='symbol val'>:dependent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:destroy</span>
+</pre>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#all-class_method" title="all (class method)">+ (Array&lt;VM&gt;) <strong>all</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns an array of all available VMs.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find-class_method" title="find (class method)">+ (VM) <strong>find</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Finds a VM by UUID or registered name and returns a
+new VM object.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#human_info-class_method" title="human_info (class method)">+ (String) <strong>human_info</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Gets the non-machine-readable info for a given VM and returns
+it as a raw string.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#import-class_method" title="import (class method)">+ (VM) <strong>import</strong>(source_path) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Imports a VM, blocking the entire thread during this time.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_vm_info-class_method" title="parse_vm_info (class method)">+ (Object) <strong>parse_vm_info</strong>(raw) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Parses the machine-readable format outputted by VBoxManage showvminfo
+into a hash.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_vm_list-class_method" title="parse_vm_list (class method)">+ (Array) <strong>parse_vm_list</strong>(raw) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Parses the list of VMs returned by the "list vms" command used
+in <tt><a href="#all-class_method" title="VirtualBox::VM.all (method)">VM.all</a></tt>.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_vm_name-class_method" title="parse_vm_name (class method)">+ (String) <strong>parse_vm_name</strong>(raw) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Parses the vm name from the import results.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#raw_info-class_method" title="raw_info (class method)">+ (Hash) <strong>raw_info</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Gets the VM info (machine readable) for a given VM and returns it
+as a hash.</span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Object) <strong>destroy</strong>(opts = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Destroys the virtual machine.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (VM) <strong>initialize</strong>(data) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Creates a new instance of a virtual machine.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save-instance_method" title="#save (instance method)">- (Object) <strong>save</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves the virtual machine if modified.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save_attribute-instance_method" title="#save_attribute (instance method)">- (Object) <strong>save_attribute</strong>(key, value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves a single attribute of the virtual machine.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#start-instance_method" title="#start (instance method)">- (Object) <strong>start</strong>(mode = :gui) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Starts the virtual machine.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#state-instance_method" title="#state (instance method)">- (String) <strong>state</strong>(reload = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">State of the virtual machine.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stop-instance_method" title="#stop (instance method)">- (Object) <strong>stop</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Stops the VM by directly calling "poweroff." Immediately halts the
+virtual machine without saving state.</span>
+  
+</li>
+
+    
+  </ul>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
+  <p class="inherited"><a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Attributable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a></h3>
+  <p class="inherited"><a href="AbstractModel/Dirty.html#changed%3F-instance_method" title="VirtualBox::AbstractModel::Dirty#changed? (method)">#changed?</a>, <a href="AbstractModel/Dirty.html#changes-instance_method" title="VirtualBox::AbstractModel::Dirty#changes (method)">#changes</a>, <a href="AbstractModel/Dirty.html#clear_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#clear_dirty! (method)">#clear_dirty!</a>, <a href="AbstractModel/Dirty.html#ignore_dirty-instance_method" title="VirtualBox::AbstractModel::Dirty#ignore_dirty (method)">#ignore_dirty</a>, <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Dirty.html#set_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#set_dirty! (method)">#set_dirty!</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><a href="" title="VirtualBox::VM (class)">VM</a></tt>) <strong>initialize</strong>(data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Creates a new instance of a virtual machine.</p>
+
+<p><strong>Currently can NOT be used to create a NEW virtual machine</strong>.
+Support for creating new virtual machines will be added shortly.
+For now, this is only used by <tt><a href="#find-class_method" title="VirtualBox::VM.find (method)">VM.find</a></tt> and <tt><a href="#all-class_method" title="VirtualBox::VM.all (method)">VM.all</a></tt> to
+initialize the VMs.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+203
+204
+205
+206
+207
+208</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 203</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='@original_name ivar id'>@original_name</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice super">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+      in the class <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">VirtualBox::AbstractModel::Relatable</a>
+    
+  </p>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="all-class_method">
+  
+    + (<tt>Array&lt;<a href="" title="VirtualBox::VM (class)">VM</a>&gt;</tt>) <strong>all</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns an array of all available VMs.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::VM (class)">VM</a>&gt;</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+112
+113
+114
+115</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 112</span>
+
+<span class='def def kw'>def</span> <span class='all identifier id'>all</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list vms&quot;</span><span class='rparen token'>)</span>
+  <span class='parse_vm_list identifier id'>parse_vm_list</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find-class_method">
+  
+    + (<tt><a href="" title="VirtualBox::VM (class)">VM</a></tt>) <strong>find</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Finds a VM by UUID or registered name and returns a
+new VM object. If the VM doesn't exist, will return <code>nil</code>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="" title="VirtualBox::VM (class)">VM</a></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+121
+122
+123</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 121</span>
+
+<span class='def def kw'>def</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='raw_info identifier id'>raw_info</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="human_info-class_method">
+  
+    + (<tt>String</tt>) <strong>human_info</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Gets the non-machine-readable info for a given VM and returns
+it as a raw string.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+144
+145
+146</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 144</span>
+
+<span class='def def kw'>def</span> <span class='human_info identifier id'>human_info</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;showvminfo #{name}&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="import-class_method">
+  
+    + (<tt><a href="" title="VirtualBox::VM (class)">VM</a></tt>) <strong>import</strong>(source_path) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Imports a VM, blocking the entire thread during this time.
+When finished, on success, will return the VM object. This
+VM object can be used to make any modifications necessary
+(RAM, cpus, etc.).</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="" title="VirtualBox::VM (class)">VM</a></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        The newly imported virtual machine
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+131
+132
+133
+134
+135
+136</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 131</span>
+
+<span class='def def kw'>def</span> <span class='import identifier id'>import</span><span class='lparen token'>(</span><span class='source_path identifier id'>source_path</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;import #{Command.shell_escape(source_path)}&quot;</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span>
+  
+  <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='parse_vm_name identifier id'>parse_vm_name</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="parse_vm_info-class_method">
+  
+    + (<tt>Object</tt>) <strong>parse_vm_info</strong>(raw) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Parses the machine-readable format outputted by VBoxManage showvminfo
+into a hash. Ignores lines which don't match the format.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 159</span>
+
+<span class='def def kw'>def</span> <span class='parse_vm_info identifier id'>parse_vm_info</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
+  <span class='parsed identifier id'>parsed</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='raw identifier id'>raw</span><span class='dot token'>.</span><span class='lines identifier id'>lines</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span>
+    <span class='comment val'># Some lines aren't configuration, we just ignore them</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='line identifier id'>line</span> <span class='match op'>=~</span> <span class='regexp val'>/^&quot;?(.+?)&quot;?=&quot;?(.+?)&quot;?$/</span>
+    <span class='parsed identifier id'>parsed</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='$2 nth_ref id'>$2</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+  <span class='end end kw'>end</span>
+
+  <span class='parsed identifier id'>parsed</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="parse_vm_list-class_method">
+  
+    + (<tt>Array</tt>) <strong>parse_vm_list</strong>(raw) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Parses the list of VMs returned by the "list vms" command used
+in <tt><a href="#all-class_method" title="VirtualBox::VM.all (method)">VM.all</a></tt>.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        Array of virtual machines.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+176
+177
+178
+179
+180
+181
+182
+183
+184</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 176</span>
+
+<span class='def def kw'>def</span> <span class='parse_vm_list identifier id'>parse_vm_list</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
+  <span class='results identifier id'>results</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='raw identifier id'>raw</span><span class='dot token'>.</span><span class='lines identifier id'>lines</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='line identifier id'>line</span> <span class='match op'>=~</span> <span class='regexp val'>/^&quot;(.+?)&quot;\s+\{(.+?)\}$/</span>
+    <span class='results identifier id'>results</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='results identifier id'>results</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="parse_vm_name-class_method">
+  
+    + (<tt>String</tt>) <strong>parse_vm_name</strong>(raw) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Parses the vm name from the import results.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        Parsed VM name
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+191
+192
+193
+194</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 191</span>
+
+<span class='def def kw'>def</span> <span class='parse_vm_name identifier id'>parse_vm_name</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/VM name &quot;(.+?)&quot;/</span>
+  <span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="raw_info-class_method">
+  
+    + (<tt>Hash</tt>) <strong>raw_info</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Gets the VM info (machine readable) for a given VM and returns it
+as a hash.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        Parsed VM info.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+152
+153
+154
+155</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 152</span>
+
+<span class='def def kw'>def</span> <span class='raw_info identifier id'>raw_info</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;showvminfo #{name} --machinereadable&quot;</span><span class='rparen token'>)</span>
+  <span class='parse_vm_info identifier id'>parse_vm_info</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="destroy-instance_method">
+  
+    - (<tt>Object</tt>) <strong>destroy</strong>(opts = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Destroys the virtual machine. This method also removes all attached
+media (required by VirtualBox to destroy a VM). By default,
+this <strong>will not</strong> destroy attached hard drives, but will if given
+the <code>destroy_image</code> option.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="docstring">
+  <div class="discussion">
+    <p>Passes options to the destroy method.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+    
+    
+    <h3>Options Hash (<tt>opts</tt>):</h3>
+    <ul class="option">
+      
+        <li>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="name">:destroy_image</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>false</tt>
+            
+          </span>
+          &mdash;If true, will also destroy all attached images such as hard drives, disk images, etc.
+        </tr>
+      
+    </ul>
+  
+
+</div>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+279
+280
+281
+282
+283
+284
+285</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 279</span>
+
+<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='comment val'># Call super first to destroy relationships, necessary before</span>
+  <span class='comment val'># unregistering a VM</span>
+  <span class='super super kw'>super</span>
+  
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;unregistervm #{@original_name} --delete&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save-instance_method">
+  
+    - (<tt>Object</tt>) <strong>save</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves the virtual machine if modified. This method saves any modified
+attributes of the virtual machine. If any related attributes were saved
+as well (such as storage controllers), those will be saved, too.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 229</span>
+
+<span class='def def kw'>def</span> <span class='save identifier id'>save</span>
+  <span class='comment val'># Make sure we save the new name first if that was changed, or</span>
+  <span class='comment val'># we'll get some inconsistencies later</span>
+  <span class='if if kw'>if</span> <span class='name_changed? fid id'>name_changed?</span>
+    <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='@original_name ivar id'>@original_name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='super super kw'>super</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save_attribute-instance_method">
+  
+    - (<tt>Object</tt>) <strong>save_attribute</strong>(key, value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves a single attribute of the virtual machine. This should <strong>not</strong>
+be called except interally. Instead, you're probably looking for <tt><a href="#save-instance_method" title="VirtualBox::VM#save (method)">#save</a></tt>.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+244
+245
+246
+247</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 244</span>
+
+<span class='def def kw'>def</span> <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}&quot;</span><span class='rparen token'>)</span>
+  <span class='super super kw'>super</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="start-instance_method">
+  
+    - (<tt>Object</tt>) <strong>start</strong>(mode = :gui) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Starts the virtual machine. The virtual machine can be started in a
+variety of modes:</p>
+
+<ul>
+<li><strong>gui</strong> -- The VirtualBox GUI will open with the screen of the VM.</li>
+<li><strong>headless</strong> -- The VM will run in the background. No GUI will be
+present at all.</li>
+</ul>
+
+
+<p>All modes will start their processes and return almost immediately.
+Both the GUI and headless mode will not block the ruby process.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+258
+259
+260</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 258</span>
+
+<span class='def def kw'>def</span> <span class='start identifier id'>start</span><span class='lparen token'>(</span><span class='mode identifier id'>mode</span><span class='assign token'>=</span><span class='symbol val'>:gui</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;startvm #{@original_name} --type #{mode}&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="state-instance_method">
+  
+    - (<tt>String</tt>) <strong>state</strong>(reload = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>State of the virtual machine. Returns the state of the virtual
+machine. This state will represent the state that was assigned
+when the VM was found unless <code>reload</code> is set to <code>true</code>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>reload</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, will reload the state to current value.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        Virtual machine state.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+217
+218
+219
+220
+221
+222
+223
+224</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 217</span>
+
+<span class='def def kw'>def</span> <span class='state identifier id'>state</span><span class='lparen token'>(</span><span class='reload identifier id'>reload</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='reload identifier id'>reload</span>
+    <span class='info identifier id'>info</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='raw_info identifier id'>raw_info</span><span class='lparen token'>(</span><span class='@original_name ivar id'>@original_name</span><span class='rparen token'>)</span>
+    <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:state</span><span class='comma token'>,</span> <span class='info identifier id'>info</span><span class='lbrack token'>[</span><span class='symbol val'>:vmstate</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='read_attribute identifier id'>read_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:state</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="stop-instance_method">
+  
+    - (<tt>Object</tt>) <strong>stop</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Stops the VM by directly calling "poweroff." Immediately halts the
+virtual machine without saving state. This could result in a loss
+of data.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+265
+266
+267</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 265</span>
+
+<span class='def def kw'>def</span> <span class='stop identifier id'>stop</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;controlvm #{@original_name} poweroff&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun Jan 24 19:18:09 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

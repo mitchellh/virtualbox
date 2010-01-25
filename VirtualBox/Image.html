@@ -1,0 +1,617 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Class: VirtualBox::Image</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (I)</a> &raquo; 
+    <span class='title'><a href="../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span>
+     &raquo; 
+    <span class="title">Image</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: VirtualBox::Image 
+  <span class="abstract note title">Abstract</span>
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></li>
+          
+            <li class="next">VirtualBox::Image</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><a href="SubclassListing.html" title="VirtualBox::SubclassListing (module)">SubclassListing</a></dd>
+      
+    
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/virtualbox/image.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p class="note abstract">
+  <strong>This class is abstract.</strong> 
+  
+</p>
+<p>An abstract class which encapsulates the shared behaviour of
+images such as <tt><a href="HardDrive.html" title="VirtualBox::HardDrive (class)">HardDrive</a></tt> and <tt><a href="DVD.html" title="VirtualBox::DVD (class)">DVD</a></tt>.</p>
+
+<h2>Attributes</h2>
+
+<p>All images expose the following attributes. If you don't know how to read
+this than read <tt><a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">Attributable</a></tt>.</p>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:uuid</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:location</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:accessible</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+</pre>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><div id="subclasses">
+  <h2>Direct Known Subclasses</h2>
+  <p class="children"><a href="DVD.html" title="VirtualBox::DVD (class)">DVD</a>, <a href="HardDrive.html" title="VirtualBox::HardDrive (class)">HardDrive</a></p>
+</div>
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_block-class_method" title="parse_block (class method)">+ (Hash) <strong>parse_block</strong>(block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Parses a single block from VirtualBox output.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_blocks-class_method" title="parse_blocks (class method)">+ (Array&lt;Hash&gt;) <strong>parse_blocks</strong>(raw) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Parses the blocks of the output from virtualbox.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_raw-class_method" title="parse_raw (class method)">+ (Array&lt;Image&gt;) <strong>parse_raw</strong>(raw) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Parses the raw output of virtualbox into image objects.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;Image&gt;) <strong>populate_relationship</strong>(caller, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Searches the subclasses which implement all method, searching for
+a matching UUID and returning that as the relationship.</span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Image) <strong>initialize</strong>(info = nil) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><strong>This should never be called directly on <tt><a href="" title="VirtualBox::Image (class)">Image</a></tt>.</strong> Instead, initialize
+one of the subclasses.</span>
+  
+</li>
+
+    
+  </ul>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="SubclassListing.html" title="VirtualBox::SubclassListing (module)">SubclassListing</a></h3>
+  <p class="inherited"><a href="SubclassListing.html#included-class_method" title="VirtualBox::SubclassListing.included (method)">included</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
+  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Attributable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a></h3>
+  <p class="inherited"><a href="AbstractModel/Dirty.html#changed%3F-instance_method" title="VirtualBox::AbstractModel::Dirty#changed? (method)">#changed?</a>, <a href="AbstractModel/Dirty.html#changes-instance_method" title="VirtualBox::AbstractModel::Dirty#changes (method)">#changes</a>, <a href="AbstractModel/Dirty.html#clear_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#clear_dirty! (method)">#clear_dirty!</a>, <a href="AbstractModel/Dirty.html#ignore_dirty-instance_method" title="VirtualBox::AbstractModel::Dirty#ignore_dirty (method)">#ignore_dirty</a>, <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Dirty.html#set_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#set_dirty! (method)">#set_dirty!</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><a href="" title="VirtualBox::Image (class)">Image</a></tt>) <strong>initialize</strong>(info = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p><strong>This should never be called directly on <tt><a href="" title="VirtualBox::Image (class)">Image</a></tt>.</strong> Instead, initialize
+one of the subclasses.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+88
+89
+90
+91
+92</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 88</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='info identifier id'>info</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='info identifier id'>info</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='info identifier id'>info</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice super">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+      in the class <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">VirtualBox::AbstractModel::Relatable</a>
+    
+  </p>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="parse_block-class_method">
+  
+    + (<tt>Hash</tt>) <strong>parse_block</strong>(block) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Parses a single block from VirtualBox output.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 50</span>
+
+<span class='def def kw'>def</span> <span class='parse_block identifier id'>parse_block</span><span class='lparen token'>(</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='block identifier id'>block</span> <span class='match op'>=~</span> <span class='regexp val'>/^UUID:/i</span>
+  <span class='hd identifier id'>hd</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+
+  <span class='comment val'># Parses each line which should be in the format:</span>
+  <span class='comment val'># KEY: VALUE</span>
+  <span class='block identifier id'>block</span><span class='dot token'>.</span><span class='lines identifier id'>lines</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='line identifier id'>line</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?):\s+(.+?)$/</span>
+    <span class='hd identifier id'>hd</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='$2 nth_ref id'>$2</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># If we don't have a location but have a path, use that, as they</span>
+  <span class='comment val'># are equivalent but not consistent.</span>
+  <span class='hd identifier id'>hd</span><span class='lbrack token'>[</span><span class='symbol val'>:location</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='hd identifier id'>hd</span><span class='lbrack token'>[</span><span class='symbol val'>:path</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:path</span><span class='rparen token'>)</span>
+  
+  <span class='hd identifier id'>hd</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="parse_blocks-class_method">
+  
+    + (<tt>Array&lt;Hash&gt;</tt>) <strong>parse_blocks</strong>(raw) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Parses the blocks of the output from virtualbox. VirtualBox outputs
+image listing in "blocks" which are then parsed down to their attributes.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;Hash&gt;</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+41
+42
+43</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 41</span>
+
+<span class='def def kw'>def</span> <span class='parse_blocks identifier id'>parse_blocks</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='regexp val'>/\n\n/</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='parse_block identifier id'>parse_block</span><span class='lparen token'>(</span><span class='v identifier id'>v</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='compact identifier id'>compact</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="parse_raw-class_method">
+  
+    + (<tt>Array&lt;<a href="" title="VirtualBox::Image (class)">Image</a>&gt;</tt>) <strong>parse_raw</strong>(raw) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Parses the raw output of virtualbox into image objects. Used by
+subclasses to parse the output of their respective listing functions.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::Image (class)">Image</a>&gt;</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+31
+32
+33</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 31</span>
+
+<span class='def def kw'>def</span> <span class='parse_raw identifier id'>parse_raw</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
+  <span class='parse_blocks identifier id'>parse_blocks</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='v identifier id'>v</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="populate_relationship-class_method">
+  
+    + (<tt>Array&lt;<a href="" title="VirtualBox::Image (class)">Image</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Searches the subclasses which implement all method, searching for
+a matching UUID and returning that as the relationship.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::Image (class)">Image</a>&gt;</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 74</span>
+
+<span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  
+  <span class='subclasses identifier id'>subclasses</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='subclass identifier id'>subclass</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='subclass identifier id'>subclass</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:all</span><span class='rparen token'>)</span>
+    
+    <span class='matching identifier id'>matching</span> <span class='assign token'>=</span> <span class='subclass identifier id'>subclass</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='obj identifier id'>obj</span><span class='bitor op'>|</span> <span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='uuid identifier id'>uuid</span> <span class='eq op'>==</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span> <span class='rbrace token'>}</span>
+    <span class='return return kw'>return</span> <span class='matching identifier id'>matching</span> <span class='unless unless_mod kw'>unless</span> <span class='matching identifier id'>matching</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun Jan 24 19:18:08 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

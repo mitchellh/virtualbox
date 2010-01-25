@@ -1,0 +1,746 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Module: VirtualBox::AbstractModel::Dirty</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (D)</a> &raquo; 
+    <span class='title'><a href="../../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span> &raquo; <span class='title'><a href="../AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></span>
+     &raquo; 
+    <span class="title">Dirty</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: VirtualBox::AbstractModel::Dirty 
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/virtualbox/abstract_model/dirty.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Tracks "dirtiness" of values for a class. Its not tied to AbstractModel
+in any way other than the namespace.</p>
+
+<h1>Checking if a Value was Changed</h1>
+
+<p>Dynamic methods allow functionality for checking if values changed:</p>
+
+<pre class="code"><span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo_changed? fid id'>foo_changed?</span>
+</pre>
+
+<h1>Previous Value</h1>
+
+<p>Can also view the previous value of an attribute:</p>
+
+<pre class="code"><span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='comment val'># =&gt; &quot;foo&quot; initially</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='string val'>&quot;bar&quot;</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo_was identifier id'>foo_was</span> <span class='comment val'># =&gt; &quot;foo&quot;</span>
+</pre>
+
+<h1>Previous and Current Value</h1>
+
+<p>Using the <code>_change</code> dynamic method, can view the changes of a field.</p>
+
+<pre class="code"><span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='comment val'># =&gt; &quot;foo&quot; initially</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='string val'>&quot;bar&quot;</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo_change identifier id'>foo_change</span> <span class='comment val'># =&gt; [&quot;foo&quot;, &quot;bar&quot;]</span>
+</pre>
+
+<h1>All Changes</h1>
+
+<p>Can also view all changes for a class with the <code>changes</code> method.</p>
+
+<pre class="code"><span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='comment val'># =&gt; &quot;foo&quot; initially</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='bar identifier id'>bar</span> <span class='comment val'># =&gt; &quot;bar&quot; initially</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='string val'>&quot;far&quot;</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='bar identifier id'>bar</span> <span class='assign token'>=</span> <span class='string val'>&quot;baz&quot;</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='changes identifier id'>changes</span> <span class='comment val'># =&gt; { :foo =&gt; [&quot;foo&quot;, &quot;far&quot;], :bar =&gt; [&quot;bar&quot;, &quot;baz&quot;]}</span>
+</pre>
+
+<h1>Setting Dirty</h1>
+
+<p>Dirtiness tracking only occurs for values which the implementor
+explicitly sets as dirty. This is done with the <tt><a href="#set_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#set_dirty! (method)">#set_dirty!</a></tt>
+method. Example implementation below:</p>
+
+<pre class="code"><span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+  <span class='include identifier id'>include</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='AbstractModel constant id'>AbstractModel</span><span class='colon2 op'>::</span><span class='Dirty constant id'>Dirty</span>
+
+  <span class='attr_reader identifier id'>attr_reader</span> <span class='symbol val'>:name</span>
+
+  <span class='def def kw'>def</span> <span class='name= identifier id'>name=</span><span class='lparen token'>(</span><span class='value identifier id'>value</span><span class='rparen token'>)</span>
+    <span class='set_dirty! fid id'>set_dirty!</span><span class='lparen token'>(</span><span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='@name ivar id'>@name</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+    <span class='@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+
+<p>The above example has all the changes necessary to track changes
+on an attribute.</p>
+
+<h1>Ignoring Dirtiness Tracking</h1>
+
+<p>Sometimes, for features such as mass assignment, dirtiness tracking
+should be disabled. This can be done with the <code>ignore_dirty</code> method.</p>
+
+<pre class="code"><span class='ignore_dirty identifier id'>ignore_dirty</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='obj identifier id'>obj</span><span class='bitor op'>|</span>
+  <span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;Foo&quot;</span>
+<span class='end end kw'>end</span>
+
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='changed? fid id'>changed?</span> <span class='comment val'># =&gt; false</span>
+</pre>
+
+<h1>Clearing Dirty State</h1>
+
+<p>Sometimes, such as after saving a model, dirty states should be cleared.
+This can be done with the <code>clear_dirty!</code> method.</p>
+
+<pre class="code"><span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='clear_dirty! fid id'>clear_dirty!</span><span class='lparen token'>(</span><span class='symbol val'>:name</span><span class='rparen token'>)</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='name_changed? fid id'>name_changed?</span> <span class='comment val'># =&gt; false</span>
+</pre>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#changed%3F-instance_method" title="#changed? (instance method)">- (Boolean) <strong>changed?</strong>(attribute = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns boolean denoting if field changed or not.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#changes-instance_method" title="#changes (instance method)">- (Hash) <strong>changes</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns hash of changes.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#clear_dirty%21-instance_method" title="#clear_dirty! (instance method)">- (Object) <strong>clear_dirty!</strong>(key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Clears dirty state for a field.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ignore_dirty-instance_method" title="#ignore_dirty (instance method)">- (Object) <strong>ignore_dirty</strong>(&amp;block) {|_self| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Ignores any dirty changes during the duration of the block.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#method_missing-instance_method" title="#method_missing (instance method)">- (Object) <strong>method_missing</strong>(meth, *args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Method missing is used to implement the "magic" methods of
+<code>field_changed</code>, <code>field_change</code>, and <code>field_was</code>.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#set_dirty%21-instance_method" title="#set_dirty! (instance method)">- (Object) <strong>set_dirty!</strong>(name, current, value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Manages dirty state for an attribute.</span>
+  
+</li>
+
+    
+  </ul>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice this">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+  </p>
+  
+    <div class="method_details first">
+  <p class="signature first" id="method_missing-instance_method">
+  
+    - (<tt>Object</tt>) <strong>method_missing</strong>(meth, *args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Method missing is used to implement the "magic" methods of
+<code>field_changed</code>, <code>field_change</code>, and <code>field_was</code>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 144</span>
+
+<span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='meth_string identifier id'>meth_string</span> <span class='assign token'>=</span> <span class='meth identifier id'>meth</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  
+  <span class='if if kw'>if</span> <span class='meth_string identifier id'>meth_string</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?)_changed\?$/</span> 
+    <span class='changed? fid id'>changed?</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='meth_string identifier id'>meth_string</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?)_change$/</span>
+    <span class='changes identifier id'>changes</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='meth_string identifier id'>meth_string</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?)_was$/</span>
+    <span class='change identifier id'>change</span> <span class='assign token'>=</span> <span class='changes identifier id'>changes</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
+    <span class='if if kw'>if</span> <span class='change identifier id'>change</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+      <span class='nil nil kw'>nil</span>
+    <span class='else else kw'>else</span>
+      <span class='change identifier id'>change</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+    <span class='end end kw'>end</span>
+  <span class='else else kw'>else</span>
+    <span class='super super kw'>super</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="changed?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>changed?</strong>(attribute = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns boolean denoting if field changed or not. If no attribute
+is specified, returns true of false showing whether the model
+changed at all.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <span class='name'>attribute</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        The attribute to check, or if nil, all fields checked.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+126
+127
+128
+129
+130
+131
+132</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 126</span>
+
+<span class='def def kw'>def</span> <span class='changed? fid id'>changed?</span><span class='lparen token'>(</span><span class='attribute identifier id'>attribute</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='attribute identifier id'>attribute</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='notop op'>!</span><span class='changes identifier id'>changes</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+  <span class='else else kw'>else</span>
+    <span class='changes identifier id'>changes</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='attribute identifier id'>attribute</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="changes-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>changes</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns hash of changes. Keys are fields, values are an
+array of the original value and the current value.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+138
+139
+140</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 138</span>
+
+<span class='def def kw'>def</span> <span class='changes identifier id'>changes</span>
+  <span class='@changed_attributes ivar id'>@changed_attributes</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="clear_dirty!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>clear_dirty!</strong>(key) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Clears dirty state for a field.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <span class='name'>key</span>
+      
+      
+      
+        &mdash;
+        The field to clear dirty state.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+107
+108
+109</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 107</span>
+
+<span class='def def kw'>def</span> <span class='clear_dirty! fid id'>clear_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='changes identifier id'>changes</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="ignore_dirty-instance_method">
+  
+    - (<tt>Object</tt>) <strong>ignore_dirty</strong>(&amp;block) {|_self| ... }
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Ignores any dirty changes during the duration of the block.
+Guarantees the dirty state will be the same before and after
+the method call, but not within the block itself.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Yields:</h3>
+<ul class="yield">
+  
+    <li>
+      
+        <span class='type'>(<tt>_self</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+<h3>Yield Parameters:</h3>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="" title="VirtualBox::AbstractModel::Dirty (module)">VirtualBox::AbstractModel::Dirty</a></tt>)</span>
+      
+      
+        <span class='name'>_self</span>
+      
+      
+      
+        &mdash;
+        the object that the method was called on
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+114
+115
+116
+117
+118</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 114</span>
+
+<span class='def def kw'>def</span> <span class='ignore_dirty identifier id'>ignore_dirty</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='current_changes identifier id'>current_changes</span> <span class='assign token'>=</span> <span class='@changed_attributes ivar id'>@changed_attributes</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span> <span class='rescue rescue kw'>rescue</span> <span class='nil nil kw'>nil</span>
+  <span class='yield yield kw'>yield</span> <span class='self self kw'>self</span>
+  <span class='@changed_attributes ivar id'>@changed_attributes</span> <span class='assign token'>=</span> <span class='current_changes identifier id'>current_changes</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="set_dirty!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>set_dirty!</strong>(name, current, value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Manages dirty state for an attribute. This method will handle
+setting the dirty state of an attribute (or even clearing it
+if the old value is reset). Any implementors of this mixin should
+call this for any fields they want tracked.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <span class='name'>name</span>
+      
+      
+      
+        &mdash;
+        Name of field
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+        <span class='name'>current</span>
+      
+      
+      
+        &mdash;
+        Current value (not necessarilly the original value, but the <strong>current</strong> value)
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+        <span class='name'>value</span>
+      
+      
+      
+        &mdash;
+        The new value being set
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 87</span>
+
+<span class='def def kw'>def</span> <span class='set_dirty! fid id'>set_dirty!</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='current identifier id'>current</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='current identifier id'>current</span> <span class='neq op'>!=</span> <span class='value identifier id'>value</span>
+    <span class='comment val'># If its the first time this attribute has changed, store the</span>
+    <span class='comment val'># original value in the first field</span>
+    <span class='changes identifier id'>changes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='lbrack token'>[</span><span class='current identifier id'>current</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span><span class='rbrack token'>]</span>
+
+    <span class='comment val'># Then store the changed value</span>
+    <span class='changes identifier id'>changes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
+
+    <span class='comment val'># If the value changed back to the original value, remove from the</span>
+    <span class='comment val'># dirty hash</span>
+    <span class='if if kw'>if</span> <span class='changes identifier id'>changes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='changes identifier id'>changes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
+      <span class='changes identifier id'>changes</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun Jan 24 19:18:05 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

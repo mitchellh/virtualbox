@@ -1,0 +1,745 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Module: VirtualBox::AbstractModel::Attributable</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (A)</a> &raquo; 
+    <span class='title'><a href="../../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span> &raquo; <span class='title'><a href="../AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></span>
+     &raquo; 
+    <span class="title">Attributable</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: VirtualBox::AbstractModel::Attributable 
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/virtualbox/abstract_model/attributable.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Module which can be included into any other class which allows
+that class to have attributes using the "attribute" class method.
+This creates the reader/writer for the attribute but also provides
+other useful options such as readonly attributes, default values,
+and more.</p>
+
+<p>Make sure to also see the <tt><a href="Attributable/ClassMethods.html" title="VirtualBox::AbstractModel::Attributable::ClassMethods (module)">ClassMethods</a></tt>.</p>
+
+<h2>Defining a Basic Attribute</h2>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:name</span>
+</pre>
+
+<p>The example above would put the "name" attribute on the class. This
+would give the class the following abilities</p>
+
+<pre class="code"><span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;Harry!&quot;</span>
+<span class='puts identifier id'>puts</span> <span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='comment val'># =&gt; &quot;Harry!&quot;</span>
+</pre>
+
+<p>Basic attributes alone are not different than ruby's built-in
+<code>attr_*</code> methods.</p>
+
+<h2>Defining a Readonly Attribute</h2>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:age</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+</pre>
+
+<p>The example above allows age to be read, but not written to via the
+<code>age=</code> method. The attribute is still able to written using
+<tt><a href="#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></tt> but this is generally only for
+inter-class use, and not for users of it.</p>
+
+<h2>Defining Default Values</h2>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:format</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;VDI&quot;</span>
+</pre>
+
+<p>The example above applies a default value to format. So if no value
+is ever given to it, <code>format</code> would return <code>VDI</code>.</p>
+
+<h2>Populating Multiple Attributes</h2>
+
+<p>Attributes can be mass populated using <tt><a href="#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a></tt>. Below
+is an example of the use.</p>
+
+<pre class="code"><span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+  <span class='include identifier id'>include</span> <span class='Attributable constant id'>Attributable</span>
+
+  <span class='attribute identifier id'>attribute</span> <span class='symbol val'>:name</span>
+  <span class='attribute identifier id'>attribute</span> <span class='symbol val'>:age</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+
+  <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>
+    <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='lbrace token'>{</span>
+      <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;Steven&quot;</span><span class='comma token'>,</span>
+      <span class='symbol val'>:age</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>27</span>
+    <span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+
+<p><strong>Note:</strong> Populating attributes is not the same as mass-updating attributes.
+<tt><a href="#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a></tt> is meant to do initial population only. There is
+currently no method for mass assignment for updating.</p>
+
+<h2>Custom Populate Keys</h2>
+
+<p>Sometimes the attribute names don't match the keys of the hash that will be
+used to populate it. For this purpose, you can define a custom
+<code>populate_key</code>. Example:</p>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:path</span><span class='comma token'>,</span> <span class='symbol val'>:populate_key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:location</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='symbol val'>:location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;Home&quot;</span><span class='rparen token'>)</span>
+  <span class='puts identifier id'>puts</span> <span class='path identifier id'>path</span> <span class='comment val'># =&gt; &quot;Home&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+   
+    
+      <strong class="modules">Modules:</strong> <a href="Attributable/ClassMethods.html" title="VirtualBox::AbstractModel::Attributable::ClassMethods (module)">ClassMethods</a>
+    
+   
+    
+  
+</p>
+
+
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#included-class_method" title="included (class method)">+ (Object) <strong>included</strong>(base) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#attributes-instance_method" title="#attributes (instance method)">- (Object) <strong>attributes</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns a hash of all attributes and their options.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#has_attribute%3F-instance_method" title="#has_attribute? (instance method)">- (Boolean) <strong>has_attribute?</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns boolean value denoting if an attribute exists.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#method_missing-instance_method" title="#method_missing (instance method)">- (Object) <strong>method_missing</strong>(meth, *args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Method missing is used to add dynamic handlers for accessors and
+setters.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#populate_attributes-instance_method" title="#populate_attributes (instance method)">- (Object) <strong>populate_attributes</strong>(attribs) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Does the initial population of the various attributes.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#read_attribute-instance_method" title="#read_attribute (instance method)">- (Object) <strong>read_attribute</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Reads an attribute.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#readonly_attribute%3F-instance_method" title="#readonly_attribute? (instance method)">- (Boolean) <strong>readonly_attribute?</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns a boolean value denoting if an attribute is readonly.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#write_attribute-instance_method" title="#write_attribute (instance method)">- (Object) <strong>write_attribute</strong>(name, value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Writes an attribute.</span>
+  
+</li>
+
+    
+  </ul>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice this">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+  </p>
+  
+    <div class="method_details first">
+  <p class="signature first" id="method_missing-instance_method">
+  
+    - (<tt>Object</tt>) <strong>method_missing</strong>(meth, *args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Method missing is used to add dynamic handlers for accessors and
+setters. Due to the general ugliness of <code>method_missing</code>, this may
+change in the near future, but for now it is what it is.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 180</span>
+
+<span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='meth_string identifier id'>meth_string</span> <span class='assign token'>=</span> <span class='meth identifier id'>meth</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+
+  <span class='if if kw'>if</span> <span class='has_attribute? fid id'>has_attribute?</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='rparen token'>)</span>
+    <span class='read_attribute identifier id'>read_attribute</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='rparen token'>)</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='meth_string identifier id'>meth_string</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?)=$/</span> <span class='andop op'>&amp;&amp;</span> <span class='has_attribute? fid id'>has_attribute?</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='readonly_attribute? fid id'>readonly_attribute?</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='rparen token'>)</span>
+    <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='else else kw'>else</span>
+    <span class='super super kw'>super</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="included-class_method">
+  
+    + (<tt>Object</tt>) <strong>included</strong>(base) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+77
+78
+79</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 77</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='included identifier id'>included</span><span class='lparen token'>(</span><span class='base identifier id'>base</span><span class='rparen token'>)</span>
+  <span class='base identifier id'>base</span><span class='dot token'>.</span><span class='extend identifier id'>extend</span> <span class='ClassMethods constant id'>ClassMethods</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="attributes-instance_method">
+  
+    - (<tt>Object</tt>) <strong>attributes</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns a hash of all attributes and their options.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+159
+160
+161</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 159</span>
+
+<span class='def def kw'>def</span> <span class='attributes identifier id'>attributes</span>
+  <span class='@attribute_values ivar id'>@attribute_values</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="has_attribute?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>has_attribute?</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns boolean value denoting if an attribute exists.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+164
+165
+166</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 164</span>
+
+<span class='def def kw'>def</span> <span class='has_attribute? fid id'>has_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="populate_attributes-instance_method">
+  
+    - (<tt>Object</tt>) <strong>populate_attributes</strong>(attribs) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Does the initial population of the various attributes. It will
+ignore attributes which are not defined or have no value in the
+hash.</p>
+
+<p>Population uses the attributes <code>populate_key</code> if present to
+determine which value to take. Example:</p>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:populate_key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:namae</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:age</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='symbol val'>:namae</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;Henry&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:age</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>27</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+
+<p>The above example would set <code>name</code> to <code>Henry</code> since that is
+the <code>populate_key</code>. If a <code>populate_key</code> is not present, the
+attribute name is used.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+132
+133
+134
+135
+136
+137</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 132</span>
+
+<span class='def def kw'>def</span> <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='attribs identifier id'>attribs</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='value_key identifier id'>value_key</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:populate_key</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='key identifier id'>key</span>
+    <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='attribs identifier id'>attribs</span><span class='lbrack token'>[</span><span class='value_key identifier id'>value_key</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="read_attribute-instance_method">
+  
+    - (<tt>Object</tt>) <strong>read_attribute</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Reads an attribute. This method will return <code>nil</code> if the
+attribute doesn't exist. If the attribute does exist but
+doesn't have a value set, it'll use the <code>default</code> value
+if specified.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+152
+153
+154
+155
+156</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 152</span>
+
+<span class='def def kw'>def</span> <span class='read_attribute identifier id'>read_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='has_attribute? fid id'>has_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:default</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="readonly_attribute?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>readonly_attribute?</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns a boolean value denoting if an attribute is readonly.
+This method also returns false for <strong>nonexistent attributes</strong>
+so it should be used in conjunction with <tt><a href="#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a></tt> if
+existence is important.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+172
+173
+174
+175</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 172</span>
+
+<span class='def def kw'>def</span> <span class='readonly_attribute? fid id'>readonly_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
+  <span class='has_attribute? fid id'>has_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:readonly</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="write_attribute-instance_method">
+  
+    - (<tt>Object</tt>) <strong>write_attribute</strong>(name, value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Writes an attribute. This method ignores the <code>readonly</code> option
+on attribute definitions. This method is mostly meant for
+internal use on setting attributes (including readonly
+attributes), whereas users of a class which includes this
+module should use the accessor methods, such as <code>name=</code>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+144
+145
+146</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 144</span>
+
+<span class='def def kw'>def</span> <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun Jan 24 19:18:07 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

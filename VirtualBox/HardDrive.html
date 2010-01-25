@@ -1,0 +1,801 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Class: VirtualBox::HardDrive</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (H)</a> &raquo; 
+    <span class='title'><a href="../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span>
+     &raquo; 
+    <span class="title">HardDrive</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: VirtualBox::HardDrive 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><a href="Image.html" title="VirtualBox::Image (class)">Image</a></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></li>
+          
+            <li class="next"><a href="Image.html" title="VirtualBox::Image (class)">Image</a></li>
+          
+            <li class="next">VirtualBox::HardDrive</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/virtualbox/hard_drive.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Represents a hard disk which is registered with VirtualBox.</p>
+
+<h1>Finding a Hard Drive</h1>
+
+<p>Hard drives can be found use <tt><a href="#all-class_method" title="VirtualBox::HardDrive.all (method)">HardDrive.all</a></tt> and <tt><a href="#find-class_method" title="VirtualBox::HardDrive.find (method)">HardDrive.find</a></tt>, which
+find all or a specific hard drive, respectively. Example below:</p>
+
+<pre class="code"><span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='all identifier id'>all</span>
+</pre>
+
+<p>Or:</p>
+
+<pre class="code"><span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;Foo.vdi&quot;</span><span class='rparen token'>)</span>
+</pre>
+
+<h1>Creating a Hard Drive</h1>
+
+<p>The hard drive is one of the few data items at the moment which supports
+new creation. Below is a simple example of how this works:</p>
+
+<pre class="code"><span class='hd identifier id'>hd</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='assign token'>=</span> <span class='string val'>&quot;foo.vdi&quot;</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='assign token'>=</span> <span class='integer val'>2400</span> <span class='comment val'># in megabytes</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+
+<span class='comment val'># You can now access other attributes, since its saved:</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='uuid identifier id'>uuid</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='comment val'># will return a full path now</span>
+</pre>
+
+<p>Although <code>VDI</code> is the default format for newly created hard drives, other
+formats are supported:</p>
+
+<pre class="code"><span class='hd identifier id'>hd</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='format identifier id'>format</span> <span class='assign token'>=</span> <span class='string val'>&quot;VMDK&quot;</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='assign token'>=</span> <span class='string val'>&quot;bar.vmdk&quot;</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='assign token'>=</span> <span class='integer val'>9001</span> <span class='comment val'># Its over 9000! (If you don't understand the reference, just ignore this comment)</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<p>Any formats listed by your VirtualBox installation's <code>VBoxManage list hddbackends</code> command
+can be used with the virtualbox gem.</p>
+
+<h1>Destroying Hard Drives</h1>
+
+<p>Hard drives can also be deleted, which will completely remove them from
+disk. <strong>This operation is not reversable</strong>.</p>
+
+<pre class="code"><span class='hd identifier id'>hd</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;foo&quot;</span><span class='rparen token'>)</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
+</pre>
+
+<h1>Cloning Hard Drives</h1>
+
+<p>Hard drives can just as easily be cloned as they can be created or destroyed.</p>
+
+<pre class="code"><span class='hd identifier id'>hd</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;foo&quot;</span><span class='rparen token'>)</span>
+<span class='cloned_hd identifier id'>cloned_hd</span> <span class='assign token'>=</span> <span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='clone identifier id'>clone</span><span class='lparen token'>(</span><span class='string val'>&quot;bar&quot;</span><span class='rparen token'>)</span> 
+</pre>
+
+<p>In addition to simply cloning hard drives, this command can be used to
+clone to a different format:</p>
+
+<pre class="code"><span class='hd identifier id'>hd</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;foo&quot;</span><span class='rparen token'>)</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='clone identifier id'>clone</span><span class='lparen token'>(</span><span class='string val'>&quot;bar&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;VMDK&quot;</span><span class='rparen token'>)</span> <span class='comment val'># Will clone and convert to VMDK format</span>
+</pre>
+
+<h1>Attributes</h1>
+
+<p>Properties of the model are exposed using standard ruby instance
+methods which are generated on the fly. Because of this, they are not listed
+below as available instance methods.</p>
+
+<p>These attributes can be accessed and modified via standard ruby-style
+<code>instance.attribute</code> and <code>instance.attribute=</code> methods. The attributes are
+listed below. If you aren't sure what this means or you can't understand
+why the below is listed, please read <tt><a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">Attributable</a></tt>.</p>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:uuid</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:location</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:accessible</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:format</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;VDI&quot;</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:size</span>
+</pre>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#all-class_method" title="all (class method)">+ (Array&lt;HardDrive&gt;) <strong>all</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns an array of all available hard drives as HardDrive
+objects.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find-class_method" title="find (class method)">+ (HardDrive) <strong>find</strong>(id) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Finds one specific hard drive by UUID or file name.</span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#clone-instance_method" title="#clone (instance method)">- (HardDrive) <strong>clone</strong>(outputfile, format = &quot;VDI&quot;) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Clone hard drive, possibly also converting formats.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create-instance_method" title="#create (instance method)">- (Object) <strong>create</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Creates a new hard drive.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Boolean) <strong>destroy</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Destroys the hard drive.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save-instance_method" title="#save (instance method)">- (Object) <strong>save</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves the hard drive object.</span>
+  
+</li>
+
+    
+  </ul>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="Image.html" title="VirtualBox::Image (class)">Image</a></h3>
+  <p class="inherited"><a href="Image.html#initialize-instance_method" title="VirtualBox::Image#initialize (method)">#initialize</a>, <a href="Image.html#parse_block-class_method" title="VirtualBox::Image.parse_block (method)">parse_block</a>, <a href="Image.html#parse_blocks-class_method" title="VirtualBox::Image.parse_blocks (method)">parse_blocks</a>, <a href="Image.html#parse_raw-class_method" title="VirtualBox::Image.parse_raw (method)">parse_raw</a>, <a href="Image.html#populate_relationship-class_method" title="VirtualBox::Image.populate_relationship (method)">populate_relationship</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="SubclassListing.html" title="VirtualBox::SubclassListing (module)">SubclassListing</a></h3>
+  <p class="inherited"><a href="SubclassListing.html#included-class_method" title="VirtualBox::SubclassListing.included (method)">included</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
+  <p class="inherited"><a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Attributable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a></h3>
+  <p class="inherited"><a href="AbstractModel/Dirty.html#changed%3F-instance_method" title="VirtualBox::AbstractModel::Dirty#changed? (method)">#changed?</a>, <a href="AbstractModel/Dirty.html#changes-instance_method" title="VirtualBox::AbstractModel::Dirty#changes (method)">#changes</a>, <a href="AbstractModel/Dirty.html#clear_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#clear_dirty! (method)">#clear_dirty!</a>, <a href="AbstractModel/Dirty.html#ignore_dirty-instance_method" title="VirtualBox::AbstractModel::Dirty#ignore_dirty (method)">#ignore_dirty</a>, <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Dirty.html#set_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#set_dirty! (method)">#set_dirty!</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <p class="notice">This class inherits a constructor from <a href="Image.html#initialize-instance_method" title="VirtualBox::Image#initialize (method)">VirtualBox::Image</a></p>
+  
+</div>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice super">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+      in the class <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">VirtualBox::AbstractModel::Relatable</a>
+    
+  </p>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="all-class_method">
+  
+    + (<tt>Array&lt;<a href="" title="VirtualBox::HardDrive (class)">HardDrive</a>&gt;</tt>) <strong>all</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns an array of all available hard drives as HardDrive
+objects.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::HardDrive (class)">HardDrive</a>&gt;</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+88
+89
+90
+91</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 88</span>
+
+<span class='def def kw'>def</span> <span class='all identifier id'>all</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list hdds&quot;</span><span class='rparen token'>)</span>
+  <span class='parse_blocks identifier id'>parse_blocks</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='v identifier id'>v</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find-class_method">
+  
+    + (<tt><a href="" title="VirtualBox::HardDrive (class)">HardDrive</a></tt>) <strong>find</strong>(id) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Finds one specific hard drive by UUID or file name. If the
+hard drive can not be found, will return <code>nil</code>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="" title="VirtualBox::HardDrive (class)">HardDrive</a></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 97</span>
+
+<span class='def def kw'>def</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;showhdinfo #{id}&quot;</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># Return nil if the hard drive doesn't exist</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/VERR_FILE_NOT_FOUND/</span>
+  
+  <span class='data identifier id'>data</span> <span class='assign token'>=</span> <span class='raw identifier id'>raw</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='regexp val'>/\n\n/</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='parse_block identifier id'>parse_block</span><span class='lparen token'>(</span><span class='v identifier id'>v</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='notop op'>!</span><span class='v identifier id'>v</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='rbrace token'>}</span>
+  
+  <span class='comment val'># Set equivalent fields</span>
+  <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:format</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:&quot;storage format&quot;</span><span class='rbrack token'>]</span>
+  <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:size</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:&quot;logical size&quot;</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='regexp val'>/\s+/</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:&quot;logical size&quot;</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># Return new object</span>
+  <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="clone-instance_method">
+  
+    - (<tt><a href="" title="VirtualBox::HardDrive (class)">HardDrive</a></tt>) <strong>clone</strong>(outputfile, format = &quot;VDI&quot;) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Clone hard drive, possibly also converting formats. All formats
+supported by your local VirtualBox installation are supported
+here. If no format is specified, the format of the source drive
+will be used.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>outputfile</span>
+      
+      
+      
+        &mdash;
+        The output file. This should be just a single filename, since VirtualBox will place it in the hard drives folder.
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>format</span>
+      
+      
+        <em class="default">(defaults to: <tt>&quot;VDI&quot;</tt>)</em>
+      
+      
+        &mdash;
+        The format to convert to.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="" title="VirtualBox::HardDrive (class)">HardDrive</a></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        The new, cloned hard drive.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+124
+125
+126
+127
+128
+129</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 124</span>
+
+<span class='def def kw'>def</span> <span class='clone identifier id'>clone</span><span class='lparen token'>(</span><span class='outputfile identifier id'>outputfile</span><span class='comma token'>,</span> <span class='format identifier id'>format</span><span class='assign token'>=</span><span class='string val'>&quot;VDI&quot;</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;clonehd #{uuid} #{Command.shell_escape(outputfile)} --format #{format} --remember&quot;</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/UUID: (.+?)$/</span>
+  
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="create-instance_method">
+  
+    - (<tt>Object</tt>) <strong>create</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Creates a new hard drive.</p>
+
+<p><strong>This method should NEVER be called. Call <tt><a href="#save-instance_method" title="VirtualBox::HardDrive#save (method)">#save</a></tt> instead.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+134
+135
+136
+137
+138
+139
+140
+141</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 134</span>
+
+<span class='def def kw'>def</span> <span class='create identifier id'>create</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember&quot;</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/UUID: (.+?)$/</span>
+  
+  <span class='comment val'># Just replace our attributes with the newly created ones. This also</span>
+  <span class='comment val'># will set new_record to false.</span>
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="destroy-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>destroy</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Destroys the hard drive. This deletes the hard drive off
+of disk.</p>
+
+<p><strong>This operation is not reversable.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+164
+165
+166
+167</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 164</span>
+
+<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;closemedium disk #{uuid} --delete&quot;</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='$? gvar id'>$?</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save-instance_method">
+  
+    - (<tt>Object</tt>) <strong>save</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves the hard drive object. If the hard drive is new,
+this will create a new hard drive. Otherwise, it will
+save any other details about the existing hard drive.</p>
+
+<p>Currently, <strong>saving existing hard drives does nothing</strong>.
+This is a limitation of VirtualBox, rather than the library itself.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+149
+150
+151
+152
+153
+154
+155
+156</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 149</span>
+
+<span class='def def kw'>def</span> <span class='save identifier id'>save</span>
+  <span class='if if kw'>if</span> <span class='new_record? fid id'>new_record?</span>
+    <span class='comment val'># Create a new hard drive</span>
+    <span class='create identifier id'>create</span>
+  <span class='else else kw'>else</span>
+    <span class='super super kw'>super</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun Jan 24 19:18:08 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

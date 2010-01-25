@@ -1,0 +1,732 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Module: VirtualBox::AbstractModel::Relatable</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (R)</a> &raquo; 
+    <span class='title'><a href="../../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span> &raquo; <span class='title'><a href="../AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></span>
+     &raquo; 
+    <span class="title">Relatable</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: VirtualBox::AbstractModel::Relatable 
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/virtualbox/abstract_model/relatable.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Provides simple relationship features to any class. These relationships
+can be anything, since this module makes no assumptions and doesn't
+differentiate between "has many" or "belongs to" or any of that.</p>
+
+<p>The way it works is simple:</p>
+
+<ol>
+<li>Relationships are defined with a relationship name and a
+class of the relationship objects.</li>
+<li>When <tt><a href="#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a></tt> is called, <code>populate_relationship</code> is
+called on each relationship class (example: <tt><a href="../StorageController.html#populate_relationship-class_method" title="VirtualBox::StorageController.populate_relationship (method)">StorageController.populate_relationship</a></tt>).
+This is expected to return the relationship, which can be any object.</li>
+<li>When <tt><a href="#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></tt> is called, <code>save_relationship</code> is
+ called on each relationship class, which manages saving its own
+ relationship.</li>
+<li>When <tt><a href="#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a></tt> is called, <code>destroy_relationship</code> is
+ called on each relationship class, which manages destroying
+ its own relationship.</li>
+</ol>
+
+
+<p>Be sure to read <tt><a href="Relatable/ClassMethods.html" title="VirtualBox::AbstractModel::Relatable::ClassMethods (module)">ClassMethods</a></tt> for complete documentation of methods.</p>
+
+<h1>Defining Relationships</h1>
+
+<p>Every relationship has two mandatory parameters: the name and the class.</p>
+
+<pre class="code"><span class='relationship identifier id'>relationship</span> <span class='symbol val'>:bacons</span><span class='comma token'>,</span> <span class='Bacon constant id'>Bacon</span>
+</pre>
+
+<p>In this case, there is a relationship <code>bacons</code> which refers to the <code>Bacon</code>
+class.</p>
+
+<h1>Accessing Relationships</h1>
+
+<p>Relatable offers up dynamically generated accessors for every relationship
+which simply returns the relationship data.</p>
+
+<pre class="code"><span class='relationship identifier id'>relationship</span> <span class='symbol val'>:bacons</span><span class='comma token'>,</span> <span class='Bacon constant id'>Bacon</span>
+
+<span class='comment val'># Accessing through an instance &quot;instance&quot;</span>
+<span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='bacons identifier id'>bacons</span> <span class='comment val'># =&gt; whatever Bacon.populate_relationship created</span>
+</pre>
+
+<h1>Dependent Relationships</h1>
+
+<p>By setting <code>:dependent =&gt; :destroy</code> on relationships, <tt><a href="../AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></tt>
+will automatically call <tt><a href="#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a></tt> when <tt><a href="../AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">AbstractModel#destroy</a></tt>
+is called.</p>
+
+<p>This is not a feature built-in to Relatable but figured it should be
+mentioned here.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+   
+    
+      <strong class="modules">Modules:</strong> <a href="Relatable/ClassMethods.html" title="VirtualBox::AbstractModel::Relatable::ClassMethods (module)">ClassMethods</a>
+    
+   
+    
+  
+</p>
+
+
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#included-class_method" title="included (class method)">+ (Object) <strong>included</strong>(base) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#destroy_relationship-instance_method" title="#destroy_relationship (instance method)">- (Object) <strong>destroy_relationship</strong>(name, *args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Destroys only a single relationship.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#destroy_relationships-instance_method" title="#destroy_relationships (instance method)">- (Object) <strong>destroy_relationships</strong>(*args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Calls <code>destroy_relationship</code> on each of the relationships.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#has_relationship%3F-instance_method" title="#has_relationship? (instance method)">- (Boolean) <strong>has_relationship?</strong>(key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns boolean denoting if a relationship exists.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#method_missing-instance_method" title="#method_missing (instance method)">- (Object) <strong>method_missing</strong>(meth, *args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Method missing is used to add dynamic handlers for relationship
+accessors.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#populate_relationships-instance_method" title="#populate_relationships (instance method)">- (Object) <strong>populate_relationships</strong>(data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">The equivalent to <tt><a href="Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">Attributable#populate_attributes</a></tt>, but with
+relationships.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#relationship_data-instance_method" title="#relationship_data (instance method)">- (Hash) <strong>relationship_data</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Hash to data associated with relationships.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save_relationships-instance_method" title="#save_relationships (instance method)">- (Object) <strong>save_relationships</strong>(*args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves the model, calls save_relationship on all relations.</span>
+  
+</li>
+
+    
+  </ul>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice this">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+  </p>
+  
+    <div class="method_details first">
+  <p class="signature first" id="method_missing-instance_method">
+  
+    - (<tt>Object</tt>) <strong>method_missing</strong>(meth, *args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Method missing is used to add dynamic handlers for relationship
+accessors.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+152
+153
+154
+155
+156
+157
+158
+159
+160</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 152</span>
+
+<span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='meth_string identifier id'>meth_string</span> <span class='assign token'>=</span> <span class='meth identifier id'>meth</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+
+  <span class='if if kw'>if</span> <span class='has_relationship? fid id'>has_relationship?</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='rparen token'>)</span>
+    <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='meth identifier id'>meth</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
+  <span class='else else kw'>else</span>
+    <span class='super super kw'>super</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="included-class_method">
+  
+    + (<tt>Object</tt>) <strong>included</strong>(base) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+51
+52
+53</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 51</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='included identifier id'>included</span><span class='lparen token'>(</span><span class='base identifier id'>base</span><span class='rparen token'>)</span>
+  <span class='base identifier id'>base</span><span class='dot token'>.</span><span class='extend identifier id'>extend</span> <span class='ClassMethods constant id'>ClassMethods</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="destroy_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>destroy_relationship</strong>(name, *args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Destroys only a single relationship. Any arbitrary args
+may be added to the end and they will be pushed through to
+the class's <code>destroy_relationship</code> method.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <span class='name'>name</span>
+      
+      
+      
+        &mdash;
+        The name of the relationship
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+129
+130
+131
+132
+133</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 129</span>
+
+<span class='def def kw'>def</span> <span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span> <span class='andop op'>&amp;&amp;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:destroy_relationship</span><span class='rparen token'>)</span>
+  <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="destroy_relationships-instance_method">
+  
+    - (<tt>Object</tt>) <strong>destroy_relationships</strong>(*args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Calls <code>destroy_relationship</code> on each of the relationships. Any
+arbitrary args may be added and they will be forarded to the
+relationship's <code>destroy_relationship</code> method.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+118
+119
+120
+121
+122</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 118</span>
+
+<span class='def def kw'>def</span> <span class='destroy_relationships identifier id'>destroy_relationships</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="has_relationship?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>has_relationship?</strong>(key) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns boolean denoting if a relationship exists.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+146
+147
+148</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 146</span>
+
+<span class='def def kw'>def</span> <span class='has_relationship? fid id'>has_relationship?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="populate_relationships-instance_method">
+  
+    - (<tt>Object</tt>) <strong>populate_relationships</strong>(data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>The equivalent to <tt><a href="Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">Attributable#populate_attributes</a></tt>, but with
+relationships.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+108
+109
+110
+111
+112
+113</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 108</span>
+
+<span class='def def kw'>def</span> <span class='populate_relationships identifier id'>populate_relationships</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:populate_relationship</span><span class='rparen token'>)</span>
+    <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="relationship_data-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>relationship_data</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Hash to data associated with relationships. You should instead
+use the accessors created by Relatable.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+139
+140
+141</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 139</span>
+
+<span class='def def kw'>def</span> <span class='relationship_data identifier id'>relationship_data</span>
+  <span class='@relationship_data ivar id'>@relationship_data</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save_relationships-instance_method">
+  
+    - (<tt>Object</tt>) <strong>save_relationships</strong>(*args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves the model, calls save_relationship on all relations. It is up to
+the relation to determine whether anything changed, etc. Simply
+calls <code>save_relationship</code> on each relationshp class passing in the
+following parameters:</p>
+
+<ul>
+<li><strong>caller</strong> - The class which is calling save</li>
+<li><strong>data</strong> - The data associated with the relationship</li>
+</ul>
+
+
+<p>In addition to those two args, any arbitrary args may be tacked on to the
+end and they'll be pushed through to the <code>save_relationship</code> method.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+99
+100
+101
+102
+103
+104</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 99</span>
+
+<span class='def def kw'>def</span> <span class='save_relationships identifier id'>save_relationships</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:save_relationship</span><span class='rparen token'>)</span>
+    <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun Jan 24 19:18:07 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

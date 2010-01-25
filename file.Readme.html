@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Documentation by YARD 0.5.3</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html" title="Index">Index</a> &raquo; 
+    <span class="title">File: Readme</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><div id='filecontents'><h1>VirtualBox Ruby Gem</h1>
+
+<p>The VirtualBox ruby gem is a library which allows anyone to control VirtualBox
+from ruby code! Create, destroy, start, stop, suspend, and resume virtual machines.
+Also list virtual machines, list hard drives, network devices, etc.</p>
+
+<h2>Installation and Requirements</h2>
+
+<p>First you need to install <a href="http://www.virtualbox.org/">VirtualBox</a> which is available for
+Windows, Linux, and OS X. After installation, install the gem:</p>
+
+<pre class="code"><span class='sudo identifier id'>sudo</span> <span class='gem identifier id'>gem</span> <span class='install identifier id'>install</span> <span class='virtualbox identifier id'>virtualbox</span>
+</pre>
+
+<p>The gem assumes that <code>VBoxManage</code> will be available on the <code>PATH</code>. If not, before using
+the gem, you must set the path to your <code>VBoxManage</code> binary:</p>
+
+<pre class="code"><span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span> <span class='assign token'>=</span> <span class='string val'>&quot;/path/to/my/VBoxManage&quot;</span>
+</pre>
+
+<h2>Basic Usage</h2>
+
+<p>The virtualbox gem is modeled after ActiveRecord. If you've used ActiveRecord, you'll
+feel very comfortable using the virtualbox gem.</p>
+
+<p>Complete documentation can be found at <a href="http://mitchellh.github.com/virtualbox">http://mitchellh.github.com/virtualbox</a>.</p>
+
+<p>Below are some examples:</p>
+
+<pre class="code"><span class='require identifier id'>require</span> <span class='string val'>'virtualbox'</span>
+
+<span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;my-vm&quot;</span><span class='rparen token'>)</span>
+
+<span class='comment val'># Let's first print out some basic info about the VM</span>
+<span class='puts identifier id'>puts</span> <span class='dstring node'>&quot;Memory: #{vm.memory}&quot;</span>
+
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='storage_controllers identifier id'>storage_controllers</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='sc identifier id'>sc</span>
+  <span class='sc identifier id'>sc</span><span class='dot token'>.</span><span class='attached_devices identifier id'>attached_devices</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='device identifier id'>device</span><span class='bitor op'>|</span>
+    <span class='puts identifier id'>puts</span> <span class='dstring node'>&quot;Attached Device: #{device.uuid}&quot;</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+
+<span class='comment val'># Let's modify the memory and name...</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='memory identifier id'>memory</span> <span class='assign token'>=</span> <span class='integer val'>360</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;my-renamed-vm&quot;</span>
+
+<span class='comment val'># Save it!</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<p>Or here is an example of creating a hard drive:</p>
+
+<pre class="code"><span class='require identifier id'>require</span> <span class='string val'>'virtualbox'</span>
+
+<span class='hd identifier id'>hd</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='assign token'>=</span> <span class='string val'>&quot;foo.vdi&quot;</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='assign token'>=</span> <span class='integer val'>2000</span> <span class='comment val'># megabytes</span>
+<span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<h2>Known Issues or Uncompleted Features</h2>
+
+<p>VirtualBox has a <em>ton</em> of features! As such, this gem is still not totally complete.
+You can see the features that are still left to do in the TODO file.</p>
+
+<h2>Reporting Bugs or Feature Requests</h2>
+
+<p>Please use the <a href="https://github.com/mitchellh/virtualbox/issues">issue tracker</a>.</p>
+
+<h2>Contributing</h2>
+
+<p>If you'd like to contribute to VirtualBox, the first step to developing is to
+clone this repo, get <a href="http://github.com/wycats/bundler">wycat's bundler</a> if you
+don't have it already, and do the following:</p>
+
+<pre class="code"><span class='gem identifier id'>gem</span> <span class='bundle identifier id'>bundle</span> <span class='test identifier id'>test</span>
+<span class='rake identifier id'>rake</span>
+</pre>
+
+<p>This will run the test suite, which should come back all green! Then you're good to go!</p></div></div>
+    
+    <div id="footer">
+  Generated on Sun Jan 24 19:18:04 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

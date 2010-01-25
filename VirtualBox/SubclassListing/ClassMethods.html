@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Module: VirtualBox::SubclassListing::ClassMethods</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (C)</a> &raquo; 
+    <span class='title'><a href="../../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span> &raquo; <span class='title'><a href="../SubclassListing.html" title="VirtualBox::SubclassListing (module)">SubclassListing</a></span>
+     &raquo; 
+    <span class="title">ClassMethods</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: VirtualBox::SubclassListing::ClassMethods 
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/virtualbox/ext/subclass_listing.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#subclasses-instance_method" title="#subclasses (instance method)">- (Object) <strong>subclasses</strong>(direct = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+  </ul>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="subclasses-instance_method">
+  
+    - (<tt>Object</tt>) <strong>subclasses</strong>(direct = false) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/ext/subclass_listing.rb', line 8</span>
+
+<span class='def def kw'>def</span> <span class='subclasses identifier id'>subclasses</span><span class='lparen token'>(</span><span class='direct identifier id'>direct</span> <span class='assign token'>=</span> <span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='classes identifier id'>classes</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='if if kw'>if</span> <span class='direct identifier id'>direct</span>
+    <span class='ObjectSpace constant id'>ObjectSpace</span><span class='dot token'>.</span><span class='each_object identifier id'>each_object</span><span class='lparen token'>(</span><span class='Class constant id'>Class</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='c identifier id'>c</span><span class='bitor op'>|</span>
+      <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='c identifier id'>c</span><span class='dot token'>.</span><span class='superclass identifier id'>superclass</span> <span class='eq op'>==</span> <span class='self self kw'>self</span>
+      <span class='classes identifier id'>classes</span> <span class='lshft op'>&lt;&lt;</span> <span class='c identifier id'>c</span>
+    <span class='end end kw'>end</span>
+  <span class='else else kw'>else</span>
+    <span class='ObjectSpace constant id'>ObjectSpace</span><span class='dot token'>.</span><span class='each_object identifier id'>each_object</span><span class='lparen token'>(</span><span class='Class constant id'>Class</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='c identifier id'>c</span><span class='bitor op'>|</span>
+      <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='c identifier id'>c</span><span class='dot token'>.</span><span class='ancestors identifier id'>ancestors</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='lparen token'>(</span><span class='c identifier id'>c</span> <span class='neq op'>!=</span> <span class='self self kw'>self</span><span class='rparen token'>)</span>
+      <span class='classes identifier id'>classes</span> <span class='lshft op'>&lt;&lt;</span> <span class='c identifier id'>c</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='classes identifier id'>classes</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun Jan 24 19:18:05 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>
