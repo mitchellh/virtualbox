@@ -147,6 +147,28 @@ module VirtualBox
         self.class.relationships.has_key?(key.to_sym)
       end
       
+      # Sets a relationship to the given value. This is not guaranteed to
+      # do anything, since "set_relationship" will be called on the class
+      # that the relationship is associated with and its expected to return
+      # the resulting relationship to set. 
+      #
+      # If the relationship class doesn't respond to the set_relationship
+      # method, then an exception {NonSettableRelationshipException} will
+      # be raised.
+      #
+      # This method is called by the "magic" method of `relationship=`.
+      #
+      # @param [Symbol] key Relationship key.
+      # @param [Object] value The new value of the relationship.
+      def set_relationship(key, value)
+        key = key.to_sym
+        relationship = self.class.relationships[key]
+        return unless relationship
+        
+        raise Exceptions::NonSettableRelationshipException.new unless relationship[:klass].respond_to?(:set_relationship)
+        relationship_data[key] = relationship[:klass].set_relationship(self, relationship_data[key], value)
+      end
+      
       # Method missing is used to add dynamic handlers for relationship
       # accessors.
       def method_missing(meth, *args)
@@ -154,6 +176,8 @@ module VirtualBox
 
         if has_relationship?(meth)
           relationship_data[meth.to_sym]
+        elsif meth_string =~ /^(.+?)=$/ && has_relationship?($1)
+          set_relationship($1.to_sym, *args)
         else
           super
         end

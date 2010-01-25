@@ -6,7 +6,10 @@ class RelatableTest < Test::Unit::TestCase
       "FOO"
     end
   end
-  class BarRelatee; end
+  class BarRelatee
+    def self.set_relationship(caller, old_value, new_value)
+    end
+  end
   
   class RelatableModel
     include VirtualBox::AbstractModel::Relatable
@@ -17,6 +20,37 @@ class RelatableTest < Test::Unit::TestCase
   
   setup do
     @data = {}
+  end
+  
+  context "setting a relationship" do
+    setup do
+      @model = RelatableModel.new
+    end
+    
+    should "have a magic method relationship= which calls set_relationship" do
+      @model.expects(:set_relationship).with(:foos, "FOOS!")
+      @model.foos = "FOOS!"
+    end
+    
+    should "raise a NonSettableRelationshipException if relationship can't be set" do
+      assert_raises(VirtualBox::Exceptions::NonSettableRelationshipException) {
+        @model.foos = "FOOS!"
+      }
+    end
+    
+    should "call set_relationship on the relationship class" do
+      BarRelatee.expects(:populate_relationship).returns("foo")
+      @model.populate_relationships({})
+      
+      BarRelatee.expects(:set_relationship).with(@model, "foo", "bars")
+      assert_nothing_raised { @model.bars = "bars" }
+    end
+    
+    should "set the result of set_relationship as the new relationship data" do
+      BarRelatee.stubs(:set_relationship).returns("hello")
+      @model.bars = "zoo"
+      assert_equal "hello", @model.bars
+    end
   end
   
   context "subclasses" do
