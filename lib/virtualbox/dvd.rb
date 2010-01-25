@@ -1,4 +1,14 @@
 module VirtualBox
+  # Represents a DVD image stored by VirtualBox. These DVD images can be
+  # mounted onto virtual machines.
+  #
+  # # Finding all DVDs
+  #
+  # The only method at the moment of finding DVDs is to use {DVD.all}, which
+  # returns an array of {DVD}s.
+  #
+  #     DVD.all
+  #
   class DVD < Image
     class <<self
       # Returns an array of all available DVDs as DVD objects
@@ -8,8 +18,11 @@ module VirtualBox
       end
     end
     
-    # Deletes the DVD from VBox managed list, but not actually from
-    # disk itself.
+    # Deletes the DVD from VBox managed list and also from disk.
+    # This method will fail if the disk is currently mounted to any
+    # virtual machine.
+    #
+    # @return [Boolean]
     def destroy
       Command.vboxmanage("closemedium dvd #{uuid} --delete")
       return $?.to_i == 0
