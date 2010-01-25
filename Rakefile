@@ -25,7 +25,7 @@ end
 begin
   require 'yard'
   YARD::Rake::YardocTask.new do |t|
-    t.options = ['--main', 'Readme.md', '--markup', 'markdown']
+    t.options = ['--main', 'Readme.md', '--markup', 'markdown', '--files', 'TODO']
   end
 rescue LoadError
   puts "Yard not available. Install it with: gem install yard"

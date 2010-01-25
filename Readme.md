@@ -10,16 +10,50 @@ Also list virtual machines, list hard drives, network devices, etc.
 
 ## Basic Usage
 
-I tried to model the VirtualBox gem in a way that would be familiar to ActiveRecord
-users. Examples are best:
+The virtualbox gem is modeled after ActiveRecord. If you've used ActiveRecord, you'll
+feel very comfortable using the virtualbox gem. 
+
+Complete documentation can be found at [http://mitchellh.github.com/virtualbox](http://mitchellh.github.com/virtualbox).
+
+Below are some examples:
 
     require 'virtualbox'
     
     vm = VirtualBox::VM.find("my-vm")
-    vm.memory = 256 if vm.memory > 256
+    
+    # Let's first print out some basic info about the VM
+    puts "Memory: #{vm.memory}"
+    
+    vm.storage_controllers.each do |sc
+      sc.attached_devices.each do |device|
+        puts "Attached Device: #{device.uuid}"
+      end
+    end
+    
+    # Let's modify the memory and name...
+    vm.memory = 360
+    vm.name = "my-renamed-vm"
+    
+    # Save it!
     vm.save
 
-Detailed documentation can be found here (TODO).
+Or here is an example of creating a hard drive:
+
+    require 'virtualbox'
+    
+    hd = VirtualBox::HardDrive.new
+    hd.location = "foo.vdi"
+    hd.size = 2000 # megabytes
+    hd.save
+
+## Known Issues or Uncompleted Features
+
+VirtualBox has a _ton_ of features! As such, this gem is still not totally complete.
+You can see the features that are still left to do in the TODO file.
+
+## Reporting Bugs or Feature Requests
+
+Please use the [issue tracker](https://github.com/mitchellh/virtualbox/issues).
 
 ## Contributing
 
