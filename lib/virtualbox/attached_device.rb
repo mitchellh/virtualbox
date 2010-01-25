@@ -52,7 +52,7 @@ module VirtualBox
       #
       # @return [Array<AttachedDevice>]
       def populate_relationship(caller, data)
-        relation = []
+        relation = Proxies::Collection.new(caller)
         
         counter = 0
         loop do
