@@ -29,7 +29,9 @@ module VirtualBox
       
       # Runs a VBoxManage command and returns the output.
       def vboxmanage(command)
-        execute("#{@@vboxmanage} #{command}")
+        result = execute("#{@@vboxmanage} #{command}")
+        raise Exceptions::CommandFailedException.new(result) if !Command.success?
+        result
       end
       
       # Runs a command and returns a boolean result showing

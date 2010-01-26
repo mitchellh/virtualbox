@@ -79,17 +79,16 @@ class AttachedDeviceTest < Test::Unit::TestCase
       end
 
       should "return false if the command failed" do
-        VirtualBox::Command.expects(:success?).returns(false)
+        VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
         assert !@ad.save
       end
 
       should "return true if the command was a success" do
-        VirtualBox::Command.expects(:success?).returns(true)
         assert @ad.save
       end
       
       should "raise an exception if true sent to save and error occured" do
-        VirtualBox::Command.expects(:success?).returns(false)
+        VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
         assert_raises(VirtualBox::Exceptions::CommandFailedException) {
           @ad.save(true)
         }

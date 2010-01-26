@@ -137,14 +137,12 @@ module VirtualBox
     def create(raise_errors=false)
       raise Exceptions::NoParentException.new if parent.nil?
       raise Exceptions::InvalidObjectException.new("Image must be set") if image.nil?
-      raw = Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}")
-      
-      if !Command.success?
-        raise Exceptions::CommandFailedException.new(raw) if raise_errors
-        return false
-      end
+      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}")
       
       true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
     end
     
     # Destroys the attached device. By default, this only removes any

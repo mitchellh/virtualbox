@@ -50,8 +50,7 @@ raw
     end
     
     should "raise a CommandFailedException if it fails" do
-      VirtualBox::Command.expects(:vboxmanage).returns("")
-      VirtualBox::Command.expects(:success?).returns(false)
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
       
       nic = @nic[0]
       nic.nictype = "ZOO"

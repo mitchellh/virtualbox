@@ -139,10 +139,6 @@ module VirtualBox
     def create(raise_errors=false)
       raw = Command.vboxmanage("createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember")
       return nil unless raw =~ /UUID: (.+?)$/
-      if !Command.success?
-        raise Exceptions::CommandFailedException.new(raw) if raise_errors
-        return false
-      end
       
       # Just replace our attributes with the newly created ones. This also
       # will set new_record to false.
@@ -150,6 +146,9 @@ module VirtualBox
       
       # Return the success of the command
       true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
     end
     
     # Saves the hard drive object. If the hard drive is new,

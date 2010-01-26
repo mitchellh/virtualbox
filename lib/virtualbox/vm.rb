@@ -247,8 +247,7 @@ module VirtualBox
     #
     # **This method typically won't be used except internally.**
     def save_attribute(key, value)
-      raw = Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
-      raise Exceptions::CommandFailedException.new(raw) unless Command.success?
+      Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
       super
     end
     
@@ -274,14 +273,18 @@ module VirtualBox
     # @option options [String] :version (nil) The version information
     # @option options [String] :eula (nil) License text
     # @option options [String] :eulafile (nil) License file
-    def export(filename, options={})
+    def export(filename, options={}, raise_error=false)
       options = options.inject([]) do |acc, kv|
         acc.push("--#{kv[0]} #{Command.shell_escape(kv[1])}")
       end
       
       options.unshift("--vsys 0") unless options.empty?
       
-      Command.vboxmanage("export #{@original_name} -o #{Command.shell_escape(filename)} #{options.join(" ")}".strip)
+      raw = Command.vboxmanage("export #{@original_name} -o #{Command.shell_escape(filename)} #{options.join(" ")}".strip)
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_error
+      false
     end
     
     # Starts the virtual machine. The virtual machine can be started in a

@@ -131,6 +131,22 @@ showvminfo
       VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo --vsys 0 --foo a\\ space")
       @vm.export("foo", :foo => "a space")
     end
+    
+    should "return true if the export succeeded" do
+      assert @vm.export("foo")
+    end
+    
+    should "return false if the export failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@vm.export("foo")
+    end
+    
+    should "raise an exception on failure if raise_error is true" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @vm.export("foo", {}, true)
+      }
+    end
   end
   
   context "controlling a VM (start, stop, pause, etc.)" do
@@ -254,14 +270,14 @@ raw
     end
     
     should "return false if saving fails" do
-      VirtualBox::Command.expects(:success?).returns(false)
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
       
       @vm.ostype = "Zubuntu"
       assert !@vm.save
     end
     
     should "raise an error if saving fails and flag to true" do
-      VirtualBox::Command.expects(:success?).returns(false)
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
       
       @vm.ostype = "Zubuntu"
       assert_raises(VirtualBox::Exceptions::CommandFailedException) {
