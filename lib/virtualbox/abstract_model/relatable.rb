@@ -94,8 +94,16 @@ module VirtualBox
         # @option options [Symbol] :dependent (nil) - If set to `:destroy`
         #   {AbstractModel#destroy} will propagate through to relationships.
         def relationship(name, klass, options = {})
+          name = name.to_sym
+          
           @relationships ||= {}
           @relationships[name] = { :klass => klass }.merge(options)
+          
+          # Define the method to read the relationship
+          define_method(name) { relationship_data[name] }
+          
+          # Define the method to set the relationship
+          define_method("#{name}=") { |*args| set_relationship(name, *args) }
         end
         
         # Returns a hash of all the relationships.
@@ -198,20 +206,6 @@ module VirtualBox
         
         raise Exceptions::NonSettableRelationshipException.new unless relationship[:klass].respond_to?(:set_relationship)
         relationship_data[key] = relationship[:klass].set_relationship(self, relationship_data[key], value)
-      end
-      
-      # Method missing is used to add dynamic handlers for relationship
-      # accessors.
-      def method_missing(meth, *args)
-        meth_string = meth.to_s
-
-        if has_relationship?(meth)
-          relationship_data[meth.to_sym]
-        elsif meth_string =~ /^(.+?)=$/ && has_relationship?($1)
-          set_relationship($1.to_sym, *args)
-        else
-          super
-        end
       end
     end
   end

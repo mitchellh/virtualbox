@@ -92,7 +92,21 @@ module VirtualBox
         # @option options [Symbol] :populate_key (attribute name) Specifies
         #   a custom populate key to use for {Attributable#populate_attributes}
         def attribute(name, options = {})
-          attributes[name.to_sym] = options
+          name = name.to_sym
+          attributes[name] = options
+          
+          # Create the method for reading this attribute
+          define_method(name) { read_attribute(name) }
+          
+          # Create the writer method for it unless the attribute is readonly,
+          # then remove the method if it exists
+          if !options[:readonly]
+            define_method("#{name}=") do |value|
+              write_attribute(name, value)
+            end
+          elsif method_defined?("#{name}=")
+            undef_method("#{name}=")
+          end
         end
 
         # Returns the hash of attributes and their associated options.
@@ -172,21 +186,6 @@ module VirtualBox
       def readonly_attribute?(name)
         name = name.to_sym
         has_attribute?(name) && self.class.attributes[name][:readonly]
-      end
-      
-      # Method missing is used to add dynamic handlers for accessors and
-      # setters. Due to the general ugliness of `method_missing`, this may
-      # change in the near future, but for now it is what it is.
-      def method_missing(meth, *args)
-        meth_string = meth.to_s
-
-        if has_attribute?(meth)
-          read_attribute(meth)
-        elsif meth_string =~ /^(.+?)=$/ && has_attribute?($1) && !readonly_attribute?($1)
-          write_attribute($1.to_sym, *args)
-        else
-          super
-        end
       end
     end
   end
