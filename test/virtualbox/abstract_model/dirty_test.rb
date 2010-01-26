@@ -59,6 +59,11 @@ class DirtyTest < Test::Unit::TestCase
       assert_equal "foo", @model.foo_was
     end
     
+    should "return nil for field_was if its not changed" do
+      assert !@model.foo_changed?
+      assert_nil @model.foo_was
+    end
+    
     should "show changes for the whole model" do
       assert !@model.changed?
       @model.foo = "foo2"

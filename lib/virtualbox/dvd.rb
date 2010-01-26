@@ -49,9 +49,14 @@ module VirtualBox
     # virtual machine.
     #
     # @return [Boolean]
-    def destroy
+    def destroy(raise_errors=false)
+      return false if empty_drive?
+      
       Command.vboxmanage("closemedium dvd #{uuid} --delete")
-      return $?.to_i == 0
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
     end
   end
 end

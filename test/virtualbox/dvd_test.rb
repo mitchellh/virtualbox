@@ -1,6 +1,37 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class DVDTest < Test::Unit::TestCase
+  setup do
+    VirtualBox::Command.stubs(:execute)
+  end
+  
+  context "destroying a dvd" do
+    setup do
+      @dvd = VirtualBox::DVD.new
+    end
+    
+    should "return false if attempting to destroy an empty drive" do
+      assert !VirtualBox::DVD.empty_drive.destroy
+    end
+    
+    should "call vboxmanage to destroy it" do
+      VirtualBox::Command.expects(:vboxmanage).with("closemedium dvd #{@dvd.uuid} --delete")
+      assert @dvd.destroy
+    end
+    
+    should "return false if destroy failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@dvd.destroy
+    end
+    
+    should "raise an exception if failed and flag is set" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @dvd.destroy(true)
+      }
+    end
+  end
+  
   context "empty drive" do
     should "return an empty drive instance by calling new with :empty_drive" do
       dvd = VirtualBox::DVD.new(:empty_drive)

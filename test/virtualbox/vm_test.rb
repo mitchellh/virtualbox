@@ -83,7 +83,9 @@ showvminfo
   def create_vm
     command_seq = sequence("command_seq")
     VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).in_sequence(command_seq)
-    VirtualBox::Command.expects(:vboxmanage).with(anything).returns("").at_least(0).in_sequence(command_seq)
+    VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name}").returns("").in_sequence(command_seq)
+    VirtualBox::Command.expects(:vboxmanage).with("list hdds").returns("").in_sequence(command_seq)
+    VirtualBox::Command.expects(:vboxmanage).with("list dvds").returns("").in_sequence(command_seq)
     vm = VirtualBox::VM.find(@name)
     assert vm
     vm
@@ -123,8 +125,8 @@ showvminfo
     end
     
     should "export the VM with specified options" do
-      VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo --vsys 0 --foo bar --bar baz")
-      @vm.export("foo", :foo => :bar, :bar => :baz)
+      VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo --vsys 0 --foo bar")
+      @vm.export("foo", :foo => :bar)
     end
     
     should "shell escape all the options" do
@@ -133,6 +135,7 @@ showvminfo
     end
     
     should "return true if the export succeeded" do
+      VirtualBox::Command.expects(:vboxmanage).once
       assert @vm.export("foo")
     end
     
@@ -176,6 +179,18 @@ showvminfo
     should "start a VM with the given type" do
       VirtualBox::Command.expects(:vboxmanage).with("startvm #{@name} --type FOO")
       assert @vm.start(:FOO)
+    end
+    
+    should "return false if start failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@vm.start
+    end
+    
+    should "raise an exception if start fails and flag is set" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @vm.start(:foo, true)
+      }
     end
     
     should "stop a VM with a 'poweroff'" do

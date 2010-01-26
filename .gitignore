@@ -3,3 +3,4 @@ vendor/gems/*
 doc/*
 .yardoc/*
 pkg/*
+test/coverage/*

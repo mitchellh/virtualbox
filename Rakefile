@@ -31,3 +31,16 @@ begin
 rescue LoadError
   puts "Yard not available. Install it with: gem install yard"
 end
+
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |t|
+    t.libs << "test"
+    t.test_files = FileList["test/**/*_test.rb"]
+    t.output_dir = "test/coverage"
+    t.verbose = true
+  end
+rescue LoadError
+  puts "Rcov not available. Coverage data tasks not available."
+  puts "Install it with: gem install rcov"
+end
