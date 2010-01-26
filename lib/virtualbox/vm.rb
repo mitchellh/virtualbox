@@ -296,32 +296,74 @@ module VirtualBox
     #
     # All modes will start their processes and return almost immediately.
     # Both the GUI and headless mode will not block the ruby process.
-    def start(mode=:gui)
+    #
+    # @param [Symbol] mode Described above.
+    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def start(mode=:gui, raise_errors=false)
       Command.vboxmanage("startvm #{@original_name} --type #{mode}")
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
     end
     
     # Stops the VM by directly calling "poweroff." Immediately halts the
     # virtual machine without saving state. This could result in a loss
     # of data.
-    def stop
-      Command.vboxmanage("controlvm #{@original_name} poweroff")
+    #
+    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def stop(raise_errors=false)
+      control(:poweroff, raise_errors)
     end
     
     # Pauses the VM, putting it on hold temporarily. The VM can be resumed
     # again by calling {#resume}
-    def pause
-      Command.vboxmanage("controlvm #{@original_name} pause")
+    #
+    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def pause(raise_errors=false)
+      control(:pause, raise_errors)
     end
     
     # Resume a paused VM.
-    def resume
-      Command.vboxmanage("controlvm #{@original_name} resume")
+    #
+    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def resume(raise_errors=false)
+      control(:resume, raise_errors)
     end
     
     # Saves the state of a VM and stops it. The VM can be resumed
     # again by calling "start" again.
-    def save_state
-      Command.vboxmanage("controlvm #{@original_name} savestate")
+    #
+    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def save_state(raise_errors=false)
+      control(:savestate, raise_errors)
+    end
+    
+    # Controls the virtual machine. This method is used by {#stop},
+    # {#pause}, {#resume}, and {#save_state} to control the virtual machine.
+    # Typically, you won't ever have to call this method and should
+    # instead call those.
+    #
+    # @param [String] command The command to run on controlvm
+    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def control(command, raise_errors=false)
+      Command.vboxmanage("controlvm #{@original_name} #{command}")
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
     end
     
     # Destroys the virtual machine. This method also removes all attached

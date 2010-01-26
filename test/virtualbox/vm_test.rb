@@ -154,29 +154,48 @@ showvminfo
       @vm = create_vm
     end
     
+    context "control method" do
+      should "run the given command when 'control' is called" do
+        VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} foo")
+        assert @vm.control(:foo)
+      end
+      
+      should "return false if the command failed" do
+        VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+        assert !@vm.control(:foo)
+      end
+      
+      should "raise an exception if flag is set" do
+        VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+        assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+          @vm.control(:foo, true)
+        }
+      end
+    end
+    
     should "start a VM with the given type" do
       VirtualBox::Command.expects(:vboxmanage).with("startvm #{@name} --type FOO")
-      @vm.start(:FOO)
+      assert @vm.start(:FOO)
     end
     
     should "stop a VM with a 'poweroff'" do
-      VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} poweroff")
-      @vm.stop
+      @vm.expects(:control).with(:poweroff, false).returns(true)
+      assert @vm.stop
     end
     
     should "pause a VM" do
-      VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} pause")
-      @vm.pause
+      @vm.expects(:control).with(:pause, false).returns(true)
+      assert @vm.pause
     end
     
     should "resume a VM" do
-      VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} resume")
-      @vm.resume
+      @vm.expects(:control).with(:resume, false).returns(true)
+      assert @vm.resume
     end
     
     should "save the state of a VM" do
-      VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} savestate")
-      @vm.save_state
+      @vm.expects(:control).with(:savestate, false).returns(true)
+      assert @vm.save_state
     end
   end
   
