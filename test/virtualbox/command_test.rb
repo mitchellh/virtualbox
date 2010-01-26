@@ -9,6 +9,18 @@ class CommandTest < Test::Unit::TestCase
     end
   end
   
+  context "executing commands" do
+    should "use backticks to execute the command" do
+      VirtualBox::Command.expects(:`).with("foo").once
+      VirtualBox::Command.execute("foo")
+    end
+    
+    should "return the result of the execution" do
+      VirtualBox::Command.expects(:`).with("foo").returns("bar").once
+      assert_equal "bar", VirtualBox::Command.execute("foo")
+    end
+  end
+  
   context "vbox commands" do
     should "call 'vboxmanage' followed by command" do
       VirtualBox::Command.expects(:execute).with("VBoxManage foo")
