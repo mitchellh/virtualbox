@@ -111,6 +111,15 @@ module VirtualBox
       end
     end
     
+    # Medium of the attached image. This attribute will be dependent
+    # on the attached image and will return one of the following values:
+    #
+    # * **none** - There is no attached image
+    # * **emptydrive** - An image with an empty drive is attached (see
+    #     {DVD.empty_drive})
+    # * **image uuid** - The image's UUID
+    #
+    # @return [String]
     def medium
       if image.nil?
         "none"

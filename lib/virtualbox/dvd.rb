@@ -31,8 +31,17 @@ module VirtualBox
       end
     end
     
+    # Override of {Image#empty_drive?}. This will only be true if
+    # the DVD was created with {DVD.empty_drive}.
+    #
+    # @return [Boolean]
     def empty_drive?
       @empty_drive || false
+    end
+    
+    # Override of {Image#image_type}.
+    def image_type
+      "dvddrive"
     end
     
     # Deletes the DVD from VBox managed list and also from disk.
