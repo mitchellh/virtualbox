@@ -29,6 +29,13 @@ module VirtualBox
       @new_record = true
     end
     
+    # Explicitly sets the model to not be a new record. If you're using
+    # this method outside of virtualbox library core, you should really
+    # be asking yourself "why?"
+    def existing_record!
+      @new_record = false
+    end
+    
     # Saves the model attributes and relationships.
     #
     # The method can be passed any arbitrary arguments, which are 

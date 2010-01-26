@@ -104,8 +104,12 @@ module VirtualBox
       # Clears dirty state for a field.
       #
       # @param [Symbol] key The field to clear dirty state.
-      def clear_dirty!(key)
-        changes.delete(key)
+      def clear_dirty!(key=nil)
+        if key.nil?
+          @changed_attributes = {}
+        else
+          changes.delete(key)
+        end
       end
 
       # Ignores any dirty changes during the duration of the block. 

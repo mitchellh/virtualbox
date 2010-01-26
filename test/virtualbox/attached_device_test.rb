@@ -49,11 +49,6 @@ class AttachedDeviceTest < Test::Unit::TestCase
       @ad.port = 3
     end
     
-    should "call create on save if its a new record" do
-      @ad.expects(:create).once
-      @ad.save
-    end
-    
     should "raise a NoParentException if it wasn't added to a relationship" do
       assert_raises(VirtualBox::Exceptions::NoParentException) {
         @ad.save
@@ -66,7 +61,7 @@ class AttachedDeviceTest < Test::Unit::TestCase
         VirtualBox::Command.stubs(:vboxmanage)
       end
       
-      should "raise an InvalidObjectException if no image is set" do
+      should "not raise an InvalidObjectException if no image is set" do
         @ad.image = nil
         assert_raises(VirtualBox::Exceptions::InvalidObjectException) {
           @ad.save
@@ -92,6 +87,18 @@ class AttachedDeviceTest < Test::Unit::TestCase
         assert_raises(VirtualBox::Exceptions::CommandFailedException) {
           @ad.save(true)
         }
+      end
+      
+      should "not be a new record after saving" do
+        assert @ad.new_record?
+        assert @ad.save
+        assert !@ad.new_record?
+      end
+      
+      should "not be changed after saving" do
+        assert @ad.changed?
+        assert @ad.save
+        assert !@ad.changed?
       end
     end
   end
@@ -147,6 +154,16 @@ class AttachedDeviceTest < Test::Unit::TestCase
       VirtualBox::Command.expects(:shell_escape).with(@vm.name).in_sequence(shell_seq)
       VirtualBox::Command.expects(:shell_escape).with(@caller.name).in_sequence(shell_seq)
       VirtualBox::Command.expects(:vboxmanage).in_sequence(shell_seq)
+      @value.destroy
+    end
+    
+    should "destroy with the specified port if set" do
+      VirtualBox::Command.expects(:vboxmanage).with("storageattach #{VirtualBox::Command.shell_escape(@vm.name)} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port 80 --device 0 --medium none")
+      @value.destroy(:port => 80)
+    end
+    
+    should "destroy with the default port if not other port is specified" do
+      VirtualBox::Command.expects(:vboxmanage).with("storageattach #{VirtualBox::Command.shell_escape(@vm.name)} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port #{@value.port} --device 0 --medium none")
       @value.destroy
     end
     

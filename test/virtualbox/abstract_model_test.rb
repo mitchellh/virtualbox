@@ -38,6 +38,12 @@ class AbstractModelTest < Test::Unit::TestCase
       @model.new_record!
       assert @model.new_record?
     end
+    
+    should "become an existing record if existing_record! is called" do
+      assert @model.new_record?
+      @model.existing_record!
+      assert !@model.new_record?
+    end
   end
   
   context "subclasses" do
