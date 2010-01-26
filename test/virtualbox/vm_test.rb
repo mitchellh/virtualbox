@@ -253,18 +253,34 @@ raw
       @vm = create_vm
     end
     
+    should "return false if saving fails" do
+      VirtualBox::Command.expects(:success?).returns(false)
+      
+      @vm.ostype = "Zubuntu"
+      assert !@vm.save
+    end
+    
+    should "raise an error if saving fails and flag to true" do
+      VirtualBox::Command.expects(:success?).returns(false)
+      
+      @vm.ostype = "Zubuntu"
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @vm.save(true)
+      }
+    end
+    
     should "save only the attributes which saved" do
       VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --ostype Zubuntu")
       
       @vm.ostype = "Zubuntu"
-      @vm.save
+      assert @vm.save
     end
     
     should "shell escape saved values" do
       VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --ostype My\\ Value")
       
       @vm.ostype = "My Value"
-      @vm.save
+      assert @vm.save
     end
     
     should "shell escape the string value of a value" do
@@ -282,7 +298,7 @@ raw
       
       @vm.name = new_name
       @vm.ostype = "Zubuntu"
-      @vm.save
+      assert @vm.save
     end
   end
   

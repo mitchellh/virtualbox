@@ -226,7 +226,7 @@ module VirtualBox
     # Saves the virtual machine if modified. This method saves any modified
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
-    def save
+    def save(raise_errors=false)
       # Make sure we save the new name first if that was changed, or
       # we'll get some inconsistencies later
       if name_changed?
@@ -234,7 +234,12 @@ module VirtualBox
         @original_name = name
       end
       
-      super
+      super()
+      
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      return false
     end
     
     # Saves a single attribute of the virtual machine. This should **not**
@@ -242,7 +247,8 @@ module VirtualBox
     #
     # **This method typically won't be used except internally.**
     def save_attribute(key, value)
-      Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
+      raw = Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
+      raise Exceptions::CommandFailedException.new(raw) unless Command.success?
       super
     end
     
