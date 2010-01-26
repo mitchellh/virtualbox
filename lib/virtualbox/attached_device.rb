@@ -40,7 +40,7 @@ module VirtualBox
   #
   class AttachedDevice < AbstractModel
     attribute :parent, :readonly => true
-    attribute :uuid
+    attribute :uuid, :readonly => true
     attribute :port
     relationship :image, Image
     
