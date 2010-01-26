@@ -298,7 +298,7 @@ module VirtualBox
     # Both the GUI and headless mode will not block the ruby process.
     #
     # @param [Symbol] mode Described above.
-    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def start(mode=:gui, raise_errors=false)
@@ -313,7 +313,7 @@ module VirtualBox
     # virtual machine without saving state. This could result in a loss
     # of data.
     #
-    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def stop(raise_errors=false)
@@ -323,7 +323,7 @@ module VirtualBox
     # Pauses the VM, putting it on hold temporarily. The VM can be resumed
     # again by calling {#resume}
     #
-    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def pause(raise_errors=false)
@@ -332,7 +332,7 @@ module VirtualBox
     
     # Resume a paused VM.
     #
-    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def resume(raise_errors=false)
@@ -342,7 +342,7 @@ module VirtualBox
     # Saves the state of a VM and stops it. The VM can be resumed
     # again by calling "start" again.
     #
-    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def save_state(raise_errors=false)
@@ -355,7 +355,7 @@ module VirtualBox
     # instead call those.
     #
     # @param [String] command The command to run on controlvm
-    # @param [Boolean] raise_errors If true, {CommandFailedException}
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def control(command, raise_errors=false)

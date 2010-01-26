@@ -74,6 +74,13 @@ module VirtualBox
     #     obj.clear_dirty!(:name)
     #     obj.name_changed? # => false
     #
+    # If no specific field is speciied, `clear_dirty!` will clear the dirty
+    # status on the entire model.
+    #
+    #     obj.changed? # => assume true
+    #     obj.clear_dirty!
+    #     obj.changed? # => false
+    #
     module Dirty
       # Manages dirty state for an attribute. This method will handle
       # setting the dirty state of an attribute (or even clearing it

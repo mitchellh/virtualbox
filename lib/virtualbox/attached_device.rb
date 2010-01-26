@@ -2,9 +2,22 @@ module VirtualBox
   # Represents an device which is attached to a storage controller. An example
   # of such a device would be a CD or hard drive attached to an IDE controller.
   #
-  # **Currently, attached devices can not be created from scratch. The only way
-  # to access them is through relationships with other models such as
-  # {StorageController}.**
+  # # Creating a New Attached Device
+  #
+  # Creating a new attached device is simple. The following is a simple example
+  # of creating a DVD with an empty drive:
+  #
+  #     ad = VirtualBox::AttachedDevice.new
+  #     ad.port = 0
+  #     ad.image = VirtualBox::DVD.empty_drive
+  #     storage_controller.devices << ad
+  #     ad.save
+  #
+  # The only quirk is that the attached device **must** be attached to a 
+  # storage controller. The above assumes that `storage_controller` exists,
+  # which adds the device.
+  #
+  # Any {Image} subclass can be set to the `image` relationship.
   #
   # # Attributes and Relationships
   #
@@ -99,10 +112,11 @@ module VirtualBox
       end
     end
     
-    # Saves or creates an attached device. If this is a new record,
-    # then {#create} will automatically be called a new record will be
-    # created. Otherwise, nothing will happen since modifying existing
-    # attached devices is not yet supported.
+    # Saves or creates an attached device.
+    #
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
     def save(raise_errors=false)
       raise Exceptions::NoParentException.new if parent.nil?
       raise Exceptions::InvalidObjectException.new("Image must be set") if image.nil?
@@ -147,6 +161,9 @@ module VirtualBox
     #
     # @option options [Boolean] :destroy_image (false) If true, will also
     #   destroy the image associated with device.
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
     def destroy(options={}, raise_errors=false)
       # parent = storagecontroller
       # parent.parent = vm

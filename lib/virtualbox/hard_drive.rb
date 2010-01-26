@@ -136,6 +136,10 @@ module VirtualBox
     # Creates a new hard drive. 
     #
     # **This method should NEVER be called. Call {#save} instead.**
+    #
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
     def create(raise_errors=false)
       raw = Command.vboxmanage("createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember")
       return nil unless raw =~ /UUID: (.+?)$/
@@ -157,6 +161,10 @@ module VirtualBox
     # 
     # Currently, **saving existing hard drives does nothing**.
     # This is a limitation of VirtualBox, rather than the library itself.
+    #
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
     def save(raise_errors=false)
       if new_record?
         # Create a new hard drive
@@ -171,7 +179,9 @@ module VirtualBox
     # 
     # **This operation is not reversable.**
     #
-    # @return [Boolean]
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
     def destroy(raise_errors=false)
       Command.vboxmanage("closemedium disk #{uuid} --delete")
       true

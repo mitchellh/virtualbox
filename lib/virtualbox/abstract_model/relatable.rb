@@ -39,6 +39,37 @@ module VirtualBox
     #     # Accessing through an instance "instance"
     #     instance.bacons # => whatever Bacon.populate_relationship created
     #
+    # # Settable Relationships
+    #
+    # It is often convenient that relationships become "settable." That is,
+    # for a relationship `foos`, there would exist a `foos=` method. This is
+    # possible by implementing the `set_relationship` method on the relationship
+    # class. Consider the following relationship:
+    #
+    #     relationship :foos, Foo
+    #
+    # If `Foo` has the `set_relationship` method, then it will be called by
+    # `foos=`. It is expected to return the new value for the relationship. To
+    # facilitate this need, the `set_relationship` method is given three 
+    # parameters: caller, old value, and new value. An example implementation,
+    # albeit a silly one, is below:
+    #
+    #     class Foo
+    #       def self.set_relationship(caller, old_value, new_value)
+    #         return "Changed to: #{new_value}"
+    #       end
+    #     end
+    #
+    # In this case, the following behavior would occur:
+    #
+    #     instance.foos # => assume "foo"
+    #     instance.foos = "bar"
+    #     instance.foos # => "Changed to: bar"
+    #
+    # If the relationship class _does not implement_ the `set_relationship` 
+    # method, then a {Exceptions::NonSettableRelationshipException} will be raised if
+    # a user attempts to set that relationship.
+    #
     # # Dependent Relationships
     #
     # By setting `:dependent => :destroy` on relationships, {AbstractModel}
@@ -153,7 +184,7 @@ module VirtualBox
       # the resulting relationship to set. 
       #
       # If the relationship class doesn't respond to the set_relationship
-      # method, then an exception {NonSettableRelationshipException} will
+      # method, then an exception {Exceptions::NonSettableRelationshipException} will
       # be raised.
       #
       # This method is called by the "magic" method of `relationship=`.
