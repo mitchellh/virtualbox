@@ -156,6 +156,20 @@ class RelatableTest < Test::Unit::TestCase
     end
   end
   
+  context "checking for relationships" do
+    setup do
+      @model = RelatableModel.new
+    end
+    
+    should "return true for existing relationships" do
+      assert @model.has_relationship?(:foos)
+    end
+    
+    should "return false for nonexistent relationships" do
+      assert !@model.has_relationship?(:bazs)
+    end
+  end
+  
   context "populating relationships" do
     setup do
       @model = RelatableModel.new

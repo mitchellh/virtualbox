@@ -75,5 +75,9 @@ class DirtyTest < Test::Unit::TestCase
       assert_equal ["foo", "foo2"], changes[:foo]
       assert_equal ["bar", "bar2"], changes[:bar]
     end
+    
+    should "still forward non-dirty magic methods up method_missing" do
+      assert_raises(NoMethodError) { @model.foobarbaz }
+    end
   end
 end
