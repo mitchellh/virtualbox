@@ -120,12 +120,17 @@ module VirtualBox
     #   single filename, since VirtualBox will place it in the hard
     #   drives folder.
     # @param [String] format The format to convert to.
-    # @return [HardDrive] The new, cloned hard drive.
-    def clone(outputfile, format="VDI")
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [HardDrive] The new, cloned hard drive, or nil on failure.
+    def clone(outputfile, format="VDI", raise_errors=false)
       raw = Command.vboxmanage("clonehd #{uuid} #{Command.shell_escape(outputfile)} --format #{format} --remember")
       return nil unless raw =~ /UUID: (.+?)$/
       
       self.class.find($1.to_s)
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      nil
     end
     
     # Override of {Image#image_type}.

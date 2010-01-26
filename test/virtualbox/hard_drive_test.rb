@@ -49,7 +49,7 @@ raw
   context "cloning a hard drive" do
     setup do
       @hd = VirtualBox::HardDrive.find(@name)
-      VirtualBox::Command.expects(:vboxmanage).with("clonehd #{@hd.uuid} bar --format VDI --remember").returns(@find_raw)
+      VirtualBox::Command.stubs(:vboxmanage).with("clonehd #{@hd.uuid} bar --format VDI --remember").returns(@find_raw)
     end
     
     should "call vboxmanage with the clone command" do
@@ -61,6 +61,18 @@ raw
       @new_hd = mock("hd")
       VirtualBox::HardDrive.expects(:find).returns(@new_hd)
       assert_equal @new_hd, @hd.clone("bar")
+    end
+    
+    should "return false on failure" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert @hd.clone("bar").nil?
+    end
+    
+    should "raise an exception if raise_errors is true and failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @hd.clone("bar", "VDI", true)
+      }
     end
   end
   
