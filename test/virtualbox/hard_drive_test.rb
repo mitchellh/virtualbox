@@ -85,6 +85,23 @@ raw
       
       assert_equal "foo", @hd.uuid
     end
+    
+    should "return true if the command was a success" do
+      VirtualBox::Command.expects(:success?).returns(true)
+      assert @hd.save
+    end
+    
+    should "return failure if the command failed" do
+      VirtualBox::Command.expects(:success?).returns(false)
+      assert !@hd.save
+    end
+    
+    should "raise an exception if flag is set" do
+      VirtualBox::Command.expects(:success?).returns(false)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @hd.save(true)
+      }
+    end
   end
   
   context "finding a single hard drive" do

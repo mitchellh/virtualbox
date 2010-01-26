@@ -14,6 +14,13 @@ module VirtualBox
     @@vboxmanage = "VBoxManage"
     
     class <<self
+      # Returns true if the last run command was a success. Obviously this
+      # will introduce all sorts of thread-safe problems. Those will have to
+      # be addressed another time.
+      def success?
+        $?.to_i == 0
+      end
+      
       # Sets the path to VBoxManage, which is required for this gem to
       # work.
       def vboxmanage=(path)
@@ -30,7 +37,7 @@ module VirtualBox
       # exit code.
       def test(command)
         execute(command)
-        $?.to_i == 0
+        success?
       end
     
       # Runs a command and returns the STDOUT result. The reason this is

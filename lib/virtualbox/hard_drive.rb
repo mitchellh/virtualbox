@@ -136,13 +136,20 @@ module VirtualBox
     # Creates a new hard drive. 
     #
     # **This method should NEVER be called. Call {#save} instead.**
-    def create
+    def create(raise_errors=false)
       raw = Command.vboxmanage("createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember")
       return nil unless raw =~ /UUID: (.+?)$/
+      if !Command.success?
+        raise Exceptions::CommandFailedException.new(raw) if raise_errors
+        return false
+      end
       
       # Just replace our attributes with the newly created ones. This also
       # will set new_record to false.
       populate_attributes(self.class.find($1.to_s).attributes)
+      
+      # Return the success of the command
+      true
     end
     
     # Saves the hard drive object. If the hard drive is new,
@@ -151,10 +158,10 @@ module VirtualBox
     # 
     # Currently, **saving existing hard drives does nothing**.
     # This is a limitation of VirtualBox, rather than the library itself.
-    def save
+    def save(raise_errors=false)
       if new_record?
         # Create a new hard drive
-        create
+        create(raise_errors)
       else
         super
       end

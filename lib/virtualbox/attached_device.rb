@@ -103,9 +103,9 @@ module VirtualBox
     # then {#create} will automatically be called a new record will be
     # created. Otherwise, nothing will happen since modifying existing
     # attached devices is not yet supported.
-    def save
+    def save(raise_errors=false)
       if new_record?
-        create
+        create(raise_errors)
       else
         super
       end
@@ -134,10 +134,12 @@ module VirtualBox
     # {#save} and should only be called by {#save}.
     #
     # **Never call this method on its own.**
-    def create
+    def create(raise_errors=false)
       raise Exceptions::NoParentException.new if parent.nil?
       raise Exceptions::InvalidObjectException.new("Image must be set") if image.nil?
-      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}")
+      raw = Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}")
+      raise Exceptions::CommandFailedException.new(raw) if !Command.success? && raise_errors
+      Command.success?
     end
     
     # Destroys the attached device. By default, this only removes any

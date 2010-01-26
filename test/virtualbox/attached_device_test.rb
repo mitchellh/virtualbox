@@ -54,24 +54,46 @@ class AttachedDeviceTest < Test::Unit::TestCase
       @ad.save
     end
     
-    should "raise an InvalidObjectException if no image is set" do
-      @ad.added_to_relationship(@caller)
-      @ad.image = nil
-      assert_raises(VirtualBox::Exceptions::InvalidObjectException) {
-        @ad.save
-      }
-    end
-    
     should "raise a NoParentException if it wasn't added to a relationship" do
       assert_raises(VirtualBox::Exceptions::NoParentException) {
         @ad.save
       }
     end
     
-    should "call the proper vboxcommand" do
-      VirtualBox::Command.expects(:vboxmanage).with("storageattach #{@vm.name} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port #{@ad.port} --device 0 --type #{@image.image_type} --medium #{@ad.medium}")
-      @ad.added_to_relationship(@caller)
-      @ad.save
+    context "has a parent" do
+      setup do
+        @ad.added_to_relationship(@caller)
+        VirtualBox::Command.stubs(:vboxmanage)
+      end
+      
+      should "raise an InvalidObjectException if no image is set" do
+        @ad.image = nil
+        assert_raises(VirtualBox::Exceptions::InvalidObjectException) {
+          @ad.save
+        }
+      end
+
+      should "call the proper vboxcommand" do
+        VirtualBox::Command.expects(:vboxmanage).with("storageattach #{@vm.name} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port #{@ad.port} --device 0 --type #{@image.image_type} --medium #{@ad.medium}")
+        @ad.save
+      end
+
+      should "return false if the command failed" do
+        VirtualBox::Command.expects(:success?).twice.returns(false)
+        assert !@ad.save
+      end
+
+      should "return true if the command was a success" do
+        VirtualBox::Command.expects(:success?).twice.returns(true)
+        assert @ad.save
+      end
+      
+      should "raise an exception if true sent to save and error occured" do
+        VirtualBox::Command.expects(:success?).returns(false)
+        assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+          @ad.save(true)
+        }
+      end
     end
   end
   
