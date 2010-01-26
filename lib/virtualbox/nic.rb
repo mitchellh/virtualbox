@@ -142,8 +142,9 @@ module VirtualBox
     # called on {#save}.
     #
     # **This method typically won't be used except internally.**
-    def save_attribute(key, value, vmname)
-      Command.vboxmanage("modifyvm #{vmname} --#{key}#{@index} #{Command.shell_escape(value)}")
+    def save_attribute(key, value, vmname)        
+      raw = Command.vboxmanage("modifyvm #{vmname} --#{key}#{@index} #{Command.shell_escape(value)}")
+      raise Exceptions::CommandFailedException.new(raw) unless Command.success?
       super
     end
   end

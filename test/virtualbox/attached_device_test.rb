@@ -79,12 +79,12 @@ class AttachedDeviceTest < Test::Unit::TestCase
       end
 
       should "return false if the command failed" do
-        VirtualBox::Command.expects(:success?).twice.returns(false)
+        VirtualBox::Command.expects(:success?).returns(false)
         assert !@ad.save
       end
 
       should "return true if the command was a success" do
-        VirtualBox::Command.expects(:success?).twice.returns(true)
+        VirtualBox::Command.expects(:success?).returns(true)
         assert @ad.save
       end
       

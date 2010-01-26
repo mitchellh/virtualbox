@@ -48,6 +48,17 @@ raw
       assert nic.nictype_changed?
       nic.save(@vmname)
     end
+    
+    should "raise a CommandFailedException if it fails" do
+      VirtualBox::Command.expects(:vboxmanage).returns("")
+      VirtualBox::Command.expects(:success?).returns(false)
+      
+      nic = @nic[0]
+      nic.nictype = "ZOO"
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        nic.save(@vmname)
+      }
+    end
   end
   
   context "populating relationships" do
