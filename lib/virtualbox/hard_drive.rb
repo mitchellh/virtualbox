@@ -172,9 +172,12 @@ module VirtualBox
     # **This operation is not reversable.**
     #
     # @return [Boolean]
-    def destroy
+    def destroy(raise_errors=false)
       Command.vboxmanage("closemedium disk #{uuid} --delete")
-      return $?.to_i == 0
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
     end
   end
 end

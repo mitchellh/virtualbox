@@ -23,6 +23,29 @@ raw
     VirtualBox::Command.stubs(:vboxmanage).with("showhdinfo #{@name}").returns(@find_raw)
   end
   
+  context "destroying a hard drive" do
+    setup do
+      @hd = VirtualBox::HardDrive.find(@name)
+    end
+    
+    should "call vboxmanage to destroy it" do
+      VirtualBox::Command.expects(:vboxmanage).with("closemedium disk #{@hd.uuid} --delete")
+      assert @hd.destroy
+    end
+    
+    should "return false if destroy failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@hd.destroy
+    end
+    
+    should "raise an exception if failed and flag is set" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @hd.destroy(true)
+      }
+    end
+  end
+  
   context "cloning a hard drive" do
     setup do
       @hd = VirtualBox::HardDrive.find(@name)

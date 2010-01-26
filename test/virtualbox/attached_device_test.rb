@@ -41,6 +41,38 @@ class AttachedDeviceTest < Test::Unit::TestCase
     end
   end
   
+  context "saving an existing device" do
+    setup do
+      @value = VirtualBox::AttachedDevice.populate_relationship(@caller, @data)
+      @value = @value[0]
+      @value.image = VirtualBox::DVD.empty_drive
+    end
+    
+    should "call vboxmanage" do
+      VirtualBox::Command.expects(:vboxmanage).once
+      @value.save
+    end
+    
+    should "not call destroy if the port didn't change" do
+      @value.expects(:destroy).never
+      assert !@value.port_changed?
+      assert @value.save
+    end
+    
+    should "call destroy with the old port if the port changed" do
+      @value.expects(:destroy).with({:port => @value.port}, false)
+      @value.port = 7
+      assert @value.port_changed?
+      assert @value.save
+    end
+    
+    should "call destroy with the raise errors flag" do
+      @value.expects(:destroy).with(anything, true).once
+      @value.port = 7
+      @value.save(true)
+    end
+  end
+  
   context "creating a new attached device" do
     setup do
       @image = VirtualBox::HardDrive.new
@@ -59,6 +91,11 @@ class AttachedDeviceTest < Test::Unit::TestCase
       setup do
         @ad.added_to_relationship(@caller)
         VirtualBox::Command.stubs(:vboxmanage)
+      end
+      
+      should "not call destroy since its a new record" do
+        @ad.expects(:destroy).never
+        assert @ad.save
       end
       
       should "not raise an InvalidObjectException if no image is set" do
@@ -184,6 +221,23 @@ class AttachedDeviceTest < Test::Unit::TestCase
       @value.destroy({
         :destroy_image => true
       })
+    end
+    
+    should "return false if destroy failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@value.destroy
+    end
+    
+    should "raise an exception if destroy failed and an error occured" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @value.destroy({}, true)
+      }
+    end
+    
+    should "forward raise_errors flag to image.destroy" do
+      @image.expects(:destroy).with(true).once
+      @value.destroy({:destroy_image => true}, true)
     end
   end
   

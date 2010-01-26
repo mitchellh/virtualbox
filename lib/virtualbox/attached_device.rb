@@ -109,7 +109,7 @@ module VirtualBox
       
       # If the port changed, we have to destroy the old one, then create
       # a new one
-      destroy(:port => port_was) if port_changed? && !port_was.nil?
+      destroy({:port => port_was}, raise_errors) if port_changed? && !port_was.nil?
 
       Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}")
       existing_record!
@@ -147,12 +147,15 @@ module VirtualBox
     #
     # @option options [Boolean] :destroy_image (false) If true, will also
     #   destroy the image associated with device.
-    def destroy(options={})
+    def destroy(options={}, raise_errors=false)
       # parent = storagecontroller
       # parent.parent = vm
       destroy_port = options[:port] || port
       Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{destroy_port} --device 0 --medium none")      
-      image.destroy if options[:destroy_image] && image
+      image.destroy(raise_errors) if options[:destroy_image] && image
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
     end
     
     # Relationship callback when added to a collection. This is automatically
