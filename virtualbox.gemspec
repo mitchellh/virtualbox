@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{virtualbox}
-  s.version = "0.1.1"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-01-24}
+  s.date = %q{2010-01-26}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -17,11 +17,13 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".gitignore",
+     ".yardopts",
      "Gemfile",
      "Rakefile",
      "Readme.md",
      "TODO",
      "VERSION",
+     "docs/GettingStarted.md",
      "lib/virtualbox.rb",
      "lib/virtualbox/abstract_model.rb",
      "lib/virtualbox/abstract_model/attributable.rb",
@@ -30,11 +32,12 @@ Gem::Specification.new do |s|
      "lib/virtualbox/attached_device.rb",
      "lib/virtualbox/command.rb",
      "lib/virtualbox/dvd.rb",
-     "lib/virtualbox/errors.rb",
+     "lib/virtualbox/exceptions.rb",
      "lib/virtualbox/ext/subclass_listing.rb",
      "lib/virtualbox/hard_drive.rb",
      "lib/virtualbox/image.rb",
      "lib/virtualbox/nic.rb",
+     "lib/virtualbox/proxies/collection.rb",
      "lib/virtualbox/storage_controller.rb",
      "lib/virtualbox/vm.rb",
      "test/test_helper.rb",
@@ -49,6 +52,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/hard_drive_test.rb",
      "test/virtualbox/image_test.rb",
      "test/virtualbox/nic_test.rb",
+     "test/virtualbox/proxies/collection_test.rb",
      "test/virtualbox/storage_controller_test.rb",
      "test/virtualbox/vm_test.rb",
      "virtualbox.gemspec"
@@ -71,6 +75,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/hard_drive_test.rb",
      "test/virtualbox/image_test.rb",
      "test/virtualbox/nic_test.rb",
+     "test/virtualbox/proxies/collection_test.rb",
      "test/virtualbox/storage_controller_test.rb",
      "test/virtualbox/vm_test.rb"
   ]
