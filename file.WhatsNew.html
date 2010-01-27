@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>File: WhatsNew</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html" title="Index">Index</a> &raquo; 
+    <span class="title">File: WhatsNew</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><div id='filecontents'><h1>What's New in 0.2.x?</h1>
+
+<h2>Common Saving Convention</h2>
+
+<p>All models now implement a common saving convention. <code>save</code> will always return <code>true</code>
+on success and <code>false</code> on failure. Additionally, an optional parameter <code>raise_error</code>
+is available on save for all models which will cause failure to raise a
+<tt><a href="VirtualBox/Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">VirtualBox::Exceptions::CommandFailedException</a></tt> which contains the reason for
+failure.</p>
+
+<p>This change allowed uniformity across all the models and also increased the error
+checking ability of developers.</p>
+
+<h2>AttachedDevice Creation</h2>
+
+<p><tt><a href="VirtualBox/AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">VirtualBox::AttachedDevice</a></tt> objects can now be created from scratch. A
+quick example below:</p>
+
+<pre class="code"><span class='ad identifier id'>ad</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='AttachedDevice constant id'>AttachedDevice</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='image identifier id'>image</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='HardDrive constant id'>HardDrive</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;my-hd&quot;</span><span class='rparen token'>)</span>
+<span class='storate_controller identifier id'>storate_controller</span><span class='dot token'>.</span><span class='devices identifier id'>devices</span> <span class='lshft op'>&lt;&lt;</span> <span class='ad identifier id'>ad</span>
+<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<h2>Empty Drives</h2>
+
+<p><tt><a href="VirtualBox/DVD.html" title="VirtualBox::DVD (class)">VirtualBox::DVD</a></tt> now supports empty drives. That is, you can create a
+DVD object which represents an empty drive by calling <tt><a href="VirtualBox/DVD.html#empty_drive-class_method" title="VirtualBox::DVD.empty_drive (method)">VirtualBox::DVD.empty_drive</a></tt>.
+This object can be used as an image when creating a new or modifying an
+existing <tt><a href="VirtualBox/AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">VirtualBox::AttachedDevice</a></tt>.</p>
+
+<h2>VM Saving Propagates Fully</h2>
+
+<p>Previously, when saving a <tt><a href="VirtualBox/VM.html" title="VirtualBox::VM (class)">VirtualBox::VM</a></tt>, it would only save the <code>nics</code>
+relationship in addition to its own attributes. This was because only those
+were editable, at the time. Now that <tt><a href="VirtualBox/AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">VirtualBox::AttachedDevice</a></tt> can be
+edited and created, virtual machine objects save <strong>all</strong> relationships when
+<code>save</code> is called. This means you can do things like the following, and
+they'll work as expected:</p>
+
+<pre class="code"><span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;Foo&quot;</span><span class='rparen token'>)</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='storage_controllers identifier id'>storage_controllers</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='devices identifier id'>devices</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='image identifier id'>image</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='DVD constant id'>DVD</span><span class='dot token'>.</span><span class='empty_drive identifier id'>empty_drive</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<h2>Bug Fixes &amp; Testing Improvements</h2>
+
+<p>This release has 100% test coverage based on RCov's output and fixes
+many bugs which existed in 0.1.x.</p></div></div>
+    
+    <div id="footer">
+  Generated on Tue Jan 26 17:54:18 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>
