@@ -108,6 +108,40 @@ which simply returns the relationship data.</p>
 <span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='bacons identifier id'>bacons</span> <span class='comment val'># =&gt; whatever Bacon.populate_relationship created</span>
 </pre>
 
+<h1>Settable Relationships</h1>
+
+<p>It is often convenient that relationships become "settable." That is,
+for a relationship <code>foos</code>, there would exist a <code>foos=</code> method. This is
+possible by implementing the <code>set_relationship</code> method on the relationship
+class. Consider the following relationship:</p>
+
+<pre class="code"><span class='relationship identifier id'>relationship</span> <span class='symbol val'>:foos</span><span class='comma token'>,</span> <span class='Foo constant id'>Foo</span>
+</pre>
+
+<p>If <code>Foo</code> has the <code>set_relationship</code> method, then it will be called by
+<code>foos=</code>. It is expected to return the new value for the relationship. To
+facilitate this need, the <code>set_relationship</code> method is given three
+parameters: caller, old value, and new value. An example implementation,
+albeit a silly one, is below:</p>
+
+<pre class="code"><span class='class class kw'>class</span> <span class='Foo constant id'>Foo</span>
+  <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='set_relationship identifier id'>set_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='old_value identifier id'>old_value</span><span class='comma token'>,</span> <span class='new_value identifier id'>new_value</span><span class='rparen token'>)</span>
+    <span class='return return kw'>return</span> <span class='dstring node'>&quot;Changed to: #{new_value}&quot;</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+
+<p>In this case, the following behavior would occur:</p>
+
+<pre class="code"><span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='foos identifier id'>foos</span> <span class='comment val'># =&gt; assume &quot;foo&quot;</span>
+<span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='foos identifier id'>foos</span> <span class='assign token'>=</span> <span class='string val'>&quot;bar&quot;</span>
+<span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='foos identifier id'>foos</span> <span class='comment val'># =&gt; &quot;Changed to: bar&quot;</span>
+</pre>
+
+<p>If the relationship class <em>does not implement</em> the <code>set_relationship</code>
+method, then a <tt><a href="../Exceptions/NonSettableRelationshipException.html" title="VirtualBox::Exceptions::NonSettableRelationshipException (class)">Exceptions::NonSettableRelationshipException</a></tt> will be raised if
+a user attempts to set that relationship.</p>
+
 <h1>Dependent Relationships</h1>
 
 <p>By setting <code>:dependent =&gt; :destroy</code> on relationships, <tt><a href="../AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></tt>
@@ -227,27 +261,6 @@ mentioned here.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#method_missing-instance_method" title="#method_missing (instance method)">- (Object) <strong>method_missing</strong>(meth, *args) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc">Method missing is used to add dynamic handlers for relationship
-accessors.</span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#populate_relationships-instance_method" title="#populate_relationships (instance method)">- (Object) <strong>populate_relationships</strong>(data) </a>
     
 
@@ -306,65 +319,27 @@ relationships.</span>
 </li>
 
     
-  </ul>
-<div id="method_missing_details" class="method_details_list">
-  <h2>Dynamic Method Handling</h2>
-  <p class="notice this">
-    This class handles dynamic methods through the <tt>method_missing</tt> method
+      <li class="public ">
+  <span class="summary_signature">
     
-  </p>
+      <a href="#set_relationship-instance_method" title="#set_relationship (instance method)">- (Object) <strong>set_relationship</strong>(key, value) </a>
+    
+
+    
+  </span>
   
-    <div class="method_details first">
-  <p class="signature first" id="method_missing-instance_method">
   
-    - (<tt>Object</tt>) <strong>method_missing</strong>(meth, *args) 
+  
+  
   
 
   
-</p><div class="docstring">
-  <div class="discussion">
-    <p>Method missing is used to add dynamic handlers for relationship
-accessors.</p>
-
-  </div>
-</div>
-<div class="tags">
+    <span class="summary_desc">Sets a relationship to the given value.</span>
   
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
+</li>
 
-
-152
-153
-154
-155
-156
-157
-158
-159
-160</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 152</span>
-
-<span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
-  <span class='meth_string identifier id'>meth_string</span> <span class='assign token'>=</span> <span class='meth identifier id'>meth</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
-
-  <span class='if if kw'>if</span> <span class='has_relationship? fid id'>has_relationship?</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='rparen token'>)</span>
-    <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='meth identifier id'>meth</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
-  <span class='else else kw'>else</span>
-    <span class='super super kw'>super</span>
-  <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-  
-</div>
+    
+  </ul>
 
 
   <div id="class_method_details" class="method_details_list">
@@ -392,12 +367,12 @@ accessors.</p>
       <pre class="lines">
 
 
-51
-52
-53</pre>
+82
+83
+84</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 51</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 82</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='included identifier id'>included</span><span class='lparen token'>(</span><span class='base identifier id'>base</span><span class='rparen token'>)</span>
   <span class='base identifier id'>base</span><span class='dot token'>.</span><span class='extend identifier id'>extend</span> <span class='ClassMethods constant id'>ClassMethods</span>
@@ -455,14 +430,14 @@ the class's <code>destroy_relationship</code> method.</p>
       <pre class="lines">
 
 
-129
-130
-131
-132
-133</pre>
+168
+169
+170
+171
+172</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 129</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 168</span>
 
 <span class='def def kw'>def</span> <span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
@@ -498,14 +473,14 @@ relationship's <code>destroy_relationship</code> method.</p>
       <pre class="lines">
 
 
-118
-119
-120
-121
-122</pre>
+157
+158
+159
+160
+161</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 157</span>
 
 <span class='def def kw'>def</span> <span class='destroy_relationships identifier id'>destroy_relationships</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
@@ -552,12 +527,12 @@ relationship's <code>destroy_relationship</code> method.</p>
       <pre class="lines">
 
 
-146
-147
-148</pre>
+185
+186
+187</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 146</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 185</span>
 
 <span class='def def kw'>def</span> <span class='has_relationship? fid id'>has_relationship?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
@@ -590,15 +565,15 @@ relationships.</p>
       <pre class="lines">
 
 
-108
-109
-110
-111
-112
-113</pre>
+147
+148
+149
+150
+151
+152</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 147</span>
 
 <span class='def def kw'>def</span> <span class='populate_relationships identifier id'>populate_relationships</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
@@ -647,12 +622,12 @@ use the accessors created by Relatable.</p>
       <pre class="lines">
 
 
-139
-140
-141</pre>
+178
+179
+180</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 139</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 178</span>
 
 <span class='def def kw'>def</span> <span class='relationship_data identifier id'>relationship_data</span>
   <span class='@relationship_data ivar id'>@relationship_data</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
@@ -696,15 +671,15 @@ end and they'll be pushed through to the <code>save_relationship</code> method.<
       <pre class="lines">
 
 
-99
-100
-101
-102
-103
-104</pre>
+138
+139
+140
+141
+142
+143</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 138</span>
 
 <span class='def def kw'>def</span> <span class='save_relationships identifier id'>save_relationships</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
@@ -718,12 +693,113 @@ end and they'll be pushed through to the <code>save_relationship</code> method.<
 </table>
 </div>
     
+      <div class="method_details ">
+  <p class="signature " id="set_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>set_relationship</strong>(key, value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Sets a relationship to the given value. This is not guaranteed to
+do anything, since "set_relationship" will be called on the class
+that the relationship is associated with and its expected to return
+the resulting relationship to set.</p>
+
+<p>If the relationship class doesn't respond to the set_relationship
+method, then an exception <tt><a href="../Exceptions/NonSettableRelationshipException.html" title="VirtualBox::Exceptions::NonSettableRelationshipException (class)">Exceptions::NonSettableRelationshipException</a></tt> will
+be raised.</p>
+
+<p>This method is called by the "magic" method of <code>relationship=</code>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <span class='name'>key</span>
+      
+      
+      
+        &mdash;
+        Relationship key.
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+        <span class='name'>value</span>
+      
+      
+      
+        &mdash;
+        The new value of the relationship.
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="../Exceptions/NonSettableRelationshipException.html" title="VirtualBox::Exceptions::NonSettableRelationshipException (class)">Exceptions::NonSettableRelationshipException</a></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+202
+203
+204
+205
+206
+207
+208
+209</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 202</span>
+
+<span class='def def kw'>def</span> <span class='set_relationship identifier id'>set_relationship</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='key identifier id'>key</span> <span class='assign token'>=</span> <span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
+  <span class='relationship identifier id'>relationship</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='relationship identifier id'>relationship</span>
+  
+  <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='NonSettableRelationshipException constant id'>NonSettableRelationshipException</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='unless unless_mod kw'>unless</span> <span class='relationship identifier id'>relationship</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:set_relationship</span><span class='rparen token'>)</span>
+  <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='relationship identifier id'>relationship</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='set_relationship identifier id'>set_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 24 19:18:07 2010 by 
+  Generated on Tue Jan 26 17:43:35 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

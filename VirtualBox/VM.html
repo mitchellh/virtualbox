@@ -362,6 +362,26 @@ as a hash.</span>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#control-instance_method" title="#control (instance method)">- (Boolean) <strong>control</strong>(command, raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Controls the virtual machine.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#destroy-instance_method" title="#destroy (instance method)">- (Object) <strong>destroy</strong>(opts = {}) </a>
     
 
@@ -375,6 +395,26 @@ as a hash.</span>
 
   
     <span class="summary_desc">Destroys the virtual machine.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#export-instance_method" title="#export (instance method)">- (Object) <strong>export</strong>(filename, options = {}, raise_error = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Exports a virtual machine.</span>
   
 </li>
 
@@ -404,7 +444,47 @@ as a hash.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#save-instance_method" title="#save (instance method)">- (Object) <strong>save</strong> </a>
+      <a href="#pause-instance_method" title="#pause (instance method)">- (Boolean) <strong>pause</strong>(raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Pauses the VM, putting it on hold temporarily.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#resume-instance_method" title="#resume (instance method)">- (Boolean) <strong>resume</strong>(raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Resume a paused VM.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save-instance_method" title="#save (instance method)">- (Object) <strong>save</strong>(raise_errors = false) </a>
     
 
     
@@ -444,7 +524,27 @@ as a hash.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#start-instance_method" title="#start (instance method)">- (Object) <strong>start</strong>(mode = :gui) </a>
+      <a href="#save_state-instance_method" title="#save_state (instance method)">- (Boolean) <strong>save_state</strong>(raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves the state of a VM and stops it.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#start-instance_method" title="#start (instance method)">- (Boolean) <strong>start</strong>(mode = :gui, raise_errors = false) </a>
     
 
     
@@ -484,7 +584,7 @@ as a hash.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#stop-instance_method" title="#stop (instance method)">- (Object) <strong>stop</strong> </a>
+      <a href="#stop-instance_method" title="#stop (instance method)">- (Boolean) <strong>stop</strong>(raise_errors = false) </a>
     
 
     
@@ -510,7 +610,7 @@ virtual machine without saving state.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -518,7 +618,7 @@ virtual machine without saving state.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Attributable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -534,7 +634,7 @@ virtual machine without saving state.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -592,7 +692,7 @@ initialize the VMs.</p>
   <p class="notice super">
     This class handles dynamic methods through the <tt>method_missing</tt> method
     
-      in the class <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">VirtualBox::AbstractModel::Relatable</a>
+      in the class <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">VirtualBox::AbstractModel::Dirty</a>
     
   </p>
   
@@ -1061,7 +1161,105 @@ as a hash.</p>
     
     
       <div class="method_details first">
-  <p class="signature first" id="destroy-instance_method">
+  <p class="signature first" id="control-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>control</strong>(command, raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Controls the virtual machine. This method is used by <tt><a href="#stop-instance_method" title="VirtualBox::VM#stop (method)">#stop</a></tt>,
+<tt><a href="#pause-instance_method" title="VirtualBox::VM#pause (method)">#pause</a></tt>, <tt><a href="#resume-instance_method" title="VirtualBox::VM#resume (method)">#resume</a></tt>, and <tt><a href="#save_state-instance_method" title="VirtualBox::VM#save_state (method)">#save_state</a></tt> to control the virtual machine.
+Typically, you won't ever have to call this method and should
+instead call those.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>command</span>
+      
+      
+      
+        &mdash;
+        The command to run on controlvm
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+361
+362
+363
+364
+365
+366
+367</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 361</span>
+
+<span class='def def kw'>def</span> <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;controlvm #{@original_name} #{command}&quot;</span><span class='rparen token'>)</span>
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="destroy-instance_method">
   
     - (<tt>Object</tt>) <strong>destroy</strong>(opts = {}) 
   
@@ -1115,16 +1313,16 @@ the <code>destroy_image</code> option.</p>
       <pre class="lines">
 
 
-279
-280
-281
-282
-283
-284
-285</pre>
+379
+380
+381
+382
+383
+384
+385</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 279</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 379</span>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># Call super first to destroy relationships, necessary before</span>
@@ -1140,9 +1338,338 @@ the <code>destroy_image</code> option.</p>
 </div>
     
       <div class="method_details ">
+  <p class="signature " id="export-instance_method">
+  
+    - (<tt>Object</tt>) <strong>export</strong>(filename, options = {}, raise_error = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Exports a virtual machine. The virtual machine will be exported
+to the specified OVF file name. This directory will also have the
+<code>mf</code> file which contains the file checksums and also the virtual
+drives of the machine.</p>
+
+<p>Export also supports an additional options hash which can contain
+information that will be embedded with the virtual machine. View
+below for more information on the available options.</p>
+
+<p>This method will block until the export is complete, which takes about
+60 to 90 seconds on my 2.2 GHz 2009 model MacBook Pro.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>filename</span>
+      
+      
+      
+        &mdash;
+        The file (not directory) to save the exported OVF file. This directory will also receive the checksum file and virtual disks.
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <h3>Options Hash (<tt>options</tt>):</h3>
+    <ul class="option">
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:product</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>nil</tt>
+            
+          </span>
+          &mdash;The name of the product
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:producturl</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>nil</tt>
+            
+          </span>
+          &mdash;The URL of the product
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:vendor</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>nil</tt>
+            
+          </span>
+          &mdash;The name of the vendor
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:vendorurl</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>nil</tt>
+            
+          </span>
+          &mdash;The URL for the vendor
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:version</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>nil</tt>
+            
+          </span>
+          &mdash;The version information
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:eula</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>nil</tt>
+            
+          </span>
+          &mdash;License text
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:eulafile</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>nil</tt>
+            
+          </span>
+          &mdash;License file
+        </tr>
+      
+    </ul>
+  
+    
+    
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 276</span>
+
+<span class='def def kw'>def</span> <span class='export identifier id'>export</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='raise_error identifier id'>raise_error</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='acc identifier id'>acc</span><span class='comma token'>,</span> <span class='kv identifier id'>kv</span><span class='bitor op'>|</span>
+    <span class='acc identifier id'>acc</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='dstring node'>&quot;--#{kv[0]} #{Command.shell_escape(kv[1])}&quot;</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='unshift identifier id'>unshift</span><span class='lparen token'>(</span><span class='string val'>&quot;--vsys 0&quot;</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+  
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;export #{@original_name} -o #{Command.shell_escape(filename)} #{options.join(&quot; &quot;)}&quot;</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span><span class='rparen token'>)</span>
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_error identifier id'>raise_error</span>
+  <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="pause-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>pause</strong>(raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Pauses the VM, putting it on hold temporarily. The VM can be resumed
+again by calling <tt><a href="#resume-instance_method" title="VirtualBox::VM#resume (method)">#resume</a></tt></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+329
+330
+331</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 329</span>
+
+<span class='def def kw'>def</span> <span class='pause identifier id'>pause</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:pause</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="resume-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>resume</strong>(raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Resume a paused VM.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+338
+339
+340</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 338</span>
+
+<span class='def def kw'>def</span> <span class='resume identifier id'>resume</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:resume</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <p class="signature " id="save-instance_method">
   
-    - (<tt>Object</tt>) <strong>save</strong> 
+    - (<tt>Object</tt>) <strong>save</strong>(raise_errors = false) 
   
 
   
@@ -1171,12 +1698,17 @@ as well (such as storage controllers), those will be saved, too.</p>
 235
 236
 237
-238</pre>
+238
+239
+240
+241
+242
+243</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 229</span>
 
-<span class='def def kw'>def</span> <span class='save identifier id'>save</span>
+<span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='comment val'># Make sure we save the new name first if that was changed, or</span>
   <span class='comment val'># we'll get some inconsistencies later</span>
   <span class='if if kw'>if</span> <span class='name_changed? fid id'>name_changed?</span>
@@ -1184,7 +1716,12 @@ as well (such as storage controllers), those will be saved, too.</p>
     <span class='@original_name ivar id'>@original_name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span>
   <span class='end end kw'>end</span>
   
-  <span class='super super kw'>super</span>
+  <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1216,13 +1753,13 @@ be called except interally. Instead, you're probably looking for <tt><a href="#s
       <pre class="lines">
 
 
-244
-245
-246
-247</pre>
+249
+250
+251
+252</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 244</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 249</span>
 
 <span class='def def kw'>def</span> <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}&quot;</span><span class='rparen token'>)</span>
@@ -1235,9 +1772,83 @@ be called except interally. Instead, you're probably looking for <tt><a href="#s
 </div>
     
       <div class="method_details ">
+  <p class="signature " id="save_state-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>save_state</strong>(raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves the state of a VM and stops it. The VM can be resumed
+again by calling "start" again.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+348
+349
+350</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 348</span>
+
+<span class='def def kw'>def</span> <span class='save_state identifier id'>save_state</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:savestate</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <p class="signature " id="start-instance_method">
   
-    - (<tt>Object</tt>) <strong>start</strong>(mode = :gui) 
+    - (<tt>Boolean</tt>) <strong>start</strong>(mode = :gui, raise_errors = false) 
   
 
   
@@ -1259,22 +1870,82 @@ Both the GUI and headless mode will not block the ruby process.</p>
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <span class='name'>mode</span>
+      
+      
+        <em class="default">(defaults to: <tt>:gui</tt>)</em>
+      
+      
+        &mdash;
+        Described above.
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-258
-259
-260</pre>
+304
+305
+306
+307
+308
+309
+310</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 258</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 304</span>
 
-<span class='def def kw'>def</span> <span class='start identifier id'>start</span><span class='lparen token'>(</span><span class='mode identifier id'>mode</span><span class='assign token'>=</span><span class='symbol val'>:gui</span><span class='rparen token'>)</span>
+<span class='def def kw'>def</span> <span class='start identifier id'>start</span><span class='lparen token'>(</span><span class='mode identifier id'>mode</span><span class='assign token'>=</span><span class='symbol val'>:gui</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;startvm #{@original_name} --type #{mode}&quot;</span><span class='rparen token'>)</span>
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1370,7 +2041,7 @@ when the VM was found unless <code>reload</code> is set to <code>true</code>.</p
       <div class="method_details ">
   <p class="signature " id="stop-instance_method">
   
-    - (<tt>Object</tt>) <strong>stop</strong> 
+    - (<tt>Boolean</tt>) <strong>stop</strong>(raise_errors = false) 
   
 
   
@@ -1383,22 +2054,58 @@ of data.</p>
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-265
-266
-267</pre>
+319
+320
+321</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 265</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 319</span>
 
-<span class='def def kw'>def</span> <span class='stop identifier id'>stop</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;controlvm #{@original_name} poweroff&quot;</span><span class='rparen token'>)</span>
+<span class='def def kw'>def</span> <span class='stop identifier id'>stop</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:poweroff</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1411,7 +2118,7 @@ of data.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 24 19:18:09 2010 by 
+  Generated on Tue Jan 26 17:43:32 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

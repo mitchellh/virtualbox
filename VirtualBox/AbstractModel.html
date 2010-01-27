@@ -142,6 +142,46 @@ It provides convenient ActiveRecord-style model behavior to subclasses.</p>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#existing_record%21-instance_method" title="#existing_record! (instance method)">- (Object) <strong>existing_record!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Explicitly sets the model to not be a new record.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#new_record%21-instance_method" title="#new_record! (instance method)">- (Object) <strong>new_record!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Explicitly resets the model to a new record.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#new_record%3F-instance_method" title="#new_record? (instance method)">- (Boolean) <strong>new_record?</strong> </a>
     
 
@@ -222,6 +262,27 @@ It provides convenient ActiveRecord-style model behavior to subclasses.</p>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#set_relationship-instance_method" title="#set_relationship (instance method)">- (Object) <strong>set_relationship</strong>(key, value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Overwrites <tt><a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">Relatable#set_relationship</a></tt> to set the dirty state of the
+relationship.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#write_attribute-instance_method" title="#write_attribute (instance method)">- (Object) <strong>write_attribute</strong>(name, value) </a>
     
 
@@ -248,7 +309,7 @@ the written attribute.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Attributable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a></p>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a></p>
 
   
   
@@ -264,13 +325,13 @@ the written attribute.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
 <div id="method_missing_details" class="method_details_list">
   <h2>Dynamic Method Handling</h2>
   <p class="notice super">
     This class handles dynamic methods through the <tt>method_missing</tt> method
     
-      in the class <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">VirtualBox::AbstractModel::Relatable</a>
+      in the class <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">VirtualBox::AbstractModel::Dirty</a>
     
   </p>
   
@@ -305,21 +366,99 @@ on relationships, see <tt><a href="AbstractModel/Relatable.html" title="VirtualB
       <pre class="lines">
 
 
-88
-89
-90
-91
-92
-93</pre>
+110
+111
+112
+113
+114
+115</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 110</span>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># Destroy dependent relationships</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
     <span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:dependent</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='symbol val'>:destroy</span>
   <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="existing_record!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>existing_record!</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Explicitly sets the model to not be a new record. If you're using
+this method outside of virtualbox library core, you should really
+be asking yourself "why?"</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+35
+36
+37</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 35</span>
+
+<span class='def def kw'>def</span> <span class='existing_record! fid id'>existing_record!</span>
+  <span class='@new_record ivar id'>@new_record</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="new_record!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>new_record!</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Explicitly resets the model to a new record. If you're using this
+method outside of virtualbox library core, you should really be
+asking yourself "why?"</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+28
+29
+30</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 28</span>
+
+<span class='def def kw'>def</span> <span class='new_record! fid id'>new_record!</span>
+  <span class='@new_record ivar id'>@new_record</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -374,7 +513,7 @@ previously exist, or save an old one if it did exist.</p>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 20</span>
 
 <span class='def def kw'>def</span> <span class='new_record? fid id'>new_record?</span>
-  <span class='@new_record ivar id'>@new_record</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='@new_record ivar id'>@new_record</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='new_record! fid id'>new_record!</span> <span class='if if_mod kw'>if</span> <span class='@new_record ivar id'>@new_record</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
   <span class='@new_record ivar id'>@new_record</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -418,19 +557,19 @@ a new record (see <tt><a href="#new_record%3F-instance_method" title="VirtualBox
       <pre class="lines">
 
 
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75</pre>
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 80</span>
 
 <span class='def def kw'>def</span> <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='attribs identifier id'>attribs</span><span class='rparen token'>)</span>
   <span class='comment val'># No longer a new record</span>
@@ -472,21 +611,21 @@ implementation specific (see <tt><a href="VM.html#save-instance_method" title="V
       <pre class="lines">
 
 
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40</pre>
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 43</span>
 
 <span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># Go through changed attributes and call save_attribute for</span>
@@ -531,15 +670,57 @@ by any subclasses.</p>
       <pre class="lines">
 
 
-47
-48
-49</pre>
+61
+62
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 47</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 61</span>
 
 <span class='def def kw'>def</span> <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='clear_dirty! fid id'>clear_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="set_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>set_relationship</strong>(key, value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Overwrites <tt><a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">Relatable#set_relationship</a></tt> to set the dirty state of the
+relationship. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#set_dirty! (method)">Dirty#set_dirty!</a></tt> as well.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+100
+101
+102
+103
+104</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 100</span>
+
+<span class='def def kw'>def</span> <span class='set_relationship identifier id'>set_relationship</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='existing identifier id'>existing</span> <span class='assign token'>=</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
+  <span class='new_value identifier id'>new_value</span> <span class='assign token'>=</span> <span class='super super kw'>super</span>
+  <span class='set_dirty! fid id'>set_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='existing identifier id'>existing</span><span class='comma token'>,</span> <span class='new_value identifier id'>new_value</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -569,13 +750,13 @@ the written attribute. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-in
       <pre class="lines">
 
 
-79
-80
-81
-82</pre>
+93
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 93</span>
 
 <span class='def def kw'>def</span> <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='set_dirty! fid id'>set_dirty!</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='read_attribute identifier id'>read_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
@@ -592,7 +773,7 @@ the written attribute. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-in
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 24 19:18:07 2010 by 
+  Generated on Tue Jan 26 17:43:34 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

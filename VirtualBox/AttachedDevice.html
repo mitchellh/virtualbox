@@ -84,9 +84,41 @@
     <p>Represents an device which is attached to a storage controller. An example
 of such a device would be a CD or hard drive attached to an IDE controller.</p>
 
-<p><strong>Currently, attached devices can not be created from scratch. The only way
-to access them is through relationships with other models such as
-<tt><a href="StorageController.html" title="VirtualBox::StorageController (class)">StorageController</a></tt>.</strong></p>
+<h1>Creating a New Attached Device</h1>
+
+<p>Creating a new attached device is simple. The following is a simple example
+of creating a DVD with an empty drive:</p>
+
+<pre class="code"><span class='ad identifier id'>ad</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='AttachedDevice constant id'>AttachedDevice</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='image identifier id'>image</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='DVD constant id'>DVD</span><span class='dot token'>.</span><span class='empty_drive identifier id'>empty_drive</span>
+<span class='storage_controller identifier id'>storage_controller</span><span class='dot token'>.</span><span class='devices identifier id'>devices</span> <span class='lshft op'>&lt;&lt;</span> <span class='ad identifier id'>ad</span>
+<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<p>The only quirk is that the attached device <strong>must</strong> be attached to a
+storage controller. The above assumes that <code>storage_controller</code> exists,
+which adds the device.</p>
+
+<p>Any <tt><a href="Image.html" title="VirtualBox::Image (class)">Image</a></tt> subclass can be set to the <code>image</code> relationship.</p>
+
+<p>The following is an example using <tt><a href="VM.html#find-class_method" title="VirtualBox::VM.find (method)">VM.find</a></tt>:</p>
+
+<pre class="code"><span class='comment val'># First creating the new device...</span>
+<span class='ad identifier id'>ad</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='AttachedDevice constant id'>AttachedDevice</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='image identifier id'>image</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='DVD constant id'>DVD</span><span class='dot token'>.</span><span class='empty_drive identifier id'>empty_drive</span>
+
+<span class='comment val'># Now attaching to existing VM</span>
+<span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;FooVM&quot;</span><span class='rparen token'>)</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='storage_controllers identifier id'>storage_controllers</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='devices identifier id'>devices</span> <span class='lshft op'>&lt;&lt;</span> <span class='ad identifier id'>ad</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<p>The interesting thing in this example is that the <code>save</code> method is called on
+the virtual machine rather than the AttachedDevice. This will actually work
+as expected! Saving a virtual machine automatically saves all it's relationships
+as well.</p>
 
 <h1>Attributes and Relationships</h1>
 
@@ -189,6 +221,26 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
 </li>
 
     
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save_relationship-class_method" title="save_relationship (class method)">+ (Object) <strong>save_relationship</strong>(caller, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves the relationship.</span>
+  
+</li>
+
+    
   </ul>
 
   <h2>Instance Method Summary</h2>
@@ -198,7 +250,27 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Object) <strong>destroy</strong>(options = {}) </a>
+      <a href="#added_to_relationship-instance_method" title="#added_to_relationship (instance method)">- (Object) <strong>added_to_relationship</strong>(parent) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Relationship callback when added to a collection.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Boolean) <strong>destroy</strong>(options = {}, raise_errors = false) </a>
     
 
     
@@ -218,7 +290,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (AttachedDevice) <strong>initialize</strong>(index, caller, data) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (AttachedDevice) <strong>initialize</strong>(*args) </a>
     
 
     
@@ -232,8 +304,47 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 
   
-    <span class="summary_desc">Since attached devices can not be created from scratch yet, this
-method should never be called.</span>
+    <span class="summary_desc">A new instance of AttachedDevice.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#medium-instance_method" title="#medium (instance method)">- (String) <strong>medium</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Medium of the attached image.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save-instance_method" title="#save (instance method)">- (Boolean) <strong>save</strong>(raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves or creates an attached device.</span>
   
 </li>
 
@@ -246,7 +357,7 @@ method should never be called.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -254,7 +365,7 @@ method should never be called.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Attributable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -270,56 +381,165 @@ method should never be called.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <p class="signature first" id="initialize-instance_method">
   
-    - (<tt><a href="" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a></tt>) <strong>initialize</strong>(index, caller, data) 
+    
+      <span class="overload">- (<tt>Object</tt>) <strong>initialize</strong>(data = {}) </span>
+    
+      <span class="overload">- (<tt>Object</tt>) <strong>initialize</strong>(index, caller, data) </span>
+    
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Since attached devices can not be created from scratch yet, this
-method should never be called. Instead access attached devices
-through relationships from other models such as <tt><a href="StorageController.html" title="VirtualBox::StorageController (class)">StorageController</a></tt>.</p>
+    <p>A new instance of AttachedDevice</p>
 
   </div>
 </div>
 <div class="tags">
   
+  <h3>Overloads:</h3>
+  <ul class="overload">
+    
+      
+      <li class="overload_item">
+        <span class="signature">- (<tt>Object</tt>) <strong>initialize</strong>(data = {}) </span>
+        <div class="docstring">
+  <div class="discussion">
+    <p>Creates a new AttachedDevice which is a new record. This
+should be attached to a storage controller and saved.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <span class='name'>data</span>
+      
+      
+      
+        &mdash;
+        (optional) A hash which contains initial attribute values for the AttachedDevice.
+      
+    </li>
+  
+</ul>
+
+</div>
+      </li>
+    
+      
+      <li class="overload_item">
+        <span class="signature">- (<tt>Object</tt>) <strong>initialize</strong>(index, caller, data) </span>
+        <div class="docstring">
+  <div class="discussion">
+    <p>Creates an AttachedDevice for a relationship. <strong>This should
+never be called except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <span class='name'>index</span>
+      
+      
+      
+        &mdash;
+        Index of the port
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+        <span class='name'>caller</span>
+      
+      
+      
+        &mdash;
+        The parent
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <span class='name'>data</span>
+      
+      
+      
+        &mdash;
+        A hash of data which must be used to extract the relationship data.
+      
+    </li>
+  
+</ul>
+
+</div>
+      </li>
+    
+  </ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88</pre>
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 128</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
   
-  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='lbrace token'>{</span>
-    <span class='symbol val'>:parent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span>
-    <span class='symbol val'>:port</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='index identifier id'>index</span><span class='comma token'>,</span>
-    <span class='symbol val'>:medium</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{caller.name}-#{index}-0&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='symbol val'>:uuid</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{caller.name}-ImageUUID-#{index}-0&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
-  <span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>3</span>
+    <span class='populate_from_data identifier id'>populate_from_data</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
+    <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+    <span class='new_record! fid id'>new_record!</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+    <span class='return return kw'>return</span>
+  <span class='else else kw'>else</span>
+    <span class='raise identifier id'>raise</span> <span class='NoMethodError constant id'>NoMethodError</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -333,7 +553,7 @@ through relationships from other models such as <tt><a href="StorageController.h
   <p class="notice super">
     This class handles dynamic methods through the <tt>method_missing</tt> method
     
-      in the class <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">VirtualBox::AbstractModel::Relatable</a>
+      in the class <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">VirtualBox::AbstractModel::Dirty</a>
     
   </p>
   
@@ -367,12 +587,12 @@ through relationships from other models such as <tt><a href="StorageController.h
       <pre class="lines">
 
 
-71
-72
-73</pre>
+100
+101
+102</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 71</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 100</span>
 
 <span class='def def kw'>def</span> <span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='v identifier id'>v</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
@@ -419,25 +639,25 @@ through relationships from other models such as <tt><a href="StorageController.h
       <pre class="lines">
 
 
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66</pre>
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 54</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 83</span>
 
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
-  <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='Proxies constant id'>Proxies</span><span class='colon2 op'>::</span><span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
   
   <span class='counter identifier id'>counter</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
   <span class='loop identifier id'>loop</span> <span class='do do kw'>do</span>
@@ -455,6 +675,52 @@ through relationships from other models such as <tt><a href="StorageController.h
 </table>
 </div>
     
+      <div class="method_details ">
+  <p class="signature " id="save_relationship-class_method">
+  
+    + (<tt>Object</tt>) <strong>save_relationship</strong>(caller, data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves the relationship. This simply calls <tt><a href="#save-instance_method" title="VirtualBox::AttachedDevice#save (method)">#save</a></tt> on every
+member of the relationship.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+108
+109
+110
+111
+112
+113</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 108</span>
+
+<span class='def def kw'>def</span> <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='comment val'># Just call save on each nic with the VM</span>
+  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='ad identifier id'>ad</span><span class='bitor op'>|</span>
+    <span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
   <div id="instance_method_details" class="method_details_list">
@@ -462,9 +728,47 @@ through relationships from other models such as <tt><a href="StorageController.h
     
     
       <div class="method_details first">
-  <p class="signature first" id="destroy-instance_method">
+  <p class="signature first" id="added_to_relationship-instance_method">
   
-    - (<tt>Object</tt>) <strong>destroy</strong>(options = {}) 
+    - (<tt>Object</tt>) <strong>added_to_relationship</strong>(parent) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Relationship callback when added to a collection. This is automatically
+called by any relationship collection when this object is added.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+209
+210
+211</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 209</span>
+
+<span class='def def kw'>def</span> <span class='added_to_relationship identifier id'>added_to_relationship</span><span class='lparen token'>(</span><span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
+  <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="destroy-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>destroy</strong>(options = {}, raise_errors = false) 
   
 
   
@@ -478,7 +782,27 @@ option.</p>
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+
   
     
     
@@ -499,6 +823,24 @@ option.</p>
       
     </ul>
   
+    
+    
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -506,21 +848,216 @@ option.</p>
       <pre class="lines">
 
 
-97
-98
-99
-100
-101
-102</pre>
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 97</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 196</span>
 
-<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='comment val'># parent = storagecontroller</span>
   <span class='comment val'># parent.parent = vm</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --medium none&quot;</span><span class='rparen token'>)</span>      
-  <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span> <span class='if if_mod kw'>if</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:destroy_image</span><span class='rbrack token'>]</span> <span class='andop op'>&amp;&amp;</span> <span class='image identifier id'>image</span>
+  <span class='destroy_port identifier id'>destroy_port</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:port</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='port identifier id'>port</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{destroy_port} --device 0 --medium none&quot;</span><span class='rparen token'>)</span>      
+  <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:destroy_image</span><span class='rbrack token'>]</span> <span class='andop op'>&amp;&amp;</span> <span class='image identifier id'>image</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="medium-instance_method">
+  
+    - (<tt>String</tt>) <strong>medium</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Medium of the attached image. This attribute will be dependent
+on the attached image and will return one of the following values:</p>
+
+<ul>
+<li><strong>none</strong> - There is no attached image</li>
+<li><strong>emptydrive</strong> - An image with an empty drive is attached (see
+  <tt><a href="DVD.html#empty_drive-class_method" title="VirtualBox::DVD.empty_drive (method)">DVD.empty_drive</a></tt>)</li>
+<li><strong>image uuid</strong> - The image's UUID</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+176
+177
+178
+179
+180
+181
+182
+183
+184</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 176</span>
+
+<span class='def def kw'>def</span> <span class='medium identifier id'>medium</span>
+  <span class='if if kw'>if</span> <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='string val'>&quot;none&quot;</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='empty_drive? fid id'>empty_drive?</span>
+    <span class='string val'>&quot;emptydrive&quot;</span>
+  <span class='else else kw'>else</span>
+    <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='uuid identifier id'>uuid</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>save</strong>(raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves or creates an attached device.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="Exceptions/NoParentException.html" title="VirtualBox::Exceptions::NoParentException (class)">Exceptions::NoParentException</a></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 148</span>
+
+<span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='NoParentException constant id'>NoParentException</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='if if_mod kw'>if</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='InvalidObjectException constant id'>InvalidObjectException</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Image must be set&quot;</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='unless unless_mod kw'>unless</span> <span class='changed? fid id'>changed?</span>
+  
+  <span class='comment val'># If the port changed, we have to destroy the old one, then create</span>
+  <span class='comment val'># a new one</span>
+  <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='lbrace token'>{</span><span class='symbol val'>:port</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='port_was identifier id'>port_was</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='port_changed? fid id'>port_changed?</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='port_was identifier id'>port_was</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}&quot;</span><span class='rparen token'>)</span>
+  <span class='existing_record! fid id'>existing_record!</span>
+  <span class='clear_dirty! fid id'>clear_dirty!</span>
+  
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -533,7 +1070,7 @@ option.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 24 19:18:06 2010 by 
+  Generated on Tue Jan 26 17:43:37 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

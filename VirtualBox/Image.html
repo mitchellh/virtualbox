@@ -218,11 +218,72 @@ a matching UUID and returning that as the relationship.</span>
 </li>
 
     
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#set_relationship-class_method" title="set_relationship (class method)">+ (Image) <strong>set_relationship</strong>(caller, old_value, new_value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Sets an image onto a relationship and/or removes it from a
+relationship.</span>
+  
+</li>
+
+    
   </ul>
 
   <h2>Instance Method Summary</h2>
 
   <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#empty_drive%3F-instance_method" title="#empty_drive? (instance method)">- (Boolean) <strong>empty_drive?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns boolean showing if empty drive or not.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#image_type-instance_method" title="#image_type (instance method)">- (String) <strong>image_type</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">The image type as a string for the virtualbox command line.</span>
+  
+</li>
+
     
       <li class="public ">
   <span class="summary_signature">
@@ -263,7 +324,7 @@ one of the subclasses.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -271,7 +332,7 @@ one of the subclasses.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Attributable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -287,7 +348,7 @@ one of the subclasses.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -313,14 +374,14 @@ one of the subclasses.</p>
       <pre class="lines">
 
 
-88
-89
-90
-91
-92</pre>
+105
+106
+107
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 105</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='info identifier id'>info</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
@@ -339,7 +400,7 @@ one of the subclasses.</p>
   <p class="notice super">
     This class handles dynamic methods through the <tt>method_missing</tt> method
     
-      in the class <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">VirtualBox::AbstractModel::Relatable</a>
+      in the class <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">VirtualBox::AbstractModel::Dirty</a>
     
   </p>
   
@@ -582,12 +643,16 @@ a matching UUID and returning that as the relationship.</p>
 80
 81
 82
-83</pre>
+83
+84
+85
+86</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 74</span>
 
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='DVD constant id'>DVD</span><span class='dot token'>.</span><span class='empty_drive identifier id'>empty_drive</span> <span class='if if_mod kw'>if</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:medium</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='string val'>&quot;emptydrive&quot;</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
   
   <span class='subclasses identifier id'>subclasses</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='subclass identifier id'>subclass</span><span class='bitor op'>|</span>
@@ -596,6 +661,194 @@ a matching UUID and returning that as the relationship.</p>
     <span class='matching identifier id'>matching</span> <span class='assign token'>=</span> <span class='subclass identifier id'>subclass</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='obj identifier id'>obj</span><span class='bitor op'>|</span> <span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='uuid identifier id'>uuid</span> <span class='eq op'>==</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span> <span class='rbrace token'>}</span>
     <span class='return return kw'>return</span> <span class='matching identifier id'>matching</span> <span class='unless unless_mod kw'>unless</span> <span class='matching identifier id'>matching</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
   <span class='end end kw'>end</span>
+  
+  <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="set_relationship-class_method">
+  
+    + (<tt><a href="" title="VirtualBox::Image (class)">Image</a></tt>) <strong>set_relationship</strong>(caller, old_value, new_value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Sets an image onto a relationship and/or removes it from a
+relationship. This method is automatically called by <tt><a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">Relatable</a></tt>.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="" title="VirtualBox::Image (class)">Image</a></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="Exceptions/InvalidRelationshipObjectException.html" title="VirtualBox::Exceptions::InvalidRelationshipObjectException (class)">Exceptions::InvalidRelationshipObjectException</a></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+94
+95
+96
+97
+98
+99
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 94</span>
+
+<span class='def def kw'>def</span> <span class='set_relationship identifier id'>set_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='old_value identifier id'>old_value</span><span class='comma token'>,</span> <span class='new_value identifier id'>new_value</span><span class='rparen token'>)</span>
+  <span class='comment val'># We don't actually destroy any images using this method,</span>
+  <span class='comment val'># so just return the new value as long as its a valid object</span>
+  <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='InvalidRelationshipObjectException constant id'>InvalidRelationshipObjectException</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='if if_mod kw'>if</span> <span class='new_value identifier id'>new_value</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='new_value identifier id'>new_value</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='Image constant id'>Image</span><span class='rparen token'>)</span>
+  
+  <span class='return return kw'>return</span> <span class='new_value identifier id'>new_value</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="empty_drive?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>empty_drive?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns boolean showing if empty drive or not. This method should be
+overriden by any subclass and is expected to return true of false
+showing if this image represents an empty drive of whatever type
+the subclass is.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+127
+128
+129</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 127</span>
+
+<span class='def def kw'>def</span> <span class='empty_drive? fid id'>empty_drive?</span>
+  <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="image_type-instance_method">
+  
+    - (<tt>String</tt>) <strong>image_type</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>The image type as a string for the virtualbox command line. This
+method should be overridden by any subclass and is expected to
+return the type which is used in command line parameters for
+attaching to storage controllers.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+117
+118
+119</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 117</span>
+
+<span class='def def kw'>def</span> <span class='image_type identifier id'>image_type</span>
+  <span class='raise identifier id'>raise</span> <span class='string val'>&quot;This must be implemented by any subclasses&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -608,7 +861,7 @@ a matching UUID and returning that as the relationship.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 24 19:18:08 2010 by 
+  Generated on Tue Jan 26 17:43:37 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

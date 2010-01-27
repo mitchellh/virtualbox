@@ -159,16 +159,16 @@ relationships as well, which would be the expected behaviour.</p>
       <pre class="lines">
 
 
-80
-81
-82
-83
-84
-85
-86</pre>
+119
+120
+121
+122
+123
+124
+125</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 80</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 119</span>
 
 <span class='def def kw'>def</span> <span class='inherited identifier id'>inherited</span><span class='lparen token'>(</span><span class='subclass identifier id'>subclass</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span> <span class='rescue rescue kw'>rescue</span> <span class='NoMethodError constant id'>NoMethodError</span>
@@ -266,17 +266,33 @@ class will be used to call the <code>populate_relationship,
       <pre class="lines">
 
 
-65
-66
-67
-68</pre>
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 96</span>
 
 <span class='def def kw'>def</span> <span class='relationship identifier id'>relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='klass identifier id'>klass</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
+  
   <span class='@relationships ivar id'>@relationships</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
   <span class='@relationships ivar id'>@relationships</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:klass</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='klass identifier id'>klass</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># Define the method to read the relationship</span>
+  <span class='define_method identifier id'>define_method</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='rbrace token'>}</span>
+  
+  <span class='comment val'># Define the method to set the relationship</span>
+  <span class='define_method identifier id'>define_method</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{name}=&quot;</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='bitor op'>|</span> <span class='set_relationship identifier id'>set_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -318,12 +334,12 @@ class will be used to call the <code>populate_relationship,
       <pre class="lines">
 
 
-73
-74
-75</pre>
+112
+113
+114</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 73</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 112</span>
 
 <span class='def def kw'>def</span> <span class='relationships identifier id'>relationships</span>
   <span class='@relationships ivar id'>@relationships</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
@@ -339,7 +355,7 @@ class will be used to call the <code>populate_relationship,
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 24 19:18:06 2010 by 
+  Generated on Tue Jan 26 17:43:33 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

@@ -253,7 +253,7 @@ objects.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#clone-instance_method" title="#clone (instance method)">- (HardDrive) <strong>clone</strong>(outputfile, format = &quot;VDI&quot;) </a>
+      <a href="#clone-instance_method" title="#clone (instance method)">- (HardDrive) <strong>clone</strong>(outputfile, format = &quot;VDI&quot;, raise_errors = false) </a>
     
 
     
@@ -273,7 +273,7 @@ objects.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#create-instance_method" title="#create (instance method)">- (Object) <strong>create</strong> </a>
+      <a href="#create-instance_method" title="#create (instance method)">- (Boolean) <strong>create</strong>(raise_errors = false) </a>
     
 
     
@@ -293,7 +293,7 @@ objects.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Boolean) <strong>destroy</strong> </a>
+      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Boolean) <strong>destroy</strong>(raise_errors = false) </a>
     
 
     
@@ -313,7 +313,27 @@ objects.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#save-instance_method" title="#save (instance method)">- (Object) <strong>save</strong> </a>
+      <a href="#image_type-instance_method" title="#image_type (instance method)">- (Object) <strong>image_type</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Override of <tt><a href="Image.html#image_type-instance_method" title="VirtualBox::Image#image_type (method)">Image#image_type</a></tt>.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save-instance_method" title="#save (instance method)">- (Boolean) <strong>save</strong>(raise_errors = false) </a>
     
 
     
@@ -338,7 +358,7 @@ objects.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="Image.html" title="VirtualBox::Image (class)">Image</a></h3>
-  <p class="inherited"><a href="Image.html#initialize-instance_method" title="VirtualBox::Image#initialize (method)">#initialize</a>, <a href="Image.html#parse_block-class_method" title="VirtualBox::Image.parse_block (method)">parse_block</a>, <a href="Image.html#parse_blocks-class_method" title="VirtualBox::Image.parse_blocks (method)">parse_blocks</a>, <a href="Image.html#parse_raw-class_method" title="VirtualBox::Image.parse_raw (method)">parse_raw</a>, <a href="Image.html#populate_relationship-class_method" title="VirtualBox::Image.populate_relationship (method)">populate_relationship</a></p>
+  <p class="inherited"><a href="Image.html#empty_drive%3F-instance_method" title="VirtualBox::Image#empty_drive? (method)">#empty_drive?</a>, <a href="Image.html#initialize-instance_method" title="VirtualBox::Image#initialize (method)">#initialize</a>, <a href="Image.html#parse_block-class_method" title="VirtualBox::Image.parse_block (method)">parse_block</a>, <a href="Image.html#parse_blocks-class_method" title="VirtualBox::Image.parse_blocks (method)">parse_blocks</a>, <a href="Image.html#parse_raw-class_method" title="VirtualBox::Image.parse_raw (method)">parse_raw</a>, <a href="Image.html#populate_relationship-class_method" title="VirtualBox::Image.populate_relationship (method)">populate_relationship</a>, <a href="Image.html#set_relationship-class_method" title="VirtualBox::Image.set_relationship (method)">set_relationship</a></p>
 
   
   
@@ -354,7 +374,7 @@ objects.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -362,7 +382,7 @@ objects.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Attributable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -378,7 +398,7 @@ objects.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -390,7 +410,7 @@ objects.</span>
   <p class="notice super">
     This class handles dynamic methods through the <tt>method_missing</tt> method
     
-      in the class <a href="AbstractModel/Relatable.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Relatable#method_missing (method)">VirtualBox::AbstractModel::Relatable</a>
+      in the class <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">VirtualBox::AbstractModel::Dirty</a>
     
   </p>
   
@@ -538,7 +558,7 @@ hard drive can not be found, will return <code>nil</code>.</p>
       <div class="method_details first">
   <p class="signature first" id="clone-instance_method">
   
-    - (<tt><a href="" title="VirtualBox::HardDrive (class)">HardDrive</a></tt>) <strong>clone</strong>(outputfile, format = &quot;VDI&quot;) 
+    - (<tt><a href="" title="VirtualBox::HardDrive (class)">HardDrive</a></tt>) <strong>clone</strong>(outputfile, format = &quot;VDI&quot;, raise_errors = false) 
   
 
   
@@ -585,6 +605,22 @@ will be used.</p>
       
     </li>
   
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
 </ul>
 <h3>Returns:</h3>
 <ul class="return">
@@ -597,7 +633,7 @@ will be used.</p>
       
       
         &mdash;
-        The new, cloned hard drive.
+        The new, cloned hard drive, or nil on failure.
       
     </li>
   
@@ -609,21 +645,27 @@ will be used.</p>
       <pre class="lines">
 
 
-124
-125
 126
 127
 128
-129</pre>
+129
+130
+131
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 124</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 126</span>
 
-<span class='def def kw'>def</span> <span class='clone identifier id'>clone</span><span class='lparen token'>(</span><span class='outputfile identifier id'>outputfile</span><span class='comma token'>,</span> <span class='format identifier id'>format</span><span class='assign token'>=</span><span class='string val'>&quot;VDI&quot;</span><span class='rparen token'>)</span>
+<span class='def def kw'>def</span> <span class='clone identifier id'>clone</span><span class='lparen token'>(</span><span class='outputfile identifier id'>outputfile</span><span class='comma token'>,</span> <span class='format identifier id'>format</span><span class='assign token'>=</span><span class='string val'>&quot;VDI&quot;</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;clonehd #{uuid} #{Command.shell_escape(outputfile)} --format #{format} --remember&quot;</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/UUID: (.+?)$/</span>
   
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='nil nil kw'>nil</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -634,7 +676,7 @@ will be used.</p>
       <div class="method_details ">
   <p class="signature " id="create-instance_method">
   
-    - (<tt>Object</tt>) <strong>create</strong> 
+    - (<tt>Boolean</tt>) <strong>create</strong>(raise_errors = false) 
   
 
   
@@ -647,32 +689,80 @@ will be used.</p>
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-134
-135
-136
-137
-138
-139
-140
-141</pre>
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 134</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 148</span>
 
-<span class='def def kw'>def</span> <span class='create identifier id'>create</span>
+<span class='def def kw'>def</span> <span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember&quot;</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/UUID: (.+?)$/</span>
   
   <span class='comment val'># Just replace our attributes with the newly created ones. This also</span>
   <span class='comment val'># will set new_record to false.</span>
   <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># Return the success of the command</span>
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -683,7 +773,7 @@ will be used.</p>
       <div class="method_details ">
   <p class="signature " id="destroy-instance_method">
   
-    - (<tt>Boolean</tt>) <strong>destroy</strong> 
+    - (<tt>Boolean</tt>) <strong>destroy</strong>(raise_errors = false) 
   
 
   
@@ -697,7 +787,27 @@ of disk.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -706,6 +816,9 @@ of disk.</p>
       
       
       
+      
+        &mdash;
+        True if command was successful, false otherwise.
       
     </li>
   
@@ -717,17 +830,60 @@ of disk.</p>
       <pre class="lines">
 
 
-164
-165
-166
-167</pre>
+190
+191
+192
+193
+194
+195
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 164</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 190</span>
 
-<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span>
+<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;closemedium disk #{uuid} --delete&quot;</span><span class='rparen token'>)</span>
-  <span class='return return kw'>return</span> <span class='$? gvar id'>$?</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="image_type-instance_method">
+  
+    - (<tt>Object</tt>) <strong>image_type</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Override of <tt><a href="Image.html#image_type-instance_method" title="VirtualBox::Image#image_type (method)">Image#image_type</a></tt>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+137
+138
+139</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 137</span>
+
+<span class='def def kw'>def</span> <span class='image_type identifier id'>image_type</span>
+  <span class='string val'>&quot;hdd&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -738,7 +894,7 @@ of disk.</p>
       <div class="method_details ">
   <p class="signature " id="save-instance_method">
   
-    - (<tt>Object</tt>) <strong>save</strong> 
+    - (<tt>Boolean</tt>) <strong>save</strong>(raise_errors = false) 
   
 
   
@@ -754,29 +910,65 @@ This is a limitation of VirtualBox, rather than the library itself.</p>
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-149
-150
-151
-152
-153
-154
-155
-156</pre>
+173
+174
+175
+176
+177
+178
+179
+180</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 149</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 173</span>
 
-<span class='def def kw'>def</span> <span class='save identifier id'>save</span>
+<span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='new_record? fid id'>new_record?</span>
     <span class='comment val'># Create a new hard drive</span>
-    <span class='create identifier id'>create</span>
+    <span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
   <span class='else else kw'>else</span>
     <span class='super super kw'>super</span>
   <span class='end end kw'>end</span>
@@ -792,7 +984,7 @@ This is a limitation of VirtualBox, rather than the library itself.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 24 19:18:08 2010 by 
+  Generated on Tue Jan 26 17:43:36 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

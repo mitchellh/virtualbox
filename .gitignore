@@ -1,0 +1,6 @@
+.yardoc/*
+bin/*
+doc/*
+pkg/*
+test/*
+vendor/*

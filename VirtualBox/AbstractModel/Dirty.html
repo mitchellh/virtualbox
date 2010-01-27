@@ -145,6 +145,14 @@ This can be done with the <code>clear_dirty!</code> method.</p>
 <span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='name_changed? fid id'>name_changed?</span> <span class='comment val'># =&gt; false</span>
 </pre>
 
+<p>If no specific field is speciied, <code>clear_dirty!</code> will clear the dirty
+status on the entire model.</p>
+
+<pre class="code"><span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='changed? fid id'>changed?</span> <span class='comment val'># =&gt; assume true</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='clear_dirty! fid id'>clear_dirty!</span>
+<span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='changed? fid id'>changed?</span> <span class='comment val'># =&gt; false</span>
+</pre>
+
   </div>
 </div>
 <div class="tags">
@@ -199,7 +207,7 @@ This can be done with the <code>clear_dirty!</code> method.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#clear_dirty%21-instance_method" title="#clear_dirty! (instance method)">- (Object) <strong>clear_dirty!</strong>(key) </a>
+      <a href="#clear_dirty%21-instance_method" title="#clear_dirty! (instance method)">- (Object) <strong>clear_dirty!</strong>(key = nil) </a>
     
 
     
@@ -307,27 +315,27 @@ This can be done with the <code>clear_dirty!</code> method.</p>
       <pre class="lines">
 
 
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
 155
 156
 157
 158
 159
 160
-161</pre>
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 144</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 155</span>
 
 <span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='meth_string identifier id'>meth_string</span> <span class='assign token'>=</span> <span class='meth identifier id'>meth</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
@@ -416,16 +424,16 @@ changed at all.</p>
       <pre class="lines">
 
 
-126
-127
-128
-129
-130
-131
-132</pre>
+137
+138
+139
+140
+141
+142
+143</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 126</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 137</span>
 
 <span class='def def kw'>def</span> <span class='changed? fid id'>changed?</span><span class='lparen token'>(</span><span class='attribute identifier id'>attribute</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='attribute identifier id'>attribute</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -475,12 +483,12 @@ array of the original value and the current value.</p>
       <pre class="lines">
 
 
-138
-139
-140</pre>
+149
+150
+151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 138</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 149</span>
 
 <span class='def def kw'>def</span> <span class='changes identifier id'>changes</span>
   <span class='@changed_attributes ivar id'>@changed_attributes</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
@@ -494,7 +502,7 @@ array of the original value and the current value.</p>
       <div class="method_details ">
   <p class="signature " id="clear_dirty!-instance_method">
   
-    - (<tt>Object</tt>) <strong>clear_dirty!</strong>(key) 
+    - (<tt>Object</tt>) <strong>clear_dirty!</strong>(key = nil) 
   
 
   
@@ -516,6 +524,8 @@ array of the original value and the current value.</p>
         <span class='name'>key</span>
       
       
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
       
         &mdash;
         The field to clear dirty state.
@@ -530,15 +540,23 @@ array of the original value and the current value.</p>
       <pre class="lines">
 
 
-107
-108
-109</pre>
+114
+115
+116
+117
+118
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 107</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 114</span>
 
-<span class='def def kw'>def</span> <span class='clear_dirty! fid id'>clear_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
-  <span class='changes identifier id'>changes</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+<span class='def def kw'>def</span> <span class='clear_dirty! fid id'>clear_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='key identifier id'>key</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='@changed_attributes ivar id'>@changed_attributes</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='else else kw'>else</span>
+    <span class='changes identifier id'>changes</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -600,14 +618,14 @@ the method call, but not within the block itself.</p>
       <pre class="lines">
 
 
-114
-115
-116
-117
-118</pre>
+125
+126
+127
+128
+129</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 114</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 125</span>
 
 <span class='def def kw'>def</span> <span class='ignore_dirty identifier id'>ignore_dirty</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
   <span class='current_changes identifier id'>current_changes</span> <span class='assign token'>=</span> <span class='@changed_attributes ivar id'>@changed_attributes</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span> <span class='rescue rescue kw'>rescue</span> <span class='nil nil kw'>nil</span>
@@ -690,13 +708,6 @@ call this for any fields they want tracked.</p>
       <pre class="lines">
 
 
-87
-88
-89
-90
-91
-92
-93
 94
 95
 96
@@ -705,10 +716,17 @@ call this for any fields they want tracked.</p>
 99
 100
 101
-102</pre>
+102
+103
+104
+105
+106
+107
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 87</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/dirty.rb', line 94</span>
 
 <span class='def def kw'>def</span> <span class='set_dirty! fid id'>set_dirty!</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='current identifier id'>current</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='current identifier id'>current</span> <span class='neq op'>!=</span> <span class='value identifier id'>value</span>
@@ -737,7 +755,7 @@ call this for any fields they want tracked.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 24 19:18:05 2010 by 
+  Generated on Tue Jan 26 17:43:31 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>
