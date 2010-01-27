@@ -19,6 +19,23 @@ module VirtualBox
   #
   # Any {Image} subclass can be set to the `image` relationship.
   #
+  # The following is an example using {VM.find}:
+  #
+  #     # First creating the new device...
+  #     ad = VirtualBox::AttachedDevice.new
+  #     ad.port = 0
+  #     ad.image = VirtualBox::DVD.empty_drive
+  #     
+  #     # Now attaching to existing VM
+  #     vm = VirtualBox::VM.find("FooVM")
+  #     vm.storage_controllers[0].devices << ad
+  #     vm.save
+  #
+  # The interesting thing in this example is that the `save` method is called on
+  # the virtual machine rather than the AttachedDevice. This will actually work
+  # as expected! Saving a virtual machine automatically saves all it's relationships
+  # as well.
+  #
   # # Attributes and Relationships
   #
   # Properties of the model are exposed using standard ruby instance

@@ -21,6 +21,9 @@ the gem, you must set the path to your `VBoxManage` binary:
 The virtualbox gem is modeled after ActiveRecord. If you've used ActiveRecord, you'll
 feel very comfortable using the virtualbox gem. 
 
+There is a [quick getting started guide](http://mitchellh.github.com/virtualbox/file.GettingStarted.html) to 
+get you acquainted with the conventions of the virtualbox gem.
+
 Complete documentation can be found at [http://mitchellh.github.com/virtualbox](http://mitchellh.github.com/virtualbox).
 
 Below are some examples:
