@@ -81,11 +81,10 @@ showvminfo
   end
   
   def create_vm
-    command_seq = sequence("command_seq")
-    VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).in_sequence(command_seq)
-    VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name}").returns("").in_sequence(command_seq)
-    VirtualBox::Command.expects(:vboxmanage).with("list hdds").returns("").in_sequence(command_seq)
-    VirtualBox::Command.expects(:vboxmanage).with("list dvds").returns("").in_sequence(command_seq)
+    VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw)
+    VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name}").returns("")
+    VirtualBox::Command.expects(:vboxmanage).with("list hdds").returns("")
+    VirtualBox::Command.expects(:vboxmanage).with("list dvds").returns("")
     vm = VirtualBox::VM.find(@name)
     assert vm
     vm
@@ -301,6 +300,7 @@ raw
   context "saving a changed VM" do
     setup do
       @vm = create_vm
+      VirtualBox::AttachedDevice.any_instance.stubs(:save)
     end
     
     should "return false if saving fails" do
@@ -348,6 +348,12 @@ raw
       
       @vm.name = new_name
       @vm.ostype = "Zubuntu"
+      assert @vm.save
+    end
+    
+    should "save the relationships as well" do
+      VirtualBox::Nic.expects(:save_relationship).once
+      VirtualBox::StorageController.expects(:save_relationship).once
       assert @vm.save
     end
   end

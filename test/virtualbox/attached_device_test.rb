@@ -46,6 +46,15 @@ class AttachedDeviceTest < Test::Unit::TestCase
       @value = VirtualBox::AttachedDevice.populate_relationship(@caller, @data)
       @value = @value[0]
       @value.image = VirtualBox::DVD.empty_drive
+      assert @value.changed?
+    end
+    
+    should "not do anything if the device isn't change" do
+      @value.clear_dirty!
+      assert !@value.changed?
+      
+      VirtualBox::Command.expects(:vboxmanage).never
+      @value.save
     end
     
     should "call vboxmanage" do

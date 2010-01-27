@@ -83,6 +83,17 @@ module VirtualBox
       def destroy_relationship(caller, data, *args)
         data.each { |v| v.destroy(*args) }
       end
+      
+      # Saves the relationship. This simply calls {#save} on every
+      # member of the relationship.
+      #
+      # **This method typically won't be used except internally.**
+      def save_relationship(caller, data)
+        # Just call save on each nic with the VM
+        data.each do |ad|
+          ad.save
+        end
+      end
     end
     
     # @overload initialize(data={})
@@ -120,6 +131,7 @@ module VirtualBox
     def save(raise_errors=false)
       raise Exceptions::NoParentException.new if parent.nil?
       raise Exceptions::InvalidObjectException.new("Image must be set") if image.nil?
+      return true unless changed?
       
       # If the port changed, we have to destroy the old one, then create
       # a new one

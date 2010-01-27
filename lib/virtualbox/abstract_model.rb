@@ -95,6 +95,14 @@ module VirtualBox
       super
     end
     
+    # Overwrites {Relatable#set_relationship} to set the dirty state of the
+    # relationship. See {Dirty#set_dirty!} as well.
+    def set_relationship(key, value)
+      existing = relationship_data[key]
+      new_value = super
+      set_dirty!(key, existing, new_value)
+    end
+    
     # Destroys the model. The exact behaviour of this method is expected to be
     # defined on the subclasses. This method on AbstractModel simply
     # propagates the destroy to the dependent relationships. For more information

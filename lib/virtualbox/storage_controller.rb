@@ -73,6 +73,17 @@ module VirtualBox
       def destroy_relationship(caller, data, *args)
         data.each { |v| v.destroy(*args) }
       end
+      
+      # Saves the relationship. This simply calls {#save} on every
+      # member of the relationship.
+      #
+      # **This method typically won't be used except internally.**
+      def save_relationship(caller, data)
+        # Just call save on each nic with the VM
+        data.each do |sc|
+          sc.save
+        end
+      end
     end
     
     # Since storage controllers still can't be created from scratch,

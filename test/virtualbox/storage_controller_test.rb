@@ -15,6 +15,18 @@ class StorageControllerTest < Test::Unit::TestCase
     @caller = mock("caller")
   end
   
+  context "saving" do
+    setup do
+      @value = VirtualBox::StorageController.populate_relationship(@caller, @data)
+      @value = @value[0]
+    end
+    
+    should "save relationship" do
+      VirtualBox::AttachedDevice.expects(:save_relationship).once
+      @value.save
+    end
+  end
+  
   context "destroying" do
     setup do
       @value = VirtualBox::StorageController.populate_relationship(@caller, @data)

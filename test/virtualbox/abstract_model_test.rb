@@ -1,7 +1,12 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class AbstractModelTest < Test::Unit::TestCase
-  class Foo; end
+  class Foo
+    def self.set_relationship(caller, old_value, new_value)
+      new_value
+    end
+  end
+  
   class Bar; end
   
   class FakeModel < VirtualBox::AbstractModel
@@ -131,6 +136,18 @@ class AbstractModelTest < Test::Unit::TestCase
     should "populate relationships at the same time as attributes" do
       Foo.expects(:populate_relationship).once
       @model.populate_attributes({})
+    end
+  end
+  
+  context "integrating relatable" do
+    setup do
+      @model = FakeModel.new
+    end
+    
+    should "set dirty state when a relationship is set" do
+      assert !@model.changed?
+      @model.foos = "foo"
+      assert @model.changed?
     end
   end
   
