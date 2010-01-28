@@ -23,6 +23,22 @@ raw
     VirtualBox::Command.stubs(:vboxmanage).with("showhdinfo #{@name}").returns(@find_raw)
   end
   
+  context "validations" do
+    setup do
+      @hd = VirtualBox::HardDrive.new
+      @hd.size = 2000
+    end
+    
+    should "be valid with a size and format" do
+      assert @hd.valid?
+    end
+    
+    should "be invalid if size is nil" do
+      @hd.size = nil
+      assert !@hd.valid?
+    end
+  end
+  
   context "destroying a hard drive" do
     setup do
       @hd = VirtualBox::HardDrive.find(@name)
@@ -133,6 +149,19 @@ raw
     should "raise an exception if flag is set" do
       VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
       assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @hd.save(true)
+      }
+    end
+    
+    should "not run if invalid" do
+      @hd.expects(:valid?).returns(false)
+      VirtualBox::Command.expects(:vboxmanage).never
+      assert !@hd.save
+    end
+    
+    should "raise a ValidationFailedException if invalid and raise_errors is true" do
+      @hd.expects(:valid?).returns(false)
+      assert_raises(VirtualBox::Exceptions::ValidationFailedException) {
         @hd.save(true)
       }
     end

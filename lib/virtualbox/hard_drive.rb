@@ -138,6 +138,12 @@ module VirtualBox
       "hdd"
     end
     
+    # Validates a hard drive.
+    def validate
+      validates_presence_of :format
+      validates_presence_of :size
+    end
+    
     # Creates a new hard drive. 
     #
     # **This method should NEVER be called. Call {#save} instead.**
@@ -146,6 +152,11 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def create(raise_errors=false)
+      if !valid?
+        raise Exceptions::ValidationFailedException.new(errors) if raise_errors
+        return false
+      end
+      
       raw = Command.vboxmanage("createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember")
       return nil unless raw =~ /UUID: (.+?)$/
       

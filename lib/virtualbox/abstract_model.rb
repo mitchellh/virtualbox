@@ -54,6 +54,10 @@ module VirtualBox
     
     # Validates the model and relationships.
     def validate(*args)
+      # First clear all previous errors
+      clear_errors
+      
+      # Then do the validations
       failed = false
       self.class.relationships.each do |name, options|
         next unless options && options[:klass].respond_to?(:validate_relationship)

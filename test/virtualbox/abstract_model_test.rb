@@ -24,6 +24,11 @@ class AbstractModelTest < Test::Unit::TestCase
       @model = FakeModel.new
     end
     
+    should "clear all previous errors" do
+      @model.expects(:clear_errors).once
+      @model.validate
+    end
+    
     should "call validate_relationship on each relationship class" do
       Foo.expects(:validate_relationship).once.with(@model, nil)
       @model.validate
@@ -48,9 +53,9 @@ class AbstractModelTest < Test::Unit::TestCase
     context "errors" do
       should "return the errors of the relationships, as well as the model itself" do
         @model.foo = nil
-        @model.validates_presence_of(:foo)
         assert !@model.validate
 
+        @model.validates_presence_of(:foo)
         Foo.expects(:errors_for_relationship).with(@model, nil).returns("BAD")
         errors = @model.errors
         assert errors.has_key?(:foos)

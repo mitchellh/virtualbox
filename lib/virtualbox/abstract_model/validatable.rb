@@ -17,6 +17,7 @@ module VirtualBox
       end
 
       def valid?
+        validate
         errors.empty?
       end
       

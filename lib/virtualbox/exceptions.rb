@@ -9,5 +9,6 @@ module VirtualBox
     class InvalidRelationshipObjectException < Exception; end
     class NonSettableRelationshipException < Exception; end
     class NoParentException < Exception; end
+    class ValidationFailedException < Exception; end
   end
 end

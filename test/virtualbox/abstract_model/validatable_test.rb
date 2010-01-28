@@ -45,6 +45,11 @@ class ValidatableTest < Test::Unit::TestCase
       @model = ValidatableModel.new
     end
     
+    should "call validate on valid?" do
+      @model.expects(:validate)
+      assert @model.valid?
+    end
+    
     should "be valid if there are no errors" do
       assert @model.valid?
     end
