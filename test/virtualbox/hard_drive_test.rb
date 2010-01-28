@@ -37,6 +37,13 @@ raw
       @hd.size = nil
       assert !@hd.valid?
     end
+    
+    should "clear validations when rechecking" do
+      @hd.size = nil
+      assert !@hd.valid?
+      @hd.size = 700
+      assert @hd.valid?
+    end
   end
   
   context "destroying a hard drive" do

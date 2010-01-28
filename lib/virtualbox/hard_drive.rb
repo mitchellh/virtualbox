@@ -140,6 +140,8 @@ module VirtualBox
     
     # Validates a hard drive.
     def validate
+      super
+      
       validates_presence_of :format
       validates_presence_of :size
     end
