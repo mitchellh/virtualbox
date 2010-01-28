@@ -140,15 +140,27 @@ module VirtualBox
       end
     end
     
+    # Validates an attached device.
+    def validate
+      super
+      
+      validates_presence_of :parent
+      validates_presence_of :image
+      validates_presence_of :port
+    end
+    
     # Saves or creates an attached device.
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def save(raise_errors=false)
-      raise Exceptions::NoParentException.new if parent.nil?
-      raise Exceptions::InvalidObjectException.new("Image must be set") if image.nil?
+    def save(raise_errors=false)      
       return true unless changed?
+      
+      if !valid?
+        raise Exceptions::ValidationFailedException.new(errors) if raise_errors
+        return false
+      end
       
       # If the port changed, we have to destroy the old one, then create
       # a new one

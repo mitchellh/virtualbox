@@ -19,6 +19,34 @@ class AttachedDeviceTest < Test::Unit::TestCase
     VirtualBox::Command.stubs(:execute).returns('')
   end
   
+  context "validations" do
+    setup do
+      @ad = VirtualBox::AttachedDevice.new
+      @ad.image = VirtualBox::DVD.empty_drive
+      @ad.port = 7
+      @ad.added_to_relationship(@caller)
+    end
+    
+    should "be valid with all fields" do
+      assert @ad.valid?
+    end
+    
+    should "be invalid with no image" do
+      @ad.image = nil
+      assert !@ad.valid?
+    end
+    
+    should "be invalid with no port" do
+      @ad.port = nil
+      assert !@ad.valid?
+    end
+    
+    should "be invalid if not in a relationship" do
+      @ad.write_attribute(:parent, nil)
+      assert !@ad.valid?
+    end
+  end
+  
   context "medium" do
     setup do
       @ad = VirtualBox::AttachedDevice.new
@@ -62,6 +90,12 @@ class AttachedDeviceTest < Test::Unit::TestCase
       @value.save
     end
     
+    should "return false and not call vboxmanage if invalid" do
+      VirtualBox::Command.expects(:vboxmanage).never
+      @value.expects(:valid?).returns(false)
+      assert !@value.save
+    end
+    
     should "not call destroy if the port didn't change" do
       @value.expects(:destroy).never
       assert !@value.port_changed?
@@ -90,9 +124,16 @@ class AttachedDeviceTest < Test::Unit::TestCase
       @ad.port = 3
     end
     
-    should "raise a NoParentException if it wasn't added to a relationship" do
-      assert_raises(VirtualBox::Exceptions::NoParentException) {
-        @ad.save
+    should "return false and not call vboxmanage if invalid" do
+      VirtualBox::Command.expects(:vboxmanage).never
+      @ad.expects(:valid?).returns(false)
+      assert !@ad.save
+    end
+    
+    should "raise a ValidationFailedException if invalid and raise_errors is true" do
+      @ad.expects(:valid?).returns(false)
+      assert_raises(VirtualBox::Exceptions::ValidationFailedException) {
+        @ad.save(true)
       }
     end
     
@@ -105,13 +146,6 @@ class AttachedDeviceTest < Test::Unit::TestCase
       should "not call destroy since its a new record" do
         @ad.expects(:destroy).never
         assert @ad.save
-      end
-      
-      should "not raise an InvalidObjectException if no image is set" do
-        @ad.image = nil
-        assert_raises(VirtualBox::Exceptions::InvalidObjectException) {
-          @ad.save
-        }
       end
 
       should "call the proper vboxcommand" do
