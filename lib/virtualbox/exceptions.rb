@@ -5,10 +5,8 @@ module VirtualBox
     class Exception < ::Exception; end
 
     class CommandFailedException < Exception; end
-    class InvalidObjectException < Exception; end
     class InvalidRelationshipObjectException < Exception; end
     class NonSettableRelationshipException < Exception; end
-    class NoParentException < Exception; end
     class ValidationFailedException < Exception; end
   end
 end
