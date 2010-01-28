@@ -38,6 +38,31 @@ module VirtualBox
       @new_record = false
     end
     
+    # Returns the errors for a model.
+    def errors
+      error_hash = super
+      
+      self.class.relationships.each do |name, options|
+        next unless options && options[:klass].respond_to?(:errors_for_relationship)
+        relationship_errors = options[:klass].errors_for_relationship(self, relationship_data[name])
+        
+        error_hash.merge!({ :foos => relationship_errors }) if relationship_errors.length > 0
+      end
+      
+      error_hash
+    end
+    
+    # Validates the model and relationships.
+    def validate(*args)
+      failed = false
+      self.class.relationships.each do |name, options|
+        next unless options && options[:klass].respond_to?(:validate_relationship)
+        failed = true if !options[:klass].validate_relationship(self, relationship_data[name], *args)
+      end
+      
+      return !failed
+    end
+    
     # Saves the model attributes and relationships.
     #
     # The method can be passed any arbitrary arguments, which are 

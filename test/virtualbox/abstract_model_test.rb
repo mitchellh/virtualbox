@@ -5,6 +5,9 @@ class AbstractModelTest < Test::Unit::TestCase
     def self.set_relationship(caller, old_value, new_value)
       new_value
     end
+    
+    def self.validate_relationship(caller, data)
+    end
   end
   
   class Bar; end
@@ -14,6 +17,47 @@ class AbstractModelTest < Test::Unit::TestCase
     attribute :bar
     relationship :foos, Foo
     relationship :bars, Bar, :dependent => :destroy
+  end
+  
+  context "validation" do
+    setup do
+      @model = FakeModel.new
+    end
+    
+    should "call validate_relationship on each relationship class" do
+      Foo.expects(:validate_relationship).once.with(@model, nil)
+      @model.validate
+    end
+    
+    should "forward arguments to validate_relationship" do
+      Foo.expects(:validate_relationship).once.with(@model, nil, "HELLO")
+      @model.validate("HELLO")
+    end
+    
+    should "succeed if all relationships succeeded" do
+      Foo.expects(:validate_relationship).returns(true)
+      assert @model.validate
+    end
+    
+    should "fail if one relationship failed to validate" do
+      Foo.expects(:validate_relationship).returns(true)
+      Bar.expects(:validate_relationship).returns(false)
+      assert !@model.validate
+    end
+    
+    context "errors" do
+      should "return the errors of the relationships, as well as the model itself" do
+        @model.foo = nil
+        @model.validates_presence_of(:foo)
+        assert !@model.validate
+
+        Foo.expects(:errors_for_relationship).with(@model, nil).returns("BAD")
+        errors = @model.errors
+        assert errors.has_key?(:foos)
+        assert_equal "BAD", errors[:foos]
+        assert errors.has_key?(:foo)
+      end
+    end
   end
   
   context "new/existing records" do
