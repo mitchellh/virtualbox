@@ -1,6 +1,7 @@
 require 'virtualbox/abstract_model/attributable'
 require 'virtualbox/abstract_model/dirty'
 require 'virtualbox/abstract_model/relatable'
+require 'virtualbox/abstract_model/validatable'
 
 module VirtualBox
   # AbstractModel is the base class used for most of virtualbox's classes.
@@ -11,6 +12,7 @@ module VirtualBox
     include Attributable
     include Dirty
     include Relatable
+    include Validatable
     
     # Returns a boolean denoting if the record is new or existing. This
     # method is provided for subclasses to use to differentiate between
