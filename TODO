@@ -5,6 +5,5 @@ But they will definitely all make it for version 1.0.
 
 * Creating a VM from scratch (non-import)
 * Parsing bridged IFs
-* Shared folders
 * Snapshots
 * Getting/Setting guest properties
