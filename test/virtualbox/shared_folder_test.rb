@@ -15,6 +15,111 @@ class SharedFolderTest < Test::Unit::TestCase
     VirtualBox::Command.stubs(:execute)
   end
   
+  context "saving an existing shared folder" do
+    setup do
+      @value = VirtualBox::SharedFolder.populate_relationship(@caller, @data)
+      @value = @value[0]
+      @value.name = "different"
+      assert @value.changed?
+    end
+    
+    should "first destroy the shared folder then recreate it" do
+      seq = sequence("create_seq")
+      @value.expects(:destroy).in_sequence(seq)
+      VirtualBox::Command.expects(:vboxmanage).in_sequence(seq)
+      assert @value.save
+    end
+    
+    should "call destroy with raise errors if set" do
+      @value.expects(:destroy).with(true).once
+      assert @value.save(true)
+    end
+  end
+  
+  context "creating a new shared folder" do
+    setup do
+      @sf = VirtualBox::SharedFolder.new
+      @sf.name = "foo"
+      @sf.hostpath = "bar"
+    end
+    
+    should "return false and not call vboxmanage if invalid" do
+      VirtualBox::Command.expects(:vboxmanage).never
+      @sf.expects(:valid?).returns(false)
+      assert !@sf.save
+    end
+    
+    should "raise a ValidationFailedException if invalid and raise_errors is true" do
+      @sf.expects(:valid?).returns(false)
+      assert_raises(VirtualBox::Exceptions::ValidationFailedException) {
+        @sf.save(true)
+      }
+    end
+    
+    context "has a parent" do
+      setup do
+        @sf.added_to_relationship(@caller)
+        VirtualBox::Command.stubs(:vboxmanage)
+      end
+      
+      should "not call destroy since its a new record" do
+        @sf.expects(:destroy).never
+        assert @sf.save
+      end
+
+      should "call the proper vboxcommand" do
+        VirtualBox::Command.expects(:vboxmanage).with("sharedfolder add #{@caller.name} --name #{@sf.name} --hostpath #{@sf.hostpath}")
+        assert @sf.save
+      end
+
+      should "return false if the command failed" do
+        VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+        assert !@sf.save
+      end
+
+      should "return true if the command was a success" do
+        assert @sf.save
+      end
+      
+      should "raise an exception if true sent to save and error occured" do
+        VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+        assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+          @sf.save(true)
+        }
+      end
+      
+      should "not be a new record after saving" do
+        assert @sf.new_record?
+        assert @sf.save
+        assert !@sf.new_record?
+      end
+      
+      should "not be changed after saving" do
+        assert @sf.changed?
+        assert @sf.save
+        assert !@sf.changed?
+      end
+    end
+  end
+  
+  context "constructor" do
+    should "call initialize_for_relationship if 3 args are given" do
+      VirtualBox::SharedFolder.any_instance.expects(:initialize_for_relationship).with(1,2,3).once
+      VirtualBox::SharedFolder.new(1,2,3)
+    end
+    
+    should "raise a NoMethodError if anything other than 0,1,or 3 arguments" do
+      2.upto(9) do |i|
+        next if i == 3
+        args = Array.new(i, "A")
+        
+        assert_raises(NoMethodError) {
+          VirtualBox::SharedFolder.new(*args)
+        }
+      end
+    end
+  end
+  
   context "destroying" do
     setup do
       @value = VirtualBox::SharedFolder.populate_relationship(@caller, @data)
@@ -44,6 +149,15 @@ class SharedFolderTest < Test::Unit::TestCase
       assert_raises(VirtualBox::Exceptions::CommandFailedException) {
         @value.destroy(true)
       }
+    end
+    
+    should "use the old name if it was changed" do 
+      @value.name = "DIFFERENT"
+      shell_seq = sequence("shell_seq")
+      VirtualBox::Command.expects(:shell_escape).with(@caller.name).in_sequence(shell_seq)
+      VirtualBox::Command.expects(:shell_escape).with(@value.name_was).in_sequence(shell_seq)
+      VirtualBox::Command.expects(:vboxmanage).in_sequence(shell_seq)
+      assert @value.destroy
     end
   end
   
