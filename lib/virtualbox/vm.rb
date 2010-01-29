@@ -74,6 +74,7 @@ module VirtualBox
   #
   #     relationship :nics, Nic
   #     relationship :storage_controllers, StorageController, :dependent => :destroy
+  #     relationship :shared_folders, SharedFolder
   #
   class VM < AbstractModel
     attribute :uuid, :readonly => true

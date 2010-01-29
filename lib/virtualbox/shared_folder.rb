@@ -1,5 +1,89 @@
 module VirtualBox
-  # Represents a shared folder in VirtualBox.
+  # Represents a shared folder in VirtualBox. In VirtualBox, shared folders are a
+  # method for basically "symlinking" a folder on the guest system to a folder which
+  # exists on the host system. This allows for sharing of files across the virtual
+  # machine. 
+  #
+  # **Note:** Whenever modifying shared folders on a VM, the changes won't take
+  # effect until a _cold reboot_ occurs. This means actually closing the virtual
+  # machine _completely_, then restarting it. You can't just hit "Start > Restart"
+  # or do a `sudo reboot`. It doesn't work that way!
+  #
+  # # Getting Shared Folders
+  #
+  # All shared folders are attached to a {VM} object, by definition. Therefore, to
+  # get a list of the shared folders, first {VM.find find} the VM you need, then
+  # use the `shared_folders` relationship to access an array of the shared folders.
+  # With this array, you can create, modify, update, and delete the shared folders
+  # for that virtual machine.
+  #
+  # # Creating a Shared Folder
+  #
+  # **This whole section will assume you already looked up a {VM} and assigned it to
+  # a local variable named `vm`.**
+  #
+  # With a VM found, creating a shared folder is just a few lines of code:
+  #
+  #     folder = VirtualBox::SharedFolder.new
+  #     folder.name = "desktop-images"
+  #     folder.hostpath = File.expand_path("~/Desktop/images")
+  #     vm.shared_folders << folder
+  #     folder.save # Or you can call vm.save, which works too!
+  #
+  # # Modifying an Existing Shared Folder
+  #
+  # **This whole section will assume you already looked up a {VM} and assigned it to
+  # a local variable named `vm`.**
+  #
+  # Nothing tricky here: You treat existing shared folder objects just as if they
+  # were new ones. Assign a new name and/or a new path, then save. 
+  #
+  #     folder = vm.shared_folders.first
+  #     folder.name = "rufus"
+  #     folder.save # Or vm.save
+  #
+  # **Note**: The VirtualBox-saavy will know that VirtualBox doesn't actually
+  # expose a way to edit shared folders. Under the hood, the virtualbox ruby
+  # library is actually deleting the old shared folder, then creating a new
+  # one with the new details. This shouldn't affect the way anything works for
+  # the VM itself.
+  #
+  # # Deleting a Shared Folder
+  #
+  # **This whole section will assume you already looked up a {VM} and assigned it to
+  # a local variable named `vm`.**
+  #
+  #     folder = vm.shared_folder.first
+  #     folder.destroy
+  #
+  # Poof! It'll be gone. This is usually the place where I warn you about this
+  # being non-reversable, but since no _data_ was actually destroyed, this is
+  # not too risky. You could always just recreate the shared folder with the
+  # same name and path and it'll be like nothing happened.
+  #
+  # # Attributes and Relationships
+  #
+  # Properties of the model are exposed using standard ruby instance
+  # methods which are generated on the fly. Because of this, they are not listed
+  # below as available instance methods. 
+  #
+  # These attributes can be accessed and modified via standard ruby-style
+  # `instance.attribute` and `instance.attribute=` methods. The attributes are
+  # listed below.
+  #
+  # Relationships are also accessed like attributes but can't be set. Instead,
+  # they are typically references to other objects such as an {AttachedDevice} which
+  # in turn have their own attributes which can be modified.
+  #
+  # ## Attributes
+  #
+  # This is copied directly from the class header, but lists all available
+  # attributes. If you don't understand what this means, read {Attributable}.
+  #
+  #     attribute :parent, :readonly => :readonly
+  #     attribute :name
+  #     attribute :hostpath
+  #
   class SharedFolder < AbstractModel
     attribute :parent, :readonly => :readonly
     attribute :name, :populate_key => "SharedFolderNameMachineMapping"
@@ -65,6 +149,15 @@ module VirtualBox
       populate_attributes(populate_data.merge({
         :parent => caller
       }))
+    end
+    
+    # Validates a shared folder.
+    def validate
+      super
+      
+      validates_presence_of :parent
+      validates_presence_of :name
+      validates_presence_of :hostpath
     end
     
     # Saves or creates a shared folder.

@@ -15,6 +15,34 @@ class SharedFolderTest < Test::Unit::TestCase
     VirtualBox::Command.stubs(:execute)
   end
   
+  context "validations" do
+    setup do
+      @sf = VirtualBox::SharedFolder.new
+      @sf.name = "foo"
+      @sf.hostpath = "bar"
+      @sf.added_to_relationship(@caller)
+    end
+    
+    should "be valid with all fields" do
+      assert @sf.valid?
+    end
+    
+    should "be invalid with no name" do
+      @sf.name = nil
+      assert !@sf.valid?
+    end
+    
+    should "be invalid with no hostpath" do
+      @sf.hostpath = nil
+      assert !@sf.valid?
+    end
+    
+    should "be invalid if not in a relationship" do
+      @sf.write_attribute(:parent, nil)
+      assert !@sf.valid?
+    end
+  end
+  
   context "saving an existing shared folder" do
     setup do
       @value = VirtualBox::SharedFolder.populate_relationship(@caller, @data)
