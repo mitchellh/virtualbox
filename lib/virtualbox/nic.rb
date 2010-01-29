@@ -54,7 +54,7 @@ module VirtualBox
         
         # Complicated chain of methods just maps parse_nic over each line,
         # removing invalid ones, and then converting it into a single hash.
-        raw.lines.collect { |v| parse_nic(v) }.compact.inject({}) do |acc, obj|
+        raw.split("\n").collect { |v| parse_nic(v) }.compact.inject({}) do |acc, obj|
           acc.merge({ obj[0] => obj[1] })
         end
       end

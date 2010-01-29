@@ -112,6 +112,11 @@ raw
       }
     end
     
+    should "return false if the command failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@ed.destroy
+    end
+    
     should "destroy using the old key if it was changed" do
       @ed.key = "CHANGED"
       VirtualBox::Command.expects(:vboxmanage).with("setextradata global foo")
@@ -142,6 +147,11 @@ raw
     should "call the proper vbox command" do
       VirtualBox::Command.expects(:vboxmanage).with("setextradata global foo bar")
       assert @ed.save
+    end
+    
+    should "return false if the command failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@ed.save
     end
     
     should "raise an exception if true sent to save and error occured" do
@@ -189,7 +199,7 @@ raw
     end
     
     should "have proper data on extradata objects" do
-      object = @objects[0]
+      object = @objects[3]
       assert_equal "GUI/SuppressMessages", object.key
       assert_equal ",confirmInputCapture,remindAboutAutoCapture,confirmRemoveMedium,remindAboutInaccessibleMedia,confirmGoingFullscreen,remindAboutMouseIntegrationOn", object.value
     end

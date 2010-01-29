@@ -53,7 +53,7 @@ module VirtualBox
 
         # Parses each line which should be in the format:
         # KEY: VALUE
-        block.lines.each do |line|
+        block.split("\n").each do |line|
           next unless line =~ /^(.+?):\s+(.+?)$/
           hd[$1.downcase.to_sym] = $2.to_s
         end

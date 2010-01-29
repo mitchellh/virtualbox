@@ -22,7 +22,8 @@ module VirtualBox
       def pairs_to_objects(pairs, other_data={})
         objects = []
         
-        pairs.each do |k,v|
+        pairs.keys.sort.each do |k|
+          v = pairs[k]
           objects.push(new({
             :key    => k,
             :value  => v
@@ -39,7 +40,7 @@ module VirtualBox
       # @return [Hash]
       def parse_kv_pairs(raw)
         data = {}
-        raw.lines.each do |line|
+        raw.split("\n").each do |line|
           next unless line =~ /^Key: (.+?), Value: (.+?)$/i
           data[$1.to_s] = $2.strip.to_s
         end

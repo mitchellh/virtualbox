@@ -55,7 +55,7 @@ class RelatableTest < Test::Unit::TestCase
   
   context "subclasses" do
     class SubRelatableModel < RelatableModel
-      relationship :bars, Relatee
+      relationship :bars, RelatableTest::Relatee
     end
     
     setup do
