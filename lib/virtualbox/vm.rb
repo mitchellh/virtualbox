@@ -144,7 +144,7 @@ module VirtualBox
       #
       # @return [String]
       def human_info(name)
-        Command.vboxmanage("showvminfo #{name}")
+        Command.vboxmanage("showvminfo #{Command.shell_escape(name)}")
       end
       
       # Gets the VM info (machine readable) for a given VM and returns it
@@ -152,7 +152,7 @@ module VirtualBox
       #
       # @return [Hash] Parsed VM info.
       def raw_info(name)
-        raw = Command.vboxmanage("showvminfo #{name} --machinereadable")
+        raw = Command.vboxmanage("showvminfo #{Command.shell_escape(name)} --machinereadable")
         parse_vm_info(raw)
       end
       
