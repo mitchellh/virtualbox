@@ -106,6 +106,7 @@ module VirtualBox
     relationship :nics, Nic
     relationship :storage_controllers, StorageController, :dependent => :destroy
     relationship :shared_folders, SharedFolder
+    relationship :extra_data, ExtraData
     
     class <<self
       # Returns an array of all available VMs.

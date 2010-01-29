@@ -19,14 +19,14 @@ module VirtualBox
       #
       # @param [Hash] pairs ExtraData key-value pair as ruby hash.
       # @return [Array<ExtraData>]
-      def pairs_to_objects(pairs)
+      def pairs_to_objects(pairs, other_data={})
         objects = []
         
         pairs.each do |k,v|
           objects.push(new({
             :key    => k,
             :value  => v
-          }))
+          }.merge(other_data)))
         end
         
         objects
@@ -46,6 +46,28 @@ module VirtualBox
         
         data
       end
+      
+      # Populates a relationship with another model.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Array<ExtraData>]
+      def populate_relationship(caller, data)
+        raw = Command.vboxmanage("getextradata #{Command.shell_escape(caller.name)} enumerate")
+        pairs_to_objects(parse_kv_pairs(raw), {
+          :parent => caller
+        })
+      end
+      
+      # Saves the relationship. This simply calls {#save} on every
+      # member of the relationship.
+      #
+      # **This method typically won't be used except internally.**
+      def save_relationship(caller, data)
+        data.each do |ed|
+          ed.save
+        end
+      end
     end
     
     # Initializes an extra data object. 
@@ -54,6 +76,19 @@ module VirtualBox
     def initialize(data)
       super()
       populate_attributes(data)
+    end
+    
+    # Special accessor for parent name attribute. This returns
+    # either the parent name if its a VM object, otherwise
+    # just returns the default.
+    #
+    # @return [String]
+    def parent_name
+      if parent.is_a?(VM)
+        parent.name
+      else
+        parent
+      end
     end
     
     # Validates extra data.
@@ -79,7 +114,7 @@ module VirtualBox
       end
       
       destroy(raise_errors) if key_changed?
-      Command.vboxmanage("setextradata #{Command.shell_escape(parent)} #{Command.shell_escape(key)} #{Command.shell_escape(value)}")
+      Command.vboxmanage("setextradata #{Command.shell_escape(parent_name)} #{Command.shell_escape(key)} #{Command.shell_escape(value)}")
       clear_dirty!
       
       true
@@ -95,7 +130,7 @@ module VirtualBox
     # @return [Boolean] True if command was successful, false otherwise.
     def destroy(raise_errors=false)
       delete_key = key_changed? ? key_was : key
-      Command.vboxmanage("setextradata #{Command.shell_escape(parent)} #{Command.shell_escape(delete_key)}")
+      Command.vboxmanage("setextradata #{Command.shell_escape(parent_name)} #{Command.shell_escape(delete_key)}")
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors

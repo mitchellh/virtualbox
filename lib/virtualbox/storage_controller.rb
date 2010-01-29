@@ -79,7 +79,6 @@ module VirtualBox
       #
       # **This method typically won't be used except internally.**
       def save_relationship(caller, data)
-        # Just call save on each nic with the VM
         data.each do |sc|
           sc.save
         end

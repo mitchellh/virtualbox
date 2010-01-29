@@ -20,6 +20,61 @@ raw
     })
   end
   
+  context "attributes" do
+    should "return parent name if its a VM object" do
+      vm = mock("vm")
+      vm.stubs(:is_a?).with(VirtualBox::VM).returns(true)
+      vm.stubs(:name).returns("FOO")
+      
+      @ed.parent = vm
+      assert_equal "FOO", @ed.parent_name
+    end
+    
+    should "return default otherwise" do
+      assert_equal "global", @ed.parent_name
+    end
+  end
+  
+  context "relationships" do
+    setup do
+      @caller = mock("caller")
+      @caller.stubs(:name).returns("foocaller")
+      
+      VirtualBox::Command.stubs(:vboxmanage).returns(@raw)      
+    end
+    
+    context "populating" do
+      should "call VBoxManage for the caller" do
+        VirtualBox::Command.expects(:vboxmanage).with("getextradata #{@caller.name} enumerate").returns(@raw)
+        VirtualBox::ExtraData.populate_relationship(@caller, {})
+      end
+      
+      should "call pairs_to_objects with parent set to the caller" do
+        VirtualBox::ExtraData.expects(:pairs_to_objects).with(anything, {:parent => @caller}).at_least(0)
+        VirtualBox::ExtraData.populate_relationship(@caller, {})        
+      end
+      
+      should "return an array of ExtraData objects" do
+        result = VirtualBox::ExtraData.populate_relationship(@caller, {})
+        assert result.is_a?(Array)
+        assert result.all? { |o| o.is_a?(VirtualBox::ExtraData) }
+      end
+    end
+    
+    context "saving" do
+      should "call save on each object" do
+        objects = []
+        5.times do |i|
+          object = mock("object#{i}")
+          object.expects(:save).once
+          objects.push(object)
+        end
+        
+        VirtualBox::ExtraData.save_relationship(@caller, objects)
+      end
+    end
+  end
+  
   context "validations" do
     should "be valid with all fields" do
       assert @ed.valid?
@@ -129,6 +184,14 @@ raw
       object = @objects[0]
       assert_equal "GUI/SuppressMessages", object.key
       assert_equal ",confirmInputCapture,remindAboutAutoCapture,confirmRemoveMedium,remindAboutInaccessibleMedia,confirmGoingFullscreen,remindAboutMouseIntegrationOn", object.value
+    end
+    
+    should "forward the second argument into the hash" do
+      objects = VirtualBox::ExtraData.pairs_to_objects(@data, {
+        :parent => "FOO"
+      })
+      
+      assert_equal "FOO", objects[0].parent
     end
   end
   

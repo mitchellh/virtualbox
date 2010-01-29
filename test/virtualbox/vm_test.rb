@@ -89,6 +89,7 @@ showvminfo
     VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name}").returns("")
     VirtualBox::Command.expects(:vboxmanage).with("list hdds").returns("")
     VirtualBox::Command.expects(:vboxmanage).with("list dvds").returns("")
+    VirtualBox::Command.expects(:vboxmanage).with("getextradata #{@name} enumerate").returns("")
     vm = VirtualBox::VM.find(@name)
     assert vm
     vm
