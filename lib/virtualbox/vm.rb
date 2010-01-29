@@ -161,7 +161,7 @@ module VirtualBox
       # into a hash. Ignores lines which don't match the format.
       def parse_vm_info(raw)
         parsed = {}
-        raw.lines.each do |line|
+        raw.split("\n").each do |line|
           # Some lines aren't configuration, we just ignore them
           next unless line =~ /^"?(.+?)"?="?(.+?)"?$/
           parsed[$1.downcase.to_sym] = $2.strip
@@ -178,7 +178,7 @@ module VirtualBox
       # @return [Array] Array of virtual machines.
       def parse_vm_list(raw)
         results = []
-        raw.lines.each do |line|
+        raw.split("\n").each do |line|
           next unless line =~ /^"(.+?)"\s+\{(.+?)\}$/
           results.push(find($1.to_s))
         end

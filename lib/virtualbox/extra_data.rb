@@ -39,7 +39,7 @@ module VirtualBox
       # @return [Hash]
       def parse_kv_pairs(raw)
         data = {}
-        raw.lines.each do |line|
+        raw.split("\n").each do |line|
           next unless line =~ /^Key: (.+?), Value: (.+?)$/i
           data[$1.to_s] = $2.strip.to_s
         end
