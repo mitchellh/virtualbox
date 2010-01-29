@@ -22,7 +22,8 @@ module VirtualBox
       def pairs_to_objects(pairs, other_data={})
         objects = []
         
-        pairs.each do |k,v|
+        pairs.keys.sort.each do |k|
+          v = pairs[k]
           objects.push(new({
             :key    => k,
             :value  => v
