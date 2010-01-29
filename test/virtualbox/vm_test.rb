@@ -99,6 +99,11 @@ showvminfo
       VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name}").once
       VirtualBox::VM.human_info(@name)
     end
+    
+    should "shell escape parameter" do
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo hello\\ world").once
+      VirtualBox::VM.human_info("hello world")
+    end
   end
   
   context "reading the VM state" do
@@ -377,6 +382,11 @@ raw
       VirtualBox::Command.expects(:vboxmanage).with(anything).returns("").at_least(0).in_sequence(command_seq)
       @vm = VirtualBox::VM.find(@name)
       assert @vm
+    end
+    
+    should "shell escape the VM name" do
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo hello\\ world --machinereadable").returns(@raw)
+      assert VirtualBox::VM.find("hello world")
     end
     
     should "return a VM object with proper attributes" do      
