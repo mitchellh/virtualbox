@@ -35,7 +35,7 @@ Below are some examples:
     # Let's first print out some basic info about the VM
     puts "Memory: #{vm.memory}"
     
-    vm.storage_controllers.each do |sc
+    vm.storage_controllers.each do |sc|
       sc.attached_devices.each do |device|
         puts "Attached Device: #{device.uuid}"
       end
