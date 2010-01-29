@@ -189,7 +189,7 @@ raw
     end
     
     should "have proper data on extradata objects" do
-      object = @objects[0]
+      object = @objects[3]
       assert_equal "GUI/SuppressMessages", object.key
       assert_equal ",confirmInputCapture,remindAboutAutoCapture,confirmRemoveMedium,remindAboutInaccessibleMedia,confirmGoingFullscreen,remindAboutMouseIntegrationOn", object.value
     end
