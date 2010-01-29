@@ -25,6 +25,17 @@ module VirtualBox
         
         relation
       end
+      
+      # Saves the relationship. This simply calls {#save} on every
+      # member of the relationship.
+      #
+      # **This method typically won't be used except internally.**
+      def save_relationship(caller, data)
+        # Just call save on each folder with the VM
+        data.each do |sf|
+          sf.save
+        end
+      end
     end
     
     # Since there is currently no way to create a _new_ shared folder, this is 

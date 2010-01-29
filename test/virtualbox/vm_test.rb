@@ -358,6 +358,7 @@ raw
     should "save the relationships as well" do
       VirtualBox::Nic.expects(:save_relationship).once
       VirtualBox::StorageController.expects(:save_relationship).once
+      VirtualBox::SharedFolder.expects(:save_relationship).once
       assert @vm.save
     end
   end
