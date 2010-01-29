@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta name="Content-Type" content="text/html; charset=UTF-8" />
-<title>Class: VirtualBox::AttachedDevice</title>
+<title>Class: VirtualBox::SharedFolder</title>
 <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
@@ -23,10 +23,10 @@
     <div id="header">
       <div id="menu">
   
-    <a href="../_index.html">Index (A)</a> &raquo; 
+    <a href="../_index.html">Index (S)</a> &raquo; 
     <span class='title'><a href="../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span>
      &raquo; 
-    <span class="title">AttachedDevice</span>
+    <span class="title">SharedFolder</span>
   
   
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
@@ -43,7 +43,7 @@
     
     <iframe id="search_frame"></iframe>
     
-    <div id="content"><h1>Class: VirtualBox::AttachedDevice 
+    <div id="content"><h1>Class: VirtualBox::SharedFolder 
   
   
 </h1>
@@ -59,7 +59,7 @@
           
             <li class="next"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></li>
           
-            <li class="next">VirtualBox::AttachedDevice</li>
+            <li class="next">VirtualBox::SharedFolder</li>
           
         </ul>
         <a href="#" class="inheritanceTree">show all</a>
@@ -74,51 +74,77 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/virtualbox/attached_device.rb</dd>
+    <dd class="r2 last">lib/virtualbox/shared_folder.rb</dd>
   
 </dl>
 <div class="clear"></div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>Represents an device which is attached to a storage controller. An example
-of such a device would be a CD or hard drive attached to an IDE controller.</p>
+    <p>Represents a shared folder in VirtualBox. In VirtualBox, shared folders are a
+method for basically "symlinking" a folder on the guest system to a folder which
+exists on the host system. This allows for sharing of files across the virtual
+machine.</p>
 
-<h1>Creating a New Attached Device</h1>
+<p><strong>Note:</strong> Whenever modifying shared folders on a VM, the changes won't take
+effect until a <em>cold reboot</em> occurs. This means actually closing the virtual
+machine <em>completely</em>, then restarting it. You can't just hit "Start > Restart"
+or do a <code>sudo reboot</code>. It doesn't work that way!</p>
 
-<p>Creating a new attached device is simple. The following is a simple example
-of creating a DVD with an empty drive:</p>
+<h1>Getting Shared Folders</h1>
 
-<pre class="code"><span class='ad identifier id'>ad</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='AttachedDevice constant id'>AttachedDevice</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
-<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
-<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='image identifier id'>image</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='DVD constant id'>DVD</span><span class='dot token'>.</span><span class='empty_drive identifier id'>empty_drive</span>
-<span class='storage_controller identifier id'>storage_controller</span><span class='dot token'>.</span><span class='devices identifier id'>devices</span> <span class='lshft op'>&lt;&lt;</span> <span class='ad identifier id'>ad</span>
-<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+<p>All shared folders are attached to a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt> object, by definition. Therefore, to
+get a list of the shared folders, first <tt><a href="VM.html#find-class_method" title="VirtualBox::VM.find (method)">find</a></tt> the VM you need, then
+use the <code>shared_folders</code> relationship to access an array of the shared folders.
+With this array, you can create, modify, update, and delete the shared folders
+for that virtual machine.</p>
+
+<h1>Creating a Shared Folder</h1>
+
+<p><strong>This whole section will assume you already looked up a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt> and assigned it to
+a local variable named <code>vm</code>.</strong></p>
+
+<p>With a VM found, creating a shared folder is just a few lines of code:</p>
+
+<pre class="code"><span class='folder identifier id'>folder</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='SharedFolder constant id'>SharedFolder</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='folder identifier id'>folder</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;desktop-images&quot;</span>
+<span class='folder identifier id'>folder</span><span class='dot token'>.</span><span class='hostpath identifier id'>hostpath</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='string val'>&quot;~/Desktop/images&quot;</span><span class='rparen token'>)</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='shared_folders identifier id'>shared_folders</span> <span class='lshft op'>&lt;&lt;</span> <span class='folder identifier id'>folder</span>
+<span class='folder identifier id'>folder</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='comment val'># Or you can call vm.save, which works too!</span>
 </pre>
 
-<p>The only quirk is that the attached device <strong>must</strong> be attached to a
-storage controller. The above assumes that <code>storage_controller</code> exists,
-which adds the device.</p>
+<h1>Modifying an Existing Shared Folder</h1>
 
-<p>Any <tt><a href="Image.html" title="VirtualBox::Image (class)">Image</a></tt> subclass can be set to the <code>image</code> relationship.</p>
+<p><strong>This whole section will assume you already looked up a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt> and assigned it to
+a local variable named <code>vm</code>.</strong></p>
 
-<p>The following is an example using <tt><a href="VM.html#find-class_method" title="VirtualBox::VM.find (method)">VM.find</a></tt>:</p>
+<p>Nothing tricky here: You treat existing shared folder objects just as if they
+were new ones. Assign a new name and/or a new path, then save.</p>
 
-<pre class="code"><span class='comment val'># First creating the new device...</span>
-<span class='ad identifier id'>ad</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='AttachedDevice constant id'>AttachedDevice</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
-<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
-<span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='image identifier id'>image</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='DVD constant id'>DVD</span><span class='dot token'>.</span><span class='empty_drive identifier id'>empty_drive</span>
-
-<span class='comment val'># Now attaching to existing VM</span>
-<span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;FooVM&quot;</span><span class='rparen token'>)</span>
-<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='storage_controllers identifier id'>storage_controllers</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='devices identifier id'>devices</span> <span class='lshft op'>&lt;&lt;</span> <span class='ad identifier id'>ad</span>
-<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+<pre class="code"><span class='folder identifier id'>folder</span> <span class='assign token'>=</span> <span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='shared_folders identifier id'>shared_folders</span><span class='dot token'>.</span><span class='first identifier id'>first</span>
+<span class='folder identifier id'>folder</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;rufus&quot;</span>
+<span class='folder identifier id'>folder</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='comment val'># Or vm.save</span>
 </pre>
 
-<p>The interesting thing in this example is that the <code>save</code> method is called on
-the virtual machine rather than the AttachedDevice. This will actually work
-as expected! Saving a virtual machine automatically saves all it's relationships
-as well.</p>
+<p><strong>Note</strong>: The VirtualBox-saavy will know that VirtualBox doesn't actually
+expose a way to edit shared folders. Under the hood, the virtualbox ruby
+library is actually deleting the old shared folder, then creating a new
+one with the new details. This shouldn't affect the way anything works for
+the VM itself.</p>
+
+<h1>Deleting a Shared Folder</h1>
+
+<p><strong>This whole section will assume you already looked up a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt> and assigned it to
+a local variable named <code>vm</code>.</strong></p>
+
+<pre class="code"><span class='folder identifier id'>folder</span> <span class='assign token'>=</span> <span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='shared_folder identifier id'>shared_folder</span><span class='dot token'>.</span><span class='first identifier id'>first</span>
+<span class='folder identifier id'>folder</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
+</pre>
+
+<p>Poof! It'll be gone. This is usually the place where I warn you about this
+being non-reversable, but since no <em>data</em> was actually destroyed, this is
+not too risky. You could always just recreate the shared folder with the
+same name and path and it'll be like nothing happened.</p>
 
 <h1>Attributes and Relationships</h1>
 
@@ -131,7 +157,7 @@ below as available instance methods.</p>
 listed below.</p>
 
 <p>Relationships are also accessed like attributes but can't be set. Instead,
-they are typically references to other objects such as an <tt><a href="" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a></tt> which
+they are typically references to other objects such as an <tt><a href="AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a></tt> which
 in turn have their own attributes which can be modified.</p>
 
 <h2>Attributes</h2>
@@ -139,19 +165,9 @@ in turn have their own attributes which can be modified.</p>
 <p>This is copied directly from the class header, but lists all available
 attributes. If you don't understand what this means, read <tt><a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">Attributable</a></tt>.</p>
 
-<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
-<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:uuid</span>
-<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:medium</span>
-<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:port</span>
-</pre>
-
-<h2>Relationships</h2>
-
-<p>In addition to the basic attributes, a virtual machine is related
-to other things. The relationships are listed below. If you don't
-understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">Relatable</a></tt>.</p>
-
-<pre class="code"><span class='relationship identifier id'>relationship</span> <span class='symbol val'>:image</span><span class='comma token'>,</span> <span class='Image constant id'>Image</span>
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:readonly</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:name</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:hostpath</span>
 </pre>
 
   </div>
@@ -188,7 +204,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#destroy_relationship-class_method" title="destroy_relationship (class method)">+ (Object) <strong>destroy_relationship</strong>(caller, data, *args) </a>
+      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;SharedFolder&gt;) <strong>populate_relationship</strong>(caller, data) </a>
     
 
     
@@ -200,27 +216,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 
   
-    <span class="summary_desc">Destroy attached devices associated with another model.</span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;AttachedDevice&gt;) <strong>populate_relationship</strong>(caller, data) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc">Populate relationship with another model.</span>
+    <span class="summary_desc">Populates the shared folder relationship for anything which is related to it.</span>
   
 </li>
 
@@ -274,7 +270,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Boolean) <strong>destroy</strong>(options = {}, raise_errors = false) </a>
+      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Boolean) <strong>destroy</strong>(raise_errors = false) </a>
     
 
     
@@ -286,7 +282,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 
   
-    <span class="summary_desc">Destroys the attached device.</span>
+    <span class="summary_desc">Destroys the shared folder.</span>
   
 </li>
 
@@ -294,7 +290,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (AttachedDevice) <strong>initialize</strong>(*args) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (SharedFolder) <strong>initialize</strong>(*args) </a>
     
 
     
@@ -308,7 +304,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 
   
-    <span class="summary_desc">A new instance of AttachedDevice.</span>
+    <span class="summary_desc">A new instance of SharedFolder.</span>
   
 </li>
 
@@ -316,7 +312,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#medium-instance_method" title="#medium (instance method)">- (String) <strong>medium</strong> </a>
+      <a href="#initialize_for_data-instance_method" title="#initialize_for_data (instance method)">- (Object) <strong>initialize_for_data</strong>(data) </a>
     
 
     
@@ -328,7 +324,29 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 
   
-    <span class="summary_desc">Medium of the attached image.</span>
+    <span class="summary_desc">Initializes a record with initial data but keeping it a "new
+record." This is called automatically if <tt><a href="#initialize-instance_method" title="VirtualBox::SharedFolder#initialize (method)">#initialize</a></tt> is given
+only a single parameter.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize_for_relationship-instance_method" title="#initialize_for_relationship (instance method)">- (Object) <strong>initialize_for_relationship</strong>(index, caller, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Initializes the record for use in a relationship.</span>
   
 </li>
 
@@ -348,7 +366,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 
   
-    <span class="summary_desc">Saves or creates an attached device.</span>
+    <span class="summary_desc">Saves or creates a shared folder.</span>
   
 </li>
 
@@ -368,7 +386,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 
   
-    <span class="summary_desc">Validates an attached device.</span>
+    <span class="summary_desc">Validates a shared folder.</span>
   
 </li>
 
@@ -430,7 +448,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>A new instance of AttachedDevice</p>
+    <p>A new instance of SharedFolder</p>
 
   </div>
 </div>
@@ -444,8 +462,8 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
         <span class="signature">- (<tt>Object</tt>) <strong>initialize</strong>(data = {}) </span>
         <div class="docstring">
   <div class="discussion">
-    <p>Creates a new AttachedDevice which is a new record. This
-should be attached to a storage controller and saved.</p>
+    <p>Creates a new SharedFolder which is a new record. This
+should be attached to a VM and saved.</p>
 
   </div>
 </div>
@@ -463,7 +481,7 @@ should be attached to a storage controller and saved.</p>
       
       
         &mdash;
-        (optional) A hash which contains initial attribute values for the AttachedDevice.
+        (optional) A hash which contains initial attribute values for the SharedFolder.
       
     </li>
   
@@ -477,7 +495,7 @@ should be attached to a storage controller and saved.</p>
         <span class="signature">- (<tt>Object</tt>) <strong>initialize</strong>(index, caller, data) </span>
         <div class="docstring">
   <div class="discussion">
-    <p>Creates an AttachedDevice for a relationship. <strong>This should
+    <p>Creates an SharedFolder for a relationship. <strong>This should
 never be called except internally.</strong></p>
 
   </div>
@@ -496,7 +514,7 @@ never be called except internally.</strong></p>
       
       
         &mdash;
-        Index of the port
+        Index of the shared folder
       
     </li>
   
@@ -541,33 +559,31 @@ never be called except internally.</strong></p>
       <pre class="lines">
 
 
-128
-129
-130
-131
-132
-133
-134
-135
-136
 137
 138
 139
 140
-141</pre>
+141
+142
+143
+144
+145
+146
+147
+148
+149</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 128</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 137</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
   
   <span class='if if kw'>if</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>3</span>
-    <span class='populate_from_data identifier id'>populate_from_data</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+    <span class='initialize_for_relationship identifier id'>initialize_for_relationship</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='elsif elsif kw'>elsif</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
-    <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
-    <span class='new_record! fid id'>new_record!</span>
-  <span class='elsif elsif kw'>elsif</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+    <span class='initialize_for_data identifier id'>initialize_for_data</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
     <span class='return return kw'>return</span>
   <span class='else else kw'>else</span>
     <span class='raise identifier id'>raise</span> <span class='NoMethodError constant id'>NoMethodError</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
@@ -597,54 +613,15 @@ never be called except internally.</strong></p>
     
     
       <div class="method_details first">
-  <p class="signature first" id="destroy_relationship-class_method">
+  <p class="signature first" id="populate_relationship-class_method">
   
-    + (<tt>Object</tt>) <strong>destroy_relationship</strong>(caller, data, *args) 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>Destroy attached devices associated with another model.</p>
-
-<p><strong>This method typically won't be used except internally.</strong></p>
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-100
-101
-102</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 100</span>
-
-<span class='def def kw'>def</span> <span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
-  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='v identifier id'>v</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="populate_relationship-class_method">
-  
-    + (<tt>Array&lt;<a href="" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, data) 
+    + (<tt>Array&lt;<a href="" title="VirtualBox::SharedFolder (class)">SharedFolder</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, data) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Populate relationship with another model.</p>
+    <p>Populates the shared folder relationship for anything which is related to it.</p>
 
 <p><strong>This method typically won't be used except internally.</strong></p>
 
@@ -656,7 +633,7 @@ never be called except internally.</strong></p>
   
     <li>
       
-        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a>&gt;</tt>)</span>
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::SharedFolder (class)">SharedFolder</a>&gt;</tt>)</span>
       
       
       
@@ -671,31 +648,33 @@ never be called except internally.</strong></p>
       <pre class="lines">
 
 
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95</pre>
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 83</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 98</span>
 
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
-  <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='Proxies constant id'>Proxies</span><span class='colon2 op'>::</span><span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
+  <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
   
-  <span class='counter identifier id'>counter</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+  <span class='counter identifier id'>counter</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
   <span class='loop identifier id'>loop</span> <span class='do do kw'>do</span>
-    <span class='break break kw'>break</span> <span class='unless unless_mod kw'>unless</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{caller.name}-#{counter}-0&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
-    <span class='nic identifier id'>nic</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='counter identifier id'>counter</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
-    <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='nic identifier id'>nic</span><span class='rparen token'>)</span>
+    <span class='break break kw'>break</span> <span class='unless unless_mod kw'>unless</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;SharedFolderNameMachineMapping#{counter}&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
+    
+    <span class='folder identifier id'>folder</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='counter identifier id'>counter</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+    <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='folder identifier id'>folder</span><span class='rparen token'>)</span>
     <span class='counter identifier id'>counter</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
   <span class='end end kw'>end</span>
   
@@ -716,7 +695,7 @@ never be called except internally.</strong></p>
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Saves the relationship. This simply calls <tt><a href="#save-instance_method" title="VirtualBox::AttachedDevice#save (method)">#save</a></tt> on every
+    <p>Saves the relationship. This simply calls <tt><a href="#save-instance_method" title="VirtualBox::SharedFolder#save (method)">#save</a></tt> on every
 member of the relationship.</p>
 
 <p><strong>This method typically won't be used except internally.</strong></p>
@@ -731,20 +710,20 @@ member of the relationship.</p>
       <pre class="lines">
 
 
-108
-109
-110
-111
-112
-113</pre>
+117
+118
+119
+120
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 117</span>
 
 <span class='def def kw'>def</span> <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
-  <span class='comment val'># Just call save on each nic with the VM</span>
-  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='ad identifier id'>ad</span><span class='bitor op'>|</span>
-    <span class='ad identifier id'>ad</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+  <span class='comment val'># Just call save on each folder with the VM</span>
+  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='sf identifier id'>sf</span><span class='bitor op'>|</span>
+    <span class='sf identifier id'>sf</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -781,12 +760,12 @@ called by any relationship collection when this object is added.</p>
       <pre class="lines">
 
 
-221
-222
-223</pre>
+219
+220
+221</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 221</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 219</span>
 
 <span class='def def kw'>def</span> <span class='added_to_relationship identifier id'>added_to_relationship</span><span class='lparen token'>(</span><span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
   <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
@@ -800,16 +779,16 @@ called by any relationship collection when this object is added.</p>
       <div class="method_details ">
   <p class="signature " id="destroy-instance_method">
   
-    - (<tt>Boolean</tt>) <strong>destroy</strong>(options = {}, raise_errors = false) 
+    - (<tt>Boolean</tt>) <strong>destroy</strong>(raise_errors = false) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Destroys the attached device. By default, this only removes any
-media inserted within the device, but does not destroy it. This
-option can be specified, however, through the <code>destroy_image</code>
-option.</p>
+    <p>Destroys the shared folder. This doesn't actually delete the folder
+from the host system. Instead, it simply removes the mapping to the
+virtual machine, meaning it will no longer be possible to mount it
+from within the virtual machine.</p>
 
   </div>
 </div>
@@ -834,29 +813,6 @@ option.</p>
     </li>
   
 </ul>
-
-  
-    
-    
-    <h3>Options Hash (<tt>options</tt>):</h3>
-    <ul class="option">
-      
-        <li>
-          <span class="type">(<tt>Boolean</tt>)</span>
-          <span class="name">:destroy_image</span>
-          <span class="default">
-            
-              &mdash; default:
-              <tt>false</tt>
-            
-          </span>
-          &mdash;If true, will also destroy the image associated with device.
-        </tr>
-      
-    </ul>
-  
-    
-    
 <h3>Returns:</h3>
 <ul class="return">
   
@@ -880,26 +836,28 @@ option.</p>
       <pre class="lines">
 
 
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217</pre>
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 208</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 231</span>
 
-<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
-  <span class='comment val'># parent = storagecontroller</span>
-  <span class='comment val'># parent.parent = vm</span>
-  <span class='destroy_port identifier id'>destroy_port</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:port</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='port identifier id'>port</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{destroy_port} --device 0 --medium none&quot;</span><span class='rparen token'>)</span>      
-  <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:destroy_image</span><span class='rbrack token'>]</span> <span class='andop op'>&amp;&amp;</span> <span class='image identifier id'>image</span>
+<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='comment val'># If the name changed, we have to be sure to use the previous</span>
+  <span class='comment val'># one.</span>
+  <span class='name_value identifier id'>name_value</span> <span class='assign token'>=</span> <span class='name_changed? fid id'>name_changed?</span> <span class='integer val'>? </span><span class='name_was identifier id'>name_was</span> <span class='colon op'>:</span> <span class='name identifier id'>name</span>
+  
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;sharedfolder remove #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name_value)}&quot;</span><span class='rparen token'>)</span>
+  <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
   <span class='false false kw'>false</span>
@@ -911,69 +869,108 @@ option.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="medium-instance_method">
+  <p class="signature " id="initialize_for_data-instance_method">
   
-    - (<tt>String</tt>) <strong>medium</strong> 
+    - (<tt>Object</tt>) <strong>initialize_for_data</strong>(data) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Medium of the attached image. This attribute will be dependent
-on the attached image and will return one of the following values:</p>
-
-<ul>
-<li><strong>none</strong> - There is no attached image</li>
-<li><strong>emptydrive</strong> - An image with an empty drive is attached (see
-  <tt><a href="DVD.html#empty_drive-class_method" title="VirtualBox::DVD.empty_drive (method)">DVD.empty_drive</a></tt>)</li>
-<li><strong>image uuid</strong> - The image's UUID</li>
-</ul>
-
+    <p>Initializes a record with initial data but keeping it a "new
+record." This is called automatically if <tt><a href="#initialize-instance_method" title="VirtualBox::SharedFolder#initialize (method)">#initialize</a></tt> is given
+only a single parameter. View <tt><a href="#initialize-instance_method" title="VirtualBox::SharedFolder#initialize (method)">#initialize</a></tt> for documentation.</p>
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
-<ul class="return">
   
-    <li>
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
-
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-188
-189
-190
-191
-192
-193
-194
-195
-196</pre>
+173
+174
+175
+176
+177
+178
+179
+180</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 188</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 173</span>
 
-<span class='def def kw'>def</span> <span class='medium identifier id'>medium</span>
-  <span class='if if kw'>if</span> <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
-    <span class='string val'>&quot;none&quot;</span>
-  <span class='elsif elsif kw'>elsif</span> <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='empty_drive? fid id'>empty_drive?</span>
-    <span class='string val'>&quot;emptydrive&quot;</span>
-  <span class='else else kw'>else</span>
-    <span class='image identifier id'>image</span><span class='dot token'>.</span><span class='uuid identifier id'>uuid</span>
+<span class='def def kw'>def</span> <span class='initialize_for_data identifier id'>initialize_for_data</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:populate_key</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
   <span class='end end kw'>end</span>
+  
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='new_record! fid id'>new_record!</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="initialize_for_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>initialize_for_relationship</strong>(index, caller, data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Initializes the record for use in a relationship. This
+is automatically called by <tt><a href="#initialize-instance_method" title="VirtualBox::SharedFolder#initialize (method)">#initialize</a></tt> if it has three
+parameters.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 156</span>
+
+<span class='def def kw'>def</span> <span class='initialize_for_relationship identifier id'>initialize_for_relationship</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='comment val'># Setup the index specific attributes</span>
+  <span class='populate_data identifier id'>populate_data</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='key identifier id'>key</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:populate_key</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='name identifier id'>name</span>
+    <span class='value identifier id'>value</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key}#{index}&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
+    <span class='populate_data identifier id'>populate_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='populate_data identifier id'>populate_data</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='lbrace token'>{</span>
+    <span class='symbol val'>:parent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span>
+  <span class='rbrace token'>}</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -990,7 +987,7 @@ on the attached image and will return one of the following values:</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Saves or creates an attached device.</p>
+    <p>Saves or creates a shared folder.</p>
 
   </div>
 </div>
@@ -1038,30 +1035,29 @@ on the attached image and will return one of the following values:</p>
       <pre class="lines">
 
 
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177</pre>
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 196</span>
 
 <span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>      
   <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='unless unless_mod kw'>unless</span> <span class='changed? fid id'>changed?</span>
@@ -1071,11 +1067,10 @@ on the attached image and will return one of the following values:</p>
     <span class='return return kw'>return</span> <span class='false false kw'>false</span>
   <span class='end end kw'>end</span>
   
-  <span class='comment val'># If the port changed, we have to destroy the old one, then create</span>
-  <span class='comment val'># a new one</span>
-  <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='lbrace token'>{</span><span class='symbol val'>:port</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='port_was identifier id'>port_was</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='port_changed? fid id'>port_changed?</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='port_was identifier id'>port_was</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
-
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}&quot;</span><span class='rparen token'>)</span>
+  <span class='comment val'># If this isn't a new record, we destroy it first</span>
+  <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='new_record? fid id'>new_record?</span>
+  
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;sharedfolder add #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name)} --hostpath #{Command.shell_escape(hostpath)}&quot;</span><span class='rparen token'>)</span>
   <span class='existing_record! fid id'>existing_record!</span>
   <span class='clear_dirty! fid id'>clear_dirty!</span>
   
@@ -1099,7 +1094,7 @@ on the attached image and will return one of the following values:</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Validates an attached device.</p>
+    <p>Validates a shared folder.</p>
 
   </div>
 </div>
@@ -1111,23 +1106,23 @@ on the attached image and will return one of the following values:</p>
       <pre class="lines">
 
 
-144
-145
-146
-147
-148
-149
-150</pre>
+183
+184
+185
+186
+187
+188
+189</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/attached_device.rb', line 144</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 183</span>
 
 <span class='def def kw'>def</span> <span class='validate identifier id'>validate</span>
   <span class='super super kw'>super</span>
   
   <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:parent</span>
-  <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:image</span>
-  <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:port</span>
+  <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:name</span>
+  <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:hostpath</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1140,7 +1135,7 @@ on the attached image and will return one of the following values:</p>
 </div>
     
     <div id="footer">
-  Generated on Thu Jan 28 20:19:34 2010 by 
+  Generated on Thu Jan 28 20:19:32 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

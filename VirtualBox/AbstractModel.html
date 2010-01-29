@@ -70,14 +70,14 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2"><a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a>, <a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a>, <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></dd>
+      <dd class="r2"><a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a>, <a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a>, <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a>, <a href="AbstractModel/Validatable.html" title="VirtualBox::AbstractModel::Validatable (module)">AbstractModel::Validatable</a></dd>
       
     
   
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">lib/virtualbox/abstract_model.rb<span class="defines">,<br />
-  lib/virtualbox/abstract_model/dirty.rb,<br /> lib/virtualbox/abstract_model/relatable.rb,<br /> lib/virtualbox/abstract_model/attributable.rb</span>
+  lib/virtualbox/abstract_model/dirty.rb,<br /> lib/virtualbox/abstract_model/relatable.rb,<br /> lib/virtualbox/abstract_model/validatable.rb,<br /> lib/virtualbox/abstract_model/attributable.rb</span>
 </dd>
   
 </dl>
@@ -98,10 +98,14 @@ It provides convenient ActiveRecord-style model behavior to subclasses.</p>
   
 </div><div id="subclasses">
   <h2>Direct Known Subclasses</h2>
-  <p class="children"><a href="AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a>, <a href="Image.html" title="VirtualBox::Image (class)">Image</a>, <a href="Nic.html" title="VirtualBox::Nic (class)">Nic</a>, <a href="StorageController.html" title="VirtualBox::StorageController (class)">StorageController</a>, <a href="VM.html" title="VirtualBox::VM (class)">VM</a></p>
+  <p class="children"><a href="AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a>, <a href="Image.html" title="VirtualBox::Image (class)">Image</a>, <a href="Nic.html" title="VirtualBox::Nic (class)">Nic</a>, <a href="SharedFolder.html" title="VirtualBox::SharedFolder (class)">SharedFolder</a>, <a href="StorageController.html" title="VirtualBox::StorageController (class)">StorageController</a>, <a href="VM.html" title="VirtualBox::VM (class)">VM</a></p>
 </div>
 
 
+  
+  
+  
+  
   
   
   
@@ -135,6 +139,26 @@ It provides convenient ActiveRecord-style model behavior to subclasses.</p>
 
   
     <span class="summary_desc">Destroys the model.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#errors-instance_method" title="#errors (instance method)">- (Object) <strong>errors</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns the errors for a model.</span>
   
 </li>
 
@@ -283,6 +307,26 @@ relationship.</span>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#validate-instance_method" title="#validate (instance method)">- (Object) <strong>validate</strong>(*args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Validates the model and relationships.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#write_attribute-instance_method" title="#write_attribute (instance method)">- (Object) <strong>write_attribute</strong>(name, value) </a>
     
 
@@ -326,6 +370,14 @@ the written attribute.</span>
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
   <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Validatable.html" title="VirtualBox::AbstractModel::Validatable (module)">AbstractModel::Validatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Validatable.html#add_error-instance_method" title="VirtualBox::AbstractModel::Validatable#add_error (method)">#add_error</a>, <a href="AbstractModel/Validatable.html#clear_errors-instance_method" title="VirtualBox::AbstractModel::Validatable#clear_errors (method)">#clear_errors</a>, <a href="AbstractModel/Validatable.html#valid%3F-instance_method" title="VirtualBox::AbstractModel::Validatable#valid? (method)">#valid?</a>, <a href="AbstractModel/Validatable.html#validates_presence_of-instance_method" title="VirtualBox::AbstractModel::Validatable#validates_presence_of (method)">#validates_presence_of</a></p>
 <div id="method_missing_details" class="method_details_list">
   <h2>Dynamic Method Handling</h2>
   <p class="notice super">
@@ -366,21 +418,76 @@ on relationships, see <tt><a href="AbstractModel/Relatable.html" title="VirtualB
       <pre class="lines">
 
 
-110
-111
-112
-113
-114
-115</pre>
+141
+142
+143
+144
+145
+146</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 141</span>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># Destroy dependent relationships</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
     <span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:dependent</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='symbol val'>:destroy</span>
   <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="errors-instance_method">
+  
+    - (<tt>Object</tt>) <strong>errors</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns the errors for a model.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 42</span>
+
+<span class='def def kw'>def</span> <span class='errors identifier id'>errors</span>
+  <span class='error_hash identifier id'>error_hash</span> <span class='assign token'>=</span> <span class='super super kw'>super</span>
+  
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span> <span class='andop op'>&amp;&amp;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:errors_for_relationship</span><span class='rparen token'>)</span>
+    <span class='relationship_errors identifier id'>relationship_errors</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='errors_for_relationship identifier id'>errors_for_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+    
+    <span class='error_hash identifier id'>error_hash</span><span class='dot token'>.</span><span class='merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='lbrace token'>{</span> <span class='symbol val'>:foos</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='relationship_errors identifier id'>relationship_errors</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='relationship_errors identifier id'>relationship_errors</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='error_hash identifier id'>error_hash</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -411,12 +518,12 @@ be asking yourself "why?"</p>
       <pre class="lines">
 
 
-35
-36
-37</pre>
+37
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 37</span>
 
 <span class='def def kw'>def</span> <span class='existing_record! fid id'>existing_record!</span>
   <span class='@new_record ivar id'>@new_record</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
@@ -450,12 +557,12 @@ asking yourself "why?"</p>
       <pre class="lines">
 
 
-28
-29
-30</pre>
+30
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 28</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 30</span>
 
 <span class='def def kw'>def</span> <span class='new_record! fid id'>new_record!</span>
   <span class='@new_record ivar id'>@new_record</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
@@ -504,13 +611,13 @@ previously exist, or save an old one if it did exist.</p>
       <pre class="lines">
 
 
-20
-21
 22
-23</pre>
+23
+24
+25</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 20</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 22</span>
 
 <span class='def def kw'>def</span> <span class='new_record? fid id'>new_record?</span>
   <span class='new_record! fid id'>new_record!</span> <span class='if if_mod kw'>if</span> <span class='@new_record ivar id'>@new_record</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -557,19 +664,19 @@ a new record (see <tt><a href="#new_record%3F-instance_method" title="VirtualBox
       <pre class="lines">
 
 
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89</pre>
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 80</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 111</span>
 
 <span class='def def kw'>def</span> <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='attribs identifier id'>attribs</span><span class='rparen token'>)</span>
   <span class='comment val'># No longer a new record</span>
@@ -611,21 +718,21 @@ implementation specific (see <tt><a href="VM.html#save-instance_method" title="V
       <pre class="lines">
 
 
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54</pre>
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 43</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 74</span>
 
 <span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># Go through changed attributes and call save_attribute for</span>
@@ -670,12 +777,12 @@ by any subclasses.</p>
       <pre class="lines">
 
 
-61
-62
-63</pre>
+92
+93
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 61</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 92</span>
 
 <span class='def def kw'>def</span> <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='clear_dirty! fid id'>clear_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
@@ -708,19 +815,76 @@ relationship. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-instance_me
       <pre class="lines">
 
 
-100
-101
-102
-103
-104</pre>
+131
+132
+133
+134
+135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 100</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 131</span>
 
 <span class='def def kw'>def</span> <span class='set_relationship identifier id'>set_relationship</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='existing identifier id'>existing</span> <span class='assign token'>=</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
   <span class='new_value identifier id'>new_value</span> <span class='assign token'>=</span> <span class='super super kw'>super</span>
   <span class='set_dirty! fid id'>set_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='existing identifier id'>existing</span><span class='comma token'>,</span> <span class='new_value identifier id'>new_value</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="validate-instance_method">
+  
+    - (<tt>Object</tt>) <strong>validate</strong>(*args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Validates the model and relationships.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 56</span>
+
+<span class='def def kw'>def</span> <span class='validate identifier id'>validate</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='comment val'># First clear all previous errors</span>
+  <span class='clear_errors identifier id'>clear_errors</span>
+  
+  <span class='comment val'># Then do the validations</span>
+  <span class='failed identifier id'>failed</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span> <span class='andop op'>&amp;&amp;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:validate_relationship</span><span class='rparen token'>)</span>
+    <span class='failed identifier id'>failed</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='validate_relationship identifier id'>validate_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='return return kw'>return</span> <span class='notop op'>!</span><span class='failed identifier id'>failed</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -750,13 +914,13 @@ the written attribute. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-in
       <pre class="lines">
 
 
-93
-94
-95
-96</pre>
+124
+125
+126
+127</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 93</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 124</span>
 
 <span class='def def kw'>def</span> <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='set_dirty! fid id'>set_dirty!</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='read_attribute identifier id'>read_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
@@ -773,7 +937,7 @@ the written attribute. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-in
 </div>
     
     <div id="footer">
-  Generated on Tue Jan 26 17:54:22 2010 by 
+  Generated on Thu Jan 28 20:19:32 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

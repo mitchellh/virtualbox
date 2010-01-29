@@ -159,6 +159,7 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
 
 <pre class="code"><span class='relationship identifier id'>relationship</span> <span class='symbol val'>:nics</span><span class='comma token'>,</span> <span class='Nic constant id'>Nic</span>
 <span class='relationship identifier id'>relationship</span> <span class='symbol val'>:storage_controllers</span><span class='comma token'>,</span> <span class='StorageController constant id'>StorageController</span><span class='comma token'>,</span> <span class='symbol val'>:dependent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:destroy</span>
+<span class='relationship identifier id'>relationship</span> <span class='symbol val'>:shared_folders</span><span class='comma token'>,</span> <span class='SharedFolder constant id'>SharedFolder</span>
 </pre>
 
   </div>
@@ -167,6 +168,10 @@ understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualB
   
 </div>
 
+  
+  
+  
+  
   
   
   
@@ -610,7 +615,7 @@ virtual machine without saving state.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -635,6 +640,14 @@ virtual machine without saving state.</span>
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
   <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Validatable.html" title="VirtualBox::AbstractModel::Validatable (module)">AbstractModel::Validatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Validatable.html#add_error-instance_method" title="VirtualBox::AbstractModel::Validatable#add_error (method)">#add_error</a>, <a href="AbstractModel/Validatable.html#clear_errors-instance_method" title="VirtualBox::AbstractModel::Validatable#clear_errors (method)">#clear_errors</a>, <a href="AbstractModel/Validatable.html#errors-instance_method" title="VirtualBox::AbstractModel::Validatable#errors (method)">#errors</a>, <a href="AbstractModel/Validatable.html#valid%3F-instance_method" title="VirtualBox::AbstractModel::Validatable#valid? (method)">#valid?</a>, <a href="AbstractModel/Validatable.html#validate-instance_method" title="VirtualBox::AbstractModel::Validatable#validate (method)">#validate</a>, <a href="AbstractModel/Validatable.html#validates_presence_of-instance_method" title="VirtualBox::AbstractModel::Validatable#validates_presence_of (method)">#validates_presence_of</a></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -664,15 +677,15 @@ initialize the VMs.</p>
       <pre class="lines">
 
 
-203
-204
 205
 206
 207
-208</pre>
+208
+209
+210</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 203</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 205</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
@@ -737,13 +750,13 @@ initialize the VMs.</p>
       <pre class="lines">
 
 
-112
-113
 114
-115</pre>
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 112</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 114</span>
 
 <span class='def def kw'>def</span> <span class='all identifier id'>all</span>
   <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list vms&quot;</span><span class='rparen token'>)</span>
@@ -790,12 +803,12 @@ new VM object. If the VM doesn't exist, will return <code>nil</code>.</p>
       <pre class="lines">
 
 
-121
-122
-123</pre>
+123
+124
+125</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 121</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 123</span>
 
 <span class='def def kw'>def</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='raw_info identifier id'>raw_info</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -843,12 +856,12 @@ it as a raw string.</p>
       <pre class="lines">
 
 
-144
-145
-146</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 144</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 146</span>
 
 <span class='def def kw'>def</span> <span class='human_info identifier id'>human_info</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;showvminfo #{name}&quot;</span><span class='rparen token'>)</span>
@@ -899,15 +912,15 @@ VM object can be used to make any modifications necessary
       <pre class="lines">
 
 
-131
-132
 133
 134
 135
-136</pre>
+136
+137
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 131</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 133</span>
 
 <span class='def def kw'>def</span> <span class='import identifier id'>import</span><span class='lparen token'>(</span><span class='source_path identifier id'>source_path</span><span class='rparen token'>)</span>
   <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;import #{Command.shell_escape(source_path)}&quot;</span><span class='rparen token'>)</span>
@@ -943,8 +956,6 @@ into a hash. Ignores lines which don't match the format.</p>
       <pre class="lines">
 
 
-159
-160
 161
 162
 163
@@ -952,10 +963,12 @@ into a hash. Ignores lines which don't match the format.</p>
 165
 166
 167
-168</pre>
+168
+169
+170</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 159</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 161</span>
 
 <span class='def def kw'>def</span> <span class='parse_vm_info identifier id'>parse_vm_info</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
   <span class='parsed identifier id'>parsed</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
@@ -1013,18 +1026,18 @@ in <tt><a href="#all-class_method" title="VirtualBox::VM.all (method)">VM.all</a
       <pre class="lines">
 
 
-176
-177
 178
 179
 180
 181
 182
 183
-184</pre>
+184
+185
+186</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 176</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 178</span>
 
 <span class='def def kw'>def</span> <span class='parse_vm_list identifier id'>parse_vm_list</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
   <span class='results identifier id'>results</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -1080,13 +1093,13 @@ in <tt><a href="#all-class_method" title="VirtualBox::VM.all (method)">VM.all</a
       <pre class="lines">
 
 
-191
-192
 193
-194</pre>
+194
+195
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 191</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 193</span>
 
 <span class='def def kw'>def</span> <span class='parse_vm_name identifier id'>parse_vm_name</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/VM name &quot;(.+?)&quot;/</span>
@@ -1136,13 +1149,13 @@ as a hash.</p>
       <pre class="lines">
 
 
-152
-153
 154
-155</pre>
+155
+156
+157</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 152</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 154</span>
 
 <span class='def def kw'>def</span> <span class='raw_info identifier id'>raw_info</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;showvminfo #{name} --machinereadable&quot;</span><span class='rparen token'>)</span>
@@ -1234,16 +1247,16 @@ instead call those.</p>
       <pre class="lines">
 
 
-361
-362
 363
 364
 365
 366
-367</pre>
+367
+368
+369</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 361</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 363</span>
 
 <span class='def def kw'>def</span> <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;controlvm #{@original_name} #{command}&quot;</span><span class='rparen token'>)</span>
@@ -1313,16 +1326,16 @@ the <code>destroy_image</code> option.</p>
       <pre class="lines">
 
 
-379
-380
 381
 382
 383
 384
-385</pre>
+385
+386
+387</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 379</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 381</span>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># Call super first to destroy relationships, necessary before</span>
@@ -1483,8 +1496,6 @@ below for more information on the available options.</p>
       <pre class="lines">
 
 
-276
-277
 278
 279
 280
@@ -1495,10 +1506,12 @@ below for more information on the available options.</p>
 285
 286
 287
-288</pre>
+288
+289
+290</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 276</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 278</span>
 
 <span class='def def kw'>def</span> <span class='export identifier id'>export</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='raise_error identifier id'>raise_error</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='acc identifier id'>acc</span><span class='comma token'>,</span> <span class='kv identifier id'>kv</span><span class='bitor op'>|</span>
@@ -1577,12 +1590,12 @@ again by calling <tt><a href="#resume-instance_method" title="VirtualBox::VM#res
       <pre class="lines">
 
 
-329
-330
-331</pre>
+331
+332
+333</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 329</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 331</span>
 
 <span class='def def kw'>def</span> <span class='pause identifier id'>pause</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:pause</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -1650,12 +1663,12 @@ again by calling <tt><a href="#resume-instance_method" title="VirtualBox::VM#res
       <pre class="lines">
 
 
-338
-339
-340</pre>
+340
+341
+342</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 338</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 340</span>
 
 <span class='def def kw'>def</span> <span class='resume identifier id'>resume</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:resume</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -1689,8 +1702,6 @@ as well (such as storage controllers), those will be saved, too.</p>
       <pre class="lines">
 
 
-229
-230
 231
 232
 233
@@ -1703,10 +1714,12 @@ as well (such as storage controllers), those will be saved, too.</p>
 240
 241
 242
-243</pre>
+243
+244
+245</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 229</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 231</span>
 
 <span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='comment val'># Make sure we save the new name first if that was changed, or</span>
@@ -1753,13 +1766,13 @@ be called except interally. Instead, you're probably looking for <tt><a href="#s
       <pre class="lines">
 
 
-249
-250
 251
-252</pre>
+252
+253
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 249</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 251</span>
 
 <span class='def def kw'>def</span> <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}&quot;</span><span class='rparen token'>)</span>
@@ -1829,12 +1842,12 @@ again by calling "start" again.</p>
       <pre class="lines">
 
 
-348
-349
-350</pre>
+350
+351
+352</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 348</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 350</span>
 
 <span class='def def kw'>def</span> <span class='save_state identifier id'>save_state</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:savestate</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -1929,16 +1942,16 @@ Both the GUI and headless mode will not block the ruby process.</p>
       <pre class="lines">
 
 
-304
-305
 306
 307
 308
 309
-310</pre>
+310
+311
+312</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 304</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 306</span>
 
 <span class='def def kw'>def</span> <span class='start identifier id'>start</span><span class='lparen token'>(</span><span class='mode identifier id'>mode</span><span class='assign token'>=</span><span class='symbol val'>:gui</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;startvm #{@original_name} --type #{mode}&quot;</span><span class='rparen token'>)</span>
@@ -2012,17 +2025,17 @@ when the VM was found unless <code>reload</code> is set to <code>true</code>.</p
       <pre class="lines">
 
 
-217
-218
 219
 220
 221
 222
 223
-224</pre>
+224
+225
+226</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 217</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 219</span>
 
 <span class='def def kw'>def</span> <span class='state identifier id'>state</span><span class='lparen token'>(</span><span class='reload identifier id'>reload</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='reload identifier id'>reload</span>
@@ -2097,12 +2110,12 @@ of data.</p>
       <pre class="lines">
 
 
-319
-320
-321</pre>
+321
+322
+323</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 319</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 321</span>
 
 <span class='def def kw'>def</span> <span class='stop identifier id'>stop</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:poweroff</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -2118,7 +2131,7 @@ of data.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Jan 26 17:54:20 2010 by 
+  Generated on Thu Jan 28 20:19:30 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>
