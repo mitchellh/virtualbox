@@ -1,48 +1,41 @@
-# What's New in 0.2.x?
+# What's New in 0.3.x?
 
-## Common Saving Convention
+## Shared Folders
 
-All models now implement a common saving convention. `save` will always return `true`
-on success and `false` on failure. Additionally, an optional parameter `raise_error`
-is available on save for all models which will cause failure to raise a 
-{VirtualBox::Exceptions::CommandFailedException} which contains the reason for
-failure.
+Shared folders are a great feature of VirtualBox which allows the host system
+to share data with guest systems easily using the native filesystem. Attaching,
+modifying, and removing these shared folders are now supported. A quick example
+below:
 
-This change allowed uniformity across all the models and also increased the error
-checking ability of developers.
-
-## AttachedDevice Creation
-
-{VirtualBox::AttachedDevice} objects can now be created from scratch. A
-quick example below:
-
-    ad = VirtualBox::AttachedDevice.new
-    ad.port = 0
-    ad.image = VirtualBox::HardDrive.find("my-hd")
-    storate_controller.devices << ad
-    ad.save
-
-## Empty Drives
-
-{VirtualBox::DVD} now supports empty drives. That is, you can create a
-DVD object which represents an empty drive by calling {VirtualBox::DVD.empty_drive}.
-This object can be used as an image when creating a new or modifying an
-existing {VirtualBox::AttachedDevice}.
-
-## VM Saving Propagates Fully
-
-Previously, when saving a {VirtualBox::VM}, it would only save the `nics`
-relationship in addition to its own attributes. This was because only those
-were editable, at the time. Now that {VirtualBox::AttachedDevice} can be
-edited and created, virtual machine objects save **all** relationships when
-`save` is called. This means you can do things like the following, and 
-they'll work as expected:
-
-    vm = VirtualBox::VM.find("Foo")
-    vm.storage_controllers[0].devices[0].image = VirtualBox::DVD.empty_drive
+    vm = VirtualBox::VM.find("FooVM")
+    folder = VirtualBox::SharedFolder.new
+    folder.name = "hosthome"
+    folder.hostpath = "/home/username"
+    vm.shared_folders << folder
     vm.save
 
-## Bug Fixes & Testing Improvements
+For full documentation on this new feature, read about them at
+{VirtualBox::SharedFolder}.
 
-This release has 100% test coverage based on RCov's output and fixes
-many bugs which existed in 0.1.x.
+## Validations
+
+Many of the models for the virtualbox library now come complete with data
+validations. These validations are performed within the library itself prior to
+calling the virtualbox commands. They work very much the same was as ActiveRecord
+validations:
+
+    sf = VirtualBox::SharedFolder.new(hash_of_values)
+    if !sf.valid?
+      puts "#{sf.errors.length} errors with the folder"
+    else
+      sf.save
+    end
+
+In addition to `valid?` there is `errors` which returns a hash of all the errors,
+including errors on relationships. There is also the `validate` method which
+runs the validations, but you really shouldn't have the need to call that directly.
+
+All validations are run automatically on `save`, which will return `false` if
+they fail. If you choose to raise errors on the save, a `ValidationFailedException`
+will be raised (in contrast to a `CommandFailedException`, which serves its own
+role).
