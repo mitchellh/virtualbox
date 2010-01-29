@@ -45,5 +45,21 @@ module VirtualBox
         :parent => caller
       }))
     end
+    
+    # Destroys the shared folder. This doesn't actually delete the folder
+    # from the host system. Instead, it simply removes the mapping to the
+    # virtual machine, meaning it will no longer be possible to mount it
+    # from within the virtual machine.
+    #
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def destroy(raise_errors=false)
+      Command.vboxmanage("sharedfolder remove #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name)}")
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
+    end
   end
 end

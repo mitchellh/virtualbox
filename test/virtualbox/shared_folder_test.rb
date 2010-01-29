@@ -11,6 +11,40 @@ class SharedFolderTest < Test::Unit::TestCase
     
     @caller = mock("caller")
     @caller.stubs(:name).returns("foo")
+    
+    VirtualBox::Command.stubs(:execute)
+  end
+  
+  context "destroying" do
+    setup do
+      @value = VirtualBox::SharedFolder.populate_relationship(@caller, @data)
+      @value = @value[0]
+    end
+    
+    should "call the proper command" do
+      VirtualBox::Command.expects(:vboxmanage).with("sharedfolder remove #{@caller.name} --name #{@value.name}").once
+      assert @value.destroy
+    end
+    
+    should "shell escape VM name and storage controller name" do
+      shell_seq = sequence("shell_seq")
+      VirtualBox::Command.expects(:shell_escape).with(@caller.name).in_sequence(shell_seq)
+      VirtualBox::Command.expects(:shell_escape).with(@value.name).in_sequence(shell_seq)
+      VirtualBox::Command.expects(:vboxmanage).in_sequence(shell_seq)
+      assert @value.destroy
+    end
+    
+    should "return false if destroy failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@value.destroy
+    end
+    
+    should "raise an exception if destroy failed and an error occured" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @value.destroy(true)
+      }
+    end
   end
   
   context "populating relationships" do
