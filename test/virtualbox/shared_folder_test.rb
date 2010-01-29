@@ -146,6 +146,26 @@ class SharedFolderTest < Test::Unit::TestCase
         }
       end
     end
+    
+    should "populate from a hash if one argument is given" do
+      VirtualBox::SharedFolder.any_instance.expects(:initialize_for_data).with("HI").once
+      VirtualBox::SharedFolder.new("HI")
+    end
+    
+    context "initializing from data" do
+      setup do
+        @sf = VirtualBox::SharedFolder.new({:name => "foo", :hostpath => "bar"})
+      end
+      
+      should "allow the use of :name and :hostpath in the hash" do
+        assert_equal "foo", @sf.name
+        assert_equal "bar", @sf.hostpath
+      end
+      
+      should "keep the record new" do
+        assert @sf.new_record?
+      end
+    end
   end
   
   context "destroying" do

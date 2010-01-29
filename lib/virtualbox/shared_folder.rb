@@ -122,21 +122,37 @@ module VirtualBox
       end
     end
     
-    # Since there is currently no way to create a _new_ shared folder, this is 
-    # only used internally. Developers should NOT try to initialize their
-    # own shared folder objects.
+    # @overload initialize(data={})
+    #   Creates a new SharedFolder which is a new record. This
+    #   should be attached to a VM and saved.
+    #   @param [Hash] data (optional) A hash which contains initial attribute
+    #     values for the SharedFolder.
+    # @overload initialize(index, caller, data)
+    #   Creates an SharedFolder for a relationship. **This should
+    #   never be called except internally.**
+    #   @param [Integer] index Index of the shared folder
+    #   @param [Object] caller The parent
+    #   @param [Hash] data A hash of data which must be used
+    #     to extract the relationship data.
     def initialize(*args)
       super()
       
       if args.length == 3
         initialize_for_relationship(*args)
-      elsif args.length <= 1
+      elsif args.length == 1
+        initialize_for_data(*args)
+      elsif args.length == 0
         return
       else
         raise NoMethodError.new
       end
     end
     
+    # Initializes the record for use in a relationship. This
+    # is automatically called by {#initialize} if it has three
+    # parameters.
+    #
+    # **This method typically won't be used except internally.**
     def initialize_for_relationship(index, caller, data)
       # Setup the index specific attributes
       populate_data = {}
@@ -149,6 +165,18 @@ module VirtualBox
       populate_attributes(populate_data.merge({
         :parent => caller
       }))
+    end
+    
+    # Initializes a record with initial data but keeping it a "new
+    # record." This is called automatically if {#initialize} is given
+    # only a single parameter. View {#initialize} for documentation.
+    def initialize_for_data(data)
+      self.class.attributes.each do |name, options|
+        data[options[:populate_key]] = data[name]
+      end
+      
+      populate_attributes(data)
+      new_record!
     end
     
     # Validates a shared folder.
