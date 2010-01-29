@@ -14,10 +14,9 @@ raw
 
     VirtualBox::Command.stubs(:execute)
 
-    @ed = VirtualBox::ExtraData.new({
-      :key   => "foo",
-      :value => "bar"
-    })
+    @ed = VirtualBox::ExtraData.new
+    @ed["foo"] = "bar"
+    @ed.clear_dirty!
   end
   
   context "attributes" do
@@ -43,14 +42,6 @@ raw
       VirtualBox::Command.stubs(:vboxmanage).returns(@raw)      
     end
     
-    context "adding to a relationship" do
-      should "replace parent with caller" do
-        assert_equal "global", @ed.parent
-        @ed.added_to_relationship(@caller)
-        assert_equal @caller, @ed.parent
-      end
-    end
-    
     context "populating" do
       should "call VBoxManage for the caller" do
         VirtualBox::Command.expects(:vboxmanage).with("getextradata #{@caller.name} enumerate").returns(@raw)
@@ -58,94 +49,69 @@ raw
       end
       
       should "call pairs_to_objects with parent set to the caller" do
-        VirtualBox::ExtraData.expects(:pairs_to_objects).with(anything, {:parent => @caller}).at_least(0)
+        VirtualBox::ExtraData.expects(:parse_kv_pairs).with(@raw, @caller).once
         VirtualBox::ExtraData.populate_relationship(@caller, {})        
       end
       
       should "return an array of ExtraData objects" do
         result = VirtualBox::ExtraData.populate_relationship(@caller, {})
-        assert result.is_a?(Array)
-        assert result.all? { |o| o.is_a?(VirtualBox::ExtraData) }
+        assert result.is_a?(VirtualBox::ExtraData)
       end
     end
     
     context "saving" do
-      should "call save on each object" do
-        objects = []
-        5.times do |i|
-          object = mock("object#{i}")
-          object.expects(:save).once
-          objects.push(object)
-        end
+      should "call save on the ExtraData object" do
+        object = mock("object")
+        object.expects(:save).once
         
-        VirtualBox::ExtraData.save_relationship(@caller, objects)
+        VirtualBox::ExtraData.save_relationship(@caller, object)
       end
     end
   end
   
-  context "validations" do
-    should "be valid with all fields" do
-      assert @ed.valid?
+  context "destroying (deleting)" do
+    setup do
+      @key = "foo"
     end
     
-    should "be invalid with no key" do
-      @ed.key = nil
-      assert !@ed.valid?
-    end
-    
-    should "be invalid with no value" do
-      @ed.value = nil
-      assert !@ed.valid?
-    end
-  end
-  
-  context "destroying" do
     should "call the proper vbox command" do
       VirtualBox::Command.expects(:vboxmanage).with("setextradata global foo")
-      assert @ed.destroy
+      assert @ed.delete(@key)
+    end
+    
+    should "remove the key from the hash" do
+      assert @ed.has_key?(@key)
+      assert @ed.delete(@key)
+      assert !@ed.has_key?(@key)
     end
     
     should "raise an exception if true sent to save and error occured" do
       VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
       assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-        @ed.destroy(true)
+        @ed.delete(@key, true)
       }
     end
     
     should "return false if the command failed" do
       VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert !@ed.destroy
-    end
-    
-    should "destroy using the old key if it was changed" do
-      @ed.key = "CHANGED"
-      VirtualBox::Command.expects(:vboxmanage).with("setextradata global foo")
-      @ed.destroy
+      assert !@ed.delete(@key)
     end
   end
   
   context "saving" do
-    should "call destroy first if the key changed" do
-      @ed.key = "CHANGED"
-      @ed.expects(:destroy).once
-      @ed.save
+    setup do
+      @ed["foo"] = "BAR"
+      assert @ed.changed?
     end
     
-    should "return false and not call vboxmanage if invalid" do
+    should "do nothing if there are no changes" do
+      @ed.clear_dirty!
       VirtualBox::Command.expects(:vboxmanage).never
-      @ed.expects(:valid?).returns(false)
-      assert !@ed.save
-    end
-    
-    should "raise a ValidationFailedException if invalid and raise_errors is true" do
-      @ed.expects(:valid?).returns(false)
-      assert_raises(VirtualBox::Exceptions::ValidationFailedException) {
-        @ed.save(true)
-      }
+      assert @ed.save
     end
     
     should "call the proper vbox command" do
-      VirtualBox::Command.expects(:vboxmanage).with("setextradata global foo bar")
+      VirtualBox::Command.expects(:vboxmanage).with("setextradata global foo BAR")
       assert @ed.save
     end
     
@@ -162,10 +128,26 @@ raw
     end
     
     should "clear dirty state" do
-      @ed.value = "rawr"
+      @ed["value"] = "rawr"
       assert @ed.changed?
       assert @ed.save
       assert !@ed.changed?
+    end
+  end
+
+  context "setting dirty state" do
+    setup do
+      @ed = VirtualBox::ExtraData.new
+    end
+
+    should "not be dirty initially" do
+      assert !@ed.changed?
+    end
+    
+    should "be dirty when setting a value" do
+      @ed["foo"] = "bar"
+      assert @ed.changed?
+      assert @ed.changes.has_key?("foo")
     end
   end
   
@@ -173,43 +155,20 @@ raw
     should "call the command, parse it, then turn it into objects" do
       get_seq = sequence("get_seq")
       VirtualBox::Command.expects(:vboxmanage).with("getextradata global enumerate").once.in_sequence(get_seq)
-      VirtualBox::ExtraData.expects(:parse_kv_pairs).once.in_sequence(get_seq)
-      VirtualBox::ExtraData.expects(:pairs_to_objects).once.returns("foo").in_sequence(get_seq)
-      assert_equal "foo", VirtualBox::ExtraData.global
+      VirtualBox::ExtraData.expects(:parse_kv_pairs).returns(@ed).once.in_sequence(get_seq)
+      assert_equal "bar", VirtualBox::ExtraData.global["foo"]
     end
   end
   
   context "constructor" do
-    should "populate the attributes with given data" do
-      ed = VirtualBox::ExtraData.new({ :key => "foo", :value => "bar" })
-      assert_equal "foo", ed.key
-      assert_equal "bar", ed.value
-    end
-  end
-  
-  context "converting pairs to objects" do
-    setup do
-      @data = VirtualBox::ExtraData.parse_kv_pairs(@raw)
-      @objects = VirtualBox::ExtraData.pairs_to_objects(@data)
+    should "set the parent with the given argument" do
+      ed = VirtualBox::ExtraData.new("JOEY")
+      assert_equal "JOEY", ed.parent
     end
     
-    should "return an array of ExtraData objects" do
-      assert @objects.is_a?(Array)
-      assert @objects.all? { |o| o.is_a?(VirtualBox::ExtraData) }
-    end
-    
-    should "have proper data on extradata objects" do
-      object = @objects[3]
-      assert_equal "GUI/SuppressMessages", object.key
-      assert_equal ",confirmInputCapture,remindAboutAutoCapture,confirmRemoveMedium,remindAboutInaccessibleMedia,confirmGoingFullscreen,remindAboutMouseIntegrationOn", object.value
-    end
-    
-    should "forward the second argument into the hash" do
-      objects = VirtualBox::ExtraData.pairs_to_objects(@data, {
-        :parent => "FOO"
-      })
-      
-      assert_equal "FOO", objects[0].parent
+    should "be global by default" do
+      ed = VirtualBox::ExtraData.new
+      assert_equal "global", ed.parent
     end
   end
   
@@ -223,12 +182,22 @@ raw
       assert_equal 6, @data.length
     end
     
-    should "return as a hash" do
+    should "return as an ExtraData Hash" do
       assert @data.is_a?(Hash)
+      assert @data.is_a?(VirtualBox::ExtraData)
     end
     
     should "return proper values, trimmed" do
       assert_equal "1 d, 2010-01-29, stable", @data["GUI/UpdateDate"]
+    end
+    
+    should  "send the 2nd param as the parent to the ED object" do
+      @data = VirtualBox::ExtraData.parse_kv_pairs(@raw, "FOO")
+      assert_equal "FOO", @data.parent
+    end
+    
+    should "return an unchanged ED object" do
+      assert !@data.changed?
     end
   end
 end
