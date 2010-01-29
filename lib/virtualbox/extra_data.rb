@@ -91,6 +91,12 @@ module VirtualBox
       end
     end
     
+    # Relationship callback when added to a collection. This is automatically
+    # called by any relationship collection when this object is added.
+    def added_to_relationship(parent)
+      write_attribute(:parent, parent)
+    end
+    
     # Validates extra data.
     def validate
       super

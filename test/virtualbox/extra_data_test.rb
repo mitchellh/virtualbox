@@ -43,6 +43,14 @@ raw
       VirtualBox::Command.stubs(:vboxmanage).returns(@raw)      
     end
     
+    context "adding to a relationship" do
+      should "replace parent with caller" do
+        assert_equal "global", @ed.parent
+        @ed.added_to_relationship(@caller)
+        assert_equal @caller, @ed.parent
+      end
+    end
+    
     context "populating" do
       should "call VBoxManage for the caller" do
         VirtualBox::Command.expects(:vboxmanage).with("getextradata #{@caller.name} enumerate").returns(@raw)
