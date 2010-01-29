@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{virtualbox}
-  s.version = "0.2.0"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-01-26}
+  s.date = %q{2010-01-28}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -24,11 +24,13 @@ Gem::Specification.new do |s|
      "TODO",
      "VERSION",
      "docs/GettingStarted.md",
+     "docs/WhatsNew.md",
      "lib/virtualbox.rb",
      "lib/virtualbox/abstract_model.rb",
      "lib/virtualbox/abstract_model/attributable.rb",
      "lib/virtualbox/abstract_model/dirty.rb",
      "lib/virtualbox/abstract_model/relatable.rb",
+     "lib/virtualbox/abstract_model/validatable.rb",
      "lib/virtualbox/attached_device.rb",
      "lib/virtualbox/command.rb",
      "lib/virtualbox/dvd.rb",
@@ -38,12 +40,14 @@ Gem::Specification.new do |s|
      "lib/virtualbox/image.rb",
      "lib/virtualbox/nic.rb",
      "lib/virtualbox/proxies/collection.rb",
+     "lib/virtualbox/shared_folder.rb",
      "lib/virtualbox/storage_controller.rb",
      "lib/virtualbox/vm.rb",
      "test/test_helper.rb",
      "test/virtualbox/abstract_model/attributable_test.rb",
      "test/virtualbox/abstract_model/dirty_test.rb",
      "test/virtualbox/abstract_model/relatable_test.rb",
+     "test/virtualbox/abstract_model/validatable_test.rb",
      "test/virtualbox/abstract_model_test.rb",
      "test/virtualbox/attached_device_test.rb",
      "test/virtualbox/command_test.rb",
@@ -53,6 +57,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/image_test.rb",
      "test/virtualbox/nic_test.rb",
      "test/virtualbox/proxies/collection_test.rb",
+     "test/virtualbox/shared_folder_test.rb",
      "test/virtualbox/storage_controller_test.rb",
      "test/virtualbox/vm_test.rb",
      "virtualbox.gemspec"
@@ -67,6 +72,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/abstract_model/attributable_test.rb",
      "test/virtualbox/abstract_model/dirty_test.rb",
      "test/virtualbox/abstract_model/relatable_test.rb",
+     "test/virtualbox/abstract_model/validatable_test.rb",
      "test/virtualbox/abstract_model_test.rb",
      "test/virtualbox/attached_device_test.rb",
      "test/virtualbox/command_test.rb",
@@ -76,6 +82,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/image_test.rb",
      "test/virtualbox/nic_test.rb",
      "test/virtualbox/proxies/collection_test.rb",
+     "test/virtualbox/shared_folder_test.rb",
      "test/virtualbox/storage_controller_test.rb",
      "test/virtualbox/vm_test.rb"
   ]
