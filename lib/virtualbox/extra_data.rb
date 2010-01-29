@@ -1,6 +1,36 @@
 module VirtualBox
   # Represents "extra data" which can be set on a specific
-  # virtual machine or on VirtualBox as a whole.
+  # virtual machine or on VirtualBox as a whole. Extra data is persistent
+  # key-value storage which is available as a way to store any information
+  # wanted. VirtualBox uses it for storing statistics and settings. You can
+  # use it for anything!
+  #
+  # # Extra Data on a Virtual Machine
+  #
+  # Setting extra data on a virtual machine is easy. All {VM} objects have a 
+  # `extra_data` relationship which is just a simple ruby hash, so you can treat
+  # it like one! Once the data is set, simply saving the VM will save the
+  # extra data. An example below:
+  #
+  #     vm = VirtualBox::VM.find("FooVM")
+  #     vm.extra_data["ruby-accessed"]  = "yes, yes it was"
+  #     vm.save
+  #
+  # Now, let's say you open up the VM again some other time:
+  #
+  #     vm = VirtualBox::VM.find("FooVM")
+  #     puts vm.extra_data["ruby-accessed"]
+  #
+  # It acts just like a hash!
+  #
+  # # Global Extra Data
+  #
+  # Extra data doesn't need to be tied to a specific virtual machine. It can also
+  # exist globally. Setting global extra-data is just as easy:
+  #
+  #     VirtualBox::ExtraData.global["some-key"] = "some value"
+  #     VirtualBox::ExtraData.global.save
+  #
   class ExtraData < Hash
     include AbstractModel::Dirty
     
