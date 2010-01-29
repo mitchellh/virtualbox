@@ -71,7 +71,11 @@ uart2="off"
 audio="none"
 clipboard="bidirectional"
 vrdp="off"
-usb="off"      
+usb="off"
+SharedFolderNameMachineMapping1="mysharedfolder"
+SharedFolderPathMachineMapping1="/virtualbox"
+SharedFolderNameMachineMapping2="otherfolder"
+SharedFolderPathMachineMapping2="/virtualbox/lib"
 showvminfo
     
     @name = "foo"
@@ -390,6 +394,12 @@ raw
       assert @vm.storage_controllers
       assert @vm.storage_controllers.is_a?(Array)
       assert_equal 2, @vm.storage_controllers.length
+    end
+    
+    should "properly load shared folder relationship" do
+      assert @vm.shared_folders
+      assert @vm.shared_folders.is_a?(Array)
+      assert_equal 2, @vm.shared_folders.length
     end
   end
   

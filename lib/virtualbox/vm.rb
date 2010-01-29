@@ -104,6 +104,7 @@ module VirtualBox
     attribute :state, :populate_key => :vmstate, :readonly => true
     relationship :nics, Nic
     relationship :storage_controllers, StorageController, :dependent => :destroy
+    relationship :shared_folders, SharedFolder
     
     class <<self
       # Returns an array of all available VMs.
