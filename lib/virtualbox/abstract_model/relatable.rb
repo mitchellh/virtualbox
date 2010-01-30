@@ -96,8 +96,7 @@ module VirtualBox
         def relationship(name, klass, options = {})
           name = name.to_sym
           
-          @relationships ||= {}
-          @relationships[name] = { :klass => klass }.merge(options)
+          relationships << [name, { :klass => klass }.merge(options)]
           
           # Define the method to read the relationship
           define_method(name) { relationship_data[name] }
@@ -109,8 +108,22 @@ module VirtualBox
         # Returns a hash of all the relationships.
         #
         # @return [Hash]
+        def relationships_hash
+          Hash[*relationships.flatten]
+        end
+        
+        # Returns an array of the relationships in order of being added.
+        #
+        # @return [Array]
         def relationships
-          @relationships ||= {}
+          @relationships ||= []
+        end
+
+        # Returns a boolean of whether a relationship exists.
+        #
+        # @return [Boolean]
+        def has_relationship?(name)
+          !!relationships.detect { |r| r[0] == name }
         end
         
         # Used to propagate relationships to subclasses. This method makes sure that
@@ -166,7 +179,7 @@ module VirtualBox
       #
       # @param [Symbol] name The name of the relationship
       def destroy_relationship(name, *args)
-        options = self.class.relationships[name]
+        options = self.class.relationships_hash[name]
         return unless options && options[:klass].respond_to?(:destroy_relationship)
         options[:klass].destroy_relationship(self, relationship_data[name], *args)
       end
@@ -183,7 +196,7 @@ module VirtualBox
       #
       # @return [Boolean]
       def has_relationship?(key)
-        self.class.relationships.has_key?(key.to_sym)
+        self.class.has_relationship?(key.to_sym)
       end
       
       # Sets a relationship to the given value. This is not guaranteed to
@@ -201,7 +214,7 @@ module VirtualBox
       # @param [Object] value The new value of the relationship.
       def set_relationship(key, value)
         key = key.to_sym
-        relationship = self.class.relationships[key]
+        relationship = self.class.relationships_hash[key]
         return unless relationship
         
         raise Exceptions::NonSettableRelationshipException.new unless relationship[:klass].respond_to?(:set_relationship)
