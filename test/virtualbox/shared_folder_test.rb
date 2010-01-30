@@ -213,6 +213,10 @@ class SharedFolderTest < Test::Unit::TestCase
     setup do
       @value = VirtualBox::SharedFolder.populate_relationship(@caller, @data)
     end
+    
+    should "be a 'collection'" do
+      assert @value.is_a?(VirtualBox::Proxies::Collection)
+    end
 
     should "create the correct amount of objects" do
       assert_equal 2, @value.length

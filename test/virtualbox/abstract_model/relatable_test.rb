@@ -22,6 +22,19 @@ class RelatableTest < Test::Unit::TestCase
     @data = {}
   end
   
+  context "class methods" do
+    should "read back relationships in order added" do
+      order = mock("order")
+      order_seq = sequence("order_seq")
+      order.expects(:foos).in_sequence(order_seq)
+      order.expects(:bars).in_sequence(order_seq)
+      
+      RelatableModel.relationships.each do |name, options|
+        order.send(name)
+      end
+    end
+  end
+  
   context "setting a relationship" do
     setup do
       @model = RelatableModel.new
@@ -63,12 +76,12 @@ class RelatableTest < Test::Unit::TestCase
     end
     
     should "inherit relationships of parent" do
-      assert @relationships.has_key?(:foos)
-      assert @relationships.has_key?(:bars)
+      assert SubRelatableModel.has_relationship?(:foos)
+      assert SubRelatableModel.has_relationship?(:bars)
     end
     
     should "inherit options of relationships" do
-      assert_equal Relatee, @relationships[:foos][:klass]
+      assert_equal Relatee, SubRelatableModel.relationships_hash[:foos][:klass]
     end
   end
   
@@ -159,6 +172,11 @@ class RelatableTest < Test::Unit::TestCase
   context "checking for relationships" do
     setup do
       @model = RelatableModel.new
+    end
+    
+    should "have a class method as well" do
+      assert RelatableModel.has_relationship?(:foos)
+      assert !RelatableModel.has_relationship?(:bazs)
     end
     
     should "return true for existing relationships" do

@@ -1,41 +1,34 @@
-# What's New in 0.3.x?
+# What's New in 0.4.x?
 
-## Shared Folders
+## "Extra Data" on VMs / Global
 
-Shared folders are a great feature of VirtualBox which allows the host system
-to share data with guest systems easily using the native filesystem. Attaching,
-modifying, and removing these shared folders are now supported. A quick example
-below:
+Extra data is persistent key-value storage which is available as a way to store any information
+wanted. VirtualBox uses it for storing statistics and settings. You can use it for anything!
+Setting extra data on virtual machines is now as easy as a ruby hash:
 
     vm = VirtualBox::VM.find("FooVM")
-    folder = VirtualBox::SharedFolder.new
-    folder.name = "hosthome"
-    folder.hostpath = "/home/username"
-    vm.shared_folders << folder
+    vm.extra_data["i_was_here"] = "yes!"
     vm.save
 
-For full documentation on this new feature, read about them at
-{VirtualBox::SharedFolder}.
+Read more about extra data {VirtualBox::ExtraData here}.
 
-## Validations
+## Port Forwarding
 
-Many of the models for the virtualbox library now come complete with data
-validations. These validations are performed within the library itself prior to
-calling the virtualbox commands. They work very much the same was as ActiveRecord
-validations:
+If a VM is using NAT for its network, the host machine can't access any outward facing
+services of the guest (for example: a web host, ftp server, etc.). Port forwarding is
+one way to facilitate this need. Port forwarding is straight forward to setup:
 
-    sf = VirtualBox::SharedFolder.new(hash_of_values)
-    if !sf.valid?
-      puts "#{sf.errors.length} errors with the folder"
-    else
-      sf.save
-    end
+    vm = VirtualBox::VM.find("FooVM")
+    port = VirtualBox::ForwardedPort.new
+    port.name = "http"
+    port.guestport = 80
+    port.hostport = 8080
+    vm.forwarded_ports << port
+    vm.save
 
-In addition to `valid?` there is `errors` which returns a hash of all the errors,
-including errors on relationships. There is also the `validate` method which
-runs the validations, but you really shouldn't have the need to call that directly.
+Read more about port forwarding {VirtualBox::ForwardedPort here}.
 
-All validations are run automatically on `save`, which will return `false` if
-they fail. If you choose to raise errors on the save, a `ValidationFailedException`
-will be raised (in contrast to a `CommandFailedException`, which serves its own
-role).
+## More Ruby Versions Supported!
+
+Previously, virtualbox only supported 1.8.7. It now supports 1.8.6 and 1.9.x thanks
+to AlekSi.

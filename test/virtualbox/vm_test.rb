@@ -366,6 +366,7 @@ raw
       VirtualBox::StorageController.expects(:save_relationship).once
       VirtualBox::SharedFolder.expects(:save_relationship).once
       VirtualBox::ExtraData.expects(:save_relationship).once
+      VirtualBox::ForwardedPort.expects(:save_relationship).once
       assert @vm.save
     end
   end
