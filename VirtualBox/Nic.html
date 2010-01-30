@@ -719,7 +719,7 @@ called on <tt><a href="AbstractModel.html#save-instance_method" title="VirtualBo
       <pre class="code"><span class="info file"># File 'lib/virtualbox/nic.rb', line 145</span>
 
 <span class='def def kw'>def</span> <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='comma token'>,</span> <span class='vmname identifier id'>vmname</span><span class='rparen token'>)</span>        
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;modifyvm #{vmname} --#{key}#{@index} #{Command.shell_escape(value)}&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;modifyvm #{Command.shell_escape(vmname)} --#{key}#{@index} #{Command.shell_escape(value)}&quot;</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -733,7 +733,7 @@ called on <tt><a href="AbstractModel.html#save-instance_method" title="VirtualBo
 </div>
     
     <div id="footer">
-  Generated on Fri Jan 29 20:04:30 2010 by 
+  Generated on Sat Jan 30 02:28:45 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>
