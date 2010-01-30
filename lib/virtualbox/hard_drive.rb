@@ -7,7 +7,7 @@ module VirtualBox
   # find all or a specific hard drive, respectively. Example below:
   #
   #     VirtualBox::HardDrive.all
-  # 
+  #
   # Or:
   #
   #     VirtualBox::HardDrive.find("Foo.vdi")
@@ -49,9 +49,9 @@ module VirtualBox
   # # Cloning Hard Drives
   #
   # Hard drives can just as easily be cloned as they can be created or destroyed.
-  # 
+  #
   #     hd = VirtualBox::HardDrive.find("foo")
-  #     cloned_hd = hd.clone("bar") 
+  #     cloned_hd = hd.clone("bar")
   #
   # In addition to simply cloning hard drives, this command can be used to
   # clone to a different format:
@@ -63,13 +63,13 @@ module VirtualBox
   #
   # Properties of the model are exposed using standard ruby instance
   # methods which are generated on the fly. Because of this, they are not listed
-  # below as available instance methods. 
+  # below as available instance methods.
   #
   # These attributes can be accessed and modified via standard ruby-style
   # `instance.attribute` and `instance.attribute=` methods. The attributes are
   # listed below. If you aren't sure what this means or you can't understand
   # why the below is listed, please read {Attributable}.
-  # 
+  #
   #     attribute :uuid, :readonly => true
   #     attribute :location
   #     attribute :accessible, :readonly => true
@@ -79,7 +79,7 @@ module VirtualBox
   class HardDrive < Image
     attribute :format, :default => "VDI"
     attribute :size
-    
+
     class <<self
       # Returns an array of all available hard drives as HardDrive
       # objects.
@@ -89,30 +89,30 @@ module VirtualBox
         raw = Command.vboxmanage("list hdds")
         parse_blocks(raw).collect { |v| find(v[:uuid]) }
       end
-      
+
       # Finds one specific hard drive by UUID or file name. If the
       # hard drive can not be found, will return `nil`.
       #
       # @return [HardDrive]
       def find(id)
         raw = Command.vboxmanage("showhdinfo #{id}")
-        
+
         # Return nil if the hard drive doesn't exist
         return nil if raw =~ /VERR_FILE_NOT_FOUND/
-        
+
         data = raw.split(/\n\n/).collect { |v| parse_block(v) }.find { |v| !v.nil? }
-        
+
         # Set equivalent fields
         data[:format] = data[:"storage format"]
         data[:size] = data[:"logical size"].split(/\s+/)[0] if data.has_key?(:"logical size")
-        
+
         # Return new object
         new(data)
       end
     end
-    
+
     # Clone hard drive, possibly also converting formats. All formats
-    # supported by your local VirtualBox installation are supported 
+    # supported by your local VirtualBox installation are supported
     # here. If no format is specified, the format of the source drive
     # will be used.
     #
@@ -126,27 +126,27 @@ module VirtualBox
     def clone(outputfile, format="VDI", raise_errors=false)
       raw = Command.vboxmanage("clonehd #{uuid} #{Command.shell_escape(outputfile)} --format #{format} --remember")
       return nil unless raw =~ /UUID: (.+?)$/
-      
+
       self.class.find($1.to_s)
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       nil
     end
-    
+
     # Override of {Image#image_type}.
     def image_type
       "hdd"
     end
-    
+
     # Validates a hard drive.
     def validate
       super
-      
+
       validates_presence_of :format
       validates_presence_of :size
     end
-    
-    # Creates a new hard drive. 
+
+    # Creates a new hard drive.
     #
     # **This method should NEVER be called. Call {#save} instead.**
     #
@@ -158,25 +158,25 @@ module VirtualBox
         raise Exceptions::ValidationFailedException.new(errors) if raise_errors
         return false
       end
-      
+
       raw = Command.vboxmanage("createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember")
       return nil unless raw =~ /UUID: (.+?)$/
-      
+
       # Just replace our attributes with the newly created ones. This also
       # will set new_record to false.
       populate_attributes(self.class.find($1.to_s).attributes)
-      
+
       # Return the success of the command
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       false
     end
-    
+
     # Saves the hard drive object. If the hard drive is new,
     # this will create a new hard drive. Otherwise, it will
     # save any other details about the existing hard drive.
-    # 
+    #
     # Currently, **saving existing hard drives does nothing**.
     # This is a limitation of VirtualBox, rather than the library itself.
     #
@@ -191,10 +191,10 @@ module VirtualBox
         super
       end
     end
-    
+
     # Destroys the hard drive. This deletes the hard drive off
-    # of disk. 
-    # 
+    # of disk.
+    #
     # **This operation is not reversable.**
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}

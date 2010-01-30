@@ -7,7 +7,7 @@ module VirtualBox
   #
   # # Extra Data on a Virtual Machine
   #
-  # Setting extra data on a virtual machine is easy. All {VM} objects have a 
+  # Setting extra data on a virtual machine is easy. All {VM} objects have a
   # `extra_data` relationship which is just a simple ruby hash, so you can treat
   # it like one! Once the data is set, simply saving the VM will save the
   # extra data. An example below:
@@ -33,11 +33,11 @@ module VirtualBox
   #
   class ExtraData < Hash
     include AbstractModel::Dirty
-    
+
     attr_accessor :parent
-    
+
     @@global_data = nil
-    
+
     class <<self
       # Gets the global extra data. This will "cache" the data for
       # future use unless you set the `reload` paramter to true.
@@ -49,10 +49,10 @@ module VirtualBox
           raw = Command.vboxmanage("getextradata global enumerate")
           @@global_data = parse_kv_pairs(raw)
         end
-        
+
         @@global_data
       end
-      
+
       # Parses the key-value pairs from the extra data enumerated
       # output.
       #
@@ -64,11 +64,11 @@ module VirtualBox
           next unless line =~ /^Key: (.+?), Value: (.+?)$/i
           data[$1.to_s] = $2.strip.to_s
         end
-        
+
         data.clear_dirty!
         data
       end
-      
+
       # Populates a relationship with another model.
       #
       # **This method typically won't be used except internally.**
@@ -78,7 +78,7 @@ module VirtualBox
         raw = Command.vboxmanage("getextradata #{Command.shell_escape(caller.name)} enumerate")
         parse_kv_pairs(raw, caller)
       end
-      
+
       # Saves the relationship. This simply calls {#save} on every
       # member of the relationship.
       #
@@ -87,21 +87,21 @@ module VirtualBox
         data.save
       end
     end
-    
-    # Initializes an extra data object. 
+
+    # Initializes an extra data object.
     #
     # @param [Hash] data Initial attributes to populate.
     def initialize(parent=nil)
       @parent = parent || "global"
     end
-    
+
     # Set an extradata key-value pair. Overrides ruby hash implementation
     # to set dirty state. Otherwise that, behaves the same way.
     def []=(key,value)
       set_dirty!(key, self[key], value)
       super
     end
-    
+
     # Special accessor for parent name attribute. This returns
     # either the parent name if its a VM object, otherwise
     # just returns the default.
@@ -114,7 +114,7 @@ module VirtualBox
         parent
       end
     end
-    
+
     # Saves extra data. This method does the same thing for both new
     # and existing extra data, since virtualbox will overwrite old data or
     # create it if it doesn't exist.
@@ -127,14 +127,14 @@ module VirtualBox
         Command.vboxmanage("setextradata #{Command.shell_escape(parent_name)} #{Command.shell_escape(key)} #{Command.shell_escape(value[1])}")
         clear_dirty!(key)
       end
-      
+
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       false
     end
-    
-    # Deletes the extra data. 
+
+    # Deletes the extra data.
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.

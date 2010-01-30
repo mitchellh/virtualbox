@@ -8,26 +8,26 @@ class CommandTest < Test::Unit::TestCase
       end
     end
   end
-  
+
   context "executing commands" do
     should "use backticks to execute the command" do
       VirtualBox::Command.expects(:`).with("foo").once
       VirtualBox::Command.execute("foo")
     end
-    
+
     should "return the result of the execution" do
       VirtualBox::Command.expects(:`).with("foo").returns("bar").once
       assert_equal "bar", VirtualBox::Command.execute("foo")
     end
   end
-  
+
   context "vbox commands" do
     should "call 'vboxmanage' followed by command" do
       VirtualBox::Command.expects(:execute).with("VBoxManage foo")
       VirtualBox::Command.stubs(:success?).returns(true)
       VirtualBox::Command.vboxmanage("foo")
     end
-    
+
     should "call the custom vboxmanage executable if set" do
       VirtualBox::Command.vboxmanage = "barf"
       VirtualBox::Command.expects(:execute).with("barf foo")
@@ -35,7 +35,7 @@ class CommandTest < Test::Unit::TestCase
       VirtualBox::Command.vboxmanage("foo")
       VirtualBox::Command.vboxmanage = "VBoxManage"
     end
-    
+
     should "raise a CommandFailedException if it failed" do
       VirtualBox::Command.expects(:execute).with("VBoxManage foo")
       VirtualBox::Command.stubs(:success?).returns(false)
@@ -44,23 +44,23 @@ class CommandTest < Test::Unit::TestCase
       }
     end
   end
-  
+
   context "testing command results" do
     setup do
       @command = "foo"
       VirtualBox::Command.stubs(:execute)
     end
-    
+
     should "return true if the exit code is 0" do
       system("echo 'hello' 1>/dev/null")
       assert_equal 0, $?.to_i
       assert VirtualBox::Command.test(@command)
     end
-    
+
     should "return false if the exit code is 1" do
       system("there_is_no_way_this_can_exist_1234567890")
       assert_not_equal 0, $?.to_i
-      assert !VirtualBox::Command.test(@command)      
+      assert !VirtualBox::Command.test(@command)
     end
   end
 end

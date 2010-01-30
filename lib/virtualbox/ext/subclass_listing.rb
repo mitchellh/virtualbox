@@ -3,7 +3,7 @@ module VirtualBox::SubclassListing
   def self.included(base)
     base.extend ClassMethods
   end
-  
+
   module ClassMethods
     def subclasses(direct = false)
       classes = []

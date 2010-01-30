@@ -1,7 +1,7 @@
 module VirtualBox
   class AbstractModel
     # Tracks "dirtiness" of values for a class. Its not tied to AbstractModel
-    # in any way other than the namespace. 
+    # in any way other than the namespace.
     #
     # # Checking if a Value was Changed
     #
@@ -12,7 +12,7 @@ module VirtualBox
     # # Previous Value
     #
     # Can also view the previous value of an attribute:
-    # 
+    #
     #     obj.foo # => "foo" initially
     #     obj.foo = "bar"
     #     obj.foo_was # => "foo"
@@ -56,14 +56,14 @@ module VirtualBox
     # on an attribute.
     #
     # # Ignoring Dirtiness Tracking
-    # 
+    #
     # Sometimes, for features such as mass assignment, dirtiness tracking
     # should be disabled. This can be done with the `ignore_dirty` method.
     #
     #     ignore_dirty do |obj|
     #       obj.name = "Foo"
     #     end
-    #     
+    #
     #     obj.changed? # => false
     #
     # # Clearing Dirty State
@@ -107,7 +107,7 @@ module VirtualBox
           end
         end
       end
-      
+
       # Clears dirty state for a field.
       #
       # @param [Symbol] key The field to clear dirty state.
@@ -119,8 +119,8 @@ module VirtualBox
         end
       end
 
-      # Ignores any dirty changes during the duration of the block. 
-      # Guarantees the dirty state will be the same before and after 
+      # Ignores any dirty changes during the duration of the block.
+      # Guarantees the dirty state will be the same before and after
       # the method call, but not within the block itself.
       def ignore_dirty(&block)
         current_changes = @changed_attributes.dup rescue nil
@@ -149,13 +149,13 @@ module VirtualBox
       def changes
         @changed_attributes ||= {}
       end
-      
+
       # Method missing is used to implement the "magic" methods of
       # `field_changed`, `field_change`, and `field_was`.
       def method_missing(meth, *args)
         meth_string = meth.to_s
-        
-        if meth_string =~ /^(.+?)_changed\?$/ 
+
+        if meth_string =~ /^(.+?)_changed\?$/
           changed?($1.to_sym)
         elsif meth_string =~ /^(.+?)_change$/
           changes[$1.to_sym]

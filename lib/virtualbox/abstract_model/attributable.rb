@@ -9,7 +9,7 @@ module VirtualBox
     # Make sure to also see the {ClassMethods}.
     #
     # ## Defining a Basic Attribute
-    # 
+    #
     #     attribute :name
     #
     # The example above would put the "name" attribute on the class. This
@@ -27,7 +27,7 @@ module VirtualBox
     #
     # The example above allows age to be read, but not written to via the
     # `age=` method. The attribute is still able to written using
-    # {#write_attribute} but this is generally only for 
+    # {#write_attribute} but this is generally only for
     # inter-class use, and not for users of it.
     #
     # ## Defining Default Values
@@ -39,15 +39,15 @@ module VirtualBox
     #
     # ## Populating Multiple Attributes
     #
-    # Attributes can be mass populated using {#populate_attributes}. Below 
+    # Attributes can be mass populated using {#populate_attributes}. Below
     # is an example of the use.
     #
     #     class Person
     #       include Attributable
-    #     
+    #
     #       attribute :name
     #       attribute :age, :readonly => true
-    #       
+    #
     #       def initialize
     #         populate_attributes({
     #           :name => "Steven",
@@ -63,7 +63,7 @@ module VirtualBox
     # ## Custom Populate Keys
     #
     # Sometimes the attribute names don't match the keys of the hash that will be
-    # used to populate it. For this purpose, you can define a custom 
+    # used to populate it. For this purpose, you can define a custom
     # `populate_key`. Example:
     #
     #     attribute :path, :populate_key => :location
@@ -77,11 +77,11 @@ module VirtualBox
       def self.included(base)
         base.extend ClassMethods
       end
-      
+
       # Defines the class methods for the {Attributable} module. For
       # detailed overview documentation, see {Attributable}.
       module ClassMethods
-        # Defines an attribute on the model. 
+        # Defines an attribute on the model.
         #
         # @param [Symbol] name The name of the attribute, which will also be
         #   used to set the accessor methods.
@@ -94,10 +94,10 @@ module VirtualBox
         def attribute(name, options = {})
           name = name.to_sym
           attributes[name] = options
-          
+
           # Create the method for reading this attribute
           define_method(name) { read_attribute(name) }
-          
+
           # Create the writer method for it unless the attribute is readonly,
           # then remove the method if it exists
           if !options[:readonly]
@@ -113,13 +113,13 @@ module VirtualBox
         def attributes
           @attributes ||= {}
         end
-        
+
         # Used to propagate attributes to subclasses. This method makes sure that
         # subclasses of a class with {Attributable} included will inherit the
         # attributes as well, which would be the expected behaviour.
         def inherited(subclass)
           super rescue NoMethodError
-          
+
           attributes.each do |name, option|
             subclass.attribute(name, option)
           end
@@ -128,7 +128,7 @@ module VirtualBox
 
       # Does the initial population of the various attributes. It will
       # ignore attributes which are not defined or have no value in the
-      # hash. 
+      # hash.
       #
       # Population uses the attributes `populate_key` if present to
       # determine which value to take. Example:
@@ -152,7 +152,7 @@ module VirtualBox
 
       # Writes an attribute. This method ignores the `readonly` option
       # on attribute definitions. This method is mostly meant for
-      # internal use on setting attributes (including readonly 
+      # internal use on setting attributes (including readonly
       # attributes), whereas users of a class which includes this
       # module should use the accessor methods, such as `name=`.
       def write_attribute(name, value)
@@ -161,14 +161,14 @@ module VirtualBox
 
       # Reads an attribute. This method will return `nil` if the
       # attribute doesn't exist. If the attribute does exist but
-      # doesn't have a value set, it'll use the `default` value 
+      # doesn't have a value set, it'll use the `default` value
       # if specified.
       def read_attribute(name)
         if has_attribute?(name)
           attributes[name] || self.class.attributes[name][:default]
         end
       end
-      
+
       # Returns a hash of all attributes and their options.
       def attributes
         @attribute_values ||= {}

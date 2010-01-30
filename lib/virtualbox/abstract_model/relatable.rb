@@ -2,10 +2,10 @@ module VirtualBox
   class AbstractModel
     # Provides simple relationship features to any class. These relationships
     # can be anything, since this module makes no assumptions and doesn't
-    # differentiate between "has many" or "belongs to" or any of that. 
+    # differentiate between "has many" or "belongs to" or any of that.
     #
     # The way it works is simple:
-    # 
+    #
     # 1. Relationships are defined with a relationship name and a
     #    class of the relationship objects.
     # 2. When {#populate_relationships} is called, `populate_relationship` is
@@ -50,7 +50,7 @@ module VirtualBox
     #
     # If `Foo` has the `set_relationship` method, then it will be called by
     # `foos=`. It is expected to return the new value for the relationship. To
-    # facilitate this need, the `set_relationship` method is given three 
+    # facilitate this need, the `set_relationship` method is given three
     # parameters: caller, old value, and new value. An example implementation,
     # albeit a silly one, is below:
     #
@@ -66,7 +66,7 @@ module VirtualBox
     #     instance.foos = "bar"
     #     instance.foos # => "Changed to: bar"
     #
-    # If the relationship class _does not implement_ the `set_relationship` 
+    # If the relationship class _does not implement_ the `set_relationship`
     # method, then a {Exceptions::NonSettableRelationshipException} will be raised if
     # a user attempts to set that relationship.
     #
@@ -82,10 +82,10 @@ module VirtualBox
       def self.included(base)
         base.extend ClassMethods
       end
-      
+
       module ClassMethods
         # Define a relationship. The name and class must be specified. This
-        # class will be used to call the `populate_relationship, 
+        # class will be used to call the `populate_relationship,
         # `save_relationship`, etc. methods.
         #
         # @param [Symbol] name Relationship name. This will also be used for
@@ -95,23 +95,23 @@ module VirtualBox
         #   {AbstractModel#destroy} will propagate through to relationships.
         def relationship(name, klass, options = {})
           name = name.to_sym
-          
+
           relationships << [name, { :klass => klass }.merge(options)]
-          
+
           # Define the method to read the relationship
           define_method(name) { relationship_data[name] }
-          
+
           # Define the method to set the relationship
           define_method("#{name}=") { |*args| set_relationship(name, *args) }
         end
-        
+
         # Returns a hash of all the relationships.
         #
         # @return [Hash]
         def relationships_hash
           Hash[*relationships.flatten]
         end
-        
+
         # Returns an array of the relationships in order of being added.
         #
         # @return [Array]
@@ -125,19 +125,19 @@ module VirtualBox
         def has_relationship?(name)
           !!relationships.detect { |r| r[0] == name }
         end
-        
+
         # Used to propagate relationships to subclasses. This method makes sure that
         # subclasses of a class with {Relatable} included will inherit the
         # relationships as well, which would be the expected behaviour.
         def inherited(subclass)
           super rescue NoMethodError
-          
+
           relationships.each do |name, options|
             subclass.relationship(name, nil, options)
           end
         end
       end
-      
+
       # Saves the model, calls save_relationship on all relations. It is up to
       # the relation to determine whether anything changed, etc. Simply
       # calls `save_relationship` on each relationshp class passing in the
@@ -154,7 +154,7 @@ module VirtualBox
           options[:klass].save_relationship(self, relationship_data[name], *args)
         end
       end
-      
+
       # The equivalent to {Attributable#populate_attributes}, but with
       # relationships.
       def populate_relationships(data)
@@ -163,7 +163,7 @@ module VirtualBox
           relationship_data[name] = options[:klass].populate_relationship(self, data)
         end
       end
-      
+
       # Calls `destroy_relationship` on each of the relationships. Any
       # arbitrary args may be added and they will be forarded to the
       # relationship's `destroy_relationship` method.
@@ -172,7 +172,7 @@ module VirtualBox
           destroy_relationship(name, *args)
         end
       end
-      
+
       # Destroys only a single relationship. Any arbitrary args
       # may be added to the end and they will be pushed through to
       # the class's `destroy_relationship` method.
@@ -183,7 +183,7 @@ module VirtualBox
         return unless options && options[:klass].respond_to?(:destroy_relationship)
         options[:klass].destroy_relationship(self, relationship_data[name], *args)
       end
-      
+
       # Hash to data associated with relationships. You should instead
       # use the accessors created by Relatable.
       #
@@ -191,18 +191,18 @@ module VirtualBox
       def relationship_data
         @relationship_data ||= {}
       end
-      
+
       # Returns boolean denoting if a relationship exists.
       #
       # @return [Boolean]
       def has_relationship?(key)
         self.class.has_relationship?(key.to_sym)
       end
-      
+
       # Sets a relationship to the given value. This is not guaranteed to
       # do anything, since "set_relationship" will be called on the class
       # that the relationship is associated with and its expected to return
-      # the resulting relationship to set. 
+      # the resulting relationship to set.
       #
       # If the relationship class doesn't respond to the set_relationship
       # method, then an exception {Exceptions::NonSettableRelationshipException} will
@@ -216,7 +216,7 @@ module VirtualBox
         key = key.to_sym
         relationship = self.class.relationships_hash[key]
         return unless relationship
-        
+
         raise Exceptions::NonSettableRelationshipException.new unless relationship[:klass].respond_to?(:set_relationship)
         relationship_data[key] = relationship[:klass].set_relationship(self, relationship_data[key], value)
       end

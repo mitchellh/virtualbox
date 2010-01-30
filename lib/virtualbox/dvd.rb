@@ -10,7 +10,7 @@ module VirtualBox
   #     DVD.all
   #
   # # Empty Drives
-  # 
+  #
   # Sometimes it is useful to have an empty drive. This is the case where you
   # may have a DVD drive but it has no disk in it. To create an {AttachedDevice},
   # an image _must_ be specified, and an empty drive is a simple option. Creating
@@ -25,7 +25,7 @@ module VirtualBox
         raw = Command.vboxmanage("list dvds")
         parse_raw(raw)
       end
-      
+
       # Returns an empty drive. This is useful for creating new
       # or modifyingn existing {AttachedDevice} objects and
       # attaching an empty drive to them.
@@ -35,7 +35,7 @@ module VirtualBox
         new(:empty_drive)
       end
     end
-    
+
     def initialize(*args)
       if args.length == 1 && args[0] == :empty_drive
         @empty_drive = true
@@ -43,7 +43,7 @@ module VirtualBox
         super
       end
     end
-    
+
     # Override of {Image#empty_drive?}. This will only be true if
     # the DVD was created with {DVD.empty_drive}.
     #
@@ -51,12 +51,12 @@ module VirtualBox
     def empty_drive?
       @empty_drive || false
     end
-    
+
     # Override of {Image#image_type}.
     def image_type
       "dvddrive"
     end
-    
+
     # Deletes the DVD from VBox managed list and also from disk.
     # This method will fail if the disk is currently mounted to any
     # virtual machine. This method also does nothing for empty drives
@@ -68,7 +68,7 @@ module VirtualBox
     # @return [Boolean] True if command was successful, false otherwise.
     def destroy(raise_errors=false)
       return false if empty_drive?
-      
+
       Command.vboxmanage("closemedium dvd #{uuid} --delete")
       true
     rescue Exceptions::CommandFailedException

@@ -6,12 +6,12 @@ module VirtualBox
       def errors
         @errors ||= {}
       end
-      
+
       def add_error(field, error)
         errors[field] ||= []
         errors[field].push(error)
       end
-      
+
       def clear_errors
         @errors = {}
       end
@@ -20,12 +20,12 @@ module VirtualBox
         validate
         errors.empty?
       end
-      
+
       # Subclasses should override this method.
       def validate
         true
       end
-      
+
       def validates_presence_of(field)
         if field.is_a?(Array)
           field.map { |v| validates_presence_of(v) }.all? { |v| v == true }

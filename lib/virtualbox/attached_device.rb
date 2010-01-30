@@ -13,7 +13,7 @@ module VirtualBox
   #     storage_controller.devices << ad
   #     ad.save
   #
-  # The only quirk is that the attached device **must** be attached to a 
+  # The only quirk is that the attached device **must** be attached to a
   # storage controller. The above assumes that `storage_controller` exists,
   # which adds the device.
   #
@@ -25,7 +25,7 @@ module VirtualBox
   #     ad = VirtualBox::AttachedDevice.new
   #     ad.port = 0
   #     ad.image = VirtualBox::DVD.empty_drive
-  #     
+  #
   #     # Now attaching to existing VM
   #     vm = VirtualBox::VM.find("FooVM")
   #     vm.storage_controllers[0].devices << ad
@@ -40,7 +40,7 @@ module VirtualBox
   #
   # Properties of the model are exposed using standard ruby instance
   # methods which are generated on the fly. Because of this, they are not listed
-  # below as available instance methods. 
+  # below as available instance methods.
   #
   # These attributes can be accessed and modified via standard ruby-style
   # `instance.attribute` and `instance.attribute=` methods. The attributes are
@@ -73,7 +73,7 @@ module VirtualBox
     attribute :uuid, :readonly => true
     attribute :port
     relationship :image, Image
-    
+
     class <<self
       # Populate relationship with another model.
       #
@@ -82,7 +82,7 @@ module VirtualBox
       # @return [Array<AttachedDevice>]
       def populate_relationship(caller, data)
         relation = Proxies::Collection.new(caller)
-        
+
         counter = 0
         loop do
           break unless data["#{caller.name}-#{counter}-0".downcase.to_sym]
@@ -90,17 +90,17 @@ module VirtualBox
           relation.push(nic)
           counter += 1
         end
-        
+
         relation
       end
-      
+
       # Destroy attached devices associated with another model.
       #
       # **This method typically won't be used except internally.**
       def destroy_relationship(caller, data, *args)
         data.each { |v| v.destroy(*args) }
       end
-      
+
       # Saves the relationship. This simply calls {#save} on every
       # member of the relationship.
       #
@@ -112,7 +112,7 @@ module VirtualBox
         end
       end
     end
-    
+
     # @overload initialize(data={})
     #   Creates a new AttachedDevice which is a new record. This
     #   should be attached to a storage controller and saved.
@@ -127,7 +127,7 @@ module VirtualBox
     #     to extract the relationship data.
     def initialize(*args)
       super()
-      
+
       if args.length == 3
         populate_from_data(*args)
       elsif args.length == 1
@@ -139,29 +139,29 @@ module VirtualBox
         raise NoMethodError.new
       end
     end
-    
+
     # Validates an attached device.
     def validate
       super
-      
+
       validates_presence_of :parent
       validates_presence_of :image
       validates_presence_of :port
     end
-    
+
     # Saves or creates an attached device.
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def save(raise_errors=false)      
+    def save(raise_errors=false)
       return true unless changed?
-      
+
       if !valid?
         raise Exceptions::ValidationFailedException.new(errors) if raise_errors
         return false
       end
-      
+
       # If the port changed, we have to destroy the old one, then create
       # a new one
       destroy({:port => port_was}, raise_errors) if port_changed? && !port_was.nil?
@@ -169,13 +169,13 @@ module VirtualBox
       Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}")
       existing_record!
       clear_dirty!
-      
+
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       false
     end
-    
+
     # Medium of the attached image. This attribute will be dependent
     # on the attached image and will return one of the following values:
     #
@@ -194,7 +194,7 @@ module VirtualBox
         image.uuid
       end
     end
-    
+
     # Destroys the attached device. By default, this only removes any
     # media inserted within the device, but does not destroy it. This
     # option can be specified, however, through the `destroy_image`
@@ -209,21 +209,21 @@ module VirtualBox
       # parent = storagecontroller
       # parent.parent = vm
       destroy_port = options[:port] || port
-      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{destroy_port} --device 0 --medium none")      
+      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{destroy_port} --device 0 --medium none")
       image.destroy(raise_errors) if options[:destroy_image] && image
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       false
     end
-    
+
     # Relationship callback when added to a collection. This is automatically
     # called by any relationship collection when this object is added.
     def added_to_relationship(parent)
       write_attribute(:parent, parent)
     end
-    
+
     protected
-    
+
     # Populates the model based on data from a parsed vminfo. This
     # method is used to create a model which already exists and is
     # part of a relationship.

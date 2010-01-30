@@ -2,7 +2,7 @@ module VirtualBox
   # Represents a shared folder in VirtualBox. In VirtualBox, shared folders are a
   # method for basically "symlinking" a folder on the guest system to a folder which
   # exists on the host system. This allows for sharing of files across the virtual
-  # machine. 
+  # machine.
   #
   # **Note:** Whenever modifying shared folders on a VM, the changes won't take
   # effect until a _cold reboot_ occurs. This means actually closing the virtual
@@ -36,7 +36,7 @@ module VirtualBox
   # a local variable named `vm`.**
   #
   # Nothing tricky here: You treat existing shared folder objects just as if they
-  # were new ones. Assign a new name and/or a new path, then save. 
+  # were new ones. Assign a new name and/or a new path, then save.
   #
   #     folder = vm.shared_folders.first
   #     folder.name = "rufus"
@@ -65,7 +65,7 @@ module VirtualBox
   #
   # Properties of the model are exposed using standard ruby instance
   # methods which are generated on the fly. Because of this, they are not listed
-  # below as available instance methods. 
+  # below as available instance methods.
   #
   # These attributes can be accessed and modified via standard ruby-style
   # `instance.attribute` and `instance.attribute=` methods. The attributes are
@@ -88,7 +88,7 @@ module VirtualBox
     attribute :parent, :readonly => :readonly
     attribute :name, :populate_key => "SharedFolderNameMachineMapping"
     attribute :hostpath, :populate_key => "SharedFolderPathMachineMapping"
-    
+
     class <<self
       # Populates the shared folder relationship for anything which is related to it.
       #
@@ -97,19 +97,19 @@ module VirtualBox
       # @return [Array<SharedFolder>]
       def populate_relationship(caller, data)
         relation = Proxies::Collection.new(caller)
-        
+
         counter = 1
         loop do
           break unless data["SharedFolderNameMachineMapping#{counter}".downcase.to_sym]
-          
+
           folder = new(counter, caller, data)
           relation.push(folder)
           counter += 1
         end
-        
+
         relation
       end
-      
+
       # Saves the relationship. This simply calls {#save} on every
       # member of the relationship.
       #
@@ -121,7 +121,7 @@ module VirtualBox
         end
       end
     end
-    
+
     # @overload initialize(data={})
     #   Creates a new SharedFolder which is a new record. This
     #   should be attached to a VM and saved.
@@ -136,7 +136,7 @@ module VirtualBox
     #     to extract the relationship data.
     def initialize(*args)
       super()
-      
+
       if args.length == 3
         initialize_for_relationship(*args)
       elsif args.length == 1
@@ -147,7 +147,7 @@ module VirtualBox
         raise NoMethodError.new
       end
     end
-    
+
     # Initializes the record for use in a relationship. This
     # is automatically called by {#initialize} if it has three
     # parameters.
@@ -161,12 +161,12 @@ module VirtualBox
         value = data["#{key}#{index}".downcase.to_sym]
         populate_data[key] = value
       end
-      
+
       populate_attributes(populate_data.merge({
         :parent => caller
       }))
     end
-    
+
     # Initializes a record with initial data but keeping it a "new
     # record." This is called automatically if {#initialize} is given
     # only a single parameter. View {#initialize} for documentation.
@@ -174,52 +174,52 @@ module VirtualBox
       self.class.attributes.each do |name, options|
         data[options[:populate_key]] = data[name]
       end
-      
+
       populate_attributes(data)
       new_record!
     end
-    
+
     # Validates a shared folder.
     def validate
       super
-      
+
       validates_presence_of :parent
       validates_presence_of :name
       validates_presence_of :hostpath
     end
-    
+
     # Saves or creates a shared folder.
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def save(raise_errors=false)      
+    def save(raise_errors=false)
       return true unless changed?
-      
+
       if !valid?
         raise Exceptions::ValidationFailedException.new(errors) if raise_errors
         return false
       end
-      
+
       # If this isn't a new record, we destroy it first
       destroy(raise_errors) if !new_record?
-      
+
       Command.vboxmanage("sharedfolder add #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name)} --hostpath #{Command.shell_escape(hostpath)}")
       existing_record!
       clear_dirty!
-      
+
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       false
     end
-    
+
     # Relationship callback when added to a collection. This is automatically
     # called by any relationship collection when this object is added.
     def added_to_relationship(parent)
       write_attribute(:parent, parent)
     end
-    
+
     # Destroys the shared folder. This doesn't actually delete the folder
     # from the host system. Instead, it simply removes the mapping to the
     # virtual machine, meaning it will no longer be possible to mount it
@@ -232,7 +232,7 @@ module VirtualBox
       # If the name changed, we have to be sure to use the previous
       # one.
       name_value = name_changed? ? name_was : name
-      
+
       Command.vboxmanage("sharedfolder remove #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name_value)}")
       true
     rescue Exceptions::CommandFailedException

@@ -1,6 +1,6 @@
 module VirtualBox
   # Represents a single VirtualBox virtual machine. All attributes which are
-  # not read-only can be modified and saved. 
+  # not read-only can be modified and saved.
   #
   # # Finding Virtual Machines
   #
@@ -21,10 +21,10 @@ module VirtualBox
   #     vm.save
   #
   # # Attributes and Relationships
-  # 
+  #
   # Properties of the virtual machine are exposed using standard ruby instance
   # methods which are generated on the fly. Because of this, they are not listed
-  # below as available instance methods. 
+  # below as available instance methods.
   #
   # These attributes can be accessed and modified via standard ruby-style
   # `instance.attribute` and `instance.attribute=` methods. The attributes are
@@ -33,7 +33,7 @@ module VirtualBox
   # Relationships are also accessed like attributes but can't be set. Instead,
   # they are typically references to other objects such as a {HardDrive} which
   # in turn have their own attributes which can be modified.
-  # 
+  #
   # ## Attributes
   #
   # This is copied directly from the class header, but lists all available
@@ -110,7 +110,7 @@ module VirtualBox
     relationship :shared_folders, SharedFolder
     relationship :extra_data, ExtraData
     relationship :forwarded_ports, ForwardedPort
-    
+
     class <<self
       # Returns an array of all available VMs.
       #
@@ -119,7 +119,7 @@ module VirtualBox
         raw = Command.vboxmanage("list vms")
         parse_vm_list(raw)
       end
-      
+
       # Finds a VM by UUID or registered name and returns a
       # new VM object. If the VM doesn't exist, will return `nil`.
       #
@@ -127,8 +127,8 @@ module VirtualBox
       def find(name)
         new(raw_info(name))
       end
-      
-      # Imports a VM, blocking the entire thread during this time. 
+
+      # Imports a VM, blocking the entire thread during this time.
       # When finished, on success, will return the VM object. This
       # VM object can be used to make any modifications necessary
       # (RAM, cpus, etc.).
@@ -137,10 +137,10 @@ module VirtualBox
       def import(source_path)
         raw = Command.vboxmanage("import #{Command.shell_escape(source_path)}")
         return nil unless raw
-        
+
         find(parse_vm_name(raw))
       end
-      
+
       # Gets the non-machine-readable info for a given VM and returns
       # it as a raw string.
       #
@@ -150,16 +150,16 @@ module VirtualBox
       def human_info(name)
         Command.vboxmanage("showvminfo #{Command.shell_escape(name)}")
       end
-      
+
       # Gets the VM info (machine readable) for a given VM and returns it
-      # as a hash. 
+      # as a hash.
       #
       # @return [Hash] Parsed VM info.
       def raw_info(name)
         raw = Command.vboxmanage("showvminfo #{Command.shell_escape(name)} --machinereadable")
         parse_vm_info(raw)
       end
-      
+
       # Parses the machine-readable format outputted by VBoxManage showvminfo
       # into a hash. Ignores lines which don't match the format.
       def parse_vm_info(raw)
@@ -172,7 +172,7 @@ module VirtualBox
 
         parsed
       end
-      
+
       # Parses the list of VMs returned by the "list vms" command used
       # in {VM.all}.
       #
@@ -185,10 +185,10 @@ module VirtualBox
           next unless line =~ /^"(.+?)"\s+\{(.+?)\}$/
           results.push(find($1.to_s))
         end
-        
+
         results
       end
-      
+
       # Parses the vm name from the import results.
       #
       # **This method typically won't be used except internally.**
@@ -199,7 +199,7 @@ module VirtualBox
         $1.to_s
       end
     end
-    
+
     # Creates a new instance of a virtual machine.
     #
     # **Currently can NOT be used to create a NEW virtual machine**.
@@ -208,11 +208,11 @@ module VirtualBox
     # initialize the VMs.
     def initialize(data)
       super()
-      
+
       populate_attributes(data)
       @original_name = data[:name]
     end
-    
+
     # State of the virtual machine. Returns the state of the virtual
     # machine. This state will represent the state that was assigned
     # when the VM was found unless `reload` is set to `true`.
@@ -225,10 +225,10 @@ module VirtualBox
         info = self.class.raw_info(@original_name)
         write_attribute(:state, info[:vmstate])
       end
-      
+
       read_attribute(:state)
     end
-    
+
     # Saves the virtual machine if modified. This method saves any modified
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
@@ -239,15 +239,15 @@ module VirtualBox
         save_attribute(:name, name)
         @original_name = name
       end
-      
+
       super()
-      
+
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       return false
     end
-    
+
     # Saves a single attribute of the virtual machine. This should **not**
     # be called except interally. Instead, you're probably looking for {#save}.
     #
@@ -256,7 +256,7 @@ module VirtualBox
       Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
       super
     end
-    
+
     # Exports a virtual machine. The virtual machine will be exported
     # to the specified OVF file name. This directory will also have the
     # `mf` file which contains the file checksums and also the virtual
@@ -283,21 +283,21 @@ module VirtualBox
       options = options.inject([]) do |acc, kv|
         acc.push("--#{kv[0]} #{Command.shell_escape(kv[1])}")
       end
-      
+
       options.unshift("--vsys 0") unless options.empty?
-      
+
       raw = Command.vboxmanage("export #{@original_name} -o #{Command.shell_escape(filename)} #{options.join(" ")}".strip)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_error
       false
     end
-    
+
     # Starts the virtual machine. The virtual machine can be started in a
     # variety of modes:
     #
     # * **gui** -- The VirtualBox GUI will open with the screen of the VM.
-    # * **headless** -- The VM will run in the background. No GUI will be 
+    # * **headless** -- The VM will run in the background. No GUI will be
     #   present at all.
     #
     # All modes will start their processes and return almost immediately.
@@ -314,7 +314,7 @@ module VirtualBox
       raise if raise_errors
       false
     end
-    
+
     # Stops the VM by directly calling "poweroff." Immediately halts the
     # virtual machine without saving state. This could result in a loss
     # of data.
@@ -325,7 +325,7 @@ module VirtualBox
     def stop(raise_errors=false)
       control(:poweroff, raise_errors)
     end
-    
+
     # Pauses the VM, putting it on hold temporarily. The VM can be resumed
     # again by calling {#resume}
     #
@@ -335,7 +335,7 @@ module VirtualBox
     def pause(raise_errors=false)
       control(:pause, raise_errors)
     end
-    
+
     # Resume a paused VM.
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
@@ -344,7 +344,7 @@ module VirtualBox
     def resume(raise_errors=false)
       control(:resume, raise_errors)
     end
-    
+
     # Saves the state of a VM and stops it. The VM can be resumed
     # again by calling "start" again.
     #
@@ -354,7 +354,7 @@ module VirtualBox
     def save_state(raise_errors=false)
       control(:savestate, raise_errors)
     end
-    
+
     # Controls the virtual machine. This method is used by {#stop},
     # {#pause}, {#resume}, and {#save_state} to control the virtual machine.
     # Typically, you won't ever have to call this method and should
@@ -371,7 +371,7 @@ module VirtualBox
       raise if raise_errors
       false
     end
-    
+
     # Destroys the virtual machine. This method also removes all attached
     # media (required by VirtualBox to destroy a VM). By default,
     # this **will not** destroy attached hard drives, but will if given
@@ -386,7 +386,7 @@ module VirtualBox
       # Call super first to destroy relationships, necessary before
       # unregistering a VM
       super
-      
+
       Command.vboxmanage("unregistervm #{@original_name} --delete")
     end
   end
