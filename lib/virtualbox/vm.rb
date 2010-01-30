@@ -54,6 +54,7 @@ module VirtualBox
   #     attribute :nestedpaging
   #     attribute :vtxvpid
   #     attribute :accelerate3d
+  #     attribute :accelerate2dvideo
   #     attribute :biosbootmenu, :populate_key => :bootmenu
   #     attribute :boot1
   #     attribute :boot2
@@ -64,6 +65,7 @@ module VirtualBox
   #     attribute :usb
   #     attribute :audio
   #     attribute :vrdp
+  #     attribute :vrdpports
   #     attribute :state, :populate_key => :vmstate, :readonly => true
   #
   # ## Relationships
@@ -94,6 +96,7 @@ module VirtualBox
     attribute :nestedpaging
     attribute :vtxvpid
     attribute :accelerate3d
+    attribute :accelerate2dvideo
     attribute :biosbootmenu, :populate_key => :bootmenu
     attribute :boot1
     attribute :boot2
@@ -104,6 +107,7 @@ module VirtualBox
     attribute :usb
     attribute :audio
     attribute :vrdp
+    attribute :vrdpports
     attribute :state, :populate_key => :vmstate, :readonly => true
     relationship :nics, Nic
     relationship :storage_controllers, StorageController, :dependent => :destroy
