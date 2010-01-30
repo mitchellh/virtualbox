@@ -391,5 +391,40 @@ module VirtualBox
 
       Command.vboxmanage("unregistervm #{@original_name} --delete")
     end
+
+    # Returns true if the virtual machine state is running
+    #
+    # @return [Boolean] True if virtual machine state is running
+    def running?
+      state == 'running'
+    end
+
+    # Returns true if the virtual machine state is powered off
+    #
+    # @return [Boolean] True if virtual machine state is powered off
+    def powered_off?
+      state == 'poweroff'
+    end
+
+    # Returns true if the virtual machine state is paused
+    #
+    # @return [Boolean] True if virtual machine state is paused
+    def paused?
+      state == 'paused'
+    end
+
+    # Returns true if the virtual machine state is saved
+    #
+    # @return [Boolean] True if virtual machine state is saved
+    def saved?
+      state == 'saved'
+    end
+
+    # Returns true if the virtual machine state is aborted
+    #
+    # @return [Boolean] True if virtual machine state is aborted
+    def aborted?
+      state == 'aborted'
+    end
   end
 end

@@ -117,6 +117,28 @@ showvminfo
       assert_equal "on", @vm.state(true)
       assert_equal "on", @vm.state
     end
+
+    should "provide conveniance methods for determining VM state" do
+      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "poweroff" })
+      assert_equal "poweroff", @vm.state(true)
+      assert @vm.powered_off?
+
+      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "running" })
+      assert_equal "running", @vm.state(true)
+      assert @vm.running?
+
+      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "paused" })
+      assert_equal "paused", @vm.state(true)
+      assert @vm.paused?
+
+      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "saved" })
+      assert_equal "saved", @vm.state(true)
+      assert @vm.saved?
+
+      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "aborted" })
+      assert_equal "aborted", @vm.state(true)
+      assert @vm.aborted?
+    end
   end
 
   context "exporting a VM" do
