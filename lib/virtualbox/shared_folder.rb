@@ -96,7 +96,7 @@ module VirtualBox
       #
       # @return [Array<SharedFolder>]
       def populate_relationship(caller, data)
-        relation = []
+        relation = Proxies::Collection.new(caller)
         
         counter = 1
         loop do

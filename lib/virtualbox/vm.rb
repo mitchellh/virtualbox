@@ -76,6 +76,7 @@ module VirtualBox
   #     relationship :storage_controllers, StorageController, :dependent => :destroy
   #     relationship :shared_folders, SharedFolder
   #     relationship :extra_data, ExtraData
+  #     relationship :forwarded_ports, ForwardedPort
   #
   class VM < AbstractModel
     attribute :uuid, :readonly => true
@@ -108,6 +109,7 @@ module VirtualBox
     relationship :storage_controllers, StorageController, :dependent => :destroy
     relationship :shared_folders, SharedFolder
     relationship :extra_data, ExtraData
+    relationship :forwarded_ports, ForwardedPort
     
     class <<self
       # Returns an array of all available VMs.
