@@ -152,11 +152,26 @@ raw
   end
   
   context "global extra data" do
-    should "call the command, parse it, then turn it into objects" do
+    setup do
       get_seq = sequence("get_seq")
       VirtualBox::Command.expects(:vboxmanage).with("getextradata global enumerate").once.in_sequence(get_seq)
       VirtualBox::ExtraData.expects(:parse_kv_pairs).returns(@ed).once.in_sequence(get_seq)
-      assert_equal "bar", VirtualBox::ExtraData.global["foo"]
+      @global = VirtualBox::ExtraData.global(true)
+    end
+    
+    should "call the command, parse it, then turn it into objects" do
+      assert_equal "bar", @global["foo"]
+    end
+    
+    should "return the same object if it exists for global data, rather than recreating it" do
+      VirtualBox::Command.expects(:vboxmanage).never
+      assert_equal @global, VirtualBox::ExtraData.global
+    end
+    
+    should "return a new object if reload is true" do
+      VirtualBox::Command.expects(:vboxmanage).once
+      VirtualBox::ExtraData.expects(:parse_kv_pairs).returns(@ed.dup).once
+      assert !@global.equal?(VirtualBox::ExtraData.global(true))
     end
   end
   

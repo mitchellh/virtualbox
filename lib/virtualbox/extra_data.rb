@@ -36,13 +36,21 @@ module VirtualBox
     
     attr_accessor :parent
     
+    @@global_data = nil
+    
     class <<self
-      # Gets the global extra data.
+      # Gets the global extra data. This will "cache" the data for
+      # future use unless you set the `reload` paramter to true.
       #
+      # @param [Boolean] reload If true, will reload new global data.
       # @return [Array<ExtraData>]
-      def global
-        raw = Command.vboxmanage("getextradata global enumerate")
-        parse_kv_pairs(raw)
+      def global(reload=false)
+        if !@@global_data || reload
+          raw = Command.vboxmanage("getextradata global enumerate")
+          @@global_data = parse_kv_pairs(raw)
+        end
+        
+        @@global_data
       end
       
       # Parses the key-value pairs from the extra data enumerated
