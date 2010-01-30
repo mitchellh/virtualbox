@@ -4,7 +4,68 @@ module VirtualBox
   # the host machine can't access services within the guest machine.
   # To get around this, NAT supports port forwarding, which allows the
   # guest machine services to be forwarded to some port on the host 
-  # machine.
+  # machine. Port forwarding is done completely through {ExtraData}, but
+  # is a complicated enough procedure that this class was made to
+  # faciliate it.
+  #
+  # **Note:** After changing any forwarded ports, the entire VirtualBox
+  # process must be restarted completely for them to take effect. When
+  # working with the ruby library, this isn't so much of an issue, but
+  # if you have any VMs running, they must all be shut down and restarted.
+  #
+  # # Adding a new Forwarded Port
+  #
+  # Since forwarded ports rely on being part of a {VM}, we're going to
+  # assume that `vm` points to a {VM} which has already been found.
+  #
+  #     port = VirtualBox::ForwardedPort.new
+  #     port.name = "apache" # This can be anything
+  #     port.guestport = 80
+  #     port.hostport = 8080
+  #     vm.forwarded_ports << port
+  #     port.save # Or vm.save
+  #
+  # # Modifying an Existing Forwarded Port
+  #
+  # This is assuming that `vm` is a local variable storing a {VM} object
+  # which has already been found.
+  #
+  #     vm.forwarded_ports.first.hostport = 1919
+  #     vm.save
+  #
+  # # Deleting a Forwarded Port
+  #
+  # To delete a forwarded port, you simply destroy it like any other model:
+  #
+  #     vm.forwarded_ports.first.destroy
+  #
+  # # Attributes and Relationships
+  #
+  # Properties of the model are exposed using standard ruby instance
+  # methods which are generated on the fly. Because of this, they are not listed
+  # below as available instance methods. 
+  #
+  # These attributes can be accessed and modified via standard ruby-style
+  # `instance.attribute` and `instance.attribute=` methods. The attributes are
+  # listed below.
+  #
+  # Relationships are also accessed like attributes but can't be set. Instead,
+  # they are typically references to other objects such as an {AttachedDevice} which
+  # in turn have their own attributes which can be modified.
+  #
+  # ## Attributes
+  #
+  # This is copied directly from the class header, but lists all available
+  # attributes. If you don't understand what this means, read {Attributable}.
+  #
+  #     attribute :parent, :readonly => true
+  #     attribute :name
+  #     attribute :instance, :default => "0"
+  #     attribute :device, :default => "pcnet"
+  #     attribute :protocol, :default => "TCP"
+  #     attribute :guestport
+  #     attribute :hostport
+  #
   class ForwardedPort < AbstractModel
     attribute :parent, :readonly => true
     attribute :name
@@ -55,6 +116,7 @@ module VirtualBox
       end
     end
     
+    # @param [Hash] data The initial attributes to populate.
     def initialize(data={})
       super()
       populate_attributes(data)
