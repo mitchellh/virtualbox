@@ -127,5 +127,12 @@ module VirtualBox
     def empty_drive?
       false
     end
+
+    # Returns the basename of the images location (the file name +extension)
+    #
+    # @return [String]
+    def filename
+      File.basename(location.to_s)
+    end
   end
 end

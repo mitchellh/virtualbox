@@ -121,6 +121,13 @@ raw
       result = VirtualBox::Image.parse_raw(@raw)
       assert_equal 3, result.length
     end
+
+    should "be able to extract the filename from the location" do
+      result = VirtualBox::Image.parse_raw(@raw)
+      assert_equal "TestJeOS.vdi", result[0].filename
+      assert_equal "HoboBase.vdi", result[1].filename
+      assert_equal "HoboBase.vmdk", result[2].filename
+    end
   end
 
   context "parsing multiple blocks" do
