@@ -59,10 +59,6 @@ class DVDTest < Test::Unit::TestCase
       }
 
       @valid = <<-valid
-VirtualBox Command Line Management Interface Version 3.1.2
-(C) 2005-2009 Sun Microsystems, Inc.
-All rights reserved.
-
 UUID:       d3252617-8176-4f8c-9d73-1c9c82b23960
 Path:       /Users/mitchellh/Downloads/jeos-8.04.3-jeos-i386.iso
 Accessible: yes

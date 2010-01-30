@@ -3,10 +3,6 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class VMTest < Test::Unit::TestCase
   setup do
     @raw = <<-showvminfo
-VirtualBox Command Line Management Interface Version 3.1.2
-(C) 2005-2009 Sun Microsystems, Inc.
-All rights reserved.
-
 name="foo"
 ostype="Ubuntu"
 UUID="8710d3db-d96a-46ed-9004-59fa891fda90"
@@ -275,10 +271,6 @@ raw
   context "importing a VM" do
     setup do
       @raw = <<-raw
-VirtualBox Command Line Management Interface Version 3.1.2
-(C) 2005-2009 Sun Microsystems, Inc.
-All rights reserved.
-
 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
 Interpreting /Users/mitchellh/base.ovf...
 OK.

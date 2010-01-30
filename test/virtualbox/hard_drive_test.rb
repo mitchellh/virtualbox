@@ -5,10 +5,6 @@ class HardDriveTest < Test::Unit::TestCase
     VirtualBox::Command.stubs(:execute)
 
     @find_raw = <<-raw
-VirtualBox Command Line Management Interface Version 3.1.2
-(C) 2005-2009 Sun Microsystems, Inc.
-All rights reserved.
-
 UUID:                 11dedd14-57a1-4bdb-adeb-dd1d67f066e1
 Accessible:           yes
 Description:
@@ -205,10 +201,6 @@ raw
   context "retrieving all hard drives" do
     setup do
       @valid = <<-valid
-VirtualBox Command Line Management Interface Version 3.1.2
-(C) 2005-2009 Sun Microsystems, Inc.
-All rights reserved.
-
 UUID:       9d2e4353-d1e9-466c-ac58-f2249264147b
 Format:     VDI
 Location:   /Users/mitchellh/Library/VirtualBox/HardDisks/foo.vdi

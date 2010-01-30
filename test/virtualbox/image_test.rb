@@ -89,10 +89,6 @@ class ImageTest < Test::Unit::TestCase
   context "parsing raw" do
     setup do
       @raw = <<-raw
-VirtualBox Command Line Management Interface Version 3.1.2
-(C) 2005-2009 Sun Microsystems, Inc.
-All rights reserved.
-
 UUID:       9d2e4353-d1e9-466c-ac58-f2249264147b
 Format:     VDI
 Location:   /Users/mitchellh/Library/VirtualBox/HardDisks/TestJeOS.vdi
@@ -117,7 +113,7 @@ raw
     end
 
     should "call parse block the correct number of times" do
-      VirtualBox::Image.expects(:parse_block).times(4).returns({})
+      VirtualBox::Image.expects(:parse_block).times(3).returns({})
       VirtualBox::Image.parse_raw(@raw)
     end
 

@@ -23,21 +23,21 @@ class CommandTest < Test::Unit::TestCase
 
   context "vbox commands" do
     should "call 'vboxmanage' followed by command" do
-      VirtualBox::Command.expects(:execute).with("VBoxManage foo")
+      VirtualBox::Command.expects(:execute).with("VBoxManage -q foo")
       VirtualBox::Command.stubs(:success?).returns(true)
       VirtualBox::Command.vboxmanage("foo")
     end
 
     should "call the custom vboxmanage executable if set" do
       VirtualBox::Command.vboxmanage = "barf"
-      VirtualBox::Command.expects(:execute).with("barf foo")
+      VirtualBox::Command.expects(:execute).with("barf -q foo")
       VirtualBox::Command.stubs(:success?).returns(true)
       VirtualBox::Command.vboxmanage("foo")
       VirtualBox::Command.vboxmanage = "VBoxManage"
     end
 
     should "raise a CommandFailedException if it failed" do
-      VirtualBox::Command.expects(:execute).with("VBoxManage foo")
+      VirtualBox::Command.expects(:execute).with("VBoxManage -q foo")
       VirtualBox::Command.stubs(:success?).returns(false)
       assert_raises(VirtualBox::Exceptions::CommandFailedException) {
         VirtualBox::Command.vboxmanage("foo")
