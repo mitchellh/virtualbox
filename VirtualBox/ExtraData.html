@@ -1,0 +1,1048 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Class: VirtualBox::ExtraData</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (E)</a> &raquo; 
+    <span class='title'><a href="../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span>
+     &raquo; 
+    <span class="title">ExtraData</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: VirtualBox::ExtraData 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Hash</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Hash</li>
+          
+            <li class="next">VirtualBox::ExtraData</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a></dd>
+      
+    
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/virtualbox/extra_data.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Represents "extra data" which can be set on a specific
+virtual machine or on VirtualBox as a whole. Extra data is persistent
+key-value storage which is available as a way to store any information
+wanted. VirtualBox uses it for storing statistics and settings. You can
+use it for anything!</p>
+
+<h1>Extra Data on a Virtual Machine</h1>
+
+<p>Setting extra data on a virtual machine is easy. All <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt> objects have a
+<code>extra_data</code> relationship which is just a simple ruby hash, so you can treat
+it like one! Once the data is set, simply saving the VM will save the
+extra data. An example below:</p>
+
+<pre class="code"><span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;FooVM&quot;</span><span class='rparen token'>)</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='string val'>&quot;ruby-accessed&quot;</span><span class='rbrack token'>]</span>  <span class='assign token'>=</span> <span class='string val'>&quot;yes, yes it was&quot;</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<p>Now, let's say you open up the VM again some other time:</p>
+
+<pre class="code"><span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;FooVM&quot;</span><span class='rparen token'>)</span>
+<span class='puts identifier id'>puts</span> <span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='string val'>&quot;ruby-accessed&quot;</span><span class='rbrack token'>]</span>
+</pre>
+
+<p>It acts just like a hash!</p>
+
+<h1>Global Extra Data</h1>
+
+<p>Extra data doesn't need to be tied to a specific virtual machine. It can also
+exist globally. Setting global extra-data is just as easy:</p>
+
+<pre class="code"><span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='ExtraData constant id'>ExtraData</span><span class='dot token'>.</span><span class='global identifier id'>global</span><span class='lbrack token'>[</span><span class='string val'>&quot;some-key&quot;</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>&quot;some value&quot;</span>
+<span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='ExtraData constant id'>ExtraData</span><span class='dot token'>.</span><span class='global identifier id'>global</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="global_data-classvariable" class="">@@global_data =
+            <span class="summary_desc"></span>
+        </dt>
+        <dd><pre class="code"><span class='nil nil kw'>nil</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+  
+  
+  
+  
+  
+  <h2>Instance Attribute Summary</h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parent-instance_method" title="#parent (instance method)">- (Object) <strong>parent</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    
+    
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns the value of attribute parent.</span>
+  
+</li>
+
+    
+  </ul>
+
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#global-class_method" title="global (class method)">+ (Array&lt;ExtraData&gt;) <strong>global</strong>(reload = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Gets the global extra data.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_kv_pairs-class_method" title="parse_kv_pairs (class method)">+ (Hash) <strong>parse_kv_pairs</strong>(raw, parent = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Parses the key-value pairs from the extra data enumerated
+output.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;ExtraData&gt;) <strong>populate_relationship</strong>(caller, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Populates a relationship with another model.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save_relationship-class_method" title="save_relationship (class method)">+ (Object) <strong>save_relationship</strong>(caller, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves the relationship.</span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%5B%5D%3D-instance_method" title="#[]= (instance method)">- (Object) <strong>[]</strong>(key, value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Set an extradata key-value pair.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete-instance_method" title="#delete (instance method)">- (Boolean) <strong>delete</strong>(key, raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Deletes the extra data.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (ExtraData) <strong>initialize</strong>(parent = nil) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Initializes an extra data object.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parent_name-instance_method" title="#parent_name (instance method)">- (String) <strong>parent_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Special accessor for parent name attribute.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save-instance_method" title="#save (instance method)">- (Boolean) <strong>save</strong>(raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves extra data.</span>
+  
+</li>
+
+    
+  </ul>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a></h3>
+  <p class="inherited"><a href="AbstractModel/Dirty.html#changed%3F-instance_method" title="VirtualBox::AbstractModel::Dirty#changed? (method)">#changed?</a>, <a href="AbstractModel/Dirty.html#changes-instance_method" title="VirtualBox::AbstractModel::Dirty#changes (method)">#changes</a>, <a href="AbstractModel/Dirty.html#clear_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#clear_dirty! (method)">#clear_dirty!</a>, <a href="AbstractModel/Dirty.html#ignore_dirty-instance_method" title="VirtualBox::AbstractModel::Dirty#ignore_dirty (method)">#ignore_dirty</a>, <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Dirty.html#set_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#set_dirty! (method)">#set_dirty!</a></p>
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><a href="" title="VirtualBox::ExtraData (class)">ExtraData</a></tt>) <strong>initialize</strong>(parent = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Initializes an extra data object.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <span class='name'>data</span>
+      
+      
+      
+        &mdash;
+        Initial attributes to populate.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+94
+95
+96</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 94</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='parent identifier id'>parent</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='@parent ivar id'>@parent</span> <span class='assign token'>=</span> <span class='parent identifier id'>parent</span> <span class='orop op'>||</span> <span class='string val'>&quot;global&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice super">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+      in the class <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">VirtualBox::AbstractModel::Dirty</a>
+    
+  </p>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id="parent=-instance_method"></span>
+      <span id="parent-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="parent-instance_method">
+  
+    - (<tt>Object</tt>) <strong>parent</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns the value of attribute parent</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+37
+38
+39</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 37</span>
+
+<span class='def def kw'>def</span> <span class='parent identifier id'>parent</span>
+  <span class='@parent ivar id'>@parent</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="global-class_method">
+  
+    + (<tt>Array&lt;<a href="" title="VirtualBox::ExtraData (class)">ExtraData</a>&gt;</tt>) <strong>global</strong>(reload = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Gets the global extra data. This will "cache" the data for
+future use unless you set the <code>reload</code> paramter to true.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>reload</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, will reload new global data.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::ExtraData (class)">ExtraData</a>&gt;</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+47
+48
+49
+50
+51
+52
+53
+54</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 47</span>
+
+<span class='def def kw'>def</span> <span class='global identifier id'>global</span><span class='lparen token'>(</span><span class='reload identifier id'>reload</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='@@global_data ivar id'>@@global_data</span> <span class='orop op'>||</span> <span class='reload identifier id'>reload</span>
+    <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;getextradata global enumerate&quot;</span><span class='rparen token'>)</span>
+    <span class='@@global_data ivar id'>@@global_data</span> <span class='assign token'>=</span> <span class='parse_kv_pairs identifier id'>parse_kv_pairs</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='@@global_data ivar id'>@@global_data</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="parse_kv_pairs-class_method">
+  
+    + (<tt>Hash</tt>) <strong>parse_kv_pairs</strong>(raw, parent = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Parses the key-value pairs from the extra data enumerated
+output.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>raw</span>
+      
+      
+      
+        &mdash;
+        The raw output from enumerating extra data.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 61</span>
+
+<span class='def def kw'>def</span> <span class='parse_kv_pairs identifier id'>parse_kv_pairs</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='comma token'>,</span> <span class='parent identifier id'>parent</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='data identifier id'>data</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='line identifier id'>line</span> <span class='match op'>=~</span> <span class='regexp val'>/^Key: (.+?), Value: (.+?)$/i</span>
+    <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='$2 nth_ref id'>$2</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='clear_dirty! fid id'>clear_dirty!</span>
+  <span class='data identifier id'>data</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="populate_relationship-class_method">
+  
+    + (<tt>Array&lt;<a href="" title="VirtualBox::ExtraData (class)">ExtraData</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Populates a relationship with another model.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::ExtraData (class)">ExtraData</a>&gt;</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+77
+78
+79
+80</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 77</span>
+
+<span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;getextradata #{Command.shell_escape(caller.name)} enumerate&quot;</span><span class='rparen token'>)</span>
+  <span class='parse_kv_pairs identifier id'>parse_kv_pairs</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save_relationship-class_method">
+  
+    + (<tt>Object</tt>) <strong>save_relationship</strong>(caller, data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves the relationship. This simply calls <tt><a href="#save-instance_method" title="VirtualBox::ExtraData#save (method)">#save</a></tt> on every
+member of the relationship.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+86
+87
+88</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 86</span>
+
+<span class='def def kw'>def</span> <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="[]=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>[]=</strong>(key, value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Set an extradata key-value pair. Overrides ruby hash implementation
+to set dirty state. Otherwise that, behaves the same way.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+100
+101
+102
+103</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 100</span>
+
+<span class='def def kw'>def</span> <span class='aset op'>[]=</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span><span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='set_dirty! fid id'>set_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='self self kw'>self</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='super super kw'>super</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="delete-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>delete</strong>(key, raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Deletes the extra data.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+142
+143
+144
+145
+146
+147
+148
+149</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 142</span>
+
+<span class='def def kw'>def</span> <span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;setextradata #{Command.shell_escape(parent_name)} #{Command.shell_escape(key)}&quot;</span><span class='rparen token'>)</span>
+  <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="parent_name-instance_method">
+  
+    - (<tt>String</tt>) <strong>parent_name</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Special accessor for parent name attribute. This returns
+either the parent name if its a VM object, otherwise
+just returns the default.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+110
+111
+112
+113
+114
+115
+116</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 110</span>
+
+<span class='def def kw'>def</span> <span class='parent_name identifier id'>parent_name</span>
+  <span class='if if kw'>if</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='VM constant id'>VM</span><span class='rparen token'>)</span>
+    <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
+  <span class='else else kw'>else</span>
+    <span class='parent identifier id'>parent</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>save</strong>(raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves extra data. This method does the same thing for both new
+and existing extra data, since virtualbox will overwrite old data or
+create it if it doesn't exist.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/extra_data.rb', line 125</span>
+
+<span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='changes identifier id'>changes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='bitor op'>|</span>
+    <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;setextradata #{Command.shell_escape(parent_name)} #{Command.shell_escape(key)} #{Command.shell_escape(value[1])}&quot;</span><span class='rparen token'>)</span>
+    <span class='clear_dirty! fid id'>clear_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Fri Jan 29 20:04:30 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

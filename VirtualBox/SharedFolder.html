@@ -667,7 +667,7 @@ never be called except internally.</strong></p>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 98</span>
 
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
-  <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='Proxies constant id'>Proxies</span><span class='colon2 op'>::</span><span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
   
   <span class='counter identifier id'>counter</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
   <span class='loop identifier id'>loop</span> <span class='do do kw'>do</span>
@@ -1135,7 +1135,7 @@ parameters.</p>
 </div>
     
     <div id="footer">
-  Generated on Thu Jan 28 20:19:32 2010 by 
+  Generated on Fri Jan 29 20:04:25 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

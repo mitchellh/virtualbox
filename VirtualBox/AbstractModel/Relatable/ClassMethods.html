@@ -72,6 +72,26 @@
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#has_relationship%3F-instance_method" title="#has_relationship? (instance method)">- (Boolean) <strong>has_relationship?</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns a boolean of whether a relationship exists.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#inherited-instance_method" title="#inherited (instance method)">- (Object) <strong>inherited</strong>(subclass) </a>
     
 
@@ -112,7 +132,27 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#relationships-instance_method" title="#relationships (instance method)">- (Hash) <strong>relationships</strong> </a>
+      <a href="#relationships-instance_method" title="#relationships (instance method)">- (Array) <strong>relationships</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns an array of the relationships in order of being added.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#relationships_hash-instance_method" title="#relationships_hash (instance method)">- (Hash) <strong>relationships_hash</strong> </a>
     
 
     
@@ -137,7 +177,57 @@
     
     
       <div class="method_details first">
-  <p class="signature first" id="inherited-instance_method">
+  <p class="signature first" id="has_relationship?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>has_relationship?</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns a boolean of whether a relationship exists.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+125
+126
+127</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 125</span>
+
+<span class='def def kw'>def</span> <span class='has_relationship? fid id'>has_relationship?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='notop op'>!</span><span class='notop op'>!</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='detect identifier id'>detect</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='r identifier id'>r</span><span class='bitor op'>|</span> <span class='r identifier id'>r</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='name identifier id'>name</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="inherited-instance_method">
   
     - (<tt>Object</tt>) <strong>inherited</strong>(subclass) 
   
@@ -159,16 +249,16 @@ relationships as well, which would be the expected behaviour.</p>
       <pre class="lines">
 
 
-119
-120
-121
-122
-123
-124
-125</pre>
+132
+133
+134
+135
+136
+137
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 119</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 132</span>
 
 <span class='def def kw'>def</span> <span class='inherited identifier id'>inherited</span><span class='lparen token'>(</span><span class='subclass identifier id'>subclass</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span> <span class='rescue rescue kw'>rescue</span> <span class='NoMethodError constant id'>NoMethodError</span>
@@ -276,8 +366,7 @@ class will be used to call the <code>populate_relationship,
 103
 104
 105
-106
-107</pre>
+106</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 96</span>
@@ -285,8 +374,7 @@ class will be used to call the <code>populate_relationship,
 <span class='def def kw'>def</span> <span class='relationship identifier id'>relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='klass identifier id'>klass</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
   
-  <span class='@relationships ivar id'>@relationships</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
-  <span class='@relationships ivar id'>@relationships</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:klass</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='klass identifier id'>klass</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='rparen token'>)</span>
+  <span class='relationships identifier id'>relationships</span> <span class='lshft op'>&lt;&lt;</span> <span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='lbrace token'>{</span> <span class='symbol val'>:klass</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='klass identifier id'>klass</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='rparen token'>)</span><span class='rbrack token'>]</span>
   
   <span class='comment val'># Define the method to read the relationship</span>
   <span class='define_method identifier id'>define_method</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='rbrace token'>}</span>
@@ -303,7 +391,57 @@ class will be used to call the <code>populate_relationship,
       <div class="method_details ">
   <p class="signature " id="relationships-instance_method">
   
-    - (<tt>Hash</tt>) <strong>relationships</strong> 
+    - (<tt>Array</tt>) <strong>relationships</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns an array of the relationships in order of being added.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+118
+119
+120</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 118</span>
+
+<span class='def def kw'>def</span> <span class='relationships identifier id'>relationships</span>
+  <span class='@relationships ivar id'>@relationships</span> <span class='opasgn op'>||=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="relationships_hash-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>relationships_hash</strong> 
   
 
   
@@ -334,15 +472,15 @@ class will be used to call the <code>populate_relationship,
       <pre class="lines">
 
 
+111
 112
-113
-114</pre>
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 112</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 111</span>
 
-<span class='def def kw'>def</span> <span class='relationships identifier id'>relationships</span>
-  <span class='@relationships ivar id'>@relationships</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+<span class='def def kw'>def</span> <span class='relationships_hash identifier id'>relationships_hash</span>
+  <span class='Hash constant id'>Hash</span><span class='lbrack token'>[</span><span class='mult op'>*</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='rbrack token'>]</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -355,7 +493,7 @@ class will be used to call the <code>populate_relationship,
 </div>
     
     <div id="footer">
-  Generated on Thu Jan 28 20:19:29 2010 by 
+  Generated on Fri Jan 29 20:04:26 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

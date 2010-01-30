@@ -1,0 +1,967 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Class: VirtualBox::ForwardedPort</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (F)</a> &raquo; 
+    <span class='title'><a href="../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span>
+     &raquo; 
+    <span class="title">ForwardedPort</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: VirtualBox::ForwardedPort 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></li>
+          
+            <li class="next">VirtualBox::ForwardedPort</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/virtualbox/forwarded_port.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>When a VM uses NAT as its NIC type, VirtualBox acts like its
+own private router for all virtual machines. Because of this,
+the host machine can't access services within the guest machine.
+To get around this, NAT supports port forwarding, which allows the
+guest machine services to be forwarded to some port on the host
+machine. Port forwarding is done completely through <tt><a href="ExtraData.html" title="VirtualBox::ExtraData (class)">ExtraData</a></tt>, but
+is a complicated enough procedure that this class was made to
+faciliate it.</p>
+
+<p><strong>Note:</strong> After changing any forwarded ports, the entire VirtualBox
+process must be restarted completely for them to take effect. When
+working with the ruby library, this isn't so much of an issue, but
+if you have any VMs running, they must all be shut down and restarted.</p>
+
+<h1>Adding a new Forwarded Port</h1>
+
+<p>Since forwarded ports rely on being part of a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>, we're going to
+assume that <code>vm</code> points to a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt> which has already been found.</p>
+
+<pre class="code"><span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='ForwardedPort constant id'>ForwardedPort</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='port identifier id'>port</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;apache&quot;</span> <span class='comment val'># This can be anything</span>
+<span class='port identifier id'>port</span><span class='dot token'>.</span><span class='guestport identifier id'>guestport</span> <span class='assign token'>=</span> <span class='integer val'>80</span>
+<span class='port identifier id'>port</span><span class='dot token'>.</span><span class='hostport identifier id'>hostport</span> <span class='assign token'>=</span> <span class='integer val'>8080</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='forwarded_ports identifier id'>forwarded_ports</span> <span class='lshft op'>&lt;&lt;</span> <span class='port identifier id'>port</span>
+<span class='port identifier id'>port</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='comment val'># Or vm.save</span>
+</pre>
+
+<h1>Modifying an Existing Forwarded Port</h1>
+
+<p>This is assuming that <code>vm</code> is a local variable storing a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt> object
+which has already been found.</p>
+
+<pre class="code"><span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='forwarded_ports identifier id'>forwarded_ports</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='dot token'>.</span><span class='hostport identifier id'>hostport</span> <span class='assign token'>=</span> <span class='integer val'>1919</span>
+<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+</pre>
+
+<h1>Deleting a Forwarded Port</h1>
+
+<p>To delete a forwarded port, you simply destroy it like any other model:</p>
+
+<pre class="code"><span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='forwarded_ports identifier id'>forwarded_ports</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
+</pre>
+
+<h1>Attributes and Relationships</h1>
+
+<p>Properties of the model are exposed using standard ruby instance
+methods which are generated on the fly. Because of this, they are not listed
+below as available instance methods.</p>
+
+<p>These attributes can be accessed and modified via standard ruby-style
+<code>instance.attribute</code> and <code>instance.attribute=</code> methods. The attributes are
+listed below.</p>
+
+<p>Relationships are also accessed like attributes but can't be set. Instead,
+they are typically references to other objects such as an <tt><a href="AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a></tt> which
+in turn have their own attributes which can be modified.</p>
+
+<h2>Attributes</h2>
+
+<p>This is copied directly from the class header, but lists all available
+attributes. If you don't understand what this means, read <tt><a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">Attributable</a></tt>.</p>
+
+<pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:name</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:instance</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;0&quot;</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:device</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;pcnet&quot;</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:protocol</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;TCP&quot;</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:guestport</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:hostport</span>
+</pre>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;ForwardedPort&gt;) <strong>populate_relationship</strong>(caller, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Populates a relationship with another model.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save_relationship-class_method" title="save_relationship (class method)">+ (Object) <strong>save_relationship</strong>(caller, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves the relationship.</span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#added_to_relationship-instance_method" title="#added_to_relationship (instance method)">- (Object) <strong>added_to_relationship</strong>(parent) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Relationship callback when added to a collection.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Boolean) <strong>destroy</strong>(raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Destroys the port forwarding mapping.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (ForwardedPort) <strong>initialize</strong>(data = {}) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">A new instance of ForwardedPort.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#key_prefix-instance_method" title="#key_prefix (instance method)">- (String) <strong>key_prefix</strong>(old_name = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns the prefix to be used for the extra data key.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save-instance_method" title="#save (instance method)">- (Boolean) <strong>save</strong>(raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves the forwarded port.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#validate-instance_method" title="#validate (instance method)">- (Object) <strong>validate</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Validates a forwarded port.</span>
+  
+</li>
+
+    
+  </ul>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
+  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a></h3>
+  <p class="inherited"><a href="AbstractModel/Dirty.html#changed%3F-instance_method" title="VirtualBox::AbstractModel::Dirty#changed? (method)">#changed?</a>, <a href="AbstractModel/Dirty.html#changes-instance_method" title="VirtualBox::AbstractModel::Dirty#changes (method)">#changes</a>, <a href="AbstractModel/Dirty.html#clear_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#clear_dirty! (method)">#clear_dirty!</a>, <a href="AbstractModel/Dirty.html#ignore_dirty-instance_method" title="VirtualBox::AbstractModel::Dirty#ignore_dirty (method)">#ignore_dirty</a>, <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Dirty.html#set_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#set_dirty! (method)">#set_dirty!</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Validatable.html" title="VirtualBox::AbstractModel::Validatable (module)">AbstractModel::Validatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Validatable.html#add_error-instance_method" title="VirtualBox::AbstractModel::Validatable#add_error (method)">#add_error</a>, <a href="AbstractModel/Validatable.html#clear_errors-instance_method" title="VirtualBox::AbstractModel::Validatable#clear_errors (method)">#clear_errors</a>, <a href="AbstractModel/Validatable.html#errors-instance_method" title="VirtualBox::AbstractModel::Validatable#errors (method)">#errors</a>, <a href="AbstractModel/Validatable.html#valid%3F-instance_method" title="VirtualBox::AbstractModel::Validatable#valid? (method)">#valid?</a>, <a href="AbstractModel/Validatable.html#validates_presence_of-instance_method" title="VirtualBox::AbstractModel::Validatable#validates_presence_of (method)">#validates_presence_of</a></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><a href="" title="VirtualBox::ForwardedPort (class)">ForwardedPort</a></tt>) <strong>initialize</strong>(data = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>A new instance of ForwardedPort</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <span class='name'>data</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        The initial attributes to populate.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+120
+121
+122
+123</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/forwarded_port.rb', line 120</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice super">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+      in the class <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">VirtualBox::AbstractModel::Dirty</a>
+    
+  </p>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="populate_relationship-class_method">
+  
+    + (<tt>Array&lt;<a href="" title="VirtualBox::ForwardedPort (class)">ForwardedPort</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Populates a relationship with another model.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::ForwardedPort (class)">ForwardedPort</a>&gt;</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/forwarded_port.rb', line 84</span>
+
+<span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='Proxies constant id'>Proxies</span><span class='colon2 op'>::</span><span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
+  
+  <span class='caller identifier id'>caller</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='key identifier id'>key</span> <span class='match op'>=~</span> <span class='regexp val'>/^(VBoxInternal\/Devices\/(.+?)\/(.+?)\/LUN#0\/Config\/(.+?)\/)Protocol$/i</span>
+    
+    <span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='lbrace token'>{</span>
+      <span class='symbol val'>:parent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span>
+      <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='$4 nth_ref id'>$4</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='comma token'>,</span>
+      <span class='symbol val'>:instance</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='$3 nth_ref id'>$3</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='comma token'>,</span>
+      <span class='symbol val'>:device</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='$2 nth_ref id'>$2</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='comma token'>,</span>
+      <span class='symbol val'>:protocol</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='value identifier id'>value</span><span class='comma token'>,</span>
+      <span class='symbol val'>:guestport</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{$1.to_s}GuestPort&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+      <span class='symbol val'>:hostport</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{$1.to_s}HostPort&quot;</span><span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span><span class='rparen token'>)</span>
+    
+    <span class='port identifier id'>port</span><span class='dot token'>.</span><span class='existing_record! fid id'>existing_record!</span>
+    
+    <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='port identifier id'>port</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='relation identifier id'>relation</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save_relationship-class_method">
+  
+    + (<tt>Object</tt>) <strong>save_relationship</strong>(caller, data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves the relationship. This simply calls <tt><a href="#save-instance_method" title="VirtualBox::ForwardedPort#save (method)">#save</a></tt> on every
+member of the relationship.</p>
+
+<p><strong>This method typically won't be used except internally.</strong></p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+112
+113
+114
+115
+116</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/forwarded_port.rb', line 112</span>
+
+<span class='def def kw'>def</span> <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='fp identifier id'>fp</span><span class='bitor op'>|</span>
+    <span class='fp identifier id'>fp</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="added_to_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>added_to_relationship</strong>(parent) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Relationship callback when added to a collection. This is automatically
+called by any relationship collection when this object is added.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+182
+183
+184</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/forwarded_port.rb', line 182</span>
+
+<span class='def def kw'>def</span> <span class='added_to_relationship identifier id'>added_to_relationship</span><span class='lparen token'>(</span><span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
+  <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="destroy-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>destroy</strong>(raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Destroys the port forwarding mapping.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/forwarded_port.rb', line 166</span>
+
+<span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='results identifier id'>results</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='new_record? fid id'>new_record?</span>
+    <span class='results identifier id'>results</span> <span class='lshft op'>&lt;&lt;</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{key_prefix(true)}Protocol&quot;</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
+    <span class='results identifier id'>results</span> <span class='lshft op'>&lt;&lt;</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{key_prefix(true)}GuestPort&quot;</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
+    <span class='results identifier id'>results</span> <span class='lshft op'>&lt;&lt;</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{key_prefix(true)}HostPort&quot;</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
+    
+    <span class='new_record! fid id'>new_record!</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='results identifier id'>results</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='orop op'>||</span> <span class='results identifier id'>results</span><span class='dot token'>.</span><span class='all? fid id'>all?</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='o identifier id'>o</span><span class='bitor op'>|</span> <span class='o identifier id'>o</span> <span class='eq op'>==</span> <span class='true true kw'>true</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="key_prefix-instance_method">
+  
+    - (<tt>String</tt>) <strong>key_prefix</strong>(old_name = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns the prefix to be used for the extra data key. Forwarded ports
+are created by simply setting <tt><a href="ExtraData.html" title="VirtualBox::ExtraData (class)">ExtraData</a></tt> on a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>. This class hides most
+of the inner workings of it, but it requires a common prefix. This method
+generates that.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+192
+193
+194
+195</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/forwarded_port.rb', line 192</span>
+
+<span class='def def kw'>def</span> <span class='key_prefix identifier id'>key_prefix</span><span class='lparen token'>(</span><span class='old_name identifier id'>old_name</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='name_value identifier id'>name_value</span> <span class='assign token'>=</span> <span class='old_name identifier id'>old_name</span> <span class='andop op'>&amp;&amp;</span> <span class='name_changed? fid id'>name_changed?</span> <span class='integer val'>? </span><span class='name_was identifier id'>name_was</span> <span class='colon op'>:</span> <span class='name identifier id'>name</span>
+  <span class='dstring node'>&quot;VBoxInternal\/Devices\/#{device}\/#{instance}\/LUN#0\/Config\/#{name_value}\/&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>save</strong>(raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves the forwarded port.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/forwarded_port.rb', line 140</span>
+
+<span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='new_record? fid id'>new_record?</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='changed? fid id'>changed?</span>
+  
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='valid? fid id'>valid?</span>
+    <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='ValidationFailedException constant id'>ValidationFailedException</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='errors identifier id'>errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+    <span class='return return kw'>return</span> <span class='false false kw'>false</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='name_changed? fid id'>name_changed?</span>
+  
+  <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key_prefix}Protocol&quot;</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='protocol identifier id'>protocol</span>
+  <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key_prefix}GuestPort&quot;</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='guestport identifier id'>guestport</span>
+  <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key_prefix}HostPort&quot;</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='hostport identifier id'>hostport</span>
+  <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
+  
+  <span class='clear_dirty! fid id'>clear_dirty!</span>
+  <span class='existing_record! fid id'>existing_record!</span>
+  
+  <span class='result identifier id'>result</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="validate-instance_method">
+  
+    - (<tt>Object</tt>) <strong>validate</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Validates a forwarded port.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+126
+127
+128
+129
+130
+131
+132
+133</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/forwarded_port.rb', line 126</span>
+
+<span class='def def kw'>def</span> <span class='validate identifier id'>validate</span>
+  <span class='super super kw'>super</span>
+  
+  <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:parent</span>
+  <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:name</span>
+  <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:guestport</span>
+  <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:hostport</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Fri Jan 29 20:04:32 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

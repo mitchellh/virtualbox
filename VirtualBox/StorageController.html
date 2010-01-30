@@ -331,6 +331,7 @@ as <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>.</p>
       <pre class="lines">
 
 
+92
 93
 94
 95
@@ -350,11 +351,10 @@ as <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>.</p>
 109
 110
 111
-112
-113</pre>
+112</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/storage_controller.rb', line 93</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/storage_controller.rb', line 92</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
@@ -539,14 +539,12 @@ member of the relationship.</p>
 82
 83
 84
-85
-86</pre>
+85</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/storage_controller.rb', line 81</span>
 
 <span class='def def kw'>def</span> <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
-  <span class='comment val'># Just call save on each nic with the VM</span>
   <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='sc identifier id'>sc</span><span class='bitor op'>|</span>
     <span class='sc identifier id'>sc</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
   <span class='end end kw'>end</span>
@@ -599,6 +597,7 @@ member of the relationship.</p>
       <pre class="lines">
 
 
+119
 120
 121
 122
@@ -609,11 +608,10 @@ member of the relationship.</p>
 127
 128
 129
-130
-131</pre>
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/storage_controller.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/storage_controller.rb', line 119</span>
 
 <span class='def def kw'>def</span> <span class='extract_devices identifier id'>extract_devices</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;storagecontrollername#{index}&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span>
@@ -638,7 +636,7 @@ member of the relationship.</p>
 </div>
     
     <div id="footer">
-  Generated on Thu Jan 28 20:19:33 2010 by 
+  Generated on Fri Jan 29 20:04:30 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

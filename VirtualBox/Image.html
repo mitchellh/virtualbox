@@ -486,7 +486,7 @@ one of the subclasses.</p>
 
   <span class='comment val'># Parses each line which should be in the format:</span>
   <span class='comment val'># KEY: VALUE</span>
-  <span class='block identifier id'>block</span><span class='dot token'>.</span><span class='lines identifier id'>lines</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span>
+  <span class='block identifier id'>block</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span>
     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='line identifier id'>line</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?):\s+(.+?)$/</span>
     <span class='hd identifier id'>hd</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='$2 nth_ref id'>$2</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
   <span class='end end kw'>end</span>
@@ -873,7 +873,7 @@ attaching to storage controllers.</p>
 </div>
     
     <div id="footer">
-  Generated on Thu Jan 28 20:19:36 2010 by 
+  Generated on Fri Jan 29 20:04:33 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>
