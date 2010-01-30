@@ -18,7 +18,7 @@ module VirtualBox
   class <<self
     # Returns installed VirtualBox version like '3.1.2r56127'.
     def version
-      execute("-v")
+      Command.vboxmanage("-v").chomp.strip
     end
   end
 end
