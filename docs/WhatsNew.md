@@ -31,4 +31,4 @@ Read more about port forwarding {VirtualBox::ForwardedPort here}.
 ## More Ruby Versions Supported!
 
 Previously, virtualbox only supported 1.8.7. It now supports 1.8.6 and 1.9.x thanks
-to AleksiP.
+to AlekSi.
