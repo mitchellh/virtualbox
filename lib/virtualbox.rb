@@ -13,3 +13,12 @@ require 'virtualbox/nic'
 require 'virtualbox/shared_folder'
 require 'virtualbox/storage_controller'
 require 'virtualbox/vm'
+
+module VirtualBox
+  class <<self
+    # Returns installed VirtualBox version like '3.1.2r56127'.
+    def version
+      execute("-v")
+    end
+  end
+end
