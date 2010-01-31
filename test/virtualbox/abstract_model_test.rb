@@ -19,6 +19,16 @@ class AbstractModelTest < Test::Unit::TestCase
     relationship :bars, Bar, :dependent => :destroy
   end
 
+  context "inspecting" do
+    setup do
+      @model = FakeModel.new
+    end
+
+    should "generate the proper inspect string" do
+      assert_equal "#<AbstractModelTest::FakeModel :foo=nil, :bar=nil, :foos=..., :bars=...>", @model.inspect
+    end
+  end
+
   context "validation" do
     setup do
       @model = FakeModel.new

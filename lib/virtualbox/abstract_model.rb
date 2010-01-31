@@ -144,5 +144,23 @@ module VirtualBox
         destroy_relationship(name, *args) if options[:dependent] == :destroy
       end
     end
+
+    # Creates a human-readable format for this model. This method overrides the
+    # default `#<class>` syntax since this doesn't work well for AbstractModels.
+    # Instead, it abbreviates it, instead showing all the attributes and their
+    # values, and `...` for relationships.
+    def inspect
+      values = []
+
+      self.class.attributes.each do |name, options|
+        values.push("#{name.inspect}=#{read_attribute(name).inspect}")
+      end
+
+      self.class.relationships.each do |name, options|
+        values.push("#{name.inspect}=...")
+      end
+
+      "#<#{self.class} #{values.join(", ")}>".strip
+    end
   end
 end
