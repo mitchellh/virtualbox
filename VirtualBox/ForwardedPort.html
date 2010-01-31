@@ -359,7 +359,7 @@ attributes. If you don't understand what this means, read <tt><a href="AbstractM
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -536,10 +536,10 @@ attributes. If you don't understand what this means, read <tt><a href="AbstractM
 
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='Proxies constant id'>Proxies</span><span class='colon2 op'>::</span><span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
-  
+
   <span class='caller identifier id'>caller</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='bitor op'>|</span>
     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='key identifier id'>key</span> <span class='match op'>=~</span> <span class='regexp val'>/^(VBoxInternal\/Devices\/(.+?)\/(.+?)\/LUN#0\/Config\/(.+?)\/)Protocol$/i</span>
-    
+
     <span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='lbrace token'>{</span>
       <span class='symbol val'>:parent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span>
       <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='$4 nth_ref id'>$4</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='comma token'>,</span>
@@ -549,12 +549,12 @@ attributes. If you don't understand what this means, read <tt><a href="AbstractM
       <span class='symbol val'>:guestport</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{$1.to_s}GuestPort&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
       <span class='symbol val'>:hostport</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{$1.to_s}HostPort&quot;</span><span class='rbrack token'>]</span>
     <span class='rbrace token'>}</span><span class='rparen token'>)</span>
-    
+
     <span class='port identifier id'>port</span><span class='dot token'>.</span><span class='existing_record! fid id'>existing_record!</span>
-    
+
     <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='port identifier id'>port</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='relation identifier id'>relation</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -732,10 +732,10 @@ called by any relationship collection when this object is added.</p>
     <span class='results identifier id'>results</span> <span class='lshft op'>&lt;&lt;</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{key_prefix(true)}Protocol&quot;</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
     <span class='results identifier id'>results</span> <span class='lshft op'>&lt;&lt;</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{key_prefix(true)}GuestPort&quot;</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
     <span class='results identifier id'>results</span> <span class='lshft op'>&lt;&lt;</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{key_prefix(true)}HostPort&quot;</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
-    
+
     <span class='new_record! fid id'>new_record!</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='results identifier id'>results</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='orop op'>||</span> <span class='results identifier id'>results</span><span class='dot token'>.</span><span class='all? fid id'>all?</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='o identifier id'>o</span><span class='bitor op'>|</span> <span class='o identifier id'>o</span> <span class='eq op'>==</span> <span class='true true kw'>true</span> <span class='rbrace token'>}</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -882,22 +882,22 @@ generates that.</p>
 
 <span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='new_record? fid id'>new_record?</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='changed? fid id'>changed?</span>
-  
+
   <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='valid? fid id'>valid?</span>
     <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='ValidationFailedException constant id'>ValidationFailedException</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='errors identifier id'>errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
     <span class='return return kw'>return</span> <span class='false false kw'>false</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='name_changed? fid id'>name_changed?</span>
-  
+
   <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key_prefix}Protocol&quot;</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='protocol identifier id'>protocol</span>
   <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key_prefix}GuestPort&quot;</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='guestport identifier id'>guestport</span>
   <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key_prefix}HostPort&quot;</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='hostport identifier id'>hostport</span>
   <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='dot token'>.</span><span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
-  
+
   <span class='clear_dirty! fid id'>clear_dirty!</span>
   <span class='existing_record! fid id'>existing_record!</span>
-  
+
   <span class='result identifier id'>result</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -941,7 +941,7 @@ generates that.</p>
 
 <span class='def def kw'>def</span> <span class='validate identifier id'>validate</span>
   <span class='super super kw'>super</span>
-  
+
   <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:parent</span>
   <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:name</span>
   <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:guestport</span>
@@ -958,7 +958,7 @@ generates that.</p>
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:47 2010 by 
+  Generated on Sun Jan 31 00:07:52 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

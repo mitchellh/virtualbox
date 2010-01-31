@@ -272,6 +272,26 @@ relationship.</span>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#filename-instance_method" title="#filename (instance method)">- (String) <strong>filename</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns the basename of the images location (the file name +extension).</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#image_type-instance_method" title="#image_type (instance method)">- (String) <strong>image_type</strong> </a>
     
 
@@ -328,7 +348,7 @@ one of the subclasses.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -397,7 +417,7 @@ one of the subclasses.</p>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='info identifier id'>info</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
-  
+
   <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='info identifier id'>info</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='info identifier id'>info</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -490,11 +510,11 @@ one of the subclasses.</p>
     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='line identifier id'>line</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?):\s+(.+?)$/</span>
     <span class='hd identifier id'>hd</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='$2 nth_ref id'>$2</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='comment val'># If we don't have a location but have a path, use that, as they</span>
   <span class='comment val'># are equivalent but not consistent.</span>
   <span class='hd identifier id'>hd</span><span class='lbrack token'>[</span><span class='symbol val'>:location</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='hd identifier id'>hd</span><span class='lbrack token'>[</span><span class='symbol val'>:path</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='hd identifier id'>hd</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:path</span><span class='rparen token'>)</span>
-  
+
   <span class='hd identifier id'>hd</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -666,14 +686,14 @@ a matching UUID and returning that as the relationship.</p>
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='DVD constant id'>DVD</span><span class='dot token'>.</span><span class='empty_drive identifier id'>empty_drive</span> <span class='if if_mod kw'>if</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:medium</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='string val'>&quot;emptydrive&quot;</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
-  
+
   <span class='subclasses identifier id'>subclasses</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='subclass identifier id'>subclass</span><span class='bitor op'>|</span>
     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='subclass identifier id'>subclass</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:all</span><span class='rparen token'>)</span>
-    
+
     <span class='matching identifier id'>matching</span> <span class='assign token'>=</span> <span class='subclass identifier id'>subclass</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='obj identifier id'>obj</span><span class='bitor op'>|</span> <span class='obj identifier id'>obj</span><span class='dot token'>.</span><span class='uuid identifier id'>uuid</span> <span class='eq op'>==</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span> <span class='rbrace token'>}</span>
     <span class='return return kw'>return</span> <span class='matching identifier id'>matching</span> <span class='unless unless_mod kw'>unless</span> <span class='matching identifier id'>matching</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='nil nil kw'>nil</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -747,7 +767,7 @@ relationship. This method is automatically called by <tt><a href="AbstractModel/
   <span class='comment val'># We don't actually destroy any images using this method,</span>
   <span class='comment val'># so just return the new value as long as its a valid object</span>
   <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='InvalidRelationshipObjectException constant id'>InvalidRelationshipObjectException</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='if if_mod kw'>if</span> <span class='new_value identifier id'>new_value</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='new_value identifier id'>new_value</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='Image constant id'>Image</span><span class='rparen token'>)</span>
-  
+
   <span class='return return kw'>return</span> <span class='new_value identifier id'>new_value</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -816,6 +836,56 @@ the subclass is.</p>
 </div>
     
       <div class="method_details ">
+  <p class="signature " id="filename-instance_method">
+  
+    - (<tt>String</tt>) <strong>filename</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns the basename of the images location (the file name +extension)</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+134
+135
+136</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/image.rb', line 134</span>
+
+<span class='def def kw'>def</span> <span class='filename identifier id'>filename</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='basename identifier id'>basename</span><span class='lparen token'>(</span><span class='location identifier id'>location</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <p class="signature " id="image_type-instance_method">
   
     - (<tt>String</tt>) <strong>image_type</strong> 
@@ -873,7 +943,7 @@ attaching to storage controllers.</p>
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:48 2010 by 
+  Generated on Sun Jan 31 00:07:50 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

@@ -399,7 +399,7 @@ only a single parameter.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -578,7 +578,7 @@ never be called except internally.</strong></p>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
-  
+
   <span class='if if kw'>if</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>3</span>
     <span class='initialize_for_relationship identifier id'>initialize_for_relationship</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='elsif elsif kw'>elsif</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -668,16 +668,16 @@ never be called except internally.</strong></p>
 
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='Proxies constant id'>Proxies</span><span class='colon2 op'>::</span><span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
-  
+
   <span class='counter identifier id'>counter</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
   <span class='loop identifier id'>loop</span> <span class='do do kw'>do</span>
     <span class='break break kw'>break</span> <span class='unless unless_mod kw'>unless</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;SharedFolderNameMachineMapping#{counter}&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
-    
+
     <span class='folder identifier id'>folder</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='counter identifier id'>counter</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
     <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='folder identifier id'>folder</span><span class='rparen token'>)</span>
     <span class='counter identifier id'>counter</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='relation identifier id'>relation</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -855,7 +855,7 @@ from within the virtual machine.</p>
   <span class='comment val'># If the name changed, we have to be sure to use the previous</span>
   <span class='comment val'># one.</span>
   <span class='name_value identifier id'>name_value</span> <span class='assign token'>=</span> <span class='name_changed? fid id'>name_changed?</span> <span class='integer val'>? </span><span class='name_was identifier id'>name_was</span> <span class='colon op'>:</span> <span class='name identifier id'>name</span>
-  
+
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;sharedfolder remove #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name_value)}&quot;</span><span class='rparen token'>)</span>
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
@@ -907,7 +907,7 @@ only a single parameter. View <tt><a href="#initialize-instance_method" title="V
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
     <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:populate_key</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='new_record! fid id'>new_record!</span>
 <span class='end end kw'>end</span>
@@ -967,7 +967,7 @@ parameters.</p>
     <span class='value identifier id'>value</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key}#{index}&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
     <span class='populate_data identifier id'>populate_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='populate_data identifier id'>populate_data</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='lbrace token'>{</span>
     <span class='symbol val'>:parent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span>
   <span class='rbrace token'>}</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -1059,21 +1059,21 @@ parameters.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 196</span>
 
-<span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>      
+<span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='unless unless_mod kw'>unless</span> <span class='changed? fid id'>changed?</span>
-  
+
   <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='valid? fid id'>valid?</span>
     <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='ValidationFailedException constant id'>ValidationFailedException</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='errors identifier id'>errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
     <span class='return return kw'>return</span> <span class='false false kw'>false</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='comment val'># If this isn't a new record, we destroy it first</span>
   <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='new_record? fid id'>new_record?</span>
-  
+
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;sharedfolder add #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name)} --hostpath #{Command.shell_escape(hostpath)}&quot;</span><span class='rparen token'>)</span>
   <span class='existing_record! fid id'>existing_record!</span>
   <span class='clear_dirty! fid id'>clear_dirty!</span>
-  
+
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
@@ -1119,7 +1119,7 @@ parameters.</p>
 
 <span class='def def kw'>def</span> <span class='validate identifier id'>validate</span>
   <span class='super super kw'>super</span>
-  
+
   <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:parent</span>
   <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:name</span>
   <span class='validates_presence_of identifier id'>validates_presence_of</span> <span class='symbol val'>:hostpath</span>
@@ -1135,7 +1135,7 @@ parameters.</p>
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:41 2010 by 
+  Generated on Sun Jan 31 00:07:56 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

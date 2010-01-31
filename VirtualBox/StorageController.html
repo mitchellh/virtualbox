@@ -271,7 +271,7 @@ this method shouldn't be called.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -358,9 +358,9 @@ as <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>.</p>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
-  
+
   <span class='@index ivar id'>@index</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span>
-  
+
   <span class='comment val'># Setup the index specific attributes</span>
   <span class='populate_data identifier id'>populate_data</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
@@ -368,11 +368,11 @@ as <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>.</p>
     <span class='value identifier id'>value</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;storagecontroller#{key}#{index}&quot;</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
     <span class='populate_data identifier id'>populate_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='comment val'># Make sure to merge in device data so those relationships will be</span>
   <span class='comment val'># setup properly</span>
   <span class='populate_data identifier id'>populate_data</span><span class='dot token'>.</span><span class='merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='extract_devices identifier id'>extract_devices</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
-  
+
   <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='populate_data identifier id'>populate_data</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='lbrace token'>{</span>
     <span class='symbol val'>:parent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='caller identifier id'>caller</span>
   <span class='rbrace token'>}</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -494,7 +494,7 @@ as <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>.</p>
 
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
-  
+
   <span class='counter identifier id'>counter</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
   <span class='loop identifier id'>loop</span> <span class='do do kw'>do</span>
     <span class='break break kw'>break</span> <span class='unless unless_mod kw'>unless</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;storagecontrollername#{counter}&quot;</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
@@ -502,7 +502,7 @@ as <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>.</p>
     <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='nic identifier id'>nic</span><span class='rparen token'>)</span>
     <span class='counter identifier id'>counter</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='relation identifier id'>relation</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -615,14 +615,14 @@ member of the relationship.</p>
 
 <span class='def def kw'>def</span> <span class='extract_devices identifier id'>extract_devices</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;storagecontrollername#{index}&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span>
-  
+
   <span class='device_data identifier id'>device_data</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
   <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='k identifier id'>k</span><span class='comma token'>,</span><span class='v identifier id'>v</span><span class='bitor op'>|</span>
     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='k identifier id'>k</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='match op'>=~</span> <span class='dregexp node'>/^#{name}-/</span>
-    
+
     <span class='device_data identifier id'>device_data</span><span class='lbrack token'>[</span><span class='k identifier id'>k</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='v identifier id'>v</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='device_data identifier id'>device_data</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -636,7 +636,7 @@ member of the relationship.</p>
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:45 2010 by 
+  Generated on Sun Jan 31 00:07:51 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

@@ -568,7 +568,7 @@ future use unless you set the <code>reload</code> paramter to true.</p>
     <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;getextradata global enumerate&quot;</span><span class='rparen token'>)</span>
     <span class='@@global_data ivar id'>@@global_data</span> <span class='assign token'>=</span> <span class='parse_kv_pairs identifier id'>parse_kv_pairs</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='@@global_data ivar id'>@@global_data</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -650,7 +650,7 @@ output.</p>
     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='line identifier id'>line</span> <span class='match op'>=~</span> <span class='regexp val'>/^Key: (.+?), Value: (.+?)$/i</span>
     <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='$2 nth_ref id'>$2</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='clear_dirty! fid id'>clear_dirty!</span>
   <span class='data identifier id'>data</span>
 <span class='end end kw'>end</span>
@@ -1022,7 +1022,7 @@ create it if it doesn't exist.</p>
     <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;setextradata #{Command.shell_escape(parent_name)} #{Command.shell_escape(key)} #{Command.shell_escape(value[1])}&quot;</span><span class='rparen token'>)</span>
     <span class='clear_dirty! fid id'>clear_dirty!</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
@@ -1039,7 +1039,7 @@ create it if it doesn't exist.</p>
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:45 2010 by 
+  Generated on Sun Jan 31 00:07:59 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

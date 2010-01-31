@@ -255,10 +255,10 @@ detailed overview documentation, see <tt><a href="../Attributable.html" title="V
 <span class='def def kw'>def</span> <span class='attribute identifier id'>attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
   <span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span>
-  
+
   <span class='comment val'># Create the method for reading this attribute</span>
   <span class='define_method identifier id'>define_method</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='read_attribute identifier id'>read_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
-  
+
   <span class='comment val'># Create the writer method for it unless the attribute is readonly,</span>
   <span class='comment val'># then remove the method if it exists</span>
   <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:readonly</span><span class='rbrack token'>]</span>
@@ -348,7 +348,7 @@ attributes as well, which would be the expected behaviour.</p>
 
 <span class='def def kw'>def</span> <span class='inherited identifier id'>inherited</span><span class='lparen token'>(</span><span class='subclass identifier id'>subclass</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span> <span class='rescue rescue kw'>rescue</span> <span class='NoMethodError constant id'>NoMethodError</span>
-  
+
   <span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='option identifier id'>option</span><span class='bitor op'>|</span>
     <span class='subclass identifier id'>subclass</span><span class='dot token'>.</span><span class='attribute identifier id'>attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='option identifier id'>option</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
@@ -364,7 +364,7 @@ attributes as well, which would be the expected behaviour.</p>
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:41 2010 by 
+  Generated on Sun Jan 31 00:07:59 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

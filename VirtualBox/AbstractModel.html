@@ -186,6 +186,26 @@ It provides convenient ActiveRecord-style model behavior to subclasses.</p>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#inspect-instance_method" title="#inspect (instance method)">- (Object) <strong>inspect</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Creates a human-readable format for this model.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#new_record%21-instance_method" title="#new_record! (instance method)">- (Object) <strong>new_record!</strong> </a>
     
 
@@ -479,14 +499,14 @@ on relationships, see <tt><a href="AbstractModel/Relatable.html" title="VirtualB
 
 <span class='def def kw'>def</span> <span class='errors identifier id'>errors</span>
   <span class='error_hash identifier id'>error_hash</span> <span class='assign token'>=</span> <span class='super super kw'>super</span>
-  
+
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span> <span class='andop op'>&amp;&amp;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:errors_for_relationship</span><span class='rparen token'>)</span>
     <span class='relationship_errors identifier id'>relationship_errors</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='errors_for_relationship identifier id'>errors_for_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
-    
+
     <span class='error_hash identifier id'>error_hash</span><span class='dot token'>.</span><span class='merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='lbrace token'>{</span> <span class='symbol val'>:foos</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='relationship_errors identifier id'>relationship_errors</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='relationship_errors identifier id'>relationship_errors</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='error_hash identifier id'>error_hash</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -527,6 +547,66 @@ be asking yourself "why?"</p>
 
 <span class='def def kw'>def</span> <span class='existing_record! fid id'>existing_record!</span>
   <span class='@new_record ivar id'>@new_record</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="inspect-instance_method">
+  
+    - (<tt>Object</tt>) <strong>inspect</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Creates a human-readable format for this model. This method overrides the
+default <code>#&lt;class&gt;</code> syntax since this doesn't work well for AbstractModels.
+Instead, it abbreviates it, instead showing all the attributes and their
+values, and <code>...</code> for relationships.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model.rb', line 152</span>
+
+<span class='def def kw'>def</span> <span class='inspect identifier id'>inspect</span>
+  <span class='values identifier id'>values</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='values identifier id'>values</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{name.inspect}=#{read_attribute(name).inspect}&quot;</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
+    <span class='values identifier id'>values</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{name.inspect}=...&quot;</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+
+  <span class='dstring node'>&quot;#&lt;#{self.class} #{values.join(&quot;, &quot;)}&gt;&quot;</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -681,10 +761,10 @@ a new record (see <tt><a href="#new_record%3F-instance_method" title="VirtualBox
 <span class='def def kw'>def</span> <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='attribs identifier id'>attribs</span><span class='rparen token'>)</span>
   <span class='comment val'># No longer a new record</span>
   <span class='@new_record ivar id'>@new_record</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-  
+
   <span class='ignore_dirty identifier id'>ignore_dirty</span> <span class='do do kw'>do</span>
     <span class='super super kw'>super</span>
-    
+
     <span class='populate_relationships identifier id'>populate_relationships</span><span class='lparen token'>(</span><span class='attribs identifier id'>attribs</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
@@ -742,7 +822,7 @@ implementation specific (see <tt><a href="VM.html#save-instance_method" title="V
   <span class='end end kw'>end</span>
 
   <span class='save_relationships identifier id'>save_relationships</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
-  
+
   <span class='comment val'># No longer a new record</span>
   <span class='@new_record ivar id'>@new_record</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
@@ -876,14 +956,14 @@ relationship. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-instance_me
 <span class='def def kw'>def</span> <span class='validate identifier id'>validate</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># First clear all previous errors</span>
   <span class='clear_errors identifier id'>clear_errors</span>
-  
+
   <span class='comment val'># Then do the validations</span>
   <span class='failed identifier id'>failed</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span> <span class='andop op'>&amp;&amp;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:validate_relationship</span><span class='rparen token'>)</span>
     <span class='failed identifier id'>failed</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='validate_relationship identifier id'>validate_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
-  
+
   <span class='return return kw'>return</span> <span class='notop op'>!</span><span class='failed identifier id'>failed</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -937,7 +1017,7 @@ the written attribute. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-in
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:46 2010 by 
+  Generated on Sun Jan 31 00:07:50 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

@@ -339,8 +339,8 @@ status on the entire model.</p>
 
 <span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='meth_string identifier id'>meth_string</span> <span class='assign token'>=</span> <span class='meth identifier id'>meth</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
-  
-  <span class='if if kw'>if</span> <span class='meth_string identifier id'>meth_string</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?)_changed\?$/</span> 
+
+  <span class='if if kw'>if</span> <span class='meth_string identifier id'>meth_string</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?)_changed\?$/</span>
     <span class='changed? fid id'>changed?</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
   <span class='elsif elsif kw'>elsif</span> <span class='meth_string identifier id'>meth_string</span> <span class='match op'>=~</span> <span class='regexp val'>/^(.+?)_change$/</span>
     <span class='changes identifier id'>changes</span><span class='lbrack token'>[</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
@@ -755,7 +755,7 @@ call this for any fields they want tracked.</p>
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:46 2010 by 
+  Generated on Sun Jan 31 00:08:00 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

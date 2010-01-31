@@ -279,7 +279,7 @@ an empty drive is simple:</p>
   
   
   <h3 class="inherited">Methods inherited from <a href="Image.html" title="VirtualBox::Image (class)">Image</a></h3>
-  <p class="inherited"><a href="Image.html#parse_block-class_method" title="VirtualBox::Image.parse_block (method)">parse_block</a>, <a href="Image.html#parse_blocks-class_method" title="VirtualBox::Image.parse_blocks (method)">parse_blocks</a>, <a href="Image.html#parse_raw-class_method" title="VirtualBox::Image.parse_raw (method)">parse_raw</a>, <a href="Image.html#populate_relationship-class_method" title="VirtualBox::Image.populate_relationship (method)">populate_relationship</a>, <a href="Image.html#set_relationship-class_method" title="VirtualBox::Image.set_relationship (method)">set_relationship</a></p>
+  <p class="inherited"><a href="Image.html#filename-instance_method" title="VirtualBox::Image#filename (method)">#filename</a>, <a href="Image.html#parse_block-class_method" title="VirtualBox::Image.parse_block (method)">parse_block</a>, <a href="Image.html#parse_blocks-class_method" title="VirtualBox::Image.parse_blocks (method)">parse_blocks</a>, <a href="Image.html#parse_raw-class_method" title="VirtualBox::Image.parse_raw (method)">parse_raw</a>, <a href="Image.html#populate_relationship-class_method" title="VirtualBox::Image.populate_relationship (method)">populate_relationship</a>, <a href="Image.html#set_relationship-class_method" title="VirtualBox::Image.set_relationship (method)">set_relationship</a></p>
 
   
   
@@ -295,7 +295,7 @@ an empty drive is simple:</p>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -566,7 +566,7 @@ that case.</p>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='if if_mod kw'>if</span> <span class='empty_drive? fid id'>empty_drive?</span>
-  
+
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;closemedium dvd #{uuid} --delete&quot;</span><span class='rparen token'>)</span>
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
@@ -672,7 +672,7 @@ the DVD was created with <tt><a href="#empty_drive-class_method" title="VirtualB
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:43 2010 by 
+  Generated on Sun Jan 31 00:07:53 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

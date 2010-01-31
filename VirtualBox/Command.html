@@ -465,7 +465,7 @@ exit code.</p>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 31</span>
 
 <span class='def def kw'>def</span> <span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='rparen token'>)</span>
-  <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='execute identifier id'>execute</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{@@vboxmanage} #{command}&quot;</span><span class='rparen token'>)</span>
+  <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='execute identifier id'>execute</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{@@vboxmanage} -q #{command}&quot;</span><span class='rparen token'>)</span>
   <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='result identifier id'>result</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='success? fid id'>success?</span>
   <span class='result identifier id'>result</span>
 <span class='end end kw'>end</span>
@@ -518,7 +518,7 @@ work.</p>
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 30 02:28:44 2010 by 
+  Generated on Sun Jan 31 00:07:57 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>
