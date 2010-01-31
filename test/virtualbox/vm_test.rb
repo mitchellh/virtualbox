@@ -185,6 +185,12 @@ showvminfo
     end
 
     context "control method" do
+      should "shell escape the vm name" do
+        VirtualBox::Command.expects(:vboxmanage).with("controlvm hello\\ world FOO")
+        @vm.instance_variable_set(:@original_name, "hello world")
+        assert @vm.control(:FOO)
+      end
+
       should "run the given command when 'control' is called" do
         VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} foo")
         assert @vm.control(:foo)
@@ -211,6 +217,12 @@ showvminfo
     should "return false if start failed" do
       VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
       assert !@vm.start
+    end
+
+    should "shell escape the VM name on start" do
+      VirtualBox::Command.expects(:vboxmanage).with("startvm hello\\ world --type FOO")
+      @vm.instance_variable_set(:@original_name, "hello world")
+      assert @vm.start(:FOO)
     end
 
     should "raise an exception if start fails and flag is set" do
@@ -249,6 +261,13 @@ showvminfo
   context "destroying" do
     setup do
       @vm = create_vm
+    end
+
+    should "shell escape the name" do
+      VirtualBox::StorageController.expects(:destroy_relationship)
+      VirtualBox::Command.expects(:vboxmanage).with("unregistervm hello\\ world --delete")
+      @vm.instance_variable_set(:@original_name, "hello world")
+      @vm.destroy
     end
 
     should "destroy all storage controllers before destroying VM" do
@@ -367,6 +386,14 @@ raw
 
       @vm.memory = 400
       assert_nothing_raised { @vm.save }
+    end
+
+    should "shell escape the VM name when saving an attribute" do
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm hello\\ world --memory 400")
+
+      @vm.memory = 400
+      @vm.instance_variable_set(:@original_name, "hello world")
+      assert @vm.save
     end
 
     should "save name first if changed, then following values should modify new VM" do
