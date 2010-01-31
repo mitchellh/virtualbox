@@ -390,6 +390,11 @@ raw
       end
     end
 
+    should "return nil if the VM doesn't exist" do
+      VirtualBox::Command.expects(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_nil VirtualBox::VM.find("dont exist")
+    end
+
     should "properly load nic relationship" do
       assert @vm.nics
       assert @vm.nics.is_a?(Array)

@@ -126,6 +126,8 @@ module VirtualBox
       # @return [VM]
       def find(name)
         new(raw_info(name))
+      rescue Exceptions::CommandFailedException
+        nil
       end
 
       # Imports a VM, blocking the entire thread during this time.
