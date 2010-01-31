@@ -335,7 +335,7 @@ module VirtualBox
 
     # Stops the VM by directly calling "poweroff." Immediately halts the
     # virtual machine without saving state. This could result in a loss
-    # of data. To prevent data loss, see {shutdown}
+    # of data. To prevent data loss, see {#shutdown}
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
