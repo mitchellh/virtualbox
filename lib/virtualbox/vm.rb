@@ -259,7 +259,7 @@ module VirtualBox
     #
     # **This method typically won't be used except internally.**
     def save_attribute(key, value)
-      Command.vboxmanage("modifyvm #{@original_name} --#{key} #{Command.shell_escape(value.to_s)}")
+      Command.vboxmanage("modifyvm #{Command.shell_escape(@original_name)} --#{key} #{Command.shell_escape(value.to_s)}")
       super
     end
 
@@ -292,7 +292,7 @@ module VirtualBox
 
       options.unshift("--vsys 0") unless options.empty?
 
-      raw = Command.vboxmanage("export #{@original_name} -o #{Command.shell_escape(filename)} #{options.join(" ")}".strip)
+      raw = Command.vboxmanage("export #{Command.shell_escape(@original_name)} -o #{Command.shell_escape(filename)} #{options.join(" ")}".strip)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_error
@@ -314,7 +314,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def start(mode=:gui, raise_errors=false)
-      Command.vboxmanage("startvm #{@original_name} --type #{mode}")
+      Command.vboxmanage("startvm #{Command.shell_escape(@original_name)} --type #{mode}")
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
@@ -383,7 +383,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def control(command, raise_errors=false)
-      Command.vboxmanage("controlvm #{@original_name} #{command}")
+      Command.vboxmanage("controlvm #{Command.shell_escape(@original_name)} #{command}")
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
@@ -405,7 +405,7 @@ module VirtualBox
       # unregistering a VM
       super
 
-      Command.vboxmanage("unregistervm #{@original_name} --delete")
+      Command.vboxmanage("unregistervm #{Command.shell_escape(@original_name)} --delete")
     end
 
     # Returns true if the virtual machine state is running
