@@ -221,6 +221,11 @@ showvminfo
     end
 
     should "stop a VM with a 'poweroff'" do
+      @vm.expects(:control).with(:acpipowerbutton, false).returns(true)
+      assert @vm.shutdown
+    end
+
+    should "stop a VM with a 'poweroff'" do
       @vm.expects(:control).with(:poweroff, false).returns(true)
       assert @vm.stop
     end

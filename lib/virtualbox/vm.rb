@@ -321,9 +321,21 @@ module VirtualBox
       false
     end
 
+    # Shuts down the VM by directly calling "acpipowerbutton". Depending on the
+    # settings of the Virtual Machine, this may not work. For example, some linux
+    # installations don't respond to the ACPI power button at all. In such cases,
+    # {#stop} or {#save_state} may be used instead.
+    #
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def shutdown(raise_errors=false)
+      control(:acpipowerbutton, raise_errors)
+    end
+
     # Stops the VM by directly calling "poweroff." Immediately halts the
     # virtual machine without saving state. This could result in a loss
-    # of data.
+    # of data. To prevent data loss, see {shutdown}
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
