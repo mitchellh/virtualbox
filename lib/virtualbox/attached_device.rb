@@ -166,7 +166,7 @@ module VirtualBox
       # a new one
       destroy({:port => port_was}, raise_errors) if port_changed? && !port_was.nil?
 
-      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{port} --device 0 --type #{image.image_type} --medium #{medium}")
+      Command.vboxmanage("storageattach", parent.parent.name, "--storagectl", parent.name, "--port", port, "--device", "0", "--type", image.image_type, "--medium", medium)
       existing_record!
       clear_dirty!
 
@@ -209,7 +209,7 @@ module VirtualBox
       # parent = storagecontroller
       # parent.parent = vm
       destroy_port = options[:port] || port
-      Command.vboxmanage("storageattach #{Command.shell_escape(parent.parent.name)} --storagectl #{Command.shell_escape(parent.name)} --port #{destroy_port} --device 0 --medium none")
+      Command.vboxmanage("storageattach", parent.parent.name, "--storagectl", parent.name, "--port", destroy_port, "--device", "0", "--medium", "none")
       image.destroy(raise_errors) if options[:destroy_image] && image
     rescue Exceptions::CommandFailedException
       raise if raise_errors

@@ -81,11 +81,11 @@ showvminfo
   end
 
   def create_vm
-    VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw)
-    VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name}").returns("")
-    VirtualBox::Command.expects(:vboxmanage).with("list hdds").returns("")
-    VirtualBox::Command.expects(:vboxmanage).with("list dvds").returns("")
-    VirtualBox::Command.expects(:vboxmanage).with("getextradata #{@name} enumerate").returns("")
+    VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name, "--machinereadable").returns(@raw)
+    VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name).returns("")
+    VirtualBox::Command.expects(:vboxmanage).with("list", "hdds").returns("")
+    VirtualBox::Command.expects(:vboxmanage).with("list", "dvds").returns("")
+    VirtualBox::Command.expects(:vboxmanage).with("getextradata", @name, "enumerate").returns("")
     vm = VirtualBox::VM.find(@name)
     assert vm
     vm
@@ -93,13 +93,8 @@ showvminfo
 
   context "human readable info" do
     should "not pass --machinereadable into the showvminfo command" do
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name}").once
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name).once
       VirtualBox::VM.human_info(@name)
-    end
-
-    should "shell escape parameter" do
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo hello\\ world").once
-      VirtualBox::VM.human_info("hello world")
     end
   end
 
@@ -147,17 +142,17 @@ showvminfo
     end
 
     should "export the VM with no options if none are passed" do
-      VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo")
+      VirtualBox::Command.expects(:vboxmanage).with("export", @name, "-o", "foo")
       @vm.export("foo")
     end
 
     should "export the VM with specified options" do
-      VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo --vsys 0 --foo bar")
+      VirtualBox::Command.expects(:vboxmanage).with("export", @name, "-o", "foo", "--vsys", "0", "--foo", :bar)
       @vm.export("foo", :foo => :bar)
     end
 
     should "shell escape all the options" do
-      VirtualBox::Command.expects(:vboxmanage).with("export #{@name} -o foo --vsys 0 --foo a\\ space")
+      VirtualBox::Command.expects(:vboxmanage).with("export", @name, "-o", "foo", "--vsys", "0", "--foo", "a space")
       @vm.export("foo", :foo => "a space")
     end
 
@@ -185,14 +180,8 @@ showvminfo
     end
 
     context "control method" do
-      should "shell escape the vm name" do
-        VirtualBox::Command.expects(:vboxmanage).with("controlvm hello\\ world FOO")
-        @vm.instance_variable_set(:@original_name, "hello world")
-        assert @vm.control(:FOO)
-      end
-
       should "run the given command when 'control' is called" do
-        VirtualBox::Command.expects(:vboxmanage).with("controlvm #{@name} foo")
+        VirtualBox::Command.expects(:vboxmanage).with("controlvm", @name, :foo)
         assert @vm.control(:foo)
       end
 
@@ -210,19 +199,13 @@ showvminfo
     end
 
     should "start a VM with the given type" do
-      VirtualBox::Command.expects(:vboxmanage).with("startvm #{@name} --type FOO")
+      VirtualBox::Command.expects(:vboxmanage).with("startvm", @name, "--type", :FOO)
       assert @vm.start(:FOO)
     end
 
     should "return false if start failed" do
       VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
       assert !@vm.start
-    end
-
-    should "shell escape the VM name on start" do
-      VirtualBox::Command.expects(:vboxmanage).with("startvm hello\\ world --type FOO")
-      @vm.instance_variable_set(:@original_name, "hello world")
-      assert @vm.start(:FOO)
     end
 
     should "raise an exception if start fails and flag is set" do
@@ -258,7 +241,7 @@ showvminfo
     end
 
     should "discard a saved state of a VM" do
-      VirtualBox::Command.expects(:vboxmanage).with("discardstate #{@name}")
+      VirtualBox::Command.expects(:vboxmanage).with("discardstate", @name)
       assert @vm.discard_state
     end
   end
@@ -268,17 +251,10 @@ showvminfo
       @vm = create_vm
     end
 
-    should "shell escape the name" do
-      VirtualBox::StorageController.expects(:destroy_relationship)
-      VirtualBox::Command.expects(:vboxmanage).with("unregistervm hello\\ world --delete")
-      @vm.instance_variable_set(:@original_name, "hello world")
-      @vm.destroy
-    end
-
     should "destroy all storage controllers before destroying VM" do
       destroy_seq = sequence("destroy_seq")
       VirtualBox::StorageController.expects(:destroy_relationship).in_sequence(destroy_seq)
-      VirtualBox::Command.expects(:vboxmanage).with("unregistervm #{@name} --delete").in_sequence(destroy_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("unregistervm", @name, "--delete").in_sequence(destroy_seq)
       @vm.destroy
     end
   end
@@ -293,7 +269,7 @@ raw
 
     should "list VMs then parse them" do
       all_seq = sequence("all")
-      VirtualBox::Command.expects(:vboxmanage).with("list vms").returns(@raw).in_sequence(all_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("list", "vms").returns(@raw).in_sequence(all_seq)
       VirtualBox::VM.expects(:parse_vm_list).with(@raw).in_sequence(all_seq)
       VirtualBox::VM.all
     end
@@ -336,7 +312,7 @@ raw
     end
 
     should "attempt to find the imported VM" do
-      VirtualBox::Command.expects(:vboxmanage).with("import whatever").returns(@raw)
+      VirtualBox::Command.expects(:vboxmanage).with("import", "whatever").returns(@raw)
       VirtualBox::VM.expects(:find).with("Base_1").once
       VirtualBox::VM.import("whatever")
     end
@@ -373,39 +349,17 @@ raw
     end
 
     should "save only the attributes which saved" do
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --ostype Zubuntu")
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--ostype", "Zubuntu")
 
       @vm.ostype = "Zubuntu"
-      assert @vm.save
-    end
-
-    should "shell escape saved values" do
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --ostype My\\ Value")
-
-      @vm.ostype = "My Value"
-      assert @vm.save
-    end
-
-    should "shell escape the string value of a value" do
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --memory 400")
-
-      @vm.memory = 400
-      assert_nothing_raised { @vm.save }
-    end
-
-    should "shell escape the VM name when saving an attribute" do
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm hello\\ world --memory 400")
-
-      @vm.memory = 400
-      @vm.instance_variable_set(:@original_name, "hello world")
       assert @vm.save
     end
 
     should "save name first if changed, then following values should modify new VM" do
       save_seq = sequence("save_seq")
       new_name = "foo2"
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@name} --name #{new_name}").in_sequence(save_seq)
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{new_name} --ostype Zubuntu").in_sequence(save_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--name", new_name).in_sequence(save_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", new_name, "--ostype", "Zubuntu").in_sequence(save_seq)
 
       @vm.name = new_name
       @vm.ostype = "Zubuntu"
@@ -432,15 +386,10 @@ raw
       }
 
       command_seq = sequence("command_seq)")
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo #{@name} --machinereadable").returns(@raw).in_sequence(command_seq)
-      VirtualBox::Command.expects(:vboxmanage).with(anything).returns("").at_least(0).in_sequence(command_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name, "--machinereadable").returns(@raw).in_sequence(command_seq)
+      VirtualBox::Command.expects(:vboxmanage).returns("").at_least(0).in_sequence(command_seq)
       @vm = VirtualBox::VM.find(@name)
       assert @vm
-    end
-
-    should "shell escape the VM name" do
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo hello\\ world --machinereadable").returns(@raw)
-      assert VirtualBox::VM.find("hello world")
     end
 
     should "return a VM object with proper attributes" do

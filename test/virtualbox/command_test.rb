@@ -43,6 +43,21 @@ class CommandTest < Test::Unit::TestCase
         VirtualBox::Command.vboxmanage("foo")
       }
     end
+
+    should "call vboxmanage with multiple arguments" do
+      VirtualBox::Command.expects(:execute).with("VBoxManage -q foo bar baz --bak bax")
+      VirtualBox::Command.vboxmanage("foo", "bar", "baz", "--bak", "bax")
+    end
+
+    should "shell escape all arguments" do
+      VirtualBox::Command.expects(:execute).with("VBoxManage -q foo\\ bar baz another\\ string")
+      VirtualBox::Command.vboxmanage("foo bar", "baz", "another string")
+    end
+
+    should "convert arguments to strings" do
+      VirtualBox::Command.expects(:execute).with("VBoxManage -q isastring 8")
+      VirtualBox::Command.vboxmanage(:isastring, 8)
+    end
   end
 
   context "testing command results" do

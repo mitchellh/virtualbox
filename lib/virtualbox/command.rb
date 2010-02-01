@@ -28,8 +28,9 @@ module VirtualBox
       end
 
       # Runs a VBoxManage command and returns the output.
-      def vboxmanage(command)
-        result = execute("#{@@vboxmanage} -q #{command}")
+      def vboxmanage(*args)
+        args.collect! { |arg| shell_escape(arg.to_s) }
+        result = execute("#{@@vboxmanage} -q #{args.join(" ")}")
         raise Exceptions::CommandFailedException.new(result) if !Command.success?
         result
       end

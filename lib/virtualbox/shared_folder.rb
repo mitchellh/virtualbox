@@ -204,7 +204,7 @@ module VirtualBox
       # If this isn't a new record, we destroy it first
       destroy(raise_errors) if !new_record?
 
-      Command.vboxmanage("sharedfolder add #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name)} --hostpath #{Command.shell_escape(hostpath)}")
+      Command.vboxmanage("sharedfolder", "add", parent.name, "--name", name, "--hostpath", hostpath)
       existing_record!
       clear_dirty!
 
@@ -233,7 +233,7 @@ module VirtualBox
       # one.
       name_value = name_changed? ? name_was : name
 
-      Command.vboxmanage("sharedfolder remove #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name_value)}")
+      Command.vboxmanage("sharedfolder", "remove", parent.name, "--name", name_value)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors

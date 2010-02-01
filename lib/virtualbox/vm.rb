@@ -120,7 +120,7 @@ module VirtualBox
       #
       # @return [Array<VM>]
       def all
-        raw = Command.vboxmanage("list vms")
+        raw = Command.vboxmanage("list", "vms")
         parse_vm_list(raw)
       end
 
@@ -141,7 +141,7 @@ module VirtualBox
       #
       # @return [VM] The newly imported virtual machine
       def import(source_path)
-        raw = Command.vboxmanage("import #{Command.shell_escape(source_path)}")
+        raw = Command.vboxmanage("import", source_path)
         return nil unless raw
 
         find(parse_vm_name(raw))
@@ -154,7 +154,7 @@ module VirtualBox
       #
       # @return [String]
       def human_info(name)
-        Command.vboxmanage("showvminfo #{Command.shell_escape(name)}")
+        Command.vboxmanage("showvminfo", name)
       end
 
       # Gets the VM info (machine readable) for a given VM and returns it
@@ -162,7 +162,7 @@ module VirtualBox
       #
       # @return [Hash] Parsed VM info.
       def raw_info(name)
-        raw = Command.vboxmanage("showvminfo #{Command.shell_escape(name)} --machinereadable")
+        raw = Command.vboxmanage("showvminfo", name, "--machinereadable")
         parse_vm_info(raw)
       end
 
@@ -259,7 +259,7 @@ module VirtualBox
     #
     # **This method typically won't be used except internally.**
     def save_attribute(key, value)
-      Command.vboxmanage("modifyvm #{Command.shell_escape(@original_name)} --#{key} #{Command.shell_escape(value.to_s)}")
+      Command.vboxmanage("modifyvm", @original_name, "--#{key}", value)
       super
     end
 
@@ -287,12 +287,13 @@ module VirtualBox
     # @option options [String] :eulafile (nil) License file
     def export(filename, options={}, raise_error=false)
       options = options.inject([]) do |acc, kv|
-        acc.push("--#{kv[0]} #{Command.shell_escape(kv[1])}")
+        acc.push("--#{kv[0]}")
+        acc.push(kv[1])
       end
 
-      options.unshift("--vsys 0") unless options.empty?
+      options.unshift("0").unshift("--vsys") unless options.empty?
 
-      raw = Command.vboxmanage("export #{Command.shell_escape(@original_name)} -o #{Command.shell_escape(filename)} #{options.join(" ")}".strip)
+      raw = Command.vboxmanage("export", @original_name, "-o", filename, *options)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_error
@@ -314,7 +315,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def start(mode=:gui, raise_errors=false)
-      Command.vboxmanage("startvm #{Command.shell_escape(@original_name)} --type #{mode}")
+      Command.vboxmanage("startvm", @original_name, "--type", mode)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
@@ -380,7 +381,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def discard_state(raise_errors=false)
-      Command.vboxmanage("discardstate #{Command.shell_escape(@original_name)}")
+      Command.vboxmanage("discardstate", @original_name)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
@@ -397,7 +398,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def control(command, raise_errors=false)
-      Command.vboxmanage("controlvm #{Command.shell_escape(@original_name)} #{command}")
+      Command.vboxmanage("controlvm", @original_name, command)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
@@ -419,7 +420,7 @@ module VirtualBox
       # unregistering a VM
       super
 
-      Command.vboxmanage("unregistervm #{Command.shell_escape(@original_name)} --delete")
+      Command.vboxmanage("unregistervm", @original_name, "--delete")
     end
 
     # Returns true if the virtual machine state is running

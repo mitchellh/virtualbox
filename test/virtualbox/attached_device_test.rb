@@ -149,7 +149,7 @@ class AttachedDeviceTest < Test::Unit::TestCase
       end
 
       should "call the proper vboxcommand" do
-        VirtualBox::Command.expects(:vboxmanage).with("storageattach #{@vm.name} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port #{@ad.port} --device 0 --type #{@image.image_type} --medium #{@ad.medium}")
+        VirtualBox::Command.expects(:vboxmanage).with("storageattach", @vm.name, "--storagectl", @caller.name, "--port", @ad.port, "--device", "0", "--type", @image.image_type, "--medium", @ad.medium)
         @ad.save
       end
 
@@ -229,21 +229,13 @@ class AttachedDeviceTest < Test::Unit::TestCase
       VirtualBox::AttachedDevice.destroy_relationship(self, [obj_one, obj_two], "HELLO")
     end
 
-    should "shell escape VM name and storage controller name" do
-      shell_seq = sequence("shell_seq")
-      VirtualBox::Command.expects(:shell_escape).with(@vm.name).in_sequence(shell_seq)
-      VirtualBox::Command.expects(:shell_escape).with(@caller.name).in_sequence(shell_seq)
-      VirtualBox::Command.expects(:vboxmanage).in_sequence(shell_seq)
-      @value.destroy
-    end
-
     should "destroy with the specified port if set" do
-      VirtualBox::Command.expects(:vboxmanage).with("storageattach #{VirtualBox::Command.shell_escape(@vm.name)} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port 80 --device 0 --medium none")
+      VirtualBox::Command.expects(:vboxmanage).with("storageattach", @vm.name, "--storagectl", @caller.name, "--port", 80, "--device", "0", "--medium", "none")
       @value.destroy(:port => 80)
     end
 
     should "destroy with the default port if not other port is specified" do
-      VirtualBox::Command.expects(:vboxmanage).with("storageattach #{VirtualBox::Command.shell_escape(@vm.name)} --storagectl #{VirtualBox::Command.shell_escape(@caller.name)} --port #{@value.port} --device 0 --medium none")
+      VirtualBox::Command.expects(:vboxmanage).with("storageattach", @vm.name, "--storagectl", @caller.name, "--port", @value.port, "--device", "0", "--medium", "none")
       @value.destroy
     end
 

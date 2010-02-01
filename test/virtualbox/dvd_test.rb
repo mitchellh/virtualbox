@@ -15,7 +15,7 @@ class DVDTest < Test::Unit::TestCase
     end
 
     should "call vboxmanage to destroy it" do
-      VirtualBox::Command.expects(:vboxmanage).with("closemedium dvd #{@dvd.uuid} --delete")
+      VirtualBox::Command.expects(:vboxmanage).with("closemedium", "dvd", @dvd.uuid, "--delete")
       assert @dvd.destroy
     end
 
@@ -69,7 +69,7 @@ Accessible: yes
 Usage:      TestJeOS (UUID: 3d0f87b4-50f7-4fc5-ad89-93375b1b32a3)
 valid
 
-      VirtualBox::Command.expects(:vboxmanage).with("list dvds").returns(@valid)
+      VirtualBox::Command.expects(:vboxmanage).with("list", "dvds").returns(@valid)
     end
 
     should "return an array of DVD objects" do

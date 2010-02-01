@@ -86,7 +86,7 @@ module VirtualBox
       #
       # @return [Array<HardDrive>]
       def all
-        raw = Command.vboxmanage("list hdds")
+        raw = Command.vboxmanage("list", "hdds")
         parse_blocks(raw).collect { |v| find(v[:uuid]) }
       end
 
@@ -95,7 +95,7 @@ module VirtualBox
       #
       # @return [HardDrive]
       def find(id)
-        raw = Command.vboxmanage("showhdinfo #{id}")
+        raw = Command.vboxmanage("showhdinfo", id)
 
         # Return nil if the hard drive doesn't exist
         return nil if raw =~ /VERR_FILE_NOT_FOUND/
@@ -124,7 +124,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [HardDrive] The new, cloned hard drive, or nil on failure.
     def clone(outputfile, format="VDI", raise_errors=false)
-      raw = Command.vboxmanage("clonehd #{uuid} #{Command.shell_escape(outputfile)} --format #{format} --remember")
+      raw = Command.vboxmanage("clonehd", uuid, outputfile, "--format", format, "--remember")
       return nil unless raw =~ /UUID: (.+?)$/
 
       self.class.find($1.to_s)
@@ -159,7 +159,7 @@ module VirtualBox
         return false
       end
 
-      raw = Command.vboxmanage("createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember")
+      raw = Command.vboxmanage("createhd", "--filename", location, "--size", size, "--format", read_attribute(:format), "--remember")
       return nil unless raw =~ /UUID: (.+?)$/
 
       # Just replace our attributes with the newly created ones. This also
@@ -201,7 +201,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def destroy(raise_errors=false)
-      Command.vboxmanage("closemedium disk #{uuid} --delete")
+      Command.vboxmanage("closemedium", "disk", uuid, "--delete")
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors

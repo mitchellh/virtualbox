@@ -25,7 +25,7 @@ raw
     end
 
     should "use the vmname strung through the save" do
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@vmname} --nic1 foo")
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--nic1", "foo")
 
       nic = @nic[0]
       nic.nic = "foo"
@@ -33,7 +33,7 @@ raw
     end
 
     should "use the proper index" do
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@vmname} --nic2 far")
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--nic2", "far")
 
       nic = @nic[1]
       nic.nic = "far"
@@ -41,7 +41,7 @@ raw
     end
 
     should "save the nictype" do
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm #{@vmname} --nictype1 ZOO")
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--nictype1", "ZOO")
 
       nic = @nic[0]
       nic.nictype = "ZOO"

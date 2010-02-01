@@ -22,7 +22,7 @@ module VirtualBox
     class <<self
       # Returns an array of all available DVDs as DVD objects
       def all
-        raw = Command.vboxmanage("list dvds")
+        raw = Command.vboxmanage("list", "dvds")
         parse_raw(raw)
       end
 
@@ -69,7 +69,7 @@ module VirtualBox
     def destroy(raise_errors=false)
       return false if empty_drive?
 
-      Command.vboxmanage("closemedium dvd #{uuid} --delete")
+      Command.vboxmanage("closemedium", "dvd", uuid, "--delete")
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors

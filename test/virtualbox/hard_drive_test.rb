@@ -16,7 +16,7 @@ In use by VMs:        FooVM (UUID: 696249ad-00b6-4087-b47f-9b82629efc31)
 Location:             /Users/mitchellh/Library/VirtualBox/HardDisks/foo.vdi
 raw
     @name = "foo"
-    VirtualBox::Command.stubs(:vboxmanage).with("showhdinfo #{@name}").returns(@find_raw)
+    VirtualBox::Command.stubs(:vboxmanage).with("showhdinfo", @name).returns(@find_raw)
   end
 
   context "validations" do
@@ -48,7 +48,7 @@ raw
     end
 
     should "call vboxmanage to destroy it" do
-      VirtualBox::Command.expects(:vboxmanage).with("closemedium disk #{@hd.uuid} --delete")
+      VirtualBox::Command.expects(:vboxmanage).with("closemedium", "disk", @hd.uuid, "--delete")
       assert @hd.destroy
     end
 
@@ -68,7 +68,7 @@ raw
   context "cloning a hard drive" do
     setup do
       @hd = VirtualBox::HardDrive.find(@name)
-      VirtualBox::Command.stubs(:vboxmanage).with("clonehd #{@hd.uuid} bar --format VDI --remember").returns(@find_raw)
+      VirtualBox::Command.stubs(:vboxmanage).with("clonehd", @hd.uuid, "bar", "--format", "VDI", "--remember").returns(@find_raw)
     end
 
     should "call vboxmanage with the clone command" do
@@ -130,7 +130,7 @@ raw
     end
 
     should "call createhd" do
-      VirtualBox::Command.expects(:vboxmanage).with("createhd --filename #{@location} --size #{@size} --format #{@format} --remember")
+      VirtualBox::Command.expects(:vboxmanage).with("createhd", "--filename", @location, "--size", @size, "--format", @format, "--remember")
       @hd.save
     end
 
@@ -172,7 +172,7 @@ raw
 
   context "finding a single hard drive" do
     should "parse proper fields" do
-      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo #{@name}").returns(@find_raw)
+      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo", @name).returns(@find_raw)
 
       @expected = {
         :uuid => "11dedd14-57a1-4bdb-adeb-dd1d67f066e1",
@@ -190,7 +190,7 @@ raw
     end
 
     should "return nil if finding a non-existent hard drive" do
-      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo 12").returns("UH OH (VERR_FILE_NOT_FOUND)")
+      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo", 12).returns("UH OH (VERR_FILE_NOT_FOUND)")
 
       assert_nothing_raised do
         assert_nil VirtualBox::HardDrive.find(12)
@@ -223,7 +223,7 @@ Type:       normal
 Usage:      foo (UUID: 8710d3db-d96a-46ed-9004-59fa891fda90)
 valid
 
-      VirtualBox::Command.expects(:vboxmanage).with("list hdds").returns(@valid)
+      VirtualBox::Command.expects(:vboxmanage).with("list", "hdds").returns(@valid)
 
       @hd = mock("hd")
       @hd.stubs(:is_a?).with(VirtualBox::HardDrive).returns(true)

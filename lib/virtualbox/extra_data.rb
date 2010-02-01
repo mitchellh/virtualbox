@@ -46,7 +46,7 @@ module VirtualBox
       # @return [Array<ExtraData>]
       def global(reload=false)
         if !@@global_data || reload
-          raw = Command.vboxmanage("getextradata global enumerate")
+          raw = Command.vboxmanage("getextradata", "global", "enumerate")
           @@global_data = parse_kv_pairs(raw)
         end
 
@@ -75,7 +75,7 @@ module VirtualBox
       #
       # @return [Array<ExtraData>]
       def populate_relationship(caller, data)
-        raw = Command.vboxmanage("getextradata #{Command.shell_escape(caller.name)} enumerate")
+        raw = Command.vboxmanage("getextradata", caller.name, "enumerate")
         parse_kv_pairs(raw, caller)
       end
 
@@ -124,7 +124,7 @@ module VirtualBox
     # @return [Boolean] True if command was successful, false otherwise.
     def save(raise_errors=false)
       changes.each do |key, value|
-        Command.vboxmanage("setextradata #{Command.shell_escape(parent_name)} #{Command.shell_escape(key)} #{Command.shell_escape(value[1])}")
+        Command.vboxmanage("setextradata", parent_name, key, value[1])
         clear_dirty!(key)
       end
 
@@ -140,7 +140,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def delete(key, raise_errors=false)
-      Command.vboxmanage("setextradata #{Command.shell_escape(parent_name)} #{Command.shell_escape(key)}")
+      Command.vboxmanage("setextradata", parent_name, key)
       super(key)
       true
     rescue Exceptions::CommandFailedException

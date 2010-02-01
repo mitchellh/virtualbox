@@ -96,7 +96,7 @@ class SharedFolderTest < Test::Unit::TestCase
       end
 
       should "call the proper vboxcommand" do
-        VirtualBox::Command.expects(:vboxmanage).with("sharedfolder add #{@caller.name} --name #{@sf.name} --hostpath #{@sf.hostpath}")
+        VirtualBox::Command.expects(:vboxmanage).with("sharedfolder", "add", @caller.name, "--name", @sf.name, "--hostpath", @sf.hostpath)
         assert @sf.save
       end
 
@@ -175,15 +175,7 @@ class SharedFolderTest < Test::Unit::TestCase
     end
 
     should "call the proper command" do
-      VirtualBox::Command.expects(:vboxmanage).with("sharedfolder remove #{@caller.name} --name #{@value.name}").once
-      assert @value.destroy
-    end
-
-    should "shell escape VM name and storage controller name" do
-      shell_seq = sequence("shell_seq")
-      VirtualBox::Command.expects(:shell_escape).with(@caller.name).in_sequence(shell_seq)
-      VirtualBox::Command.expects(:shell_escape).with(@value.name).in_sequence(shell_seq)
-      VirtualBox::Command.expects(:vboxmanage).in_sequence(shell_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("sharedfolder", "remove", @caller.name, "--name", @value.name).once
       assert @value.destroy
     end
 
@@ -201,10 +193,7 @@ class SharedFolderTest < Test::Unit::TestCase
 
     should "use the old name if it was changed" do
       @value.name = "DIFFERENT"
-      shell_seq = sequence("shell_seq")
-      VirtualBox::Command.expects(:shell_escape).with(@caller.name).in_sequence(shell_seq)
-      VirtualBox::Command.expects(:shell_escape).with(@value.name_was).in_sequence(shell_seq)
-      VirtualBox::Command.expects(:vboxmanage).in_sequence(shell_seq)
+      VirtualBox::Command.expects(:vboxmanage)
       assert @value.destroy
     end
   end

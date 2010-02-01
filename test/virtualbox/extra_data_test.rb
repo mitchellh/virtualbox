@@ -44,7 +44,7 @@ raw
 
     context "populating" do
       should "call VBoxManage for the caller" do
-        VirtualBox::Command.expects(:vboxmanage).with("getextradata #{@caller.name} enumerate").returns(@raw)
+        VirtualBox::Command.expects(:vboxmanage).with("getextradata", @caller.name, "enumerate").returns(@raw)
         VirtualBox::ExtraData.populate_relationship(@caller, {})
       end
 
@@ -75,7 +75,7 @@ raw
     end
 
     should "call the proper vbox command" do
-      VirtualBox::Command.expects(:vboxmanage).with("setextradata global foo")
+      VirtualBox::Command.expects(:vboxmanage).with("setextradata", "global", "foo")
       assert @ed.delete(@key)
     end
 
@@ -111,7 +111,7 @@ raw
     end
 
     should "call the proper vbox command" do
-      VirtualBox::Command.expects(:vboxmanage).with("setextradata global foo BAR")
+      VirtualBox::Command.expects(:vboxmanage).with("setextradata", "global", "foo", "BAR")
       assert @ed.save
     end
 
@@ -154,7 +154,7 @@ raw
   context "global extra data" do
     setup do
       get_seq = sequence("get_seq")
-      VirtualBox::Command.expects(:vboxmanage).with("getextradata global enumerate").once.in_sequence(get_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("getextradata", "global", "enumerate").once.in_sequence(get_seq)
       VirtualBox::ExtraData.expects(:parse_kv_pairs).returns(@ed).once.in_sequence(get_seq)
       @global = VirtualBox::ExtraData.global(true)
     end
