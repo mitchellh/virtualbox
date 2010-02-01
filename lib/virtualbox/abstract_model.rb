@@ -160,7 +160,7 @@ module VirtualBox
         values.push("#{name.inspect}=...")
       end
 
-      "#<#{self.class} #{values.join(", ")}>".strip
+      "#<#{self.class} #{values.sort.join(", ")}>".strip
     end
   end
 end

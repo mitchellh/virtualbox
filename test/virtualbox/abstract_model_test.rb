@@ -25,7 +25,7 @@ class AbstractModelTest < Test::Unit::TestCase
     end
 
     should "generate the proper inspect string" do
-      assert_equal "#<AbstractModelTest::FakeModel :foo=nil, :bar=nil, :foos=..., :bars=...>", @model.inspect
+      assert_equal "#<AbstractModelTest::FakeModel :bar=nil, :bars=..., :foo=nil, :foos=...>", @model.inspect
     end
   end
 
