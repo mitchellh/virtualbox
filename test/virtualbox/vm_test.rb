@@ -215,7 +215,7 @@ showvminfo
       }
     end
 
-    should "stop a VM with a 'poweroff'" do
+    should "stop a VM with a 'acpipowerbutton'" do
       @vm.expects(:control).with(:acpipowerbutton, false).returns(true)
       assert @vm.shutdown
     end
@@ -243,6 +243,18 @@ showvminfo
     should "discard a saved state of a VM" do
       VirtualBox::Command.expects(:vboxmanage).with("discardstate", @name)
       assert @vm.discard_state
+    end
+
+    should "return false if discarding state failed" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert !@vm.discard_state
+    end
+
+    should "raise an exception if discarding state fails and flag is set" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        @vm.discard_state(true)
+      }
     end
   end
 
