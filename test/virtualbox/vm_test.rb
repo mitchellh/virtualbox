@@ -256,6 +256,11 @@ showvminfo
       @vm.expects(:control).with(:savestate, false).returns(true)
       assert @vm.save_state
     end
+
+    should "discard a saved state of a VM" do
+      VirtualBox::Command.expects(:vboxmanage).with("discardstate #{@name}")
+      assert @vm.discard_state
+    end
   end
 
   context "destroying" do

@@ -364,13 +364,27 @@ module VirtualBox
     end
 
     # Saves the state of a VM and stops it. The VM can be resumed
-    # again by calling "start" again.
+    # again by calling "{#start}" again.
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def save_state(raise_errors=false)
       control(:savestate, raise_errors)
+    end
+
+    # Discards any saved state on the current VM. The VM is not destroyed though
+    # and can still be started by calling {#start}.
+    #
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def discard_state(raise_errors=false)
+      Command.vboxmanage("discardstate #{Command.shell_escape(@original_name)}")
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
     end
 
     # Controls the virtual machine. This method is used by {#stop},
