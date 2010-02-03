@@ -4,7 +4,6 @@ module VirtualBox
   # **It makes no sense to create snapshots from scratch, and thus this
   # model is only usable through its relationship to a {VM} object.**
   #
-  #
   # ## Attributes
   #
   # This is copied directly from the class header, but lists all available
@@ -111,7 +110,7 @@ module VirtualBox
       raise if raise_errors
       false
     end
-    
+
     # Delete a snapshot
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}

@@ -390,7 +390,12 @@ module VirtualBox
       false
     end
 
-   	# Take a snapshot
+   	# Take a snapshot. This will take a copy of the settings of the virtual
+   	# machine at the moment it was taken. If the VM was running at the time,
+   	# it also stores the state of the machine. This will also create a
+   	# differencing hard disk for each normal hard disk attached to the VM so
+   	# that when the snapshot is restored later, the hard drives can be brought
+   	# back to their proper state.
     #
     # @param [String] name Name of snapshot.
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
@@ -398,8 +403,6 @@ module VirtualBox
     # @return [Boolean] True if command was successful, false otherwise.
     def snapshot(name, raise_errors=false)
       Command.vboxmanage("snapshot", @original_name, "take", name)
-      data = self.class.raw_info(@original_name)
-      populate_attributes(data)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
