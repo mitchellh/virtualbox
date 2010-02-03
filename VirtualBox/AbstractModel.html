@@ -606,7 +606,7 @@ values, and <code>...</code> for relationships.</p>
     <span class='values identifier id'>values</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{name.inspect}=...&quot;</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 
-  <span class='dstring node'>&quot;#&lt;#{self.class} #{values.join(&quot;, &quot;)}&gt;&quot;</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class} #{values.sort.join(&quot;, &quot;)}&gt;&quot;</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1017,7 +1017,7 @@ the written attribute. See <tt><a href="AbstractModel/Dirty.html#set_dirty%21-in
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 31 00:07:50 2010 by 
+  Generated on Tue Feb  2 22:39:03 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

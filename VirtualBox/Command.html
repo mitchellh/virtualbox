@@ -200,7 +200,7 @@ exit code.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#vboxmanage-class_method" title="vboxmanage (class method)">+ (Object) <strong>vboxmanage</strong>(command) </a>
+      <a href="#vboxmanage-class_method" title="vboxmanage (class method)">+ (String) <strong>vboxmanage</strong>(*args) </a>
     
 
     
@@ -269,12 +269,12 @@ makes testing easier.</p>
       <pre class="lines">
 
 
-49
-50
-51</pre>
+61
+62
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 61</span>
 
 <span class='def def kw'>def</span> <span class='execute identifier id'>execute</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='rparen token'>)</span>
   <span class='dxstring node'>`#{command}`</span>
@@ -308,14 +308,14 @@ it hasn't failed!</p>
       <pre class="lines">
 
 
-56
-57
-58
-59
-60</pre>
+68
+69
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 68</span>
 
 <span class='def def kw'>def</span> <span class='shell_escape identifier id'>shell_escape</span><span class='lparen token'>(</span><span class='str identifier id'>str</span><span class='rparen token'>)</span>
   <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/n</span><span class='comma token'>,</span> <span class='string val'>'\\'</span><span class='rparen token'>)</span><span class='dot token'>.</span>
@@ -403,13 +403,13 @@ exit code.</p>
       <pre class="lines">
 
 
-40
-41
-42
-43</pre>
+52
+53
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 52</span>
 
 <span class='def def kw'>def</span> <span class='test identifier id'>test</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='rparen token'>)</span>
   <span class='execute identifier id'>execute</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='rparen token'>)</span>
@@ -424,18 +424,41 @@ exit code.</p>
       <div class="method_details ">
   <p class="signature " id="vboxmanage-class_method">
   
-    + (<tt>Object</tt>) <strong>vboxmanage</strong>(command) 
+    + (<tt>String</tt>) <strong>vboxmanage</strong>(*args) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Runs a VBoxManage command and returns the output.</p>
+    <p>Runs a VBoxManage command and returns the output. This method will automatically
+shell escape all args passed to it. There is no way to avoid this at the moment
+(since it hasn't been necessary to). This will raise an <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt>
+if the exit status of the command is nonzero. It is up to the caller to figure
+out how to handle this; there is no way to suppress it via a parameter to this
+call.</p>
+
+<p>Upon success, <tt><a href="#vboxmanage-class_method" title="VirtualBox::Command.vboxmanage (method)">vboxmanage</a></tt> returns the stdout output from the command.</p>
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        The data from stdout of the command.
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -455,17 +478,19 @@ exit code.</p>
       <pre class="lines">
 
 
-31
-32
-33
-34
-35</pre>
+42
+43
+44
+45
+46
+47</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 42</span>
 
-<span class='def def kw'>def</span> <span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='rparen token'>)</span>
-  <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='execute identifier id'>execute</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{@@vboxmanage} -q #{command}&quot;</span><span class='rparen token'>)</span>
+<span class='def def kw'>def</span> <span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='collect! fid id'>collect!</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='arg identifier id'>arg</span><span class='bitor op'>|</span> <span class='shell_escape identifier id'>shell_escape</span><span class='lparen token'>(</span><span class='arg identifier id'>arg</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+  <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='execute identifier id'>execute</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{@@vboxmanage} -q #{args.join(&quot; &quot;)}&quot;</span><span class='rparen token'>)</span>
   <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='result identifier id'>result</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='success? fid id'>success?</span>
   <span class='result identifier id'>result</span>
 <span class='end end kw'>end</span>
@@ -490,19 +515,37 @@ work.</p>
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>Full</span>
+      
+      
+      
+        &mdash;
+        path to <code>VBoxManage</code>.
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-26
-27
-28</pre>
+28
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 26</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 28</span>
 
 <span class='def def kw'>def</span> <span class='vboxmanage= identifier id'>vboxmanage=</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='@@vboxmanage ivar id'>@@vboxmanage</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span>
@@ -518,7 +561,7 @@ work.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 31 00:07:57 2010 by 
+  Generated on Tue Feb  2 22:39:07 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

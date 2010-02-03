@@ -423,7 +423,7 @@ an empty drive is simple:</p>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/dvd.rb', line 24</span>
 
 <span class='def def kw'>def</span> <span class='all identifier id'>all</span>
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list dvds&quot;</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;dvds&quot;</span><span class='rparen token'>)</span>
   <span class='parse_raw identifier id'>parse_raw</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -567,7 +567,7 @@ that case.</p>
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='if if_mod kw'>if</span> <span class='empty_drive? fid id'>empty_drive?</span>
 
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;closemedium dvd #{uuid} --delete&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;closemedium&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;dvd&quot;</span><span class='comma token'>,</span> <span class='uuid identifier id'>uuid</span><span class='comma token'>,</span> <span class='string val'>&quot;--delete&quot;</span><span class='rparen token'>)</span>
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
@@ -672,7 +672,7 @@ the DVD was created with <tt><a href="#empty_drive-class_method" title="VirtualB
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 31 00:07:53 2010 by 
+  Generated on Tue Feb  2 22:39:04 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

@@ -210,7 +210,7 @@ why the below is listed, please read <tt><a href="AbstractModel/Attributable.htm
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#all-class_method" title="all (class method)">+ (Array&lt;HardDrive&gt;) <strong>all</strong> </a>
+      <a href="#all-class_method" title="all (class method)">+ (Array&lt;HardDrive&gt;) <strong>all</strong>(raise_errors = false) </a>
     
 
     
@@ -231,7 +231,7 @@ objects.</span>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#find-class_method" title="find (class method)">+ (HardDrive) <strong>find</strong>(id) </a>
+      <a href="#find-class_method" title="find (class method)">+ (HardDrive) <strong>find</strong>(id, raise_errors = false) </a>
     
 
     
@@ -456,7 +456,7 @@ objects.</span>
       <div class="method_details first">
   <p class="signature first" id="all-class_method">
   
-    + (<tt>Array&lt;<a href="" title="VirtualBox::HardDrive (class)">HardDrive</a>&gt;</tt>) <strong>all</strong> 
+    + (<tt>Array&lt;<a href="" title="VirtualBox::HardDrive (class)">HardDrive</a>&gt;</tt>) <strong>all</strong>(raise_errors = false) 
   
 
   
@@ -468,7 +468,27 @@ objects.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -488,17 +508,23 @@ objects.</p>
       <pre class="lines">
 
 
-88
-89
 90
-91</pre>
+91
+92
+93
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 90</span>
 
-<span class='def def kw'>def</span> <span class='all identifier id'>all</span>
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list hdds&quot;</span><span class='rparen token'>)</span>
-  <span class='parse_blocks identifier id'>parse_blocks</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='v identifier id'>v</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+<span class='def def kw'>def</span> <span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;hdds&quot;</span><span class='rparen token'>)</span>
+  <span class='parse_blocks identifier id'>parse_blocks</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='v identifier id'>v</span><span class='lbrack token'>[</span><span class='symbol val'>:uuid</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -509,7 +535,7 @@ objects.</p>
       <div class="method_details ">
   <p class="signature " id="find-class_method">
   
-    + (<tt><a href="" title="VirtualBox::HardDrive (class)">HardDrive</a></tt>) <strong>find</strong>(id) 
+    + (<tt><a href="" title="VirtualBox::HardDrive (class)">HardDrive</a></tt>) <strong>find</strong>(id, raise_errors = false) 
   
 
   
@@ -521,7 +547,41 @@ hard drive can not be found, will return <code>nil</code>.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>id</span>
+      
+      
+      
+        &mdash;
+        The UUID or name of the hard drive
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -541,30 +601,27 @@ hard drive can not be found, will return <code>nil</code>.</p>
       <pre class="lines">
 
 
-97
-98
-99
-100
-101
-102
-103
-104
 105
 106
 107
 108
 109
 110
-111</pre>
+111
+112
+113
+114
+115
+116
+117
+118
+119</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 97</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 105</span>
 
-<span class='def def kw'>def</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span>
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;showhdinfo #{id}&quot;</span><span class='rparen token'>)</span>
-
-  <span class='comment val'># Return nil if the hard drive doesn't exist</span>
-  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/VERR_FILE_NOT_FOUND/</span>
+<span class='def def kw'>def</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;showhdinfo&quot;</span><span class='comma token'>,</span> <span class='id identifier id'>id</span><span class='rparen token'>)</span>
 
   <span class='data identifier id'>data</span> <span class='assign token'>=</span> <span class='raw identifier id'>raw</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='regexp val'>/\n\n/</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='parse_block identifier id'>parse_block</span><span class='lparen token'>(</span><span class='v identifier id'>v</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='notop op'>!</span><span class='v identifier id'>v</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='rbrace token'>}</span>
 
@@ -574,6 +631,9 @@ hard drive can not be found, will return <code>nil</code>.</p>
 
   <span class='comment val'># Return new object</span>
   <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='nil nil kw'>nil</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -677,21 +737,21 @@ will be used.</p>
       <pre class="lines">
 
 
-126
-127
-128
-129
-130
-131
-132
-133
-134</pre>
+134
+135
+136
+137
+138
+139
+140
+141
+142</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 126</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 134</span>
 
 <span class='def def kw'>def</span> <span class='clone identifier id'>clone</span><span class='lparen token'>(</span><span class='outputfile identifier id'>outputfile</span><span class='comma token'>,</span> <span class='format identifier id'>format</span><span class='assign token'>=</span><span class='string val'>&quot;VDI&quot;</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;clonehd #{uuid} #{Command.shell_escape(outputfile)} --format #{format} --remember&quot;</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;clonehd&quot;</span><span class='comma token'>,</span> <span class='uuid identifier id'>uuid</span><span class='comma token'>,</span> <span class='outputfile identifier id'>outputfile</span><span class='comma token'>,</span> <span class='string val'>&quot;--format&quot;</span><span class='comma token'>,</span> <span class='format identifier id'>format</span><span class='comma token'>,</span> <span class='string val'>&quot;--remember&quot;</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/UUID: (.+?)$/</span>
 
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
@@ -764,14 +824,6 @@ will be used.</p>
       <pre class="lines">
 
 
-156
-157
-158
-159
-160
-161
-162
-163
 164
 165
 166
@@ -782,10 +834,18 @@ will be used.</p>
 171
 172
 173
-174</pre>
+174
+175
+176
+177
+178
+179
+180
+181
+182</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 156</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 164</span>
 
 <span class='def def kw'>def</span> <span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='valid? fid id'>valid?</span>
@@ -793,7 +853,7 @@ will be used.</p>
     <span class='return return kw'>return</span> <span class='false false kw'>false</span>
   <span class='end end kw'>end</span>
 
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;createhd --filename #{location} --size #{size} --format #{read_attribute(:format)} --remember&quot;</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;createhd&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;--filename&quot;</span><span class='comma token'>,</span> <span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='string val'>&quot;--size&quot;</span><span class='comma token'>,</span> <span class='size identifier id'>size</span><span class='comma token'>,</span> <span class='string val'>&quot;--format&quot;</span><span class='comma token'>,</span> <span class='read_attribute identifier id'>read_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:format</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;--remember&quot;</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span> <span class='match op'>=~</span> <span class='regexp val'>/UUID: (.+?)$/</span>
 
   <span class='comment val'># Just replace our attributes with the newly created ones. This also</span>
@@ -872,19 +932,19 @@ of disk.</p>
       <pre class="lines">
 
 
-203
-204
-205
-206
-207
-208
-209</pre>
+211
+212
+213
+214
+215
+216
+217</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 203</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 211</span>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;closemedium disk #{uuid} --delete&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;closemedium&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;disk&quot;</span><span class='comma token'>,</span> <span class='uuid identifier id'>uuid</span><span class='comma token'>,</span> <span class='string val'>&quot;--delete&quot;</span><span class='rparen token'>)</span>
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
@@ -917,12 +977,12 @@ of disk.</p>
       <pre class="lines">
 
 
-137
-138
-139</pre>
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 137</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 145</span>
 
 <span class='def def kw'>def</span> <span class='image_type identifier id'>image_type</span>
   <span class='string val'>&quot;hdd&quot;</span>
@@ -995,17 +1055,17 @@ This is a limitation of VirtualBox, rather than the library itself.</p>
       <pre class="lines">
 
 
-186
-187
-188
-189
-190
-191
-192
-193</pre>
+194
+195
+196
+197
+198
+199
+200
+201</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 186</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 194</span>
 
 <span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='new_record? fid id'>new_record?</span>
@@ -1042,15 +1102,15 @@ This is a limitation of VirtualBox, rather than the library itself.</p>
       <pre class="lines">
 
 
-142
-143
-144
-145
-146
-147</pre>
+150
+151
+152
+153
+154
+155</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 142</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/hard_drive.rb', line 150</span>
 
 <span class='def def kw'>def</span> <span class='validate identifier id'>validate</span>
   <span class='super super kw'>super</span>
@@ -1069,7 +1129,7 @@ This is a limitation of VirtualBox, rather than the library itself.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 31 00:07:57 2010 by 
+  Generated on Tue Feb  2 22:39:06 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

@@ -856,7 +856,7 @@ from within the virtual machine.</p>
   <span class='comment val'># one.</span>
   <span class='name_value identifier id'>name_value</span> <span class='assign token'>=</span> <span class='name_changed? fid id'>name_changed?</span> <span class='integer val'>? </span><span class='name_was identifier id'>name_was</span> <span class='colon op'>:</span> <span class='name identifier id'>name</span>
 
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;sharedfolder remove #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name_value)}&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;sharedfolder&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;remove&quot;</span><span class='comma token'>,</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='string val'>&quot;--name&quot;</span><span class='comma token'>,</span> <span class='name_value identifier id'>name_value</span><span class='rparen token'>)</span>
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
@@ -1070,7 +1070,7 @@ parameters.</p>
   <span class='comment val'># If this isn't a new record, we destroy it first</span>
   <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='new_record? fid id'>new_record?</span>
 
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;sharedfolder add #{Command.shell_escape(parent.name)} --name #{Command.shell_escape(name)} --hostpath #{Command.shell_escape(hostpath)}&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;sharedfolder&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;add&quot;</span><span class='comma token'>,</span> <span class='parent identifier id'>parent</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='string val'>&quot;--name&quot;</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='string val'>&quot;--hostpath&quot;</span><span class='comma token'>,</span> <span class='hostpath identifier id'>hostpath</span><span class='rparen token'>)</span>
   <span class='existing_record! fid id'>existing_record!</span>
   <span class='clear_dirty! fid id'>clear_dirty!</span>
 
@@ -1135,7 +1135,7 @@ parameters.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 31 00:07:56 2010 by 
+  Generated on Tue Feb  2 22:39:07 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

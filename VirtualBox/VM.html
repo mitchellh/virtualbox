@@ -431,6 +431,26 @@ as a hash.</span>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#discard_state-instance_method" title="#discard_state (instance method)">- (Boolean) <strong>discard_state</strong>(raise_errors = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Discards any saved state on the current VM.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#export-instance_method" title="#export (instance method)">- (Object) <strong>export</strong>(filename, options = {}, raise_error = false) </a>
     
 
@@ -883,7 +903,7 @@ initialize the VMs.</p>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 122</span>
 
 <span class='def def kw'>def</span> <span class='all identifier id'>all</span>
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list vms&quot;</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;list&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;vms&quot;</span><span class='rparen token'>)</span>
   <span class='parse_vm_list identifier id'>parse_vm_list</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -992,7 +1012,7 @@ it as a raw string.</p>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 156</span>
 
 <span class='def def kw'>def</span> <span class='human_info identifier id'>human_info</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;showvminfo #{Command.shell_escape(name)}&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;showvminfo&quot;</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1051,7 +1071,7 @@ VM object can be used to make any modifications necessary
       <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 143</span>
 
 <span class='def def kw'>def</span> <span class='import identifier id'>import</span><span class='lparen token'>(</span><span class='source_path identifier id'>source_path</span><span class='rparen token'>)</span>
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;import #{Command.shell_escape(source_path)}&quot;</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;import&quot;</span><span class='comma token'>,</span> <span class='source_path identifier id'>source_path</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='raw identifier id'>raw</span>
 
   <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='parse_vm_name identifier id'>parse_vm_name</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -1286,7 +1306,7 @@ as a hash.</p>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 164</span>
 
 <span class='def def kw'>def</span> <span class='raw_info identifier id'>raw_info</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;showvminfo #{Command.shell_escape(name)} --machinereadable&quot;</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;showvminfo&quot;</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='string val'>&quot;--machinereadable&quot;</span><span class='rparen token'>)</span>
   <span class='parse_vm_info identifier id'>parse_vm_info</span><span class='lparen token'>(</span><span class='raw identifier id'>raw</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -1338,12 +1358,12 @@ as a hash.</p>
       <pre class="lines">
 
 
-442
-443
-444</pre>
+457
+458
+459</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 442</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 457</span>
 
 <span class='def def kw'>def</span> <span class='aborted? fid id'>aborted?</span>
   <span class='state identifier id'>state</span> <span class='eq op'>==</span> <span class='string val'>'aborted'</span>
@@ -1428,19 +1448,19 @@ instead call those.</p>
       <pre class="lines">
 
 
-385
-386
-387
-388
-389
-390
-391</pre>
+400
+401
+402
+403
+404
+405
+406</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 385</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 400</span>
 
 <span class='def def kw'>def</span> <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;controlvm #{Command.shell_escape(@original_name)} #{command}&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;controlvm&quot;</span><span class='comma token'>,</span> <span class='@original_name ivar id'>@original_name</span><span class='comma token'>,</span> <span class='command identifier id'>command</span><span class='rparen token'>)</span>
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
@@ -1507,23 +1527,105 @@ the <code>destroy_image</code> option.</p>
       <pre class="lines">
 
 
-403
-404
-405
-406
-407
-408
-409</pre>
+418
+419
+420
+421
+422
+423
+424</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 403</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 418</span>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># Call super first to destroy relationships, necessary before</span>
   <span class='comment val'># unregistering a VM</span>
   <span class='super super kw'>super</span>
 
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;unregistervm #{Command.shell_escape(@original_name)} --delete&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;unregistervm&quot;</span><span class='comma token'>,</span> <span class='@original_name ivar id'>@original_name</span><span class='comma token'>,</span> <span class='string val'>&quot;--delete&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="discard_state-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>discard_state</strong>(raise_errors = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Discards any saved state on the current VM. The VM is not destroyed though
+and can still be started by calling <tt><a href="#start-instance_method" title="VirtualBox::VM#start (method)">#start</a></tt>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>raise_errors</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        If true, <tt><a href="Exceptions/CommandFailedException.html" title="VirtualBox::Exceptions::CommandFailedException (class)">Exceptions::CommandFailedException</a></tt> will be raised if the command failed.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        True if command was successful, false otherwise.
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+383
+384
+385
+386
+387
+388
+389</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 383</span>
+
+<span class='def def kw'>def</span> <span class='discard_state identifier id'>discard_state</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;discardstate&quot;</span><span class='comma token'>,</span> <span class='@original_name ivar id'>@original_name</span><span class='rparen token'>)</span>
+  <span class='true true kw'>true</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
+  <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
+  <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1689,19 +1791,21 @@ below for more information on the available options.</p>
 297
 298
 299
-300</pre>
+300
+301</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 288</span>
 
 <span class='def def kw'>def</span> <span class='export identifier id'>export</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='raise_error identifier id'>raise_error</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='acc identifier id'>acc</span><span class='comma token'>,</span> <span class='kv identifier id'>kv</span><span class='bitor op'>|</span>
-    <span class='acc identifier id'>acc</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='dstring node'>&quot;--#{kv[0]} #{Command.shell_escape(kv[1])}&quot;</span><span class='rparen token'>)</span>
+    <span class='acc identifier id'>acc</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='dstring node'>&quot;--#{kv[0]}&quot;</span><span class='rparen token'>)</span>
+    <span class='acc identifier id'>acc</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='kv identifier id'>kv</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 
-  <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='unshift identifier id'>unshift</span><span class='lparen token'>(</span><span class='string val'>&quot;--vsys 0&quot;</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+  <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='unshift identifier id'>unshift</span><span class='lparen token'>(</span><span class='string val'>&quot;0&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='unshift identifier id'>unshift</span><span class='lparen token'>(</span><span class='string val'>&quot;--vsys&quot;</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
 
-  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;export #{Command.shell_escape(@original_name)} -o #{Command.shell_escape(filename)} #{options.join(&quot; &quot;)}&quot;</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span><span class='rparen token'>)</span>
+  <span class='raw identifier id'>raw</span> <span class='assign token'>=</span> <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;export&quot;</span><span class='comma token'>,</span> <span class='@original_name ivar id'>@original_name</span><span class='comma token'>,</span> <span class='string val'>&quot;-o&quot;</span><span class='comma token'>,</span> <span class='filename identifier id'>filename</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='options identifier id'>options</span><span class='rparen token'>)</span>
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_error identifier id'>raise_error</span>
@@ -1771,12 +1875,12 @@ again by calling <tt><a href="#resume-instance_method" title="VirtualBox::VM#res
       <pre class="lines">
 
 
-353
 354
-355</pre>
+355
+356</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 353</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 354</span>
 
 <span class='def def kw'>def</span> <span class='pause identifier id'>pause</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:pause</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -1824,12 +1928,12 @@ again by calling <tt><a href="#resume-instance_method" title="VirtualBox::VM#res
       <pre class="lines">
 
 
-428
-429
-430</pre>
+443
+444
+445</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 428</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 443</span>
 
 <span class='def def kw'>def</span> <span class='paused? fid id'>paused?</span>
   <span class='state identifier id'>state</span> <span class='eq op'>==</span> <span class='string val'>'paused'</span>
@@ -1877,12 +1981,12 @@ again by calling <tt><a href="#resume-instance_method" title="VirtualBox::VM#res
       <pre class="lines">
 
 
-421
-422
-423</pre>
+436
+437
+438</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 421</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 436</span>
 
 <span class='def def kw'>def</span> <span class='powered_off? fid id'>powered_off?</span>
   <span class='state identifier id'>state</span> <span class='eq op'>==</span> <span class='string val'>'poweroff'</span>
@@ -1950,12 +2054,12 @@ again by calling <tt><a href="#resume-instance_method" title="VirtualBox::VM#res
       <pre class="lines">
 
 
-362
 363
-364</pre>
+364
+365</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 362</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 363</span>
 
 <span class='def def kw'>def</span> <span class='resume identifier id'>resume</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:resume</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -2003,12 +2107,12 @@ again by calling <tt><a href="#resume-instance_method" title="VirtualBox::VM#res
       <pre class="lines">
 
 
-414
-415
-416</pre>
+429
+430
+431</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 414</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 429</span>
 
 <span class='def def kw'>def</span> <span class='running? fid id'>running?</span>
   <span class='state identifier id'>state</span> <span class='eq op'>==</span> <span class='string val'>'running'</span>
@@ -2115,7 +2219,7 @@ be called except interally. Instead, you're probably looking for <tt><a href="#s
       <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 261</span>
 
 <span class='def def kw'>def</span> <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;modifyvm #{Command.shell_escape(@original_name)} --#{key} #{Command.shell_escape(value.to_s)}&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;modifyvm&quot;</span><span class='comma token'>,</span> <span class='@original_name ivar id'>@original_name</span><span class='comma token'>,</span> <span class='dstring node'>&quot;--#{key}&quot;</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -2134,7 +2238,7 @@ be called except interally. Instead, you're probably looking for <tt><a href="#s
 </p><div class="docstring">
   <div class="discussion">
     <p>Saves the state of a VM and stops it. The VM can be resumed
-again by calling "start" again.</p>
+again by calling "<tt><a href="#start-instance_method" title="VirtualBox::VM#start (method)">#start</a></tt>" again.</p>
 
   </div>
 </div>
@@ -2182,12 +2286,12 @@ again by calling "start" again.</p>
       <pre class="lines">
 
 
-372
 373
-374</pre>
+374
+375</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 372</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 373</span>
 
 <span class='def def kw'>def</span> <span class='save_state identifier id'>save_state</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:savestate</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -2235,12 +2339,12 @@ again by calling "start" again.</p>
       <pre class="lines">
 
 
-435
-436
-437</pre>
+450
+451
+452</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 435</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 450</span>
 
 <span class='def def kw'>def</span> <span class='saved? fid id'>saved?</span>
   <span class='state identifier id'>state</span> <span class='eq op'>==</span> <span class='string val'>'saved'</span>
@@ -2311,12 +2415,12 @@ installations don't respond to the ACPI power button at all. In such cases,
       <pre class="lines">
 
 
-332
 333
-334</pre>
+334
+335</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 332</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 333</span>
 
 <span class='def def kw'>def</span> <span class='shutdown identifier id'>shutdown</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:acpipowerbutton</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -2411,19 +2515,19 @@ Both the GUI and headless mode will not block the ruby process.</p>
       <pre class="lines">
 
 
-316
 317
 318
 319
 320
 321
-322</pre>
+322
+323</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 316</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 317</span>
 
 <span class='def def kw'>def</span> <span class='start identifier id'>start</span><span class='lparen token'>(</span><span class='mode identifier id'>mode</span><span class='assign token'>=</span><span class='symbol val'>:gui</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='dstring node'>&quot;startvm #{Command.shell_escape(@original_name)} --type #{mode}&quot;</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;startvm&quot;</span><span class='comma token'>,</span> <span class='@original_name ivar id'>@original_name</span><span class='comma token'>,</span> <span class='string val'>&quot;--type&quot;</span><span class='comma token'>,</span> <span class='mode identifier id'>mode</span><span class='rparen token'>)</span>
   <span class='true true kw'>true</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='CommandFailedException constant id'>CommandFailedException</span>
   <span class='raise identifier id'>raise</span> <span class='if if_mod kw'>if</span> <span class='raise_errors identifier id'>raise_errors</span>
@@ -2579,12 +2683,12 @@ of data. To prevent data loss, see <tt><a href="#shutdown-instance_method" title
       <pre class="lines">
 
 
-343
 344
-345</pre>
+345
+346</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 343</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/vm.rb', line 344</span>
 
 <span class='def def kw'>def</span> <span class='stop identifier id'>stop</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='control identifier id'>control</span><span class='lparen token'>(</span><span class='symbol val'>:poweroff</span><span class='comma token'>,</span> <span class='raise_errors identifier id'>raise_errors</span><span class='rparen token'>)</span>
@@ -2600,7 +2704,7 @@ of data. To prevent data loss, see <tt><a href="#shutdown-instance_method" title
 </div>
     
     <div id="footer">
-  Generated on Sun Jan 31 00:07:48 2010 by 
+  Generated on Tue Feb  2 22:39:03 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>
