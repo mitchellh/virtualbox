@@ -190,11 +190,18 @@ raw
     end
 
     should "return nil if finding a non-existent hard drive" do
-      VirtualBox::Command.expects(:vboxmanage).with("showhdinfo", 12).returns("UH OH (VERR_FILE_NOT_FOUND)")
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
 
       assert_nothing_raised do
         assert_nil VirtualBox::HardDrive.find(12)
       end
+    end
+
+    should "raise an exception if flag is set" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        VirtualBox::HardDrive.find(12, true)
+      }
     end
   end
 
@@ -223,7 +230,7 @@ Type:       normal
 Usage:      foo (UUID: 8710d3db-d96a-46ed-9004-59fa891fda90)
 valid
 
-      VirtualBox::Command.expects(:vboxmanage).with("list", "hdds").returns(@valid)
+      VirtualBox::Command.stubs(:vboxmanage).with("list", "hdds").returns(@valid)
 
       @hd = mock("hd")
       @hd.stubs(:is_a?).with(VirtualBox::HardDrive).returns(true)
@@ -235,6 +242,28 @@ valid
       assert result.is_a?(Array)
 
       result.each { |v| assert v.is_a?(VirtualBox::HardDrive) }
+    end
+
+    should "forward the raise_error flag to find" do
+      VirtualBox::HardDrive.expects(:find).with(anything, true).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        VirtualBox::HardDrive.all(true)
+      }
+    end
+
+    should "return false if an error occured" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+
+      assert_nothing_raised do
+        assert !VirtualBox::HardDrive.all
+      end
+    end
+
+    should "raise an exception if flag is set" do
+      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
+        VirtualBox::HardDrive.all(true)
+      }
     end
   end
 end

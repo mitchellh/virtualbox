@@ -84,21 +84,26 @@ module VirtualBox
       # Returns an array of all available hard drives as HardDrive
       # objects.
       #
+      # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+      #   will be raised if the command failed.
       # @return [Array<HardDrive>]
-      def all
+      def all(raise_errors=false)
         raw = Command.vboxmanage("list", "hdds")
-        parse_blocks(raw).collect { |v| find(v[:uuid]) }
+        parse_blocks(raw).collect { |v| find(v[:uuid], raise_errors) }
+      rescue Exceptions::CommandFailedException
+        raise if raise_errors
+        false
       end
 
       # Finds one specific hard drive by UUID or file name. If the
       # hard drive can not be found, will return `nil`.
       #
+      # @param [String] id The UUID or name of the hard drive
+      # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+      #   will be raised if the command failed.
       # @return [HardDrive]
-      def find(id)
+      def find(id, raise_errors=false)
         raw = Command.vboxmanage("showhdinfo", id)
-
-        # Return nil if the hard drive doesn't exist
-        return nil if raw =~ /VERR_FILE_NOT_FOUND/
 
         data = raw.split(/\n\n/).collect { |v| parse_block(v) }.find { |v| !v.nil? }
 
@@ -108,6 +113,9 @@ module VirtualBox
 
         # Return new object
         new(data)
+      rescue Exceptions::CommandFailedException
+        raise if raise_errors
+        nil
       end
     end
 
