@@ -79,6 +79,7 @@ module VirtualBox
   #     relationship :shared_folders, SharedFolder
   #     relationship :extra_data, ExtraData
   #     relationship :forwarded_ports, ForwardedPort
+  #     relationship :snapshots, Snapshot, :dependent => :destroy
   #
   class VM < AbstractModel
     attribute :uuid, :readonly => true
@@ -114,6 +115,7 @@ module VirtualBox
     relationship :shared_folders, SharedFolder
     relationship :extra_data, ExtraData
     relationship :forwarded_ports, ForwardedPort
+    relationship :snapshots, Snapshot, :dependent => :destroy
 
     class <<self
       # Returns an array of all available VMs.
@@ -382,6 +384,22 @@ module VirtualBox
     # @return [Boolean] True if command was successful, false otherwise.
     def discard_state(raise_errors=false)
       Command.vboxmanage("discardstate", @original_name)
+      true
+    rescue Exceptions::CommandFailedException
+      raise if raise_errors
+      false
+    end
+
+   	# Take a snapshot
+    #
+    # @param [String] name Name of snapshot.
+    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
+    #   will be raised if the command failed.
+    # @return [Boolean] True if command was successful, false otherwise.
+    def snapshot(name, raise_errors=false)
+      Command.vboxmanage("snapshot", @original_name, "take", name)
+      data = self.class.raw_info(@original_name)
+      populate_attributes(data)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors

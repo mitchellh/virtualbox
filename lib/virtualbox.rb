@@ -12,6 +12,7 @@ require 'virtualbox/hard_drive'
 require 'virtualbox/nic'
 require 'virtualbox/shared_folder'
 require 'virtualbox/storage_controller'
+require 'virtualbox/snapshot'
 require 'virtualbox/vm'
 
 module VirtualBox
