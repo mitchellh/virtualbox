@@ -23,11 +23,22 @@ module VirtualBox
 
       # Sets the path to VBoxManage, which is required for this gem to
       # work.
+      #
+      # @param [String] Full path to `VBoxManage`.
       def vboxmanage=(path)
         @@vboxmanage = path
       end
 
-      # Runs a VBoxManage command and returns the output.
+      # Runs a VBoxManage command and returns the output. This method will automatically
+      # shell escape all args passed to it. There is no way to avoid this at the moment
+      # (since it hasn't been necessary to). This will raise an {Exceptions::CommandFailedException}
+      # if the exit status of the command is nonzero. It is up to the caller to figure
+      # out how to handle this; there is no way to suppress it via a parameter to this
+      # call.
+      #
+      # Upon success, {vboxmanage} returns the stdout output from the command.
+      #
+      # @return [String] The data from stdout of the command.
       def vboxmanage(*args)
         args.collect! { |arg| shell_escape(arg.to_s) }
         result = execute("#{@@vboxmanage} -q #{args.join(" ")}")
