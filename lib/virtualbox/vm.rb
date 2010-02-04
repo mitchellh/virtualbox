@@ -79,7 +79,6 @@ module VirtualBox
   #     relationship :shared_folders, SharedFolder
   #     relationship :extra_data, ExtraData
   #     relationship :forwarded_ports, ForwardedPort
-  #     relationship :snapshots, Snapshot, :dependent => :destroy
   #
   class VM < AbstractModel
     attribute :uuid, :readonly => true
@@ -115,7 +114,6 @@ module VirtualBox
     relationship :shared_folders, SharedFolder
     relationship :extra_data, ExtraData
     relationship :forwarded_ports, ForwardedPort
-    relationship :snapshots, Snapshot, :dependent => :destroy
 
     class <<self
       # Returns an array of all available VMs.
@@ -384,25 +382,6 @@ module VirtualBox
     # @return [Boolean] True if command was successful, false otherwise.
     def discard_state(raise_errors=false)
       Command.vboxmanage("discardstate", @original_name)
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
-    end
-
-   	# Take a snapshot. This will take a copy of the settings of the virtual
-   	# machine at the moment it was taken. If the VM was running at the time,
-   	# it also stores the state of the machine. This will also create a
-   	# differencing hard disk for each normal hard disk attached to the VM so
-   	# that when the snapshot is restored later, the hard drives can be brought
-   	# back to their proper state.
-    #
-    # @param [String] name Name of snapshot.
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
-    # @return [Boolean] True if command was successful, false otherwise.
-    def snapshot(name, raise_errors=false)
-      Command.vboxmanage("snapshot", @original_name, "take", name)
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors

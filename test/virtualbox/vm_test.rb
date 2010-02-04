@@ -91,34 +91,6 @@ showvminfo
     vm
   end
 
-  context "snapshots" do
-    setup do
-      @vm = create_vm
-    end
-
-    should "run the proper command" do
-      VirtualBox::Command.expects(:vboxmanage).with("snapshot", @vm.name, "take", "foo")
-      @vm.snapshot("foo")
-    end
-
-    should "return true if the snapshot succeeded" do
-      VirtualBox::Command.expects(:vboxmanage).once
-      assert @vm.snapshot("foo")
-    end
-
-    should "return false if the snapshot failed" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert !@vm.snapshot("foo")
-    end
-
-    should "raise an exception on failure if raise_error is true" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-        @vm.snapshot("foo", true)
-      }
-    end
-  end
-
   context "human readable info" do
     should "not pass --machinereadable into the showvminfo command" do
       VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name).once
@@ -412,7 +384,6 @@ raw
       VirtualBox::SharedFolder.expects(:save_relationship).once
       VirtualBox::ExtraData.expects(:save_relationship).once
       VirtualBox::ForwardedPort.expects(:save_relationship).once
-      VirtualBox::Snapshot.expects(:save_relationship).once
       assert @vm.save
     end
   end
