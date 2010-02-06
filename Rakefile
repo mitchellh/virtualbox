@@ -8,6 +8,8 @@ begin
     gemspec.homepage = "http://github.com/mitchellh/virtualbox"
     gemspec.authors = ["Mitchell Hashimoto"]
     gemspec.executables = []
+
+    gemspec.add_dependency('nokogiri', '>= 1.4.1')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
