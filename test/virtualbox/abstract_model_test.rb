@@ -192,9 +192,44 @@ class AbstractModelTest < Test::Unit::TestCase
       @model = FakeModel.new
     end
 
-    should "populate relationships at the same time as attributes" do
-      Foo.expects(:populate_relationship).once
-      @model.populate_attributes({})
+    context "populating attributes" do
+      should "populate relationships at the same time as attributes" do
+        Foo.expects(:populate_relationship).once
+        @model.populate_attributes({})
+      end
+
+      should "not populate relationships if :ignore_relationships is true" do
+        Foo.expects(:populate_relationship).never
+        @model.populate_attributes({}, :ignore_relationships => true)
+      end
+
+      should "cause the model to become an existing record" do
+        assert @model.new_record?
+        @model.populate_attributes({})
+        assert !@model.new_record?
+      end
+
+      should "not cause dirtiness" do
+        assert_nil @model.foo
+        @model.populate_attributes({ :foo => "foo" })
+        assert_equal "foo", @model.foo
+        assert !@model.changed?
+      end
+    end
+
+    context "populating relationships" do
+      should "cause the model to become an existing record" do
+        assert @model.new_record?
+        @model.populate_relationships({})
+        assert !@model.new_record?
+      end
+
+      should "not cause dirtiness" do
+        # TODO: This test doesn't do much right now. We need to actually compare
+        # the relationship values for dirtiness.
+        @model.populate_relationships({ :foo => "foo" })
+        assert !@model.changed?
+      end
     end
   end
 

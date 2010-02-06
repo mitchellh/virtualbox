@@ -108,15 +108,27 @@ module VirtualBox
     #
     # Calling this method will also cause the model to assume that it is not
     # a new record (see {#new_record?}).
-    def populate_attributes(attribs)
+    def populate_attributes(attribs, opts={})
       # No longer a new record
-      @new_record = false
+      existing_record!
 
       ignore_dirty do
-        super
+        super(attribs)
 
-        populate_relationships(attribs)
+        populate_relationships(attribs) unless opts[:ignore_relationships]
       end
+    end
+
+    # Loads and populates the relationships with the given data. This method
+    # is meant to be used once to initially setup the relatoinships.
+    #
+    # This methods does **not** affect dirtiness, but also does not clear it.
+    #
+    # Calling this method will also cuase the model to assume that it is not
+    # a new record (see {#new_record?})
+    def populate_relationships(data)
+      existing_record!
+      ignore_dirty { super }
     end
 
     # Overwrites {Attributable#write_attribute} to set the dirty state of
