@@ -14,6 +14,19 @@ module VirtualBox
     @@vboxmanage = "VBoxManage"
 
     class <<self
+      # Reads the XML file and returns a Nokogiri document. Reads the XML data
+      # from the specified file and returns a Nokogiri document.
+      #
+      # @param [String] File name.
+      # @return [Nokogiri::XML::Document]
+      def parse_xml(filename)
+        f = File.open(filename, "r")
+        result = Nokogiri::XML(f)
+        f.close
+
+        result
+      end
+
       # Returns true if the last run command was a success. Obviously this
       # will introduce all sorts of thread-safe problems. Those will have to
       # be addressed another time.

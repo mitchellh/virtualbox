@@ -1,6 +1,19 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class CommandTest < Test::Unit::TestCase
+  context "parsing XML" do
+    should "open the file, parse it, and close the file" do
+      arg = "foo"
+      file = mock("file")
+      seq = sequence("seq")
+      File.expects(:open).with(arg, "r").returns(file).in_sequence(seq)
+      Nokogiri.expects(:XML).in_sequence(seq)
+      file.expects(:close).in_sequence(seq)
+
+      VirtualBox::Command.parse_xml(arg)
+    end
+  end
+
   context "shell escaping" do
     should "convert value to string" do
       assert_nothing_raised do

@@ -1,4 +1,9 @@
 $:.unshift(File.expand_path(File.dirname(__FILE__)))
+
+# External Dependencies
+require 'nokogiri'
+
+# Internal Dependencies
 require 'virtualbox/exceptions'
 require 'virtualbox/command'
 require 'virtualbox/abstract_model'
