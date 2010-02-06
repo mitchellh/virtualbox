@@ -18,6 +18,8 @@ require 'virtualbox/nic'
 require 'virtualbox/shared_folder'
 require 'virtualbox/storage_controller'
 require 'virtualbox/vm'
+require 'virtualbox/media'
+require 'virtualbox/global'
 
 module VirtualBox
   class <<self

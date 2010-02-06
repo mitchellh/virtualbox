@@ -19,6 +19,33 @@ raw
     VirtualBox::Command.stubs(:vboxmanage).with("showhdinfo", @name).returns(@find_raw)
   end
 
+  context "populating relationship" do
+    setup do
+      @xml = <<-xml
+<MediaRegistry>
+  <HardDisks>
+    <HardDisk uuid="{9d2e4353-d1e9-466c-ac58-f2249264147b}" location="HardDisks/TestJeOS.vdi" format="VDI" type="Normal"/>
+    <HardDisk uuid="{5f7ccd06-78ef-47e9-b2bc-515aedd2f288}" location="HardDisks/hobobase.vdi" format="VDI" type="Normal"/>
+  </HardDisks>
+</MediaRegistry>
+xml
+      @doc = Nokogiri::XML(@xml)
+    end
+
+    should "create an object for each hard disk entry" do
+      result = VirtualBox::HardDrive.populate_relationship(nil, @doc)
+      assert_equal 2, result.length
+    end
+
+    should "properly extract uuid, location, and format" do
+      result = VirtualBox::HardDrive.populate_relationship(nil, @doc)
+      result = result[0]
+      assert_equal "{9d2e4353-d1e9-466c-ac58-f2249264147b}", result.uuid
+      assert_equal "VDI", result.format
+      assert_equal "HardDisks/TestJeOS.vdi", result.location
+    end
+  end
+
   context "validations" do
     setup do
       @hd = VirtualBox::HardDrive.new
