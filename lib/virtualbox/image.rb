@@ -19,7 +19,7 @@ module VirtualBox
 
     attribute :uuid, :readonly => true
     attribute :location
-    attribute :accessible, :readonly => true
+    attribute :accessible, :readonly => true, :lazy => true
 
     class <<self
       # Parses the raw output of virtualbox into image objects. Used by

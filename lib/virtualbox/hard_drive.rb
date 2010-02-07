@@ -78,7 +78,7 @@ module VirtualBox
   #
   class HardDrive < Image
     attribute :format, :default => "VDI"
-    attribute :size
+    attribute :size, :lazy => true
 
     class <<self
       # Returns an array of all available hard drives as HardDrive
@@ -126,6 +126,9 @@ module VirtualBox
           hd_node.attributes.each do |key, value|
             data[key.downcase.to_sym] = value.to_s
           end
+
+          # Strip the brackets off of UUID
+          data[:uuid] = data[:uuid][1..-2]
 
           # Expand location relative to config location
           data[:location] = Global.expand_path(data[:location]) if data[:location]
@@ -232,6 +235,15 @@ module VirtualBox
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       false
+    end
+
+    # Lazy load the lazy attributes for this model.
+    def load_attribute(name)
+      # Since the lazy attributes are related, we just load them all at once
+      loaded_hd = self.class.find(uuid, true)
+
+      write_attribute(:size, loaded_hd.size)
+      write_attribute(:accessible, loaded_hd.accessible)
     end
   end
 end

@@ -41,7 +41,7 @@ xml
       VirtualBox::Global.vboxconfig = "/foo/rawr.rb"
       result = VirtualBox::HardDrive.populate_relationship(nil, @doc)
       result = result[0]
-      assert_equal "{9d2e4353-d1e9-466c-ac58-f2249264147b}", result.uuid
+      assert_equal "9d2e4353-d1e9-466c-ac58-f2249264147b", result.uuid
       assert_equal "VDI", result.format
       assert_equal "/foo/HardDisks/TestJeOS.vdi", result.location
     end
