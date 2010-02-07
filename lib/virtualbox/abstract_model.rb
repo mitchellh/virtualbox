@@ -123,14 +123,14 @@ module VirtualBox
     # Calling this method will also cause the model to assume that it is not
     # a new record (see {#new_record?}).
     def populate_attributes(attribs, opts={})
-      # No longer a new record
-      existing_record!
-
       ignore_dirty do
         super(attribs)
 
         populate_relationships(attribs) unless opts[:ignore_relationships]
       end
+
+      # No longer a new record
+      existing_record!
     end
 
     # Loads and populates the relationships with the given data. This method
