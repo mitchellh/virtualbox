@@ -19,6 +19,23 @@ class AbstractModelTest < Test::Unit::TestCase
     relationship :bars, Bar, :dependent => :destroy
   end
 
+  context "lazy attributes and relationships" do
+    class LazyModel < VirtualBox::AbstractModel
+      attribute :foo, :lazy => true
+      attribute :bar
+      relationship :foos, Foo, :lazy => true
+    end
+
+    setup do
+      @model = LazyModel.new
+    end
+
+    should "return false on lazy_attribute? for all attributes if new" do
+      assert !@model.lazy_attribute?(:foo)
+      assert !@model.lazy_relationship?(:foos)
+    end
+  end
+
   context "inspecting" do
     setup do
       @model = FakeModel.new

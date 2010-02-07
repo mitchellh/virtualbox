@@ -93,6 +93,20 @@ module VirtualBox
       clear_dirty!(key)
     end
 
+    # Overriding {Attribute#lazy_attribute?} to always return false for
+    # new records, since new records shouldn't load lazy data.
+    def lazy_attribute?(*args)
+      return false if new_record?
+      super
+    end
+
+    # Overriding {Relatable#lazy_relationship?} to always return false for
+    # new records, since new records shouldn't load lazy data.
+    def lazy_relationship?(*args)
+      return false if new_record?
+      super
+    end
+
     # Sets the initial attributes from a hash. This method is meant to be used
     # once to initially setup the attributes. It is **not a mass-assignment**
     # method for updating attributes.
