@@ -121,13 +121,14 @@ module VirtualBox
       def populate_relationship(caller, doc)
         result = Proxies::Collection.new(caller)
 
-        # TODO: Location in this case is relative the vboxconfig path.
-        # We need to expand it. Also, size/accessible is not available.
         doc.css("MediaRegistry HardDisks HardDisk").each do |hd_node|
           data = {}
           hd_node.attributes.each do |key, value|
             data[key.downcase.to_sym] = value.to_s
           end
+
+          # Expand location relative to config location
+          data[:location] = Global.expand_path(data[:location]) if data[:location]
 
           result << new(data)
         end

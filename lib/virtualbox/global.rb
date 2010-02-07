@@ -29,6 +29,13 @@ module VirtualBox
       def config
         Command.parse_xml(File.expand_path(@@vboxconfig))
       end
+
+      # Expands path relative to the configuration file.
+      #
+      # @return [String]
+      def expand_path(path)
+        File.expand_path(path, File.dirname(@@vboxconfig))
+      end
     end
 
     def initialize(document)

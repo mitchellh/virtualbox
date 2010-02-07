@@ -19,4 +19,19 @@ class GlobalTest < Test::Unit::TestCase
       VirtualBox::Global.config
     end
   end
+
+  context "expanding path" do
+    setup do
+      VirtualBox::Global.vboxconfig = "/foo/bar/baz.rb"
+    end
+
+    should "expand the path properly" do
+      assert_equal "/foo/bar/vroom/rawr.bak", VirtualBox::Global.expand_path("vroom/rawr.bak")
+    end
+
+    should "expand the path relative to the vboxconfig directory" do
+      File.expects(:expand_path).with("foo", "/foo/bar").once
+      VirtualBox::Global.expand_path("foo")
+    end
+  end
 end
