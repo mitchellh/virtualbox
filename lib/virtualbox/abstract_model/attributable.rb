@@ -165,6 +165,12 @@ module VirtualBox
       # if specified.
       def read_attribute(name)
         if has_attribute?(name)
+          if lazy_attribute?(name) && !loaded_lazy_attribute?(name)
+            # Load the lazy attribute
+            attributes[name] = load_attribute(name.to_sym)
+            loaded_lazy_attribute!(name)
+          end
+
           attributes[name] || self.class.attributes[name][:default]
         end
       end
@@ -177,6 +183,26 @@ module VirtualBox
       # Returns boolean value denoting if an attribute exists.
       def has_attribute?(name)
         self.class.attributes.has_key?(name.to_sym)
+      end
+
+      # Returns boolean value denoting if an attribute is "lazy loaded"
+      def lazy_attribute?(name)
+        has_attribute?(name) && self.class.attributes[name.to_sym][:lazy]
+      end
+
+      # Returns an array of loaded lazy attributes
+      def loaded_lazy_attributes
+        @loaded_lazy_attributes ||= []
+      end
+
+      # Returns boolean value denoting if lazy attribute has been loaded.
+      def loaded_lazy_attribute?(name)
+        lazy_attribute?(name) && loaded_lazy_attributes.include?(name.to_sym)
+      end
+
+      # Makes a lazy attribute as loaded.
+      def loaded_lazy_attribute!(name)
+        loaded_lazy_attributes.push(name.to_sym) if lazy_attribute?(name)
       end
 
       # Returns a boolean value denoting if an attribute is readonly.
