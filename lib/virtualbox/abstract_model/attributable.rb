@@ -190,7 +190,7 @@ module VirtualBox
       def populate_attributes(attribs)
         self.class.attributes.each do |key, options|
           value_key = options[:populate_key] || key
-          write_attribute(key, attribs[value_key])
+          write_attribute(key, attribs[value_key]) if attribs.has_key?(value_key)
         end
       end
 

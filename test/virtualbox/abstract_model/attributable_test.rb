@@ -11,11 +11,6 @@ class AttributableTest < Test::Unit::TestCase
 
     def initialize
       super
-
-      populate_attributes({
-        :foo => "foo",
-        :bar => "bar"
-      })
     end
   end
 
@@ -152,11 +147,26 @@ class AttributableTest < Test::Unit::TestCase
         assert_equal v, @model.send(k)
       end
     end
+
+    should "not load nonexistent keys" do
+      new_attributes = {
+        :foo => "zxcv"
+      }
+
+      @model.populate_attributes(new_attributes)
+      assert @model.loaded_attribute?(:foo)
+      assert !@model.loaded_attribute?(:bar)
+    end
   end
 
   context "reading and writing attributes" do
     setup do
       @model = AttributeModel.new
+      @model.populate_attributes({
+        :foo => "foo",
+        :bar => "bar"
+      })
+
       @checkstring = "HEY"
     end
 
