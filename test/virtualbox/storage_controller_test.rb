@@ -52,6 +52,11 @@ class StorageControllerTest < Test::Unit::TestCase
   end
 
   context "populating relationships" do
+    should "create a collection proxy" do
+      value = VirtualBox::StorageController.populate_relationship(@caller, @data)
+      assert value.is_a?(VirtualBox::Proxies::Collection)
+    end
+
     should "create the correct amount of objects" do
       value = VirtualBox::StorageController.populate_relationship(@caller, @data)
       assert_equal 2, value.length
