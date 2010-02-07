@@ -116,35 +116,22 @@ class AttributableTest < Test::Unit::TestCase
       end
 
       should "load the lazy attribute on read" do
-        assert !@model.loaded_lazy_attribute?(:foo)
+        assert !@model.loaded_attribute?(:foo)
         assert_equal "foo", @model.foo
-        assert @model.loaded_lazy_attribute?(:foo)
+        assert @model.loaded_attribute?(:foo)
       end
 
       should "not be loaded initially, then should be loaded after being read" do
-        assert !@model.loaded_lazy_attribute?(:foo)
+        assert !@model.loaded_attribute?(:foo)
         @model.foo
-        assert @model.loaded_lazy_attribute?(:foo)
-      end
-
-      should "mark as loaded with loaded_lazy_attribute!" do
-        assert !@model.loaded_lazy_attribute?(:foo)
-        @model.loaded_lazy_attribute!(:foo)
-        assert @model.loaded_lazy_attribute?(:foo)
+        assert @model.loaded_attribute?(:foo)
       end
 
       should "mark as loaded if write_attribute is called on an attribute" do
-        assert !@model.loaded_lazy_attribute?(:foo)
+        assert !@model.loaded_attribute?(:foo)
         @model.write_attribute(:foo, "bar")
-        assert @model.loaded_lazy_attribute?(:foo)
+        assert @model.loaded_attribute?(:foo)
         assert_equal "bar", @model.foo
-      end
-
-      should "unmark the loaded status if clear_lazy_attribute! is called" do
-        @model.loaded_lazy_attribute!(:foo)
-        assert @model.loaded_lazy_attribute?(:foo)
-        @model.clear_lazy_attribute!(:foo)
-        assert !@model.loaded_lazy_attribute?(:foo)
       end
     end
   end

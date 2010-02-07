@@ -200,9 +200,6 @@ module VirtualBox
       # attributes), whereas users of a class which includes this
       # module should use the accessor methods, such as `name=`.
       def write_attribute(name, value)
-        # Mark as loaded, only is effective if its a lazy attribute
-        loaded_lazy_attribute!(name)
-
         attributes[name] = value
       end
 
@@ -212,7 +209,7 @@ module VirtualBox
       # if specified.
       def read_attribute(name)
         if has_attribute?(name)
-          if lazy_attribute?(name) && !loaded_lazy_attribute?(name)
+          if lazy_attribute?(name) && !loaded_attribute?(name)
             # Load the lazy attribute
             load_attribute(name.to_sym)
           end
@@ -236,24 +233,10 @@ module VirtualBox
         has_attribute?(name) && self.class.attributes[name.to_sym][:lazy]
       end
 
-      # Returns an array of loaded lazy attributes
-      def loaded_lazy_attributes
-        @loaded_lazy_attributes ||= []
-      end
-
-      # Returns boolean value denoting if lazy attribute has been loaded.
-      def loaded_lazy_attribute?(name)
-        lazy_attribute?(name) && loaded_lazy_attributes.include?(name.to_sym)
-      end
-
-      # Makes a lazy attribute as loaded.
-      def loaded_lazy_attribute!(name)
-        loaded_lazy_attributes.push(name.to_sym) if lazy_attribute?(name)
-      end
-
-      # Clear the value of a lazy loaded attribute.
-      def clear_lazy_attribute!(name)
-        loaded_lazy_attributes.delete(name.to_sym)
+      # Returns boolean value denoting if an attribute has been loaded
+      # yet.
+      def loaded_attribute?(name)
+        attributes.has_key?(name)
       end
 
       # Returns a boolean value denoting if an attribute is readonly.

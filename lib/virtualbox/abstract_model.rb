@@ -123,14 +123,14 @@ module VirtualBox
     # Calling this method will also cause the model to assume that it is not
     # a new record (see {#new_record?}).
     def populate_attributes(attribs)
-      # No longer a new record
-      @new_record = false
-
       ignore_dirty do
         super
 
         populate_relationships(attribs)
       end
+
+      # No longer a new record
+      @new_record = false
     end
 
     # Overwrites {Attributable#write_attribute} to set the dirty state of

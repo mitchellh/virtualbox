@@ -167,12 +167,7 @@ class RelatableTest < Test::Unit::TestCase
     end
 
     should "not be loaded by default" do
-      assert !@model.loaded_lazy_relationship?(:foos)
-    end
-
-    should "be able to mark a relationship as loaded" do
-      @model.loaded_lazy_relationship!(:foos)
-      assert @model.loaded_lazy_relationship?(:foos)
+      assert !@model.loaded_relationship?(:foos)
     end
 
     should "call `load_relationship` on initial load" do
@@ -187,7 +182,7 @@ class RelatableTest < Test::Unit::TestCase
 
     should "mark a relationship as loaded on populate_relationship" do
       @model.populate_relationship(:foos, {})
-      assert @model.loaded_lazy_relationship?(:foos)
+      assert @model.loaded_relationship?(:foos)
     end
   end
 

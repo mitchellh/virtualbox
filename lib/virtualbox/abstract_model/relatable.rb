@@ -181,7 +181,7 @@ module VirtualBox
       # Reads a relationship. This is equivalent to {Attributable#read_attribute},
       # but for relationships.
       def read_relationship(name)
-        if lazy_relationship?(name) && !loaded_lazy_relationship?(name)
+        if lazy_relationship?(name) && !loaded_relationship?(name)
           load_relationship(name)
         end
 
@@ -218,10 +218,6 @@ module VirtualBox
         options = self.class.relationships_hash[name]
         return unless options[:klass].respond_to?(:populate_relationship)
         relationship_data[name] = options[:klass].populate_relationship(self, data)
-
-        # Mark lazy relationships as loaded. Does nothing for
-        # non-lazy relationships
-        loaded_lazy_relationship!(name)
       end
 
       # Calls `destroy_relationship` on each of the relationships. Any
@@ -272,25 +268,9 @@ module VirtualBox
         !options.nil? && options[:lazy]
       end
 
-      # Returns boolean denoting if a lazy relationship's data has been loaded
-      # yet.
-      #
-      # @return [Boolean]
-      def loaded_lazy_relationship?(key)
-        loaded_lazy_relationships.include?(key.to_sym)
-      end
-
-      # Marks a relationship as loaded.
-      def loaded_lazy_relationship!(key)
-        loaded_lazy_relationships.push(key.to_sym) if has_relationship?(key)
-      end
-
-      # Array of all the relationships which are lazy and whose data has been
-      # loaded.
-      #
-      # @return [Array]
-      def loaded_lazy_relationships
-        @loaded_lazy_relationships ||= []
+      # Returns boolean denoting if a relationship has been loaded.
+      def loaded_relationship?(key)
+        relationship_data.has_key?(key)
       end
 
       # Sets a relationship to the given value. This is not guaranteed to
