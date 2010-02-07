@@ -78,6 +78,46 @@ module VirtualBox
     #
     # This is not a feature built-in to Relatable but figured it should be
     # mentioned here.
+    #
+    # # Lazy Relationships
+    #
+    # Often, relationships are pretty heavy things to load. Data may have to be
+    # retrieved, classes instantiated, etc. If a class has many relationships, or
+    # many relationships within many relationships, the time and memory required
+    # for relationships really begins to add up. To address this issue, _lazy relationships_
+    # are available. Lazy relationships defer loading their content until the
+    # last possible moment, or rather, when a user requests the data. By specifing
+    # the `:lazy => true` option to relationships, relationships will not be loaded
+    # immediately. Instead, when they're first requested, `load_relationship` will
+    # be called on the model, with the name of the relationship given as a
+    # parameter. It is up to this method to call {#populate_relationship} at some
+    # point with the data to setup the relationship. An example follows:
+    #
+    #     class SomeModel
+    #       include VirtualBox::AbstractModel::Relatable
+    #
+    #       relationship :foos, Foo, :lazy => true
+    #
+    #       def load_relationship(name)
+    #         if name == :foos
+    #           populate_relationship(name, get_data_for_a_long_time)
+    #         end
+    #       end
+    #     end
+    #
+    # Using the above class, we can use it like so:
+    #
+    #     model = SomeModel.new
+    #
+    #     # This initial load takes awhile as it loads...
+    #     model.foos
+    #
+    #     # Instant! (Just a hash lookup. No load necessary)
+    #     model.foos
+    #
+    # One catch: If a model attempts to {#destroy_relationship destroy} a lazy
+    # relationship, it will first load the relationship, since destroy typically
+    # depends on some data of the relationship.
     module Relatable
       def self.included(base)
         base.extend ClassMethods
@@ -99,7 +139,7 @@ module VirtualBox
           relationships << [name, { :klass => klass }.merge(options)]
 
           # Define the method to read the relationship
-          define_method(name) { relationship_data[name] }
+          define_method(name) { read_relationship(name) }
 
           # Define the method to set the relationship
           define_method("#{name}=") { |*args| set_relationship(name, *args) }
@@ -138,6 +178,16 @@ module VirtualBox
         end
       end
 
+      # Reads a relationship. This is equivalent to {Attributable#read_attribute},
+      # but for relationships.
+      def read_relationship(name)
+        if lazy_relationship?(name) && !loaded_lazy_relationship?(name)
+          load_relationship(name)
+        end
+
+        relationship_data[name.to_sym]
+      end
+
       # Saves the model, calls save_relationship on all relations. It is up to
       # the relation to determine whether anything changed, etc. Simply
       # calls `save_relationship` on each relationshp class passing in the
@@ -159,9 +209,19 @@ module VirtualBox
       # relationships.
       def populate_relationships(data)
         self.class.relationships.each do |name, options|
-          next unless options[:klass].respond_to?(:populate_relationship)
-          relationship_data[name] = options[:klass].populate_relationship(self, data)
+          populate_relationship(name, data)
         end
+      end
+
+      # Populate a single relationship.
+      def populate_relationship(name, data)
+        options = self.class.relationships_hash[name]
+        return unless options[:klass].respond_to?(:populate_relationship)
+        relationship_data[name] = options[:klass].populate_relationship(self, data)
+
+        # Mark lazy relationships as loaded. Does nothing for
+        # non-lazy relationships
+        loaded_lazy_relationship!(name)
       end
 
       # Calls `destroy_relationship` on each of the relationships. Any
@@ -181,6 +241,11 @@ module VirtualBox
       def destroy_relationship(name, *args)
         options = self.class.relationships_hash[name]
         return unless options && options[:klass].respond_to?(:destroy_relationship)
+
+        # Read relationship, which forces lazy relationships to load, which is
+        # probably necessary for destroying
+        read_relationship(name)
+
         options[:klass].destroy_relationship(self, relationship_data[name], *args)
       end
 
@@ -197,6 +262,35 @@ module VirtualBox
       # @return [Boolean]
       def has_relationship?(key)
         self.class.has_relationship?(key.to_sym)
+      end
+
+      # Returns boolean denoting if a relationship is to be lazy loaded.
+      #
+      # @return [Boolean]
+      def lazy_relationship?(key)
+        options = self.class.relationships_hash[key.to_sym]
+        !options.nil? && options[:lazy]
+      end
+
+      # Returns boolean denoting if a lazy relationship's data has been loaded
+      # yet.
+      #
+      # @return [Boolean]
+      def loaded_lazy_relationship?(key)
+        loaded_lazy_relationships.include?(key.to_sym)
+      end
+
+      # Marks a relationship as loaded.
+      def loaded_lazy_relationship!(key)
+        loaded_lazy_relationships.push(key.to_sym) if has_relationship?(key)
+      end
+
+      # Array of all the relationships which are lazy and whose data has been
+      # loaded.
+      #
+      # @return [Array]
+      def loaded_lazy_relationships
+        @loaded_lazy_relationships ||= []
       end
 
       # Sets a relationship to the given value. This is not guaranteed to
