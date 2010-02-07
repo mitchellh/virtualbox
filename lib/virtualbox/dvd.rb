@@ -34,6 +34,23 @@ module VirtualBox
       def empty_drive
         new(:empty_drive)
       end
+
+      def populate_relationship(caller, doc)
+        result = Proxies::Collection.new(caller)
+
+        # TODO: Location in this case is relative the vboxconfig path.
+        # We need to expand it. Also, size/accessible is not available.
+        doc.css("MediaRegistry DVDImages Image").each do |hd_node|
+          data = {}
+          hd_node.attributes.each do |key, value|
+            data[key.downcase.to_sym] = value.to_s
+          end
+
+          result << new(data)
+        end
+
+        result
+      end
     end
 
     def initialize(*args)
