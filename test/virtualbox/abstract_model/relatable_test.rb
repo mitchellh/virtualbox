@@ -11,9 +11,11 @@ class RelatableTest < Test::Unit::TestCase
     end
   end
 
-  class RelatableModel
+  class EmptyRelatableModel
     include VirtualBox::AbstractModel::Relatable
+  end
 
+  class RelatableModel < EmptyRelatableModel
     relationship :foos, Relatee
     relationship :bars, BarRelatee
   end
@@ -128,6 +130,12 @@ class RelatableTest < Test::Unit::TestCase
         Relatee.expects(:destroy_relationship).with(@model, "FOO").once
         @model.destroy_relationship(:foos)
       end
+
+      should "call read_relationship (to force the load if lazy)" do
+        Relatee.expects(:destroy_relationship).with(@model, "FOO").once
+        @model.expects(:read_relationship).with(:foos).once
+        @model.destroy_relationship(:foos)
+      end
     end
 
     context "all relationships" do
@@ -140,6 +148,46 @@ class RelatableTest < Test::Unit::TestCase
         Relatee.expects(:destroy_relationship).with(@model, anything, "HELLO").once
         @model.destroy_relationships("HELLO")
       end
+    end
+  end
+
+  context "lazy relationships" do
+    class LazyRelatableModel < EmptyRelatableModel
+      relationship :foos, Relatee, :lazy => true
+      relationship :bars, BarRelatee
+    end
+
+    setup do
+      @model = LazyRelatableModel.new
+    end
+
+    should "return true if a relationship is lazy, and false if not, when checking" do
+      assert @model.lazy_relationship?(:foos)
+      assert !@model.lazy_relationship?(:bars)
+    end
+
+    should "not be loaded by default" do
+      assert !@model.loaded_lazy_relationship?(:foos)
+    end
+
+    should "be able to mark a relationship as loaded" do
+      @model.loaded_lazy_relationship!(:foos)
+      assert @model.loaded_lazy_relationship?(:foos)
+    end
+
+    should "call `load_relationship` on initial load" do
+      @model.expects(:load_relationship).with(:foos).once
+      @model.foos
+    end
+
+    should "not call `load_relationship` for non lazy attributes" do
+      @model.expects(:load_relationship).never
+      @model.bars
+    end
+
+    should "mark a relationship as loaded on populate_relationship" do
+      @model.populate_relationship(:foos, {})
+      assert @model.loaded_lazy_relationship?(:foos)
     end
   end
 
@@ -193,8 +241,15 @@ class RelatableTest < Test::Unit::TestCase
       @model = RelatableModel.new
     end
 
-    should "call populate_relationship on the related class" do
+    should "be able to populate a single relationship" do
       Relatee.expects(:populate_relationship).with(@model, @data).once
+      @model.populate_relationship(:foos, @data)
+    end
+
+    should "call populate_relationship on the related class" do
+      populate_seq = sequence("populate_seq")
+      @model.expects(:populate_relationship).with(:foos, @data).once.in_sequence(populate_seq)
+      @model.expects(:populate_relationship).with(:bars, @data).once.in_sequence(populate_seq)
       @model.populate_relationships(@data)
     end
 

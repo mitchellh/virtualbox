@@ -73,6 +73,50 @@ module VirtualBox
     #       puts path # => "Home"
     #     end
     #
+    # ## Lazy Loading Attributes
+    #
+    # While most attributes are fairly trivial to calculate and populate, sometimes
+    # attributes may have an expensive cost to populate, and are generally not worth
+    # populating unless a user of the class requests that attribute. This is known as
+    # _lazy loading_ the attributes. This is possibly by specifying the `:lazy` option
+    # on the attribute. In this case, the first time (and _only_ the first time) the
+    # attribute is requested, `load_attribute` will be called with the name of the
+    # attribute as the parameter. This method is then expected to call `write_attribute`
+    # on that attribute to give it a value.
+    #
+    #     class ExpensiveAttributeModel
+    #       include VirtualBox::AbstractModel::Attributable
+    #       attribute :expensive_attribute, :lazy => true
+    #
+    #       def load_attribute(name)
+    #         if name == :expensive_attribute
+    #           write_attribute(name, perform_expensive_calculation)
+    #         end
+    #       end
+    #     end
+    #
+    # Using the above definition, we could use the class like so:
+    #
+    #     # Initializing is fast, since no attribute population is done
+    #     model = ExpensiveAttributeModel.new
+    #
+    #     # But this is slow, since it has to calculate.
+    #     puts model.expensive_attribute
+    #
+    #     # But ONLY THE FIRST TIME. This time is FAST!
+    #     puts model.expensive_attribute
+    #
+    # In addition to calling `load_attribute` on initial read, `write_attribute`
+    # when performed on a lazy loaded attribute will mark it as "loaded" so there
+    # will be no load called on the first request. Example, using the above class
+    # once again:
+    #
+    #     model = ExpensiveAttributeModel.new
+    #     model.write_attribute(:expensive_attribute, 42)
+    #
+    #     # This is FAST, since "load_attribute" is not called
+    #     puts model.expensive_attribute # => 42
+    #
     module Attributable
       def self.included(base)
         base.extend ClassMethods
@@ -156,6 +200,9 @@ module VirtualBox
       # attributes), whereas users of a class which includes this
       # module should use the accessor methods, such as `name=`.
       def write_attribute(name, value)
+        # Mark as loaded, only is effective if its a lazy attribute
+        loaded_lazy_attribute!(name)
+
         attributes[name] = value
       end
 
@@ -165,6 +212,11 @@ module VirtualBox
       # if specified.
       def read_attribute(name)
         if has_attribute?(name)
+          if lazy_attribute?(name) && !loaded_lazy_attribute?(name)
+            # Load the lazy attribute
+            load_attribute(name.to_sym)
+          end
+
           attributes[name] || self.class.attributes[name][:default]
         end
       end
@@ -177,6 +229,31 @@ module VirtualBox
       # Returns boolean value denoting if an attribute exists.
       def has_attribute?(name)
         self.class.attributes.has_key?(name.to_sym)
+      end
+
+      # Returns boolean value denoting if an attribute is "lazy loaded"
+      def lazy_attribute?(name)
+        has_attribute?(name) && self.class.attributes[name.to_sym][:lazy]
+      end
+
+      # Returns an array of loaded lazy attributes
+      def loaded_lazy_attributes
+        @loaded_lazy_attributes ||= []
+      end
+
+      # Returns boolean value denoting if lazy attribute has been loaded.
+      def loaded_lazy_attribute?(name)
+        lazy_attribute?(name) && loaded_lazy_attributes.include?(name.to_sym)
+      end
+
+      # Makes a lazy attribute as loaded.
+      def loaded_lazy_attribute!(name)
+        loaded_lazy_attributes.push(name.to_sym) if lazy_attribute?(name)
+      end
+
+      # Clear the value of a lazy loaded attribute.
+      def clear_lazy_attribute!(name)
+        loaded_lazy_attributes.delete(name.to_sym)
       end
 
       # Returns a boolean value denoting if an attribute is readonly.

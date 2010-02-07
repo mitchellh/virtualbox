@@ -94,6 +94,59 @@ class AttributableTest < Test::Unit::TestCase
         assert_nil @model.bar
       end
     end
+
+    context "lazy loading" do
+      class LazyModel < EmptyAttributeModel
+        attribute :foo, :lazy => true
+        attribute :bar
+
+        def load_attribute(attribute)
+          write_attribute(attribute, "foo")
+        end
+      end
+
+      setup do
+        @model = LazyModel.new
+      end
+
+      should "return proper value for lazy_attribute?" do
+        assert @model.lazy_attribute?(:foo)
+        assert !@model.lazy_attribute?(:bar)
+        assert !@model.lazy_attribute?(:i_dont_exist)
+      end
+
+      should "load the lazy attribute on read" do
+        assert !@model.loaded_lazy_attribute?(:foo)
+        assert_equal "foo", @model.foo
+        assert @model.loaded_lazy_attribute?(:foo)
+      end
+
+      should "not be loaded initially, then should be loaded after being read" do
+        assert !@model.loaded_lazy_attribute?(:foo)
+        @model.foo
+        assert @model.loaded_lazy_attribute?(:foo)
+      end
+
+      should "mark as loaded with loaded_lazy_attribute!" do
+        assert !@model.loaded_lazy_attribute?(:foo)
+        @model.loaded_lazy_attribute!(:foo)
+        assert @model.loaded_lazy_attribute?(:foo)
+      end
+
+      should "mark as loaded if write_attribute is called on an attribute" do
+        assert !@model.loaded_lazy_attribute?(:foo)
+        @model.write_attribute(:foo, "bar")
+        assert @model.loaded_lazy_attribute?(:foo)
+        assert_equal "bar", @model.foo
+      end
+
+      should "unmark the loaded status if clear_lazy_attribute! is called" do
+        @model.loaded_lazy_attribute!(:foo)
+        assert @model.loaded_lazy_attribute?(:foo)
+        @model.clear_lazy_attribute!(:foo)
+        assert !@model.loaded_lazy_attribute?(:foo)
+      end
+    end
   end
 
   context "populating attributes" do
