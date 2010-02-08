@@ -238,6 +238,7 @@ module VirtualBox
 
       # TODO: Relationships
       initialize_attributes(data)
+      populate_relationship(:nics, data)
       @original_name = name
     end
 
