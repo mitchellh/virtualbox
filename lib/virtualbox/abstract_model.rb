@@ -78,7 +78,12 @@ module VirtualBox
         save_attribute(key, values[1], *args)
       end
 
-      save_relationships(*args)
+      # Go through and only save the loaded relationships, since
+      # only those would be modified.
+      self.class.relationships.each do |name, options|
+        next if lazy_relationship?(name) && !loaded_relationship?(name)
+        save_relationship(name, *args)
+      end
 
       # No longer a new record
       @new_record = false

@@ -191,14 +191,20 @@ class RelatableTest < Test::Unit::TestCase
       @model = RelatableModel.new
     end
 
+    should "call save_relationship for all relationships" do
+      @model.expects(:save_relationship).with(:foos)
+      @model.expects(:save_relationship).with(:bars)
+      @model.save_relationships
+    end
+
     should "call save_relationship on the related class" do
       Relatee.expects(:save_relationship).with(@model, @model.foos).once
-      @model.save_relationships
+      @model.save_relationship(:foos)
     end
 
     should "forward parameters through" do
       Relatee.expects(:save_relationship).with(@model, @model.foos, "YES").once
-      @model.save_relationships("YES")
+      @model.save_relationship(:foos, "YES")
     end
   end
 

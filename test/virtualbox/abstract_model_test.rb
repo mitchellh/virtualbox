@@ -24,6 +24,7 @@ class AbstractModelTest < Test::Unit::TestCase
       attribute :foo, :lazy => true
       attribute :bar
       relationship :foos, Foo, :lazy => true
+      relationship :bars, Bar, :lazy => true
     end
 
     setup do
@@ -33,6 +34,16 @@ class AbstractModelTest < Test::Unit::TestCase
     should "return false on lazy_attribute? for all attributes if new" do
       assert !@model.lazy_attribute?(:foo)
       assert !@model.lazy_relationship?(:foos)
+    end
+
+    should "only save loaded relationships" do
+      @model.existing_record!
+      assert @model.lazy_relationship?(:foos)
+      assert @model.lazy_relationship?(:bars)
+      @model.stubs(:loaded_relationship?).with(:foos).returns(false)
+      @model.stubs(:loaded_relationship?).with(:bars).returns(true)
+      @model.expects(:save_relationship).with(:bars).once
+      @model.save
     end
   end
 
@@ -180,11 +191,6 @@ class AbstractModelTest < Test::Unit::TestCase
       assert @model.foo_changed?
       assert !@model.bar_changed?
       @model.expects(:save_attribute).with(:foo, "foo2").once
-      @model.save
-    end
-
-    should "call save_relationships" do
-      @model.expects(:save_relationships).once
       @model.save
     end
 

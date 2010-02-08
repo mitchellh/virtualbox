@@ -190,7 +190,7 @@ module VirtualBox
 
       # Saves the model, calls save_relationship on all relations. It is up to
       # the relation to determine whether anything changed, etc. Simply
-      # calls `save_relationship` on each relationshp class passing in the
+      # calls `save_relationship` on each relationship class passing in the
       # following parameters:
       #
       # * **caller** - The class which is calling save
@@ -200,9 +200,17 @@ module VirtualBox
       # end and they'll be pushed through to the `save_relationship` method.
       def save_relationships(*args)
         self.class.relationships.each do |name, options|
-          next unless options[:klass].respond_to?(:save_relationship)
-          options[:klass].save_relationship(self, relationship_data[name], *args)
+          save_relationship(name, *args)
         end
+      end
+
+      # Saves a single relationship. It is up to the relationship class to
+      # determine whether anything changed and how saving is implemented. Simply
+      # calls `save_relationship` on the relationship class.
+      def save_relationship(name, *args)
+        options = self.class.relationships_hash[name]
+        return unless options[:klass].respond_to?(:save_relationship)
+        options[:klass].save_relationship(self, relationship_data[name], *args)
       end
 
       # The equivalent to {Attributable#populate_attributes}, but with
