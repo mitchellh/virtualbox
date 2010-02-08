@@ -120,8 +120,7 @@ module VirtualBox
       #
       # @return [Array<VM>]
       def all
-        raw = Command.vboxmanage("list", "vms")
-        parse_vm_list(raw)
+        Global.global.vms
       end
 
       # Finds a VM by UUID or registered name and returns a
@@ -129,9 +128,20 @@ module VirtualBox
       #
       # @return [VM]
       def find(name)
-        new(raw_info(name))
-      rescue Exceptions::CommandFailedException
-        nil
+        all.detect { |o| o.name == name || o.uuid == name }
+      end
+
+      # Loads a VM from its XML configuration file. All VMs managed
+      # by VirtualBox have an XML configuration file somewhere. If
+      # given the path, this will instantiate the VM that way. Typically
+      # this method will only be called internally. Users of the class
+      # should use {all} or {find} instead.
+      #
+      # @param [String] location Full path to the XML file.
+      # @return [VM]
+      def load_from_xml(location)
+        vm_doc = Command.parse_xml(location)
+        new(vm_doc)
       end
 
       # Imports a VM, blocking the entire thread during this time.
@@ -204,6 +214,17 @@ module VirtualBox
         return nil unless raw =~ /VM name "(.+?)"/
         $1.to_s
       end
+
+      def populate_relationship(caller, doc)
+        result = Proxies::Collection.new(caller)
+
+        doc.css("Global MachineRegistry MachineEntry").each do |entry|
+          location = Global.expand_path(entry[:src])
+          result << load_from_xml(location)
+        end
+
+        result
+      end
     end
 
     # Creates a new instance of a virtual machine.
@@ -215,8 +236,65 @@ module VirtualBox
     def initialize(data)
       super()
 
-      populate_attributes(data)
-      @original_name = data[:name]
+      # TODO: Eventually, we'll want to move everything over to parsing
+      # from XML. For now, this keeps tests passing for old hash parsing.
+      if data.is_a?(Nokogiri::XML::Document)
+        # TODO: Relationships
+        initialize_attributes(data)
+        @original_name = name
+      else
+        populate_attributes(data)
+        @original_name = data[:name]
+      end
+    end
+
+    def initialize_attributes(doc)
+      # TODO: Make Lazy: synthcpu
+      # TODO: Finish the following attributes:
+      # attribute :usb
+      # attribute :audio
+      # attribute :vrdp
+      # attribute :vrdpports
+
+      attribute_associations = {
+        :uuid     => ["Machine", :uuid],
+        :name     => ["Machine", :name],
+        :ostype   => ["Machine", :OSType],
+        :memory   => ["Hardware Memory", :RAMSize],
+        :vram     => ["Hardware Display", :VRAMSize],
+        :acpi     => ["Hardware BIOS ACPI", :enabled],
+        :ioapic   => ["Hardware BIOS IOAPIC", :enabled],
+        :cpus     => ["Hardware CPU", :count],
+        :pae      => ["Hardware CPU PAE", :enabled],
+        :hwvirtex => ["Hardware CPU HardwareVirtEx", :enabled],
+        :hwvirtexexcl => ["Hardware CPU HardwareVirtEx", :exclusive],
+        :nestedpaging => ["Hardware CPU HardwareVirtExNestedPaging", :enabled],
+        :vtxvpid  => ["Hardware CPU HardwareVirtExVPID", :enabled],
+        :accelerate3d => ["Hardware Display", :accelerate3D],
+        :accelerate2dvideo => ["Hardware Display", :accelerate2DVideo],
+        :biosbootmenu => ["Hardware BIOS BootMenu", :mode],
+        :boot1    => ["Hardware Boot Order[position=\"1\"]", :device],
+        :boot2    => ["Hardware Boot Order[position=\"2\"]", :device],
+        :boot3    => ["Hardware Boot Order[position=\"3\"]", :device],
+        :boot4    => ["Hardware Boot Order[position=\"4\"]", :device],
+        :clipboard  => ["Hardware Clipboard", :mode],
+        :monitorcount => ["Hardware Display", :monitorCount],
+      }
+
+      attribute_associations.each do |name, search_data|
+        css, key = search_data
+        node = doc.css(css)[0]
+        value = node[key]
+
+        # Special cases
+        value = value[1..-2] if name == :uuid
+
+        write_attribute(name, value)
+      end
+
+      # Clear dirtiness, since this should only be called initially and
+      # therefore shouldn't affect dirtiness
+      clear_dirty!
     end
 
     # State of the virtual machine. Returns the state of the virtual

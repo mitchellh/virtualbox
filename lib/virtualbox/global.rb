@@ -8,6 +8,7 @@ module VirtualBox
     # Mac OS X
     @@vboxconfig = "~/Library/VirtualBox/VirtualBox.xml"
 
+    relationship :vms, VM
     relationship :media, Media
 
     class <<self

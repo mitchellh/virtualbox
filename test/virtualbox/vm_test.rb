@@ -74,6 +74,180 @@ SharedFolderNameMachineMapping2="otherfolder"
 SharedFolderPathMachineMapping2="/virtualbox/lib"
 showvminfo
 
+    @raw_xml = <<-xml
+<?xml version="1.0"?>
+<VirtualBox xmlns="http://www.innotek.de/VirtualBox-settings" version="1.9-macosx">
+  <Machine uuid="{8710d3db-d96a-46ed-9004-59fa891fda90}" name="foo" OSType="Ubuntu" currentSnapshot="{f1e6edb3-6e12-4615-9642-a80a3a1ad115}" lastStateChange="2010-02-07T20:01:20Z">
+    <ExtraData>
+      <ExtraDataItem name="GUI/AutoresizeGuest" value="on"/>
+      <ExtraDataItem name="GUI/Fullscreen" value="off"/>
+      <ExtraDataItem name="GUI/LastWindowPostion" value="1040,171,720,422"/>
+      <ExtraDataItem name="GUI/MiniToolBarAlignment" value="bottom"/>
+      <ExtraDataItem name="GUI/MiniToolBarAutoHide" value="on"/>
+      <ExtraDataItem name="GUI/SaveMountedAtRuntime" value="yes"/>
+      <ExtraDataItem name="GUI/Seamless" value="off"/>
+      <ExtraDataItem name="GUI/ShowMiniToolBar" value="yes"/>
+    </ExtraData>
+    <Snapshot uuid="{f1e6edb3-6e12-4615-9642-a80a3a1ad115}" name="one" timeStamp="2010-02-07T20:01:20Z">
+      <Hardware version="2">
+        <CPU count="1">
+          <HardwareVirtEx enabled="true" exclusive="false"/>
+          <HardwareVirtExNestedPaging enabled="false"/>
+          <HardwareVirtExVPID enabled="false"/>
+          <PAE enabled="true"/>
+        </CPU>
+        <Memory RAMSize="360"/>
+        <Boot>
+          <Order position="1" device="Floppy"/>
+          <Order position="2" device="DVD"/>
+          <Order position="3" device="HardDisk"/>
+          <Order position="4" device="None"/>
+        </Boot>
+        <Display VRAMSize="12" monitorCount="1" accelerate3D="false" accelerate2DVideo="false"/>
+        <RemoteDisplay enabled="false" port="3389" authType="Null" authTimeout="5000"/>
+        <BIOS>
+          <ACPI enabled="true"/>
+          <IOAPIC enabled="false"/>
+          <Logo fadeIn="true" fadeOut="true" displayTime="0"/>
+          <BootMenu mode="MessageAndMenu"/>
+          <TimeOffset value="0"/>
+          <PXEDebug enabled="false"/>
+        </BIOS>
+        <USBController enabled="false" enabledEhci="true"/>
+        <Network>
+          <Adapter slot="0" enabled="true" MACAddress="0800279C2E41" cable="true" speed="0" type="Am79C973">
+            <NAT/>
+          </Adapter>
+          <Adapter slot="1" enabled="false" MACAddress="0800277D1707" cable="true" speed="0" type="Am79C973"/>
+          <Adapter slot="2" enabled="false" MACAddress="080027FB5229" cable="true" speed="0" type="Am79C973"/>
+          <Adapter slot="3" enabled="false" MACAddress="080027DE7343" cable="true" speed="0" type="Am79C973"/>
+          <Adapter slot="4" enabled="false" MACAddress="0800277989CB" cable="true" speed="0" type="Am79C973"/>
+          <Adapter slot="5" enabled="false" MACAddress="08002768E43B" cable="true" speed="0" type="Am79C973"/>
+          <Adapter slot="6" enabled="false" MACAddress="080027903DF3" cable="true" speed="0" type="Am79C973"/>
+          <Adapter slot="7" enabled="false" MACAddress="0800276A0A7D" cable="true" speed="0" type="Am79C973"/>
+        </Network>
+        <UART>
+          <Port slot="0" enabled="false" IOBase="0x3f8" IRQ="4" hostMode="Disconnected"/>
+          <Port slot="1" enabled="false" IOBase="0x3f8" IRQ="4" hostMode="Disconnected"/>
+        </UART>
+        <LPT>
+          <Port slot="0" enabled="false" IOBase="0x378" IRQ="4"/>
+          <Port slot="1" enabled="false" IOBase="0x378" IRQ="4"/>
+        </LPT>
+        <AudioAdapter controller="AC97" driver="CoreAudio" enabled="false"/>
+        <SharedFolders/>
+        <Clipboard mode="Bidirectional"/>
+        <Guest memoryBalloonSize="0" statisticsUpdateInterval="0"/>
+        <GuestProperties>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/Product" value="Linux" timestamp="1265440664974640000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/Release" value="2.6.24-26-virtual" timestamp="1265440664974987000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/Version" value="#1 SMP Tue Dec 1 20:00:30 UTC 2009" timestamp="1265440664975592000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/ServicePack" value="" timestamp="1265440664976342000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestAdd/Revision" value="3.1.2" timestamp="1265440664977228000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestAdd/Version" value="56127" timestamp="1265440664977917000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/LoggedInUsers" value="1" timestamp="1265441395765168000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/Net/Count" value="1" timestamp="1265441395765770000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/Net/0/V4/IP" value="10.0.2.15" timestamp="1265441395765987000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/Net/0/V4/Broadcast" value="10.0.2.255" timestamp="1265441395766412000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/Net/0/V4/Netmask" value="255.255.255.0" timestamp="1265441395766827000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/Net/0/Status" value="Up" timestamp="1265441395767109000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/NoLoggedInUsers" value="false" timestamp="1265440815142014000" flags=""/>
+          <GuestProperty name="/VirtualBox/HostInfo/GUI/LanguageID" value="en_US" timestamp="1265440628402728000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/LoggedInUsersList" value="hobo" timestamp="1265441395763755000" flags=""/>
+        </GuestProperties>
+      </Hardware>
+      <StorageControllers>
+        <StorageController name="IDE Controller" type="PIIX4" PortCount="2">
+          <AttachedDevice type="HardDisk" port="0" device="0">
+            <Image uuid="{5f7ccd06-78ef-47e9-b2bc-515aedd2f288}"/>
+          </AttachedDevice>
+          <AttachedDevice type="DVD" port="1" device="0">
+            <Image uuid="{4a08f52c-bca3-4908-8da4-4f48aaa4ebba}"/>
+          </AttachedDevice>
+        </StorageController>
+      </StorageControllers>
+    </Snapshot>
+    <Hardware version="2">
+      <CPU count="1">
+        <HardwareVirtEx enabled="true" exclusive="false"/>
+        <HardwareVirtExNestedPaging enabled="false"/>
+        <HardwareVirtExVPID enabled="false"/>
+        <PAE enabled="true"/>
+      </CPU>
+      <Memory RAMSize="360"/>
+      <Boot>
+        <Order position="1" device="Floppy"/>
+        <Order position="2" device="DVD"/>
+        <Order position="3" device="HardDisk"/>
+        <Order position="4" device="None"/>
+      </Boot>
+      <Display VRAMSize="12" monitorCount="1" accelerate3D="false" accelerate2DVideo="false"/>
+      <RemoteDisplay enabled="false" port="3389" authType="Null" authTimeout="5000"/>
+      <BIOS>
+        <ACPI enabled="true"/>
+        <IOAPIC enabled="false"/>
+        <Logo fadeIn="true" fadeOut="true" displayTime="0"/>
+        <BootMenu mode="MessageAndMenu"/>
+        <TimeOffset value="0"/>
+        <PXEDebug enabled="false"/>
+      </BIOS>
+      <USBController enabled="false" enabledEhci="true"/>
+      <Network>
+        <Adapter slot="0" enabled="true" MACAddress="0800279C2E41" cable="true" speed="0" type="Am79C973">
+          <NAT/>
+        </Adapter>
+        <Adapter slot="1" enabled="false" MACAddress="0800277D1707" cable="true" speed="0" type="Am79C973"/>
+        <Adapter slot="2" enabled="false" MACAddress="080027FB5229" cable="true" speed="0" type="Am79C973"/>
+        <Adapter slot="3" enabled="false" MACAddress="080027DE7343" cable="true" speed="0" type="Am79C973"/>
+        <Adapter slot="4" enabled="false" MACAddress="0800277989CB" cable="true" speed="0" type="Am79C973"/>
+        <Adapter slot="5" enabled="false" MACAddress="08002768E43B" cable="true" speed="0" type="Am79C973"/>
+        <Adapter slot="6" enabled="false" MACAddress="080027903DF3" cable="true" speed="0" type="Am79C973"/>
+        <Adapter slot="7" enabled="false" MACAddress="0800276A0A7D" cable="true" speed="0" type="Am79C973"/>
+      </Network>
+      <UART>
+        <Port slot="0" enabled="false" IOBase="0x3f8" IRQ="4" hostMode="Disconnected"/>
+        <Port slot="1" enabled="false" IOBase="0x3f8" IRQ="4" hostMode="Disconnected"/>
+      </UART>
+      <LPT>
+        <Port slot="0" enabled="false" IOBase="0x378" IRQ="4"/>
+        <Port slot="1" enabled="false" IOBase="0x378" IRQ="4"/>
+      </LPT>
+      <AudioAdapter controller="AC97" driver="CoreAudio" enabled="false"/>
+      <SharedFolders/>
+      <Clipboard mode="Bidirectional"/>
+      <Guest memoryBalloonSize="0" statisticsUpdateInterval="0"/>
+      <GuestProperties>
+        <GuestProperty name="/VirtualBox/GuestInfo/OS/Product" value="Linux" timestamp="1265440664974640000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/OS/Release" value="2.6.24-26-virtual" timestamp="1265440664974987000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/OS/Version" value="#1 SMP Tue Dec 1 20:00:30 UTC 2009" timestamp="1265440664975592000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/OS/ServicePack" value="" timestamp="1265440664976342000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestAdd/Revision" value="3.1.2" timestamp="1265440664977228000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestAdd/Version" value="56127" timestamp="1265440664977917000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/OS/LoggedInUsers" value="1" timestamp="1265441395765168000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/Net/Count" value="1" timestamp="1265441395765770000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/Net/0/V4/IP" value="10.0.2.15" timestamp="1265441395765987000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/Net/0/V4/Broadcast" value="10.0.2.255" timestamp="1265441395766412000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/Net/0/V4/Netmask" value="255.255.255.0" timestamp="1265441395766827000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/Net/0/Status" value="Up" timestamp="1265441395767109000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/OS/NoLoggedInUsers" value="false" timestamp="1265440815142014000" flags=""/>
+        <GuestProperty name="/VirtualBox/HostInfo/GUI/LanguageID" value="en_US" timestamp="1265440628402728000" flags=""/>
+        <GuestProperty name="/VirtualBox/GuestInfo/OS/LoggedInUsersList" value="hobo" timestamp="1265441395763755000" flags=""/>
+      </GuestProperties>
+    </Hardware>
+    <StorageControllers>
+      <StorageController name="IDE Controller" type="PIIX4" PortCount="2">
+        <AttachedDevice type="HardDisk" port="0" device="0">
+          <Image uuid="{2c16dd48-4cf1-497e-98fa-84ed55cfe71f}"/>
+        </AttachedDevice>
+        <AttachedDevice type="DVD" port="1" device="0">
+          <Image uuid="{4a08f52c-bca3-4908-8da4-4f48aaa4ebba}"/>
+        </AttachedDevice>
+      </StorageController>
+    </StorageControllers>
+  </Machine>
+</VirtualBox>
+xml
+
     @name = "foo"
 
     # Just to be sure nothing is executed
@@ -81,12 +255,8 @@ showvminfo
   end
 
   def create_vm
-    VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name, "--machinereadable").returns(@raw)
-    VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name).returns("")
-    VirtualBox::Command.expects(:vboxmanage).with("list", "hdds").returns("")
-    VirtualBox::Command.expects(:vboxmanage).with("list", "dvds").returns("")
-    VirtualBox::Command.expects(:vboxmanage).with("getextradata", @name, "enumerate").returns("")
-    vm = VirtualBox::VM.find(@name)
+    VirtualBox::Command.expects(:parse_xml).returns(Nokogiri::XML(@raw_xml))
+    vm = VirtualBox::VM.load_from_xml(@name)
     assert vm
     vm
   end
@@ -280,9 +450,9 @@ raw
     end
 
     should "list VMs then parse them" do
-      all_seq = sequence("all")
-      VirtualBox::Command.expects(:vboxmanage).with("list", "vms").returns(@raw).in_sequence(all_seq)
-      VirtualBox::VM.expects(:parse_vm_list).with(@raw).in_sequence(all_seq)
+      global = mock("global")
+      global.expects(:vms).once
+      VirtualBox::Global.expects(:global).returns(global)
       VirtualBox::VM.all
     end
 
@@ -388,49 +558,51 @@ raw
     end
   end
 
+  context "loading a VM from XML" do
+    setup do
+      @nokogiri_xml = Nokogiri::XML(@raw_xml)
+    end
+
+    should "parse the XML then initializing the class" do
+      VirtualBox::Command.expects(:parse_xml).with("foo").returns(@nokogiri_xml)
+      VirtualBox::VM.expects(:new).with(@nokogiri_xml).once
+      VirtualBox::VM.load_from_xml("foo")
+    end
+
+    should "not initialize the attributes if given a hash" do
+      VirtualBox::VM.any_instance.expects(:populate_attributes).once
+      VirtualBox::VM.any_instance.expects(:initialize_attributes).never
+      VirtualBox::VM.new({})
+    end
+
+    should "initialize the attributes when called with an XML document" do
+      VirtualBox::VM.any_instance.expects(:initialize_attributes).once.with(@nokogiri_xml)
+      VirtualBox::VM.new(@nokogiri_xml)
+    end
+  end
+
   context "finding a VM by name" do
     setup do
-
       @expected = {
         :name   => "foo",
         :ostype => "Ubuntu",
         :uuid   => "8710d3db-d96a-46ed-9004-59fa891fda90"
       }
-
-      command_seq = sequence("command_seq)")
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name, "--machinereadable").returns(@raw).in_sequence(command_seq)
-      VirtualBox::Command.expects(:vboxmanage).returns("").at_least(0).in_sequence(command_seq)
-      @vm = VirtualBox::VM.find(@name)
-      assert @vm
     end
 
-    should "return a VM object with proper attributes" do
+    should "use the global 'all' array to find the VM" do
+      VirtualBox::VM.expects(:all).returns([create_vm])
+      vm = VirtualBox::VM.find(@name)
+      assert vm
+
       @expected.each do |k,v|
-        assert_equal v, @vm.read_attribute(k)
+        assert_equal v, vm.read_attribute(k)
       end
     end
 
     should "return nil if the VM doesn't exist" do
-      VirtualBox::Command.expects(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
+      VirtualBox::VM.expects(:all).returns([])
       assert_nil VirtualBox::VM.find("dont exist")
-    end
-
-    should "properly load nic relationship" do
-      assert @vm.nics
-      assert @vm.nics.is_a?(Array)
-      assert_equal 8, @vm.nics.length
-    end
-
-    should "properly load storage controller relationship" do
-      assert @vm.storage_controllers
-      assert @vm.storage_controllers.is_a?(Array)
-      assert_equal 2, @vm.storage_controllers.length
-    end
-
-    should "properly load shared folder relationship" do
-      assert @vm.shared_folders
-      assert @vm.shared_folders.is_a?(Array)
-      assert_equal 2, @vm.shared_folders.length
     end
   end
 
