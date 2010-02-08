@@ -150,6 +150,12 @@ module VirtualBox
       ignore_dirty { super }
     end
 
+    # Populates a single relationship with the given data.
+    def populate_relationship(name, data)
+      existing_record!
+      ignore_dirty { super }
+    end
+
     # Overwrites {Attributable#write_attribute} to set the dirty state of
     # the written attribute. See {Dirty#set_dirty!} as well.
     def write_attribute(name, value)

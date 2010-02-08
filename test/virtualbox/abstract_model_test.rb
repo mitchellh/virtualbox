@@ -254,6 +254,19 @@ class AbstractModelTest < Test::Unit::TestCase
         assert !@model.changed?
       end
     end
+
+    context "populating a single relationship" do
+      should "cause the model to become an existing record" do
+        assert @model.new_record?
+        @model.populate_relationship(:foos, {})
+        assert !@model.new_record?
+      end
+
+      should "not cause dirtiness" do
+        @model.populate_relationship(:foos, {})
+        assert !@model.changed?
+      end
+    end
   end
 
   context "integrating relatable" do
