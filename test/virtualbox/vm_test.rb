@@ -273,8 +273,9 @@ xml
       @vm = create_vm
     end
 
-    should "read the initial state when loading the VM" do
-      assert_equal "poweroff", @vm.state
+    should "lazy load the state" do
+      @vm.expects(:load_attribute).with(:state).once
+      @vm.state
     end
 
     should "reload the state if true is passed as a parameter" do
@@ -567,12 +568,6 @@ raw
       VirtualBox::Command.expects(:parse_xml).with("foo").returns(@nokogiri_xml)
       VirtualBox::VM.expects(:new).with(@nokogiri_xml).once
       VirtualBox::VM.load_from_xml("foo")
-    end
-
-    should "not initialize the attributes if given a hash" do
-      VirtualBox::VM.any_instance.expects(:populate_attributes).once
-      VirtualBox::VM.any_instance.expects(:initialize_attributes).never
-      VirtualBox::VM.new({})
     end
 
     should "initialize the attributes when called with an XML document" do

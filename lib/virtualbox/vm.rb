@@ -108,7 +108,7 @@ module VirtualBox
     attribute :audio
     attribute :vrdp
     attribute :vrdpports
-    attribute :state, :populate_key => :vmstate, :readonly => true
+    attribute :state, :populate_key => :vmstate, :readonly => true, :lazy => true
     relationship :nics, Nic
     relationship :storage_controllers, StorageController, :dependent => :destroy
     relationship :shared_folders, SharedFolder
@@ -236,16 +236,9 @@ module VirtualBox
     def initialize(data)
       super()
 
-      # TODO: Eventually, we'll want to move everything over to parsing
-      # from XML. For now, this keeps tests passing for old hash parsing.
-      if data.is_a?(Nokogiri::XML::Document)
-        # TODO: Relationships
-        initialize_attributes(data)
-        @original_name = name
-      else
-        populate_attributes(data)
-        @original_name = data[:name]
-      end
+      # TODO: Relationships
+      initialize_attributes(data)
+      @original_name = name
     end
 
     def initialize_attributes(doc)
@@ -295,6 +288,16 @@ module VirtualBox
       # Clear dirtiness, since this should only be called initially and
       # therefore shouldn't affect dirtiness
       clear_dirty!
+
+      # But this is an existing record
+      existing_record!
+    end
+
+    def load_attribute(name)
+      if name == :state
+        # Simply force a state reload, and it'll write the attribute up
+        state(true)
+      end
     end
 
     # State of the virtual machine. Returns the state of the virtual
