@@ -35,9 +35,9 @@ module VirtualBox
   class Nic < AbstractModel
     attribute :parent, :readonly => :readonly
     attribute :nic
-    attribute :nictype
-    attribute :macaddress
-    attribute :cableconnected
+    attribute :nictype, :populate_key => "type"
+    attribute :macaddress, :populate_key => "MACAddress"
+    attribute :cableconnected, :populate_key => "cable"
     attribute :bridgeadapter
 
     class <<self
@@ -85,22 +85,11 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<Nic>]
-      def populate_relationship(caller, data)
-        nic_data = nic_data(caller.name)
+      def populate_relationship(caller, doc)
+        relation = Proxies::Collection.new(caller)
 
-        relation = []
-
-        counter = 1
-        loop do
-          break unless data["nic#{counter}".to_sym]
-
-          nictype = nic_data["nic#{counter}".to_sym][:type] rescue nil
-
-          nic = new(counter, caller, data.merge({
-            "nictype#{counter}".to_sym => nictype
-          }))
-          relation.push(nic)
-          counter += 1
+        doc.css("Hardware Network Adapter").each do |adapter|
+          relation << new(caller, adapter)
         end
 
         relation
@@ -121,21 +110,32 @@ module VirtualBox
     # Since there is currently no way to create a _new_ nic, this is
     # only used internally. Developers should NOT try to initialize their
     # own nic objects.
-    def initialize(index, caller, data)
+    def initialize(caller, data)
       super()
 
-      @index = index
+      @index = data["slot"].to_i + 1
 
-      # Setup the index specific attributes
-      populate_data = {}
-      self.class.attributes.each do |name, options|
-        value = data["#{name}#{index}".to_sym]
-        populate_data[name] = value
+      # Set the parent
+      write_attribute(:parent, caller)
+
+      # Convert each attribute value to a string
+      attrs = {}
+      data.attributes.each do |key, value|
+        attrs[key] = value.to_s
       end
 
-      populate_attributes(populate_data.merge({
-        :parent => caller
-      }))
+      populate_attributes(attrs)
+
+      # The `nic` attribute is a bit more complicated, but not by
+      # much
+      if data["enabled"] == "true"
+        write_attribute(:nic, data.children[1].name.downcase)
+      else
+        write_attribute(:nic, "none")
+      end
+
+      # Clear dirtiness
+      clear_dirty!
     end
 
     # Saves a single attribute of the nic. This method is automatically

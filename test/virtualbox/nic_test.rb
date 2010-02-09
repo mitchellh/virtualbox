@@ -2,12 +2,6 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class NicTest < Test::Unit::TestCase
   setup do
-    @data = {
-      :nic1 => "bridged",
-      :nic2 => "foo",
-      :nic3 => "bar"
-    }
-
     @caller = mock("caller")
     @caller.stubs(:name).returns("foo")
 
@@ -20,7 +14,7 @@ raw
 
   context "saving" do
     setup do
-      @nic = VirtualBox::Nic.populate_relationship(@caller, @data)
+      @nic = VirtualBox::Nic.populate_relationship(@caller, mock_xml_doc)
       @vmname = "myvm"
     end
 
@@ -62,15 +56,27 @@ raw
 
   context "populating relationships" do
     setup do
-      @value = VirtualBox::Nic.populate_relationship(@caller, @data)
+      @value = VirtualBox::Nic.populate_relationship(@caller, mock_xml_doc)
     end
 
     should "create the correct amount of objects" do
-      assert_equal 3, @value.length
+      assert_equal 8, @value.length
+    end
+
+    should "not be dirty initially" do
+      assert !@value[0].changed?
+    end
+
+    should "be an existing record" do
+      assert !@value[0].new_record?
     end
 
     should "parse the type" do
       assert_equal "Am79C973", @value[0].nictype
+    end
+
+    should "correctly turn adapters which aren't enabled into 'none'" do
+      assert_equal "none", @value[2].nic
     end
   end
 
