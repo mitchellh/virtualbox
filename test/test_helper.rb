@@ -38,6 +38,9 @@ class Test::Unit::TestCase
       <ExtraDataItem name="GUI/SaveMountedAtRuntime" value="yes"/>
       <ExtraDataItem name="GUI/Seamless" value="off"/>
       <ExtraDataItem name="GUI/ShowMiniToolBar" value="yes"/>
+      <ExtraDataItem name="VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/GuestPort" value="23"/>
+      <ExtraDataItem name="VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/HostPort" value="2222"/>
+      <ExtraDataItem name="VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/Protocol" value="TCP"/>
     </ExtraData>
     <Hardware version="2">
       <CPU count="1">

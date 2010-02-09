@@ -240,6 +240,8 @@ module VirtualBox
       initialize_attributes(data)
       populate_relationship(:nics, data)
       populate_relationship(:shared_folders, data)
+      populate_relationship(:extra_data, data)
+      populate_relationship(:forwarded_ports, data)
       @original_name = name
     end
 

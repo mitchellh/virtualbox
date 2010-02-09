@@ -38,23 +38,11 @@ raw
     setup do
       @caller = mock("caller")
       @caller.stubs(:name).returns("foocaller")
-
-      VirtualBox::Command.stubs(:vboxmanage).returns(@raw)
     end
 
     context "populating" do
-      should "call VBoxManage for the caller" do
-        VirtualBox::Command.expects(:vboxmanage).with("getextradata", @caller.name, "enumerate").returns(@raw)
-        VirtualBox::ExtraData.populate_relationship(@caller, {})
-      end
-
-      should "call pairs_to_objects with parent set to the caller" do
-        VirtualBox::ExtraData.expects(:parse_kv_pairs).with(@raw, @caller).once
-        VirtualBox::ExtraData.populate_relationship(@caller, {})
-      end
-
-      should "return an array of ExtraData objects" do
-        result = VirtualBox::ExtraData.populate_relationship(@caller, {})
+      should "return a ExtraData object" do
+        result = VirtualBox::ExtraData.populate_relationship(@caller, mock_xml_doc)
         assert result.is_a?(VirtualBox::ExtraData)
       end
     end

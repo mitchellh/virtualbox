@@ -74,9 +74,15 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<ExtraData>]
-      def populate_relationship(caller, data)
-        raw = Command.vboxmanage("getextradata", caller.name, "enumerate")
-        parse_kv_pairs(raw, caller)
+      def populate_relationship(caller, doc)
+        data = new(caller)
+
+        doc.css("Machine ExtraData ExtraDataItem").each do |extradata|
+          data[extradata["name"].to_s] = extradata["value"].to_s
+        end
+
+        data.clear_dirty!
+        data
       end
 
       # Saves the relationship. This simply calls {#save} on every
