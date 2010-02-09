@@ -141,24 +141,25 @@ raw
 
   context "global extra data" do
     setup do
-      get_seq = sequence("get_seq")
-      VirtualBox::Command.expects(:vboxmanage).with("getextradata", "global", "enumerate").once.in_sequence(get_seq)
-      VirtualBox::ExtraData.expects(:parse_kv_pairs).returns(@ed).once.in_sequence(get_seq)
+      global = mock("global")
+      global.expects(:extra_data).once.returns("foo")
+      VirtualBox::Global.expects(:global).returns(global)
       @global = VirtualBox::ExtraData.global(true)
     end
 
-    should "call the command, parse it, then turn it into objects" do
-      assert_equal "bar", @global["foo"]
+    should "call the global extra data if it has never been loaded" do
+      assert_equal "foo", VirtualBox::ExtraData.global
     end
 
     should "return the same object if it exists for global data, rather than recreating it" do
-      VirtualBox::Command.expects(:vboxmanage).never
+      VirtualBox::Global.expects(:global).never
       assert_equal @global, VirtualBox::ExtraData.global
     end
 
     should "return a new object if reload is true" do
-      VirtualBox::Command.expects(:vboxmanage).once
-      VirtualBox::ExtraData.expects(:parse_kv_pairs).returns(@ed.dup).once
+      global = mock("global")
+      global.expects(:extra_data).once.returns("bar")
+      VirtualBox::Global.expects(:global).returns(global)
       assert !@global.equal?(VirtualBox::ExtraData.global(true))
     end
   end
@@ -172,35 +173,6 @@ raw
     should "be global by default" do
       ed = VirtualBox::ExtraData.new
       assert_equal "global", ed.parent
-    end
-  end
-
-  context "parsing KV pairs" do
-    setup do
-      @data = VirtualBox::ExtraData.parse_kv_pairs(@raw)
-    end
-
-    should "return the proper number of items" do
-      # Shows that it skips over non-matching lines as well
-      assert_equal 6, @data.length
-    end
-
-    should "return as an ExtraData Hash" do
-      assert @data.is_a?(Hash)
-      assert @data.is_a?(VirtualBox::ExtraData)
-    end
-
-    should "return proper values, trimmed" do
-      assert_equal "1 d, 2010-01-29, stable", @data["GUI/UpdateDate"]
-    end
-
-    should  "send the 2nd param as the parent to the ED object" do
-      @data = VirtualBox::ExtraData.parse_kv_pairs(@raw, "FOO")
-      assert_equal "FOO", @data.parent
-    end
-
-    should "return an unchanged ED object" do
-      assert !@data.changed?
     end
   end
 end

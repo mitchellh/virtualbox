@@ -46,27 +46,10 @@ module VirtualBox
       # @return [Array<ExtraData>]
       def global(reload=false)
         if !@@global_data || reload
-          raw = Command.vboxmanage("getextradata", "global", "enumerate")
-          @@global_data = parse_kv_pairs(raw)
+          @@global_data = Global.global.extra_data
         end
 
         @@global_data
-      end
-
-      # Parses the key-value pairs from the extra data enumerated
-      # output.
-      #
-      # @param [String] raw The raw output from enumerating extra data.
-      # @return [Hash]
-      def parse_kv_pairs(raw, parent=nil)
-        data = new(parent)
-        raw.split("\n").each do |line|
-          next unless line =~ /^Key: (.+?), Value: (.+?)$/i
-          data[$1.to_s] = $2.strip.to_s
-        end
-
-        data.clear_dirty!
-        data
       end
 
       # Populates a relationship with another model.
@@ -77,7 +60,7 @@ module VirtualBox
       def populate_relationship(caller, doc)
         data = new(caller)
 
-        doc.css("Machine ExtraData ExtraDataItem").each do |extradata|
+        doc.css("ExtraData ExtraDataItem").each do |extradata|
           data[extradata["name"].to_s] = extradata["value"].to_s
         end
 

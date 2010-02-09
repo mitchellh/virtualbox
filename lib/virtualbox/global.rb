@@ -10,6 +10,7 @@ module VirtualBox
 
     relationship :vms, VM
     relationship :media, Media
+    relationship :extra_data, ExtraData
 
     class <<self
       def global
