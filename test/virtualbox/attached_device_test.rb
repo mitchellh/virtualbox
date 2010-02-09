@@ -71,7 +71,7 @@ class AttachedDeviceTest < Test::Unit::TestCase
 
   context "saving an existing device" do
     setup do
-      @value = VirtualBox::AttachedDevice.populate_relationship(@caller, @data)
+      @value = VirtualBox::AttachedDevice.populate_relationship(@caller, mock_xml_doc)
       @value = @value[0]
       @value.image = VirtualBox::DVD.empty_drive
       assert @value.changed?
@@ -210,7 +210,7 @@ class AttachedDeviceTest < Test::Unit::TestCase
 
   context "destroying" do
     setup do
-      @value = VirtualBox::AttachedDevice.populate_relationship(@caller, @data)
+      @value = VirtualBox::AttachedDevice.populate_relationship(@caller, mock_xml_doc)
       @value = @value[0]
 
       @image = mock("image")
@@ -278,7 +278,7 @@ class AttachedDeviceTest < Test::Unit::TestCase
 
   context "populating relationships" do
     setup do
-      @value = VirtualBox::AttachedDevice.populate_relationship(@caller, @data)
+      @value = VirtualBox::AttachedDevice.populate_relationship(@caller, mock_xml_doc)
     end
 
     should "create the correct amount of objects" do
@@ -288,13 +288,13 @@ class AttachedDeviceTest < Test::Unit::TestCase
     should "create objects with proper values" do
       obj = @value[0]
       assert_equal "none", obj.medium
-      assert_equal "322f79fd-7da6-416f-a16f-e70066ccf165", obj.uuid
-      assert_equal 0, obj.port
+      assert_equal "2c16dd48-4cf1-497e-98fa-84ed55cfe71f", obj.uuid
+      assert_equal "0", obj.port
 
       obj = @value[1]
       assert_equal "none", obj.medium
       assert_nil obj.uuid
-      assert_equal 1, obj.port
+      assert_equal "1", obj.port
     end
   end
 end

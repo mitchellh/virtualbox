@@ -117,9 +117,7 @@ class Test::Unit::TestCase
         <AttachedDevice type="HardDisk" port="0" device="0">
           <Image uuid="{2c16dd48-4cf1-497e-98fa-84ed55cfe71f}"/>
         </AttachedDevice>
-        <AttachedDevice type="DVD" port="1" device="0">
-          <Image uuid="{4a08f52c-bca3-4908-8da4-4f48aaa4ebba}"/>
-        </AttachedDevice>
+        <AttachedDevice type="DVD" port="1" device="0"/>
       </StorageController>
     </StorageControllers>
   </Machine>

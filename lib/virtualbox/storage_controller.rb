@@ -98,6 +98,7 @@ module VirtualBox
       end
 
       populate_attributes(populate_data.merge({:parent => caller}), :ignore_relationships => true)
+      populate_relationship(:devices, data)
     end
   end
 end

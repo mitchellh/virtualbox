@@ -72,6 +72,7 @@ module VirtualBox
     attribute :parent, :readonly => true
     attribute :uuid, :readonly => true
     attribute :port
+    attribute :type, :readonly => true
     relationship :image, Image
 
     class <<self
@@ -84,10 +85,8 @@ module VirtualBox
         relation = Proxies::Collection.new(caller)
 
         counter = 0
-        loop do
-          break unless data["#{caller.name}-#{counter}-0".downcase.to_sym]
-          nic = new(counter, caller, data)
-          relation.push(nic)
+        data.css("AttachedDevice").each do |ad|
+          relation << new(counter, caller, ad)
           counter += 1
         end
 
@@ -230,12 +229,23 @@ module VirtualBox
     #
     # **This method should never be called except internally.**
     def populate_from_data(index, caller, data)
-      populate_attributes({
-        :parent => caller,
-        :port => index,
-        :medium => data["#{caller.name}-#{index}-0".downcase.to_sym],
-        :uuid => data["#{caller.name}-ImageUUID-#{index}-0".downcase.to_sym]
-      })
+      # Get the regular attributes
+      attrs = {}
+      data.attributes.each do |key, value|
+        attrs[key.downcase.to_sym] = value.to_s
+      end
+
+      # Get the Image UUID
+      image = data.css("Image")
+      if image.empty?
+        attrs[:uuid] = nil
+      else
+        attrs[:uuid] = image[0]["uuid"][1..-2]
+      end
+
+      populate_attributes(attrs.merge({
+        :parent => caller
+      }), :ignore_relationships => true)
     end
   end
 end
