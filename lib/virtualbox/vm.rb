@@ -260,7 +260,7 @@ module VirtualBox
       attribute_associations.each do |name, search_data|
         css, key = search_data
         node = doc.css(css)[0]
-        value = node[key]
+        value = node.nil? ? nil : node[key]
 
         # Special cases
         value = value[1..-2] if name == :uuid
