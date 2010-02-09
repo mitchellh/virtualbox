@@ -113,7 +113,7 @@ class Test::Unit::TestCase
       </GuestProperties>
     </Hardware>
     <StorageControllers>
-      <StorageController name="IDE Controller" type="PIIX4" PortCount="2">
+      <StorageController name="foo" type="PIIX4" PortCount="2">
         <AttachedDevice type="HardDisk" port="0" device="0">
           <Image uuid="{2c16dd48-4cf1-497e-98fa-84ed55cfe71f}"/>
         </AttachedDevice>

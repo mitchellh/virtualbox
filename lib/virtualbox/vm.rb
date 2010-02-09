@@ -242,6 +242,7 @@ module VirtualBox
       populate_relationship(:shared_folders, data)
       populate_relationship(:extra_data, data)
       populate_relationship(:forwarded_ports, data)
+      populate_relationship(:storage_controllers, data)
       @original_name = name
     end
 

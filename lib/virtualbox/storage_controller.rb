@@ -43,7 +43,6 @@ module VirtualBox
     attribute :parent, :readonly => true
     attribute :name
     attribute :type
-    attribute :max_ports, :populate_key => :maxportcount
     attribute :ports, :populate_key => :portcount
     relationship :devices, AttachedDevice, :dependent => :destroy
 
@@ -53,14 +52,12 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<StorageController>]
-      def populate_relationship(caller, data)
+      def populate_relationship(caller, doc)
         relation = Proxies::Collection.new(caller)
 
         counter = 0
-        loop do
-          break unless data["storagecontrollername#{counter}".to_sym]
-          nic = new(counter, caller, data)
-          relation.push(nic)
+        doc.css("StorageControllers StorageController").each do |sc|
+          relation << new(counter, caller, sc)
           counter += 1
         end
 
@@ -96,37 +93,11 @@ module VirtualBox
 
       # Setup the index specific attributes
       populate_data = {}
-      self.class.attributes.each do |name, options|
-        key = options[:populate_key] || name
-        value = data["storagecontroller#{key}#{index}".to_sym]
-        populate_data[key] = value
+      data.attributes.each do |key,value|
+        populate_data[key.downcase.to_sym] = value.to_s
       end
 
-      # Make sure to merge in device data so those relationships will be
-      # setup properly
-      populate_data.merge!(extract_devices(index, data))
-
-      populate_attributes(populate_data.merge({
-        :parent => caller
-      }))
-    end
-
-    # Extracts related devices for a storage controller.
-    #
-    # **This method typically won't be used except internally.**
-    #
-    # @return [Hash]
-    def extract_devices(index, data)
-      name = data["storagecontrollername#{index}".downcase.to_sym].downcase
-
-      device_data = {}
-      data.each do |k,v|
-        next unless k.to_s =~ /^#{name}-/
-
-        device_data[k] = v
-      end
-
-      device_data
+      populate_attributes(populate_data.merge({:parent => caller}), :ignore_relationships => true)
     end
   end
 end

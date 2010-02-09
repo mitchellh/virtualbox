@@ -17,7 +17,7 @@ class StorageControllerTest < Test::Unit::TestCase
 
   context "saving" do
     setup do
-      @value = VirtualBox::StorageController.populate_relationship(@caller, @data)
+      @value = VirtualBox::StorageController.populate_relationship(@caller, mock_xml_doc)
       @value = @value[0]
     end
 
@@ -29,7 +29,7 @@ class StorageControllerTest < Test::Unit::TestCase
 
   context "destroying" do
     setup do
-      @value = VirtualBox::StorageController.populate_relationship(@caller, @data)
+      @value = VirtualBox::StorageController.populate_relationship(@caller, mock_xml_doc)
       @value = @value[0]
     end
 
@@ -52,45 +52,25 @@ class StorageControllerTest < Test::Unit::TestCase
   end
 
   context "populating relationships" do
+    setup do
+      @sc = mock_xml_doc.css("StorageControllers StorageController").first
+    end
+
     should "create a collection proxy" do
-      value = VirtualBox::StorageController.populate_relationship(@caller, @data)
+      value = VirtualBox::StorageController.populate_relationship(@caller, mock_xml_doc)
       assert value.is_a?(VirtualBox::Proxies::Collection)
     end
 
     should "create the correct amount of objects" do
-      value = VirtualBox::StorageController.populate_relationship(@caller, @data)
-      assert_equal 2, value.length
+      value = VirtualBox::StorageController.populate_relationship(@caller, mock_xml_doc)
+      assert_equal 1, value.length
     end
 
     should "use populate keys when extracting keys" do
-      value = VirtualBox::StorageController.new(0, @caller, @data)
+      value = VirtualBox::StorageController.new(0, @caller, @sc)
       assert_equal "foo", value.name
-      assert_equal 7, value.max_ports
-    end
-
-    should "call populate attributes with the merged populate data" do
-      VirtualBox::StorageController.any_instance.expects(:extract_devices).returns({ :name => "BAR" })
-      value = VirtualBox::StorageController.new(0, @caller, @data)
-      assert_equal "BAR", value.name
-    end
-  end
-
-  context "extracting related device info" do
-    setup do
-      @controller = VirtualBox::StorageController.new(0, @caller, @data)
-    end
-
-    should "extract only those keys related to current controller name" do
-      data = @controller.extract_devices(0, @data)
-      assert data
-      assert data.has_key?(:"foo-0-0")
-      assert data.has_key?(:"foo-1-0")
-      assert !data.has_key?(:"bar-0-0")
-
-      data = @controller.extract_devices(1, @data)
-      assert data
-      assert !data.has_key?(:"foo-0-0")
-      assert data.has_key?(:"bar-0-0")
+      assert_equal "2", value.ports
+      assert_equal "PIIX4", value.type
     end
   end
 end
