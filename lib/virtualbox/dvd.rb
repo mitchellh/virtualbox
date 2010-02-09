@@ -22,6 +22,12 @@ module VirtualBox
     class <<self
       # Returns an array of all available DVDs as DVD objects
       def all
+        Global.global.media.dvds
+      end
+
+      # Returns an array of all available DVDs by parsing the VBoxManage
+      # output
+      def all_from_command
         raw = Command.vboxmanage("list", "dvds")
         parse_raw(raw)
       end
@@ -45,6 +51,9 @@ module VirtualBox
           hd_node.attributes.each do |key, value|
             data[key.downcase.to_sym] = value.to_s
           end
+
+          # Massage UUID to proper format
+          data[:uuid] = data[:uuid][1..-2]
 
           result << new(data)
         end
@@ -91,6 +100,14 @@ module VirtualBox
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       false
+    end
+
+    # Lazy load the lazy attributes for this model.
+    def load_attribute(name)
+      # Since the lazy attributes are related, we just load them all at once
+      loaded_image = self.class.all_from_command.detect { |o| o.uuid == self.uuid }
+
+      write_attribute(:accessible, loaded_image.accessible)
     end
   end
 end

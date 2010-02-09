@@ -46,19 +46,34 @@ class DVDTest < Test::Unit::TestCase
 
   context "retrieving all dvds" do
     setup do
-      @expectations = {
-        "d3252617-8176-4f8c-9d73-1c9c82b23960" => {
-          :location   => "/Users/mitchellh/Downloads/jeos-8.04.3-jeos-i386.iso",
-          :accessible => "yes"
-        },
+      media = mock("media")
+      media.expects(:dvds).returns([])
+      global = mock("global")
+      global.expects(:media).returns(media)
+      VirtualBox::Global.expects(:global).returns(global)
+    end
 
-        "4a08f52c-bca3-4908-8da4-4f48aaa4ebba" => {
-          :location   => "/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso",
-          :accessible => "yes"
+    should "return an array of DVD objects" do
+      result = VirtualBox::DVD.all
+      assert result.is_a?(Array)
+    end
+  end
+
+  context "retrieving all dvds by command" do
+      setup do
+        @expectations = {
+          "d3252617-8176-4f8c-9d73-1c9c82b23960" => {
+            :location   => "/Users/mitchellh/Downloads/jeos-8.04.3-jeos-i386.iso",
+            :accessible => "yes"
+          },
+
+          "4a08f52c-bca3-4908-8da4-4f48aaa4ebba" => {
+            :location   => "/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso",
+            :accessible => "yes"
+          }
         }
-      }
 
-      @valid = <<-valid
+        @valid = <<-valid
 UUID:       d3252617-8176-4f8c-9d73-1c9c82b23960
 Path:       /Users/mitchellh/Downloads/jeos-8.04.3-jeos-i386.iso
 Accessible: yes
@@ -69,29 +84,30 @@ Accessible: yes
 Usage:      TestJeOS (UUID: 3d0f87b4-50f7-4fc5-ad89-93375b1b32a3)
 valid
 
-      VirtualBox::Command.expects(:vboxmanage).with("list", "dvds").returns(@valid)
-    end
+        VirtualBox::Command.expects(:vboxmanage).with("list", "dvds").returns(@valid).once
+      end
 
-    should "return an array of DVD objects" do
-      result = VirtualBox::DVD.all
-      assert result.is_a?(Array)
+      should "return an array of DVD objects" do
+        result = VirtualBox::DVD.all_from_command
+        assert result.is_a?(Array)
+        assert_equal @expectations.length, result.length
 
-      result.each { |v| assert v.is_a?(VirtualBox::DVD) }
-    end
+        result.each { |v| assert v.is_a?(VirtualBox::DVD) }
+      end
 
-    should "return the proper results" do
-      result = VirtualBox::DVD.all
-      assert result.is_a?(Array)
-      assert_equal @expectations.length, result.length
+      should "return the proper results" do
+        result = VirtualBox::DVD.all_from_command
+        assert result.is_a?(Array)
+        assert_equal @expectations.length, result.length
 
-      result.each do |image|
-        expected_image = @expectations[image.uuid]
-        assert expected_image
+        result.each do |image|
+          expected_image = @expectations[image.uuid]
+          assert expected_image
 
-        expected_image.each do |k,v|
-          assert_equal v, image.read_attribute(k)
+          expected_image.each do |k,v|
+            assert_equal v, image.read_attribute(k)
+          end
         end
       end
     end
-  end
 end
