@@ -4,12 +4,6 @@ class NicTest < Test::Unit::TestCase
   setup do
     @caller = mock("caller")
     @caller.stubs(:name).returns("foo")
-
-    VirtualBox::VM.stubs(:human_info).returns(<<-raw)
-NIC 1:           MAC: 08002745B49F, Attachment: Bridged Interface 'en0: Ethernet', Cable connected: on, Trace: off (file: none), Type: Am79C973, Reported speed: 0 Mbps
-NIC 2:           MAC: 08002745B49F, Attachment: Bridged Interface 'en0: Ethernet', Cable connected: on, Trace: off (file: none), Type: Am79C973, Reported speed: 0 Mbps
-NIC 3:           MAC: 08002745B49F, Attachment: Bridged Interface 'en0: Ethernet', Cable connected: on, Trace: off (file: none), Type: Am79C973, Reported speed: 0 Mbps
-raw
   end
 
   context "saving" do

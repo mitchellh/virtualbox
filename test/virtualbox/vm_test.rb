@@ -90,13 +90,6 @@ showvminfo
     vm
   end
 
-  context "human readable info" do
-    should "not pass --machinereadable into the showvminfo command" do
-      VirtualBox::Command.expects(:vboxmanage).with("showvminfo", @name).once
-      VirtualBox::VM.human_info(@name)
-    end
-  end
-
   context "reading the VM state" do
     setup do
       @vm = create_vm

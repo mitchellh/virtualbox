@@ -89,7 +89,7 @@ module VirtualBox
     attribute :acpi
     attribute :ioapic
     attribute :cpus
-    attribute :synthcpu
+    attribute :synthcpu, :lazy => true
     attribute :pae
     attribute :hwvirtex
     attribute :hwvirtexexcl
@@ -104,10 +104,10 @@ module VirtualBox
     attribute :boot4
     attribute :clipboard
     attribute :monitorcount
-    attribute :usb
-    attribute :audio
-    attribute :vrdp
-    attribute :vrdpports
+    attribute :usb, :lazy => true
+    attribute :audio, :lazy => true
+    attribute :vrdp, :lazy => true
+    attribute :vrdpports, :lazy => true
     attribute :state, :populate_key => :vmstate, :readonly => true, :lazy => true
     relationship :nics, Nic
     relationship :storage_controllers, StorageController, :dependent => :destroy
@@ -155,16 +155,6 @@ module VirtualBox
         return nil unless raw
 
         find(parse_vm_name(raw))
-      end
-
-      # Gets the non-machine-readable info for a given VM and returns
-      # it as a raw string.
-      #
-      # **This method typically won't be used except internally.**
-      #
-      # @return [String]
-      def human_info(name)
-        Command.vboxmanage("showvminfo", name)
       end
 
       # Gets the VM info (machine readable) for a given VM and returns it
@@ -236,24 +226,12 @@ module VirtualBox
     def initialize(data)
       super()
 
-      # TODO: Relationships
       initialize_attributes(data)
-      populate_relationship(:nics, data)
-      populate_relationship(:shared_folders, data)
-      populate_relationship(:extra_data, data)
-      populate_relationship(:forwarded_ports, data)
-      populate_relationship(:storage_controllers, data)
+      populate_relationships(data)
       @original_name = name
     end
 
     def initialize_attributes(doc)
-      # TODO: Make Lazy: synthcpu
-      # TODO: Finish the following attributes:
-      # attribute :usb
-      # attribute :audio
-      # attribute :vrdp
-      # attribute :vrdpports
-
       attribute_associations = {
         :uuid     => ["Machine", :uuid],
         :name     => ["Machine", :name],
@@ -299,9 +277,19 @@ module VirtualBox
     end
 
     def load_attribute(name)
+      info = self.class.raw_info(@original_name)
+
       if name == :state
         # Simply force a state reload, and it'll write the attribute up
-        state(true)
+        write_attribute(:state, info[:vmstate])
+      end
+
+      if !loaded_attribute?(:synthcpu)
+        write_attribute(:synthcpu, info[:synthcpu])
+        write_attribute(:usb, info[:usb])
+        write_attribute(:audio, info[:audio])
+        write_attribute(:vrdp, info[:vrdp])
+        write_attribute(:vrdpports, info[:vrdpports])
       end
     end
 
@@ -314,8 +302,7 @@ module VirtualBox
     # @return [String] Virtual machine state.
     def state(reload=false)
       if reload
-        info = self.class.raw_info(@original_name)
-        write_attribute(:state, info[:vmstate])
+        load_attribute(:state)
       end
 
       read_attribute(:state)
