@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-02-02}
+  s.date = %q{2010-02-08}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -40,8 +40,10 @@ Gem::Specification.new do |s|
      "lib/virtualbox/ext/subclass_listing.rb",
      "lib/virtualbox/extra_data.rb",
      "lib/virtualbox/forwarded_port.rb",
+     "lib/virtualbox/global.rb",
      "lib/virtualbox/hard_drive.rb",
      "lib/virtualbox/image.rb",
+     "lib/virtualbox/media.rb",
      "lib/virtualbox/nic.rb",
      "lib/virtualbox/proxies/collection.rb",
      "lib/virtualbox/shared_folder.rb",
@@ -59,6 +61,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/ext/subclass_listing_test.rb",
      "test/virtualbox/extra_data_test.rb",
      "test/virtualbox/forwarded_port_test.rb",
+     "test/virtualbox/global_test.rb",
      "test/virtualbox/hard_drive_test.rb",
      "test/virtualbox/image_test.rb",
      "test/virtualbox/nic_test.rb",
@@ -87,6 +90,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/ext/subclass_listing_test.rb",
      "test/virtualbox/extra_data_test.rb",
      "test/virtualbox/forwarded_port_test.rb",
+     "test/virtualbox/global_test.rb",
      "test/virtualbox/hard_drive_test.rb",
      "test/virtualbox/image_test.rb",
      "test/virtualbox/nic_test.rb",
@@ -102,9 +106,12 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<nokogiri>, [">= 1.4.1"])
     else
+      s.add_dependency(%q<nokogiri>, [">= 1.4.1"])
     end
   else
+    s.add_dependency(%q<nokogiri>, [">= 1.4.1"])
   end
 end
 
