@@ -45,7 +45,7 @@ class SharedFolderTest < Test::Unit::TestCase
 
   context "saving an existing shared folder" do
     setup do
-      @value = VirtualBox::SharedFolder.populate_relationship(@caller, @data)
+      @value = VirtualBox::SharedFolder.populate_relationship(@caller, mock_xml_doc)
       @value = @value[0]
       @value.name = "different"
       assert @value.changed?
@@ -170,7 +170,7 @@ class SharedFolderTest < Test::Unit::TestCase
 
   context "destroying" do
     setup do
-      @value = VirtualBox::SharedFolder.populate_relationship(@caller, @data)
+      @value = VirtualBox::SharedFolder.populate_relationship(@caller, mock_xml_doc)
       @value = @value[0]
     end
 
@@ -200,7 +200,7 @@ class SharedFolderTest < Test::Unit::TestCase
 
   context "populating relationships" do
     setup do
-      @value = VirtualBox::SharedFolder.populate_relationship(@caller, @data)
+      @value = VirtualBox::SharedFolder.populate_relationship(@caller, mock_xml_doc)
     end
 
     should "be a 'collection'" do
@@ -213,11 +213,11 @@ class SharedFolderTest < Test::Unit::TestCase
 
     should "parse the proper data" do
       value = @value[0]
-      assert_equal "foofolder", value.name
+      assert_equal "foo", value.name
       assert_equal "/foo", value.hostpath
 
       value = @value[1]
-      assert_equal "barfolder", value.name
+      assert_equal "bar", value.name
       assert_equal "/bar", value.hostpath
     end
   end

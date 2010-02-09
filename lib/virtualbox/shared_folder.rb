@@ -86,8 +86,8 @@ module VirtualBox
   #
   class SharedFolder < AbstractModel
     attribute :parent, :readonly => :readonly
-    attribute :name, :populate_key => "SharedFolderNameMachineMapping"
-    attribute :hostpath, :populate_key => "SharedFolderPathMachineMapping"
+    attribute :name
+    attribute :hostpath
 
     class <<self
       # Populates the shared folder relationship for anything which is related to it.
@@ -95,15 +95,12 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<SharedFolder>]
-      def populate_relationship(caller, data)
+      def populate_relationship(caller, doc)
         relation = Proxies::Collection.new(caller)
 
         counter = 1
-        loop do
-          break unless data["SharedFolderNameMachineMapping#{counter}".downcase.to_sym]
-
-          folder = new(counter, caller, data)
-          relation.push(folder)
+        doc.css("Hardware SharedFolders SharedFolder").each do |folder|
+          relation << new(counter, caller, folder)
           counter += 1
         end
 
@@ -156,10 +153,8 @@ module VirtualBox
     def initialize_for_relationship(index, caller, data)
       # Setup the index specific attributes
       populate_data = {}
-      self.class.attributes.each do |name, options|
-        key = options[:populate_key] || name
-        value = data["#{key}#{index}".downcase.to_sym]
-        populate_data[key] = value
+      data.attributes.each do |key, value|
+        populate_data[key.downcase.to_sym] = value.to_s
       end
 
       populate_attributes(populate_data.merge({

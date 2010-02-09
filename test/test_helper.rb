@@ -85,7 +85,10 @@ class Test::Unit::TestCase
         <Port slot="1" enabled="false" IOBase="0x378" IRQ="4"/>
       </LPT>
       <AudioAdapter controller="AC97" driver="CoreAudio" enabled="false"/>
-      <SharedFolders/>
+      <SharedFolders>
+        <SharedFolder name="foo" hostPath="/foo" writable="true"/>
+        <SharedFolder name="bar" hostPath="/bar" writable="true"/>
+      </SharedFolders>
       <Clipboard mode="Bidirectional"/>
       <Guest memoryBalloonSize="0" statisticsUpdateInterval="0"/>
       <GuestProperties>

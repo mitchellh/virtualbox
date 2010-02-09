@@ -239,6 +239,7 @@ module VirtualBox
       # TODO: Relationships
       initialize_attributes(data)
       populate_relationship(:nics, data)
+      populate_relationship(:shared_folders, data)
       @original_name = name
     end
 
