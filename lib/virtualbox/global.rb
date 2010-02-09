@@ -12,9 +12,15 @@ module VirtualBox
     relationship :media, Media
     relationship :extra_data, ExtraData
 
+    @@global_data = nil
+
     class <<self
-      def global
-        new(config)
+      def global(reload = false)
+        if !@@global_data || reload
+          @@global_data = new(config)
+        end
+
+        @@global_data
       end
 
       # Sets the path to the VirtualBox.xml file. This file should already

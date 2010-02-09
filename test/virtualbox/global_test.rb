@@ -1,6 +1,22 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class GlobalTest < Test::Unit::TestCase
+  context "getting the global config" do
+    should "only get it once, then cache" do
+      VirtualBox::Global.expects(:config).returns(mock_xml_doc).once
+      result = VirtualBox::Global.global
+      assert result
+      assert result.equal?(VirtualBox::Global.global)
+    end
+
+    should "reload if reload is true" do
+      VirtualBox::Global.expects(:config).returns(mock_xml_doc).twice
+      result = VirtualBox::Global.global(true)
+      assert result
+      assert !result.equal?(VirtualBox::Global.global(true))
+    end
+  end
+
   context "parsing configuration XML" do
     should "use Command.parse_xml to parse" do
       VirtualBox::Command.expects(:parse_xml).with(anything).once
