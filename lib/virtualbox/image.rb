@@ -72,8 +72,7 @@ module VirtualBox
       #
       # @return [Array<Image>]
       def populate_relationship(caller, data)
-        return DVD.empty_drive if data[:medium] == "emptydrive"
-        return nil if data[:uuid].nil?
+        return DVD.empty_drive if data[:uuid].nil?
 
         subclasses.each do |subclass|
           next unless subclass.respond_to?(:all)

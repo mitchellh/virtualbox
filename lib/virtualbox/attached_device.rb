@@ -243,9 +243,7 @@ module VirtualBox
         attrs[:uuid] = image[0]["uuid"][1..-2]
       end
 
-      populate_attributes(attrs.merge({
-        :parent => caller
-      }), :ignore_relationships => true)
+      populate_attributes(attrs.merge({ :parent => caller }))
     end
   end
 end

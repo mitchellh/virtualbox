@@ -4,7 +4,7 @@ class GlobalTest < Test::Unit::TestCase
   context "getting the global config" do
     should "only get it once, then cache" do
       VirtualBox::Global.expects(:config).returns(mock_xml_doc).once
-      result = VirtualBox::Global.global
+      result = VirtualBox::Global.global(true)
       assert result
       assert result.equal?(VirtualBox::Global.global)
     end

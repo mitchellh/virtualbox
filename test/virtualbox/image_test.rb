@@ -34,11 +34,6 @@ class ImageTest < Test::Unit::TestCase
         assert result.empty_drive?
       end
 
-      should "return nil if uuid is nil and medium isn't empty" do
-        result = VirtualBox::Image.populate_relationship(@model, {})
-        assert result.nil?
-      end
-
       should "result a matching image from subclasses if uuid" do
         uuid = "foo'"
 

@@ -292,7 +292,7 @@ class AttachedDeviceTest < Test::Unit::TestCase
       assert_equal "0", obj.port
 
       obj = @value[1]
-      assert_equal "none", obj.medium
+      assert_equal "emptydrive", obj.medium
       assert_nil obj.uuid
       assert_equal "1", obj.port
     end

@@ -184,6 +184,12 @@ class RelatableTest < Test::Unit::TestCase
       @model.populate_relationship(:foos, {})
       assert @model.loaded_relationship?(:foos)
     end
+
+    should "not populate the lazy relationship right away" do
+      Relatee.expects(:populate_relationship).never
+      BarRelatee.expects(:populate_relationship).once
+      @model.populate_relationships({})
+    end
   end
 
   context "saving relationships" do

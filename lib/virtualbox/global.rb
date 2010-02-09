@@ -8,7 +8,7 @@ module VirtualBox
     # Mac OS X
     @@vboxconfig = "~/Library/VirtualBox/VirtualBox.xml"
 
-    relationship :vms, VM
+    relationship :vms, VM, :lazy => true
     relationship :media, Media
     relationship :extra_data, ExtraData
 
@@ -47,7 +47,12 @@ module VirtualBox
     end
 
     def initialize(document)
-      populate_attributes(document)
+      @document = document
+      populate_attributes(@document)
+    end
+
+    def load_relationship(name)
+      populate_relationship(:vms, @document)
     end
   end
 end

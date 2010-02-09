@@ -217,7 +217,7 @@ module VirtualBox
       # relationships.
       def populate_relationships(data)
         self.class.relationships.each do |name, options|
-          populate_relationship(name, data)
+          populate_relationship(name, data) unless lazy_relationship?(name)
         end
       end
 
