@@ -41,45 +41,6 @@ module VirtualBox
     attribute :bridgeadapter
 
     class <<self
-      # Retrives the Nic data from human-readable vminfo. Since some data about
-      # nics is not exposed in the machine-readable virtual machine info, some
-      # extra parsing must be done to get these attributes. This method parses
-      # the nic-specific data from this human readable information.
-      #
-      # **This method typically won't be used except internally.**
-      #
-      # @return [Hash]
-      def nic_data(vmname)
-        raw = VM.human_info(vmname)
-
-        # Complicated chain of methods just maps parse_nic over each line,
-        # removing invalid ones, and then converting it into a single hash.
-        raw.split("\n").collect { |v| parse_nic(v) }.compact.inject({}) do |acc, obj|
-          acc.merge({ obj[0] => obj[1] })
-        end
-      end
-
-      # Parses nic data out of a single line of the human readable output
-      # of vm info.
-      #
-      # **This method typically won't be used except internally.**
-      #
-      # @return [Array] First element is nic name, second is data.
-      def parse_nic(raw)
-        return unless raw =~ /^NIC\s(\d):\s+(.+?)$/
-        return if $2.to_s.strip == "disabled"
-
-        data = {}
-        nicname = "nic#{$1}"
-        $2.to_s.split(/,\s+/).each do |raw_property|
-          next unless raw_property =~ /^(.+?):\s+(.+?)$/
-
-          data[$1.downcase.to_sym] = $2.to_s
-        end
-
-        return nicname.to_sym, data
-      end
-
       # Populates the nic relationship for anything which is related to it.
       #
       # **This method typically won't be used except internally.**
