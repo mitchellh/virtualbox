@@ -119,8 +119,8 @@ module VirtualBox
       # Returns an array of all available VMs.
       #
       # @return [Array<VM>]
-      def all
-        Global.global.vms
+      def all(reload=false)
+        Global.global(reload).vms
       end
 
       # Finds a VM by UUID or registered name and returns a
@@ -128,7 +128,7 @@ module VirtualBox
       #
       # @return [VM]
       def find(name)
-        all.detect { |o| o.name == name || o.uuid == name }
+        all(true).detect { |o| o.name == name || o.uuid == name }
       end
 
       # Loads a VM from its XML configuration file. All VMs managed

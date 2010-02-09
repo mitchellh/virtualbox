@@ -265,21 +265,28 @@ showvminfo
   end
 
   context "finding all VMs" do
-    setup do
+    should "list VMs then parse them" do
+      global = mock("global")
+      global.expects(:vms).once
+      VirtualBox::Global.expects(:global).with(false).returns(global)
+      VirtualBox::VM.all
+    end
+
+    should "reload the VMs list if given the reload argument" do
+      global = mock("global")
+      global.expects(:vms).once
+      VirtualBox::Global.expects(:global).with(true).returns(global)
+      VirtualBox::VM.all(true)
+    end
+
+    context "parser" do
+      setup do
       @raw = <<-raw
 "foo" {abcdefg}
 "bar"  {zefaldf}
 raw
-    end
+      end
 
-    should "list VMs then parse them" do
-      global = mock("global")
-      global.expects(:vms).once
-      VirtualBox::Global.expects(:global).returns(global)
-      VirtualBox::VM.all
-    end
-
-    context "parser" do
       should "ignore non-matching lines" do
         assert VirtualBox::VM.parse_vm_list("HEY YOU").empty?
       end
@@ -404,7 +411,7 @@ raw
     end
 
     should "use the global 'all' array to find the VM" do
-      VirtualBox::VM.expects(:all).returns([create_vm])
+      VirtualBox::VM.expects(:all).with(true).returns([create_vm])
       vm = VirtualBox::VM.find(@name)
       assert vm
 
