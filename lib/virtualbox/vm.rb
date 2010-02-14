@@ -68,7 +68,9 @@ module VirtualBox
   #     attribute :audiocontroller
   #     attribute :audiodriver
   #     attribute :vrdp
-  #     attribute :vrdpports
+  #     attribute :vrdpport
+  #     attribute :vrdpauthtype
+  #     attribute :vrdpauthtimeout
   #     attribute :state, :populate_key => :vmstate, :readonly => true
   #
   # ## Relationships
@@ -112,8 +114,10 @@ module VirtualBox
     attribute :audio
     attribute :audiocontroller
     attribute :audiodriver
-    attribute :vrdp, :lazy => true
-    attribute :vrdpports, :lazy => true
+    attribute :vrdp
+    attribute :vrdpport
+    attribute :vrdpauthtype
+    attribute :vrdpauthtimeout
     attribute :state, :populate_key => :vmstate, :readonly => true, :lazy => true
     relationship :nics, Nic
     relationship :storage_controllers, StorageController, :dependent => :destroy
@@ -265,6 +269,10 @@ module VirtualBox
         :audio            => ["Hardware AudioAdapter", :enabled],
         :audiocontroller => ["Hardware AudioAdapter", :controller],
         :audiodriver     => ["Hardware AudioAdapter", :driver],
+        :vrdp            => ["Hardware RemoteDisplay", :enabled],
+        :vrdpport        => ["Hardware RemoteDisplay", :port],
+        :vrdpauthtype    => ["Hardware RemoteDisplay", :authType],
+        :vrdpauthtimeout => ["Hardware RemoteDisplay", :authTimeout],
       }
 
       attribute_associations.each do |name, search_data|
@@ -299,8 +307,6 @@ module VirtualBox
       if !loaded_attribute?(:synthcpu)
         write_attribute(:synthcpu, info[:synthcpu])
         write_attribute(:usb, info[:usb])
-        write_attribute(:vrdp, info[:vrdp])
-        write_attribute(:vrdpports, info[:vrdpports])
       end
     end
 
