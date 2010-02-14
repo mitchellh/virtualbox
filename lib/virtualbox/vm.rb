@@ -42,6 +42,7 @@ module VirtualBox
   #     attribute :uuid, :readonly => true
   #     attribute :name
   #     attribute :ostype
+  #     attribute :description
   #     attribute :memory
   #     attribute :vram
   #     attribute :acpi
@@ -84,6 +85,7 @@ module VirtualBox
     attribute :uuid, :readonly => true
     attribute :name
     attribute :ostype
+    attribute :description
     attribute :memory
     attribute :vram
     attribute :acpi
@@ -236,6 +238,7 @@ module VirtualBox
         :uuid     => ["Machine", :uuid],
         :name     => ["Machine", :name],
         :ostype   => ["Machine", :OSType],
+        :description => ["Machine Description"],
         :memory   => ["Hardware Memory", :RAMSize],
         :vram     => ["Hardware Display", :VRAMSize],
         :acpi     => ["Hardware BIOS ACPI", :enabled],
@@ -260,7 +263,9 @@ module VirtualBox
       attribute_associations.each do |name, search_data|
         css, key = search_data
         node = doc.css(css)[0]
-        value = node.nil? ? nil : node[key]
+
+        # key is passed in for attributes, else you get the element inner text
+        value = (key ? node[key] : node.inner_text) if node
 
         # Special cases
         value = value[1..-2] if name == :uuid

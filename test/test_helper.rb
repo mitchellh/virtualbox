@@ -29,6 +29,7 @@ class Test::Unit::TestCase
 <?xml version="1.0"?>
 <VirtualBox xmlns="http://www.innotek.de/VirtualBox-settings" version="1.9-macosx">
   <Machine uuid="{8710d3db-d96a-46ed-9004-59fa891fda90}" name="foo" OSType="Ubuntu" currentSnapshot="{f1e6edb3-6e12-4615-9642-a80a3a1ad115}" lastStateChange="2010-02-07T20:01:20Z">
+    <Description>This is a description</Description>
     <ExtraData>
       <ExtraDataItem name="GUI/AutoresizeGuest" value="on"/>
       <ExtraDataItem name="GUI/Fullscreen" value="off"/>
