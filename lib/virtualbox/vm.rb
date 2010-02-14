@@ -64,6 +64,7 @@ module VirtualBox
   #     attribute :clipboard
   #     attribute :monitorcount
   #     attribute :usb
+  #     attribute :ehci
   #     attribute :audio
   #     attribute :audiocontroller
   #     attribute :audiodriver
@@ -80,6 +81,7 @@ module VirtualBox
   # understand this, read {Relatable}.
   #
   #     relationship :nics, Nic
+  #     relationship :usbs, USB
   #     relationship :storage_controllers, StorageController, :dependent => :destroy
   #     relationship :shared_folders, SharedFolder
   #     relationship :extra_data, ExtraData
@@ -110,7 +112,8 @@ module VirtualBox
     attribute :boot4
     attribute :clipboard
     attribute :monitorcount
-    attribute :usb, :lazy => true
+    attribute :usb
+    attribute :ehci
     attribute :audio
     attribute :audiocontroller
     attribute :audiodriver
@@ -120,6 +123,7 @@ module VirtualBox
     attribute :vrdpauthtimeout
     attribute :state, :populate_key => :vmstate, :readonly => true, :lazy => true
     relationship :nics, Nic
+    relationship :usbs, USB
     relationship :storage_controllers, StorageController, :dependent => :destroy
     relationship :shared_folders, SharedFolder
     relationship :extra_data, ExtraData
@@ -266,6 +270,8 @@ module VirtualBox
         :boot4    => ["Hardware Boot Order[position=\"4\"]", :device],
         :clipboard  => ["Hardware Clipboard", :mode],
         :monitorcount => ["Hardware Display", :monitorCount],
+        :usb  => ["Hardware USBController", :enabled],
+        :ehci => ["Hardware USBController", :enabledEhci],
         :audio            => ["Hardware AudioAdapter", :enabled],
         :audiocontroller => ["Hardware AudioAdapter", :controller],
         :audiodriver     => ["Hardware AudioAdapter", :driver],
@@ -304,10 +310,7 @@ module VirtualBox
         write_attribute(:state, info[:vmstate])
       end
 
-      if !loaded_attribute?(:synthcpu)
-        write_attribute(:synthcpu, info[:synthcpu])
-        write_attribute(:usb, info[:usb])
-      end
+      write_attribute(:synthcpu, info[:synthcpu]) unless loaded_attribute?(:synthcpu)
     end
 
     # State of the virtual machine. Returns the state of the virtual
