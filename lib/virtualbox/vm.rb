@@ -65,6 +65,8 @@ module VirtualBox
   #     attribute :monitorcount
   #     attribute :usb
   #     attribute :audio
+  #     attribute :audiocontroller
+  #     attribute :audiodriver
   #     attribute :vrdp
   #     attribute :vrdpports
   #     attribute :state, :populate_key => :vmstate, :readonly => true
@@ -107,7 +109,9 @@ module VirtualBox
     attribute :clipboard
     attribute :monitorcount
     attribute :usb, :lazy => true
-    attribute :audio, :lazy => true
+    attribute :audio
+    attribute :audiocontroller
+    attribute :audiodriver
     attribute :vrdp, :lazy => true
     attribute :vrdpports, :lazy => true
     attribute :state, :populate_key => :vmstate, :readonly => true, :lazy => true
@@ -258,6 +262,9 @@ module VirtualBox
         :boot4    => ["Hardware Boot Order[position=\"4\"]", :device],
         :clipboard  => ["Hardware Clipboard", :mode],
         :monitorcount => ["Hardware Display", :monitorCount],
+        :audio            => ["Hardware AudioAdapter", :enabled],
+        :audiocontroller => ["Hardware AudioAdapter", :controller],
+        :audiodriver     => ["Hardware AudioAdapter", :driver],
       }
 
       attribute_associations.each do |name, search_data|
@@ -292,7 +299,6 @@ module VirtualBox
       if !loaded_attribute?(:synthcpu)
         write_attribute(:synthcpu, info[:synthcpu])
         write_attribute(:usb, info[:usb])
-        write_attribute(:audio, info[:audio])
         write_attribute(:vrdp, info[:vrdp])
         write_attribute(:vrdpports, info[:vrdpports])
       end
