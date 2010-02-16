@@ -1,34 +1,43 @@
-# What's New in 0.4.x?
+# What's New in 0.5.x?
 
-## "Extra Data" on VMs / Global
+## HUGE Speed Boost! Very few system calls!
 
-Extra data is persistent key-value storage which is available as a way to store any information
-wanted. VirtualBox uses it for storing statistics and settings. You can use it for anything!
-Setting extra data on virtual machines is now as easy as a ruby hash:
+Most of the data retrieved by the virtualbox library now comes via XML parsing, rather
+than making calls to `VBoxManage`. This results in a drastic speedup. The few relationships or
+attributes which require a system call are typically _lazy loaded_ (covered below), so they
+don't incur a performance penalty unless they're used.
 
-    vm = VirtualBox::VM.find("FooVM")
-    vm.extra_data["i_was_here"] = "yes!"
-    vm.save
+The one caveat is that you now need to set the path to the global VirtualBox configuration
+XML. The virtualbox library will do its best to guess this path based on the operating
+system, but this is hardly foolproof. To set the virtualbox config path, it is a simple
+one-liner:
 
-Read more about extra data {VirtualBox::ExtraData here}.
+    # Remember, this won't be necessary MOST of the time
+    VirtualBox::Global.vboxconfig = "~/path/to/VirtualBox.xml"
 
-## Port Forwarding
+## Lazy Loading of Attributes and Relationships
 
-If a VM is using NAT for its network, the host machine can't access any outward facing
-services of the guest (for example: a web host, ftp server, etc.). Port forwarding is
-one way to facilitate this need. Port forwarding is straight forward to setup:
+Although still not widely used (will be in future patch releases), some attributes and
+relationships are now _lazy loaded_. This means that since they're probably expensive
+to load (many system calls, heavy parsing, etc.) they aren't loaded initially. Instead,
+they are only loaded if they're used. This means that you don't incur the penalty cost
+of loading them unless you use it! Fantastic!
 
-    vm = VirtualBox::VM.find("FooVM")
-    port = VirtualBox::ForwardedPort.new
-    port.name = "http"
-    port.guestport = 80
-    port.hostport = 8080
-    vm.forwarded_ports << port
-    vm.save
+There is no real "example code" for this feature since to the casual user, it happens
+transparently in the background and generally "just works." If you're _really_ curious,
+then feel free to check out any class which derives from {VirtualBox::AbstractModel}
+and any attribute or relationship with the `:lazy => true` option is lazy loaded!
 
-Read more about port forwarding {VirtualBox::ForwardedPort here}.
+## System Properties
 
-## More Ruby Versions Supported!
+A small but meaningful update is the ability to view the system properties for the
+host system which VirtualBox is running. This is done via the {VirtualBox::SystemProperty}
+class, which is simply a `Hash`. System properties are immutable properties defined
+by the host system, which typically are limits imposed upon VirtualBox, such as
+maximum RAM size or default path to machine files. Retrieving the system properties
+is quite easy:
 
-Previously, virtualbox only supported 1.8.7. It now supports 1.8.6 and 1.9.x thanks
-to AlekSi.
+    properties = VirtualBox::SystemProperty.all
+    properties.each do |key, value|
+      puts "#{key} = #{value}"
+    end
