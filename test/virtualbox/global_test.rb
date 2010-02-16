@@ -15,6 +15,13 @@ class GlobalTest < Test::Unit::TestCase
       assert result
       assert !result.equal?(VirtualBox::Global.global(true))
     end
+
+    should "reload if global reload flag is set" do
+      VirtualBox::Global.reload!
+      VirtualBox::Global.expects(:config).returns(mock_xml_doc).once
+      VirtualBox::Global.global
+      assert !VirtualBox::Global.reload?
+    end
   end
 
   context "parsing configuration XML" do

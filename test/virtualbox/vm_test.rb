@@ -191,8 +191,8 @@ class VMTest < Test::Unit::TestCase
       @vm.destroy
     end
 
-    should "mark class for reloading" do
-      @vm.expects(:reload!)
+    should "mark global for reloading" do
+      VirtualBox::Global.expects(:reload!)
       @vm.destroy
     end
   end
@@ -213,13 +213,6 @@ class VMTest < Test::Unit::TestCase
     should "reload the VMs list if given the reload argument" do
       VirtualBox::Global.expects(:global).with(true).returns(@global)
       VirtualBox::VM.all(true)
-    end
-
-    should "reload the VMs if the global reload flag is set" do
-      VirtualBox::VM.reload!
-      VirtualBox::Global.expects(:global).with(true).returns(@global)
-      VirtualBox::VM.all
-      assert !VirtualBox::VM.reload?
     end
 
     context "parser" do
@@ -287,8 +280,12 @@ raw
       VirtualBox::AttachedDevice.any_instance.stubs(:save)
     end
 
-    should "force a reload on the class level" do
-      @vm.expects(:reload!).once
+    teardown do
+      VirtualBox::Global.reloaded!
+    end
+
+    should "force a reload on the global class" do
+      VirtualBox::Global.expects(:reload!).once
       assert @vm.save
     end
 

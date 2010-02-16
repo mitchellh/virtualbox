@@ -16,8 +16,9 @@ module VirtualBox
 
     class <<self
       def global(reload = false)
-        if !@@global_data || reload
+        if !@@global_data || reload || reload?
           @@global_data = new(config)
+          reloaded!
         end
 
         @@global_data

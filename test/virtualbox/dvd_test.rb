@@ -32,10 +32,9 @@ class DVDTest < Test::Unit::TestCase
       }
     end
 
-    should "mark the class for reloading" do
-      assert !VirtualBox::DVD.reload?
+    should "mark the global class for reloading" do
+      VirtualBox::Global.expects(:reload!)
       assert @dvd.destroy
-      assert VirtualBox::DVD.reload?
     end
   end
 
@@ -63,13 +62,6 @@ class DVDTest < Test::Unit::TestCase
       VirtualBox::Global.expects(:global).returns(@global)
       result = VirtualBox::DVD.all
       assert result.is_a?(Array)
-    end
-
-    should "relaod the global object if the reload flag is set" do
-      VirtualBox::DVD.reload!
-      VirtualBox::Global.expects(:global).with(true).once.returns(@global)
-      VirtualBox::DVD.all
-      assert !VirtualBox::DVD.reload?
     end
   end
 
