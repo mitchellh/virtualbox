@@ -82,7 +82,7 @@ module VirtualBox
       # Convert each attribute value to a string
       attrs = {}
       data.attributes.each do |key, value|
-        attrs[key.to_sym] = value.to_s
+        attrs[key] = value.to_s
       end
 
       populate_attributes(attrs)
