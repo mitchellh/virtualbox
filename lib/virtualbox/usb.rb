@@ -1,7 +1,7 @@
 module VirtualBox
-  # Represents a single USB Device of a virtual machine.
+  # Represents a single USB device of a virtual machine.
   #
-  # **Currently, new USB Devices can't be created, so the only way to get this
+  # **Currently, new USB devices can't be created, so the only way to get this
   # object is through a {VM}'s `usbs` relationship.**
   #
   # # Attributes
@@ -35,7 +35,7 @@ module VirtualBox
       #
       # **This method typically won't be used except internally.**
       #
-      # @return [Array<Nic>]
+      # @return [Array<USB>]
       def populate_relationship(caller, doc)
         relation = Proxies::Collection.new(caller)
 
@@ -47,7 +47,7 @@ module VirtualBox
       end
     end
 
-    # Since there is currently no way to create a _new_ usb devise, this is
+    # Since there is currently no way to create a _new_ usb device, this is
     # only used internally. Developers should NOT try to initialize their
     # own usb device objects.
     def initialize(caller, data)
