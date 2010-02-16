@@ -216,9 +216,10 @@ class VMTest < Test::Unit::TestCase
     end
 
     should "reload the VMs if the global reload flag is set" do
-      VirtualBox::VM.expects(:reload?).returns(true)
+      VirtualBox::VM.reload!
       VirtualBox::Global.expects(:global).with(true).returns(@global)
       VirtualBox::VM.all
+      assert !VirtualBox::VM.reload?
     end
 
     context "parser" do

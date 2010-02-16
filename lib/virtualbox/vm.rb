@@ -130,7 +130,9 @@ module VirtualBox
       #
       # @return [Array<VM>]
       def all(reload=false)
-        Global.global(reload || reload?).vms
+        result = Global.global(reload || reload?).vms
+        reloaded!
+        result
       end
 
       # Finds a VM by UUID or registered name and returns a

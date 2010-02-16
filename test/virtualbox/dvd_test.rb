@@ -8,6 +8,7 @@ class DVDTest < Test::Unit::TestCase
   context "destroying a dvd" do
     setup do
       @dvd = VirtualBox::DVD.new
+      VirtualBox::DVD.reloaded!
     end
 
     should "return false if attempting to destroy an empty drive" do
@@ -30,6 +31,12 @@ class DVDTest < Test::Unit::TestCase
         @dvd.destroy(true)
       }
     end
+
+    should "mark the class for reloading" do
+      assert !VirtualBox::DVD.reload?
+      assert @dvd.destroy
+      assert VirtualBox::DVD.reload?
+    end
   end
 
   context "empty drive" do
@@ -46,16 +53,23 @@ class DVDTest < Test::Unit::TestCase
 
   context "retrieving all dvds" do
     setup do
-      media = mock("media")
-      media.expects(:dvds).returns([])
-      global = mock("global")
-      global.expects(:media).returns(media)
-      VirtualBox::Global.expects(:global).returns(global)
+      @media = mock("media")
+      @media.expects(:dvds).returns([])
+      @global = mock("global")
+      @global.expects(:media).returns(@media)
     end
 
     should "return an array of DVD objects" do
+      VirtualBox::Global.expects(:global).returns(@global)
       result = VirtualBox::DVD.all
       assert result.is_a?(Array)
+    end
+
+    should "relaod the global object if the reload flag is set" do
+      VirtualBox::DVD.reload!
+      VirtualBox::Global.expects(:global).with(true).once.returns(@global)
+      VirtualBox::DVD.all
+      assert !VirtualBox::DVD.reload?
     end
   end
 

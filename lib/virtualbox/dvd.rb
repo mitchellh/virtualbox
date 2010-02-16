@@ -22,7 +22,9 @@ module VirtualBox
     class <<self
       # Returns an array of all available DVDs as DVD objects
       def all
-        Global.global.media.dvds
+        result = Global.global(reload?).media.dvds
+        reloaded!
+        result
       end
 
       # Returns an array of all available DVDs by parsing the VBoxManage
@@ -96,6 +98,7 @@ module VirtualBox
       return false if empty_drive?
 
       Command.vboxmanage("closemedium", "dvd", uuid, "--delete")
+      reload!
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
