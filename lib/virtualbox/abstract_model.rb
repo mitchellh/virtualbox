@@ -122,7 +122,7 @@ module VirtualBox
       clear_dirty!(key)
     end
 
-    # Overriding {Attribute#lazy_attribute?} to always return false for
+    # Overriding {Attributable#lazy_attribute?} to always return false for
     # new records, since new records shouldn't load lazy data.
     def lazy_attribute?(*args)
       return false if new_record?
