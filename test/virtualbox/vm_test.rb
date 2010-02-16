@@ -190,21 +190,35 @@ class VMTest < Test::Unit::TestCase
       VirtualBox::Command.expects(:vboxmanage).with("unregistervm", @name, "--delete").in_sequence(destroy_seq)
       @vm.destroy
     end
+
+    should "mark class for reloading" do
+      @vm.expects(:reload!)
+      @vm.destroy
+    end
   end
 
   context "finding all VMs" do
+    setup do
+      VirtualBox::VM.reloaded!
+
+      @global = mock("global")
+      @global.stubs(:vms)
+    end
+
     should "list VMs then parse them" do
-      global = mock("global")
-      global.expects(:vms).once
-      VirtualBox::Global.expects(:global).with(false).returns(global)
+      VirtualBox::Global.expects(:global).with(false).returns(@global)
       VirtualBox::VM.all
     end
 
     should "reload the VMs list if given the reload argument" do
-      global = mock("global")
-      global.expects(:vms).once
-      VirtualBox::Global.expects(:global).with(true).returns(global)
+      VirtualBox::Global.expects(:global).with(true).returns(@global)
       VirtualBox::VM.all(true)
+    end
+
+    should "reload the VMs if the global reload flag is set" do
+      VirtualBox::VM.expects(:reload?).returns(true)
+      VirtualBox::Global.expects(:global).with(true).returns(@global)
+      VirtualBox::VM.all
     end
 
     context "parser" do
@@ -270,6 +284,11 @@ raw
     setup do
       @vm = create_vm
       VirtualBox::AttachedDevice.any_instance.stubs(:save)
+    end
+
+    should "force a reload on the class level" do
+      @vm.expects(:reload!).once
+      assert @vm.save
     end
 
     should "return false if saving fails" do

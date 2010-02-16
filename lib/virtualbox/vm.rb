@@ -120,7 +120,7 @@ module VirtualBox
       #
       # @return [Array<VM>]
       def all(reload=false)
-        Global.global(reload).vms
+        Global.global(reload || reload?).vms
       end
 
       # Finds a VM by UUID or registered name and returns a
@@ -321,6 +321,9 @@ module VirtualBox
 
       super()
 
+      # Force reload
+      reload!
+
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
@@ -493,7 +496,12 @@ module VirtualBox
       # unregistering a VM
       super
 
-      Command.vboxmanage("unregistervm", @original_name, "--delete")
+      if Command.vboxmanage("unregistervm", @original_name, "--delete")
+        reload!
+        return true
+      else
+        return false
+      end
     end
 
     # Returns true if the virtual machine state is running
