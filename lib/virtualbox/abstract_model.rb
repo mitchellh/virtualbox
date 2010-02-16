@@ -214,7 +214,14 @@ module VirtualBox
       values = []
 
       self.class.attributes.each do |name, options|
-        values.push("#{name.inspect}=#{read_attribute(name).inspect}")
+        value = read_attribute(name)
+        value = if value.is_a?(AbstractModel)
+          "#<#{value.class.name}>"
+        else
+          value.inspect
+        end
+
+        values.push("#{name.inspect}=#{value}")
       end
 
       self.class.relationships.each do |name, options|

@@ -104,6 +104,11 @@ class AbstractModelTest < Test::Unit::TestCase
     should "generate the proper inspect string" do
       assert_equal "#<AbstractModelTest::FakeModel :bar=nil, :bars=..., :foo=nil, :foos=...>", @model.inspect
     end
+
+    should "turn attributes which are AbstractModels into classes" do
+      @model.foo = @model.dup
+      assert_equal "#<AbstractModelTest::FakeModel :bar=nil, :bars=..., :foo=#<AbstractModelTest::FakeModel>, :foos=...>", @model.inspect
+    end
   end
 
   context "validation" do
