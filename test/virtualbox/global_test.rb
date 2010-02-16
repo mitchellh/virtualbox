@@ -27,6 +27,13 @@ class GlobalTest < Test::Unit::TestCase
   context "parsing configuration XML" do
     setup do
       File.stubs(:exist?).returns(true)
+      VirtualBox::Command.stubs(:parse_xml)
+    end
+
+    should "check the file with the expanded path" do
+      File.stubs(:expand_path).returns("FOO")
+      File.expects(:exist?).with("FOO").returns(true)
+      VirtualBox::Global.config
     end
 
     should "raise an error if the config XML doesn't exist" do
