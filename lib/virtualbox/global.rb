@@ -3,9 +3,9 @@ module VirtualBox
   # which VirtualBox uses to keep track of all known virtual machines
   # and images.
   class Global < AbstractModel
-    # TODO: Perhaps make this detect the OS on initial load and set it
-    # to the typicaly "default" location, instead of defaulting to
-    # Mac OS X
+    # The path to the global VirtualBox XML configuration file. This is
+    # entirely system dependent and can be set with {vboxconfig=}. The default
+    # is set to a Mac OS X path.
     @@vboxconfig = "~/Library/VirtualBox/VirtualBox.xml"
 
     relationship :vms, VM, :lazy => true
@@ -32,10 +32,13 @@ module VirtualBox
         @@vboxconfig = value
       end
 
-      # Returns the XML document of the configuration.
+      # Returns the XML document of the configuration. This will raise an
+      # {Exceptions::ConfigurationException} if the vboxconfig file doesn't
+      # exist.
       #
       # @return [Nokogiri::XML::Document]
       def config
+        raise Exceptions::ConfigurationException.new("The path to the global VirtualBox config must be set. See Global.vboxconfig=") unless File.exist?(@@vboxconfig)
         Command.parse_xml(File.expand_path(@@vboxconfig))
       end
 

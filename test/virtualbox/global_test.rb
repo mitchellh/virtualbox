@@ -25,6 +25,17 @@ class GlobalTest < Test::Unit::TestCase
   end
 
   context "parsing configuration XML" do
+    setup do
+      File.stubs(:exist?).returns(true)
+    end
+
+    should "raise an error if the config XML doesn't exist" do
+      File.expects(:exist?).returns(false)
+      assert_raises(VirtualBox::Exceptions::ConfigurationException) do
+        VirtualBox::Global.config
+      end
+    end
+
     should "use Command.parse_xml to parse" do
       VirtualBox::Command.expects(:parse_xml).with(anything).once
       VirtualBox::Global.config

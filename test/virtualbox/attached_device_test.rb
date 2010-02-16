@@ -17,6 +17,9 @@ class AttachedDeviceTest < Test::Unit::TestCase
 
     # Stub execute to make sure nothing actually happens
     VirtualBox::Command.stubs(:execute).returns('')
+
+    # Stub the config
+    VirtualBox::Global.stubs(:config).returns(mock_xml_doc)
   end
 
   context "validations" do
