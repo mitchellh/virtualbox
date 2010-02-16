@@ -72,8 +72,8 @@ class AbstractModelTest < Test::Unit::TestCase
     class LazyModel < VirtualBox::AbstractModel
       attribute :foo, :lazy => true
       attribute :bar
-      relationship :foos, Foo, :lazy => true
-      relationship :bars, Bar, :lazy => true
+      relationship :foos, AbstractModelTest::Foo, :lazy => true
+      relationship :bars, AbstractModelTest::Bar, :lazy => true
     end
 
     setup do

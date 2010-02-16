@@ -153,8 +153,8 @@ class RelatableTest < Test::Unit::TestCase
 
   context "lazy relationships" do
     class LazyRelatableModel < EmptyRelatableModel
-      relationship :foos, Relatee, :lazy => true
-      relationship :bars, BarRelatee
+      relationship :foos, RelatableTest::Relatee, :lazy => true
+      relationship :bars, RelatableTest::BarRelatee
     end
 
     setup do
