@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta name="Content-Type" content="text/html; charset=UTF-8" />
-<title>Class: VirtualBox::Nic</title>
+<title>Class: VirtualBox::USB</title>
 <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
@@ -23,10 +23,10 @@
     <div id="header">
       <div id="menu">
   
-    <a href="../_index.html">Index (N)</a> &raquo; 
+    <a href="../_index.html">Index (U)</a> &raquo; 
     <span class='title'><a href="../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span>
      &raquo; 
-    <span class="title">Nic</span>
+    <span class="title">USB</span>
   
   
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
@@ -43,7 +43,7 @@
     
     <iframe id="search_frame"></iframe>
     
-    <div id="content"><h1>Class: VirtualBox::Nic 
+    <div id="content"><h1>Class: VirtualBox::USB 
   
   
 </h1>
@@ -59,7 +59,7 @@
           
             <li class="next"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></li>
           
-            <li class="next">VirtualBox::Nic</li>
+            <li class="next">VirtualBox::USB</li>
           
         </ul>
         <a href="#" class="inheritanceTree">show all</a>
@@ -74,28 +74,17 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/virtualbox/nic.rb</dd>
+    <dd class="r2 last">lib/virtualbox/usb.rb</dd>
   
 </dl>
 <div class="clear"></div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>Represents a single NIC (Network Interface Card) of a virtual machine.</p>
+    <p>Represents a single USB device of a virtual machine.</p>
 
-<p><strong>Currently, new NICs can't be created, so the only way to get this
-object is through a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>'s <code>nics</code> relationship.</strong></p>
-
-<h1>Editing a NIC</h1>
-
-<p>Nics can be modified directly in their relationship to other
-virtual machines. When <tt><a href="VM.html#save-instance_method" title="VirtualBox::VM#save (method)">VM#save</a></tt> is called, it will also save any
-changes to its relationships.</p>
-
-<pre class="code"><span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;foo&quot;</span><span class='rparen token'>)</span>
-<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='nics identifier id'>nics</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='macaddress identifier id'>macaddress</span> <span class='assign token'>=</span> <span class='@new_mac_address ivar id'>@new_mac_address</span>
-<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
-</pre>
+<p><strong>Currently, new USB devices can't be created, so the only way to get this
+object is through a <tt><a href="VM.html" title="VirtualBox::VM (class)">VM</a></tt>'s <code>usbs</code> relationship.</strong></p>
 
 <h1>Attributes</h1>
 
@@ -109,11 +98,11 @@ listed below. If you aren't sure what this means or you can't understand
 why the below is listed, please read <tt><a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">Attributable</a></tt>.</p>
 
 <pre class="code"><span class='attribute identifier id'>attribute</span> <span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='symbol val'>:readonly</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:readonly</span>
-<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:nic</span>
-<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:nictype</span>
-<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:macaddress</span>
-<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:cableconnected</span>
-<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:bridgeadapter</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:name</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:active</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:manufacturer</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:product</span>
+<span class='attribute identifier id'>attribute</span> <span class='symbol val'>:remote</span>
 </pre>
 
   </div>
@@ -150,7 +139,7 @@ why the below is listed, please read <tt><a href="AbstractModel/Attributable.htm
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;Nic&gt;) <strong>populate_relationship</strong>(caller, doc) </a>
+      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;USB&gt;) <strong>populate_relationship</strong>(caller, doc) </a>
     
 
     
@@ -162,27 +151,7 @@ why the below is listed, please read <tt><a href="AbstractModel/Attributable.htm
   
 
   
-    <span class="summary_desc">Populates the nic relationship for anything which is related to it.</span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#save_relationship-class_method" title="save_relationship (class method)">+ (Object) <strong>save_relationship</strong>(caller, data) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc">Saves the relationship.</span>
+    <span class="summary_desc">Populates the usb device relationship for anything which is related to it.</span>
   
 </li>
 
@@ -196,7 +165,7 @@ why the below is listed, please read <tt><a href="AbstractModel/Attributable.htm
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Nic) <strong>initialize</strong>(caller, data) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (USB) <strong>initialize</strong>(caller, data) </a>
     
 
     
@@ -210,28 +179,8 @@ why the below is listed, please read <tt><a href="AbstractModel/Attributable.htm
   
 
   
-    <span class="summary_desc">Since there is currently no way to create a <em>new</em> nic, this is
+    <span class="summary_desc">Since there is currently no way to create a <em>new</em> usb device, this is
 only used internally.</span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#save_attribute-instance_method" title="#save_attribute (instance method)">- (Object) <strong>save_attribute</strong>(key, value, vmname) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc">Saves a single attribute of the nic.</span>
   
 </li>
 
@@ -244,7 +193,7 @@ only used internally.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#lazy_attribute%3F-instance_method" title="VirtualBox::AbstractModel#lazy_attribute? (method)">#lazy_attribute?</a>, <a href="AbstractModel.html#lazy_relationship%3F-instance_method" title="VirtualBox::AbstractModel#lazy_relationship? (method)">#lazy_relationship?</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#populate_relationship-instance_method" title="VirtualBox::AbstractModel#populate_relationship (method)">#populate_relationship</a>, <a href="AbstractModel.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel.html#reload%21-class_method" title="VirtualBox::AbstractModel.reload! (method)">reload!</a>, <a href="AbstractModel.html#reload%21-instance_method" title="VirtualBox::AbstractModel#reload! (method)">#reload!</a>, <a href="AbstractModel.html#reload%3F-class_method" title="VirtualBox::AbstractModel.reload? (method)">reload?</a>, <a href="AbstractModel.html#reloaded%21-class_method" title="VirtualBox::AbstractModel.reloaded! (method)">reloaded!</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#lazy_attribute%3F-instance_method" title="VirtualBox::AbstractModel#lazy_attribute? (method)">#lazy_attribute?</a>, <a href="AbstractModel.html#lazy_relationship%3F-instance_method" title="VirtualBox::AbstractModel#lazy_relationship? (method)">#lazy_relationship?</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#populate_relationship-instance_method" title="VirtualBox::AbstractModel#populate_relationship (method)">#populate_relationship</a>, <a href="AbstractModel.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel.html#reload%21-instance_method" title="VirtualBox::AbstractModel#reload! (method)">#reload!</a>, <a href="AbstractModel.html#reload%21-class_method" title="VirtualBox::AbstractModel.reload! (method)">reload!</a>, <a href="AbstractModel.html#reload%3F-class_method" title="VirtualBox::AbstractModel.reload? (method)">reload?</a>, <a href="AbstractModel.html#reloaded%21-class_method" title="VirtualBox::AbstractModel.reloaded! (method)">reloaded!</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -283,15 +232,15 @@ only used internally.</span>
     <div class="method_details first">
   <p class="signature first" id="initialize-instance_method">
   
-    - (<tt><a href="" title="VirtualBox::Nic (class)">Nic</a></tt>) <strong>initialize</strong>(caller, data) 
+    - (<tt><a href="" title="VirtualBox::USB (class)">USB</a></tt>) <strong>initialize</strong>(caller, data) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Since there is currently no way to create a <em>new</em> nic, this is
+    <p>Since there is currently no way to create a <em>new</em> usb device, this is
 only used internally. Developers should NOT try to initialize their
-own nic objects.</p>
+own usb device objects.</p>
 
   </div>
 </div>
@@ -303,60 +252,42 @@ own nic objects.</p>
       <pre class="lines">
 
 
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100</pre>
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/nic.rb', line 74</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/usb.rb', line 53</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
-
-  <span class='@index ivar id'>@index</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='string val'>&quot;slot&quot;</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='plus op'>+</span> <span class='integer val'>1</span>
 
   <span class='comment val'># Set the parent</span>
   <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
 
   <span class='comment val'># Convert each attribute value to a string</span>
   <span class='attrs identifier id'>attrs</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+
   <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='bitor op'>|</span>
-    <span class='attrs identifier id'>attrs</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+    <span class='attrs identifier id'>attrs</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
   <span class='end end kw'>end</span>
 
   <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='attrs identifier id'>attrs</span><span class='rparen token'>)</span>
-
-  <span class='comment val'># The `nic` attribute is a bit more complicated, but not by</span>
-  <span class='comment val'># much</span>
-  <span class='if if kw'>if</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='string val'>&quot;enabled&quot;</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='string val'>&quot;true&quot;</span>
-    <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:nic</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='children identifier id'>children</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='rparen token'>)</span>
-  <span class='else else kw'>else</span>
-    <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:nic</span><span class='comma token'>,</span> <span class='string val'>&quot;none&quot;</span><span class='rparen token'>)</span>
-  <span class='end end kw'>end</span>
 
   <span class='comment val'># Clear dirtiness</span>
   <span class='clear_dirty! fid id'>clear_dirty!</span>
@@ -387,13 +318,13 @@ own nic objects.</p>
       <div class="method_details first">
   <p class="signature first" id="populate_relationship-class_method">
   
-    + (<tt>Array&lt;<a href="" title="VirtualBox::Nic (class)">Nic</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, doc) 
+    + (<tt>Array&lt;<a href="" title="VirtualBox::USB (class)">USB</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, doc) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Populates the nic relationship for anything which is related to it.</p>
+    <p>Populates the usb device relationship for anything which is related to it.</p>
 
 <p><strong>This method typically won't be used except internally.</strong></p>
 
@@ -405,7 +336,7 @@ own nic objects.</p>
   
     <li>
       
-        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::Nic (class)">Nic</a>&gt;</tt>)</span>
+        <span class='type'>(<tt>Array&lt;<a href="" title="VirtualBox::USB (class)">USB</a>&gt;</tt>)</span>
       
       
       
@@ -420,121 +351,27 @@ own nic objects.</p>
       <pre class="lines">
 
 
-49
-50
-51
-52
-53
-54
-55
-56
-57</pre>
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/nic.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/usb.rb', line 39</span>
 
 <span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='doc identifier id'>doc</span><span class='rparen token'>)</span>
   <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='Proxies constant id'>Proxies</span><span class='colon2 op'>::</span><span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
 
-  <span class='doc identifier id'>doc</span><span class='dot token'>.</span><span class='css identifier id'>css</span><span class='lparen token'>(</span><span class='string val'>&quot;Hardware Network Adapter&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='adapter identifier id'>adapter</span><span class='bitor op'>|</span>
-    <span class='relation identifier id'>relation</span> <span class='lshft op'>&lt;&lt;</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='adapter identifier id'>adapter</span><span class='rparen token'>)</span>
+  <span class='doc identifier id'>doc</span><span class='dot token'>.</span><span class='css identifier id'>css</span><span class='lparen token'>(</span><span class='string val'>&quot;Hardware USBController DeviceFilter&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='device identifier id'>device</span><span class='bitor op'>|</span>
+    <span class='relation identifier id'>relation</span> <span class='lshft op'>&lt;&lt;</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='device identifier id'>device</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 
   <span class='relation identifier id'>relation</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="save_relationship-class_method">
-  
-    + (<tt>Object</tt>) <strong>save_relationship</strong>(caller, data) 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>Saves the relationship. This simply calls <tt><a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a></tt> on every
-member of the relationship.</p>
-
-<p><strong>This method typically won't be used except internally.</strong></p>
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-63
-64
-65
-66
-67
-68</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/nic.rb', line 63</span>
-
-<span class='def def kw'>def</span> <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
-  <span class='comment val'># Just call save on each nic with the VM</span>
-  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='nic identifier id'>nic</span><span class='bitor op'>|</span>
-    <span class='nic identifier id'>nic</span><span class='dot token'>.</span><span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
-  <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-  </div>
-
-  <div id="instance_method_details" class="method_details_list">
-    <h2>Instance Method Details</h2>
-    
-    
-      <div class="method_details first">
-  <p class="signature first" id="save_attribute-instance_method">
-  
-    - (<tt>Object</tt>) <strong>save_attribute</strong>(key, value, vmname) 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>Saves a single attribute of the nic. This method is automatically
-called on <tt><a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a></tt>.</p>
-
-<p><strong>This method typically won't be used except internally.</strong></p>
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-106
-107
-108
-109</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/nic.rb', line 106</span>
-
-<span class='def def kw'>def</span> <span class='save_attribute identifier id'>save_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='comma token'>,</span> <span class='vmname identifier id'>vmname</span><span class='rparen token'>)</span>
-  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;modifyvm&quot;</span><span class='comma token'>,</span> <span class='vmname identifier id'>vmname</span><span class='comma token'>,</span> <span class='dstring node'>&quot;--#{key}#{@index}&quot;</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
-  <span class='super super kw'>super</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>

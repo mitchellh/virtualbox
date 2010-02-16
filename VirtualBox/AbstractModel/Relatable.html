@@ -151,6 +151,48 @@ is called.</p>
 <p>This is not a feature built-in to Relatable but figured it should be
 mentioned here.</p>
 
+<h1>Lazy Relationships</h1>
+
+<p>Often, relationships are pretty heavy things to load. Data may have to be
+retrieved, classes instantiated, etc. If a class has many relationships, or
+many relationships within many relationships, the time and memory required
+for relationships really begins to add up. To address this issue, <em>lazy relationships</em>
+are available. Lazy relationships defer loading their content until the
+last possible moment, or rather, when a user requests the data. By specifing
+the <code>:lazy =&gt; true</code> option to relationships, relationships will not be loaded
+immediately. Instead, when they're first requested, <code>load_relationship</code> will
+be called on the model, with the name of the relationship given as a
+parameter. It is up to this method to call <tt><a href="#populate_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationship (method)">#populate_relationship</a></tt> at some
+point with the data to setup the relationship. An example follows:</p>
+
+<pre class="code"><span class='class class kw'>class</span> <span class='SomeModel constant id'>SomeModel</span>
+  <span class='include identifier id'>include</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='AbstractModel constant id'>AbstractModel</span><span class='colon2 op'>::</span><span class='Relatable constant id'>Relatable</span>
+
+  <span class='relationship identifier id'>relationship</span> <span class='symbol val'>:foos</span><span class='comma token'>,</span> <span class='Foo constant id'>Foo</span><span class='comma token'>,</span> <span class='symbol val'>:lazy</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+
+  <span class='def def kw'>def</span> <span class='load_relationship identifier id'>load_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='symbol val'>:foos</span>
+      <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='get_data_for_a_long_time identifier id'>get_data_for_a_long_time</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+
+<p>Using the above class, we can use it like so:</p>
+
+<pre class="code"><span class='model identifier id'>model</span> <span class='assign token'>=</span> <span class='SomeModel constant id'>SomeModel</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+<span class='comment val'># This initial load takes awhile as it loads...</span>
+<span class='model identifier id'>model</span><span class='dot token'>.</span><span class='foos identifier id'>foos</span>
+
+<span class='comment val'># Instant! (Just a hash lookup. No load necessary)</span>
+<span class='model identifier id'>model</span><span class='dot token'>.</span><span class='foos identifier id'>foos</span>
+</pre>
+
+<p>One catch: If a model attempts to <tt><a href="#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">destroy</a></tt> a lazy
+relationship, it will first load the relationship, since destroy typically
+depends on some data of the relationship.</p>
+
   </div>
 </div>
 <div class="tags">
@@ -261,6 +303,66 @@ mentioned here.</p>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#lazy_relationship%3F-instance_method" title="#lazy_relationship? (instance method)">- (Boolean) <strong>lazy_relationship?</strong>(key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns boolean denoting if a relationship is to be lazy loaded.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#loaded_relationship%3F-instance_method" title="#loaded_relationship? (instance method)">- (Boolean) <strong>loaded_relationship?</strong>(key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns boolean denoting if a relationship has been loaded.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#populate_relationship-instance_method" title="#populate_relationship (instance method)">- (Object) <strong>populate_relationship</strong>(name, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Populate a single relationship.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#populate_relationships-instance_method" title="#populate_relationships (instance method)">- (Object) <strong>populate_relationships</strong>(data) </a>
     
 
@@ -282,6 +384,26 @@ relationships.</span>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#read_relationship-instance_method" title="#read_relationship (instance method)">- (Object) <strong>read_relationship</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Reads a relationship.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#relationship_data-instance_method" title="#relationship_data (instance method)">- (Hash) <strong>relationship_data</strong> </a>
     
 
@@ -295,6 +417,26 @@ relationships.</span>
 
   
     <span class="summary_desc">Hash to data associated with relationships.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#save_relationship-instance_method" title="#save_relationship (instance method)">- (Object) <strong>save_relationship</strong>(name, *args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Saves a single relationship.</span>
   
 </li>
 
@@ -367,12 +509,12 @@ relationships.</span>
       <pre class="lines">
 
 
-82
-83
-84</pre>
+122
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 82</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 122</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='included identifier id'>included</span><span class='lparen token'>(</span><span class='base identifier id'>base</span><span class='rparen token'>)</span>
   <span class='base identifier id'>base</span><span class='dot token'>.</span><span class='extend identifier id'>extend</span> <span class='ClassMethods constant id'>ClassMethods</span>
@@ -430,18 +572,28 @@ the class's <code>destroy_relationship</code> method.</p>
       <pre class="lines">
 
 
-181
-182
-183
-184
-185</pre>
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 181</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 245</span>
 
 <span class='def def kw'>def</span> <span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships_hash identifier id'>relationships_hash</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
   <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span> <span class='andop op'>&amp;&amp;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:destroy_relationship</span><span class='rparen token'>)</span>
+
+  <span class='comment val'># Read relationship, which forces lazy relationships to load, which is</span>
+  <span class='comment val'># probably necessary for destroying</span>
+  <span class='read_relationship identifier id'>read_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+
   <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='destroy_relationship identifier id'>destroy_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -473,14 +625,14 @@ relationship's <code>destroy_relationship</code> method.</p>
       <pre class="lines">
 
 
-170
-171
-172
-173
-174</pre>
+234
+235
+236
+237
+238</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 170</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 234</span>
 
 <span class='def def kw'>def</span> <span class='destroy_relationships identifier id'>destroy_relationships</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
@@ -527,15 +679,158 @@ relationship's <code>destroy_relationship</code> method.</p>
       <pre class="lines">
 
 
-198
-199
-200</pre>
+267
+268
+269</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 198</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 267</span>
 
 <span class='def def kw'>def</span> <span class='has_relationship? fid id'>has_relationship?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='has_relationship? fid id'>has_relationship?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="lazy_relationship?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>lazy_relationship?</strong>(key) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns boolean denoting if a relationship is to be lazy loaded.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+274
+275
+276
+277</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 274</span>
+
+<span class='def def kw'>def</span> <span class='lazy_relationship? fid id'>lazy_relationship?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships_hash identifier id'>relationships_hash</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
+  <span class='notop op'>!</span><span class='options identifier id'>options</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='andop op'>&amp;&amp;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:lazy</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="loaded_relationship?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>loaded_relationship?</strong>(key) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns boolean denoting if a relationship has been loaded.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+280
+281
+282</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 280</span>
+
+<span class='def def kw'>def</span> <span class='loaded_relationship? fid id'>loaded_relationship?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='relationship_data identifier id'>relationship_data</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="populate_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>populate_relationship</strong>(name, data) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Populate a single relationship.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+225
+226
+227
+228
+229</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 225</span>
+
+<span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+  <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships_hash identifier id'>relationships_hash</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:populate_relationship</span><span class='rparen token'>)</span>
+  <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -565,21 +860,65 @@ relationships.</p>
       <pre class="lines">
 
 
-160
-161
-162
-163
-164
-165</pre>
+218
+219
+220
+221
+222</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 160</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 218</span>
 
 <span class='def def kw'>def</span> <span class='populate_relationships identifier id'>populate_relationships</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
-    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:populate_relationship</span><span class='rparen token'>)</span>
-    <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+    <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='lazy_relationship? fid id'>lazy_relationship?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="read_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>read_relationship</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Reads a relationship. This is equivalent to <tt><a href="Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">Attributable#read_attribute</a></tt>,
+but for relationships.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+183
+184
+185
+186
+187
+188
+189</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 183</span>
+
+<span class='def def kw'>def</span> <span class='read_relationship identifier id'>read_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='lazy_relationship? fid id'>lazy_relationship?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='loaded_relationship? fid id'>loaded_relationship?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='load_relationship identifier id'>load_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+
+  <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -622,15 +961,58 @@ use the accessors created by Relatable.</p>
       <pre class="lines">
 
 
-191
-192
-193</pre>
+260
+261
+262</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 191</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 260</span>
 
 <span class='def def kw'>def</span> <span class='relationship_data identifier id'>relationship_data</span>
   <span class='@relationship_data ivar id'>@relationship_data</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="save_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>save_relationship</strong>(name, *args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Saves a single relationship. It is up to the relationship class to
+determine whether anything changed and how saving is implemented. Simply
+calls <code>save_relationship</code> on the relationship class.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+210
+211
+212
+213
+214</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 210</span>
+
+<span class='def def kw'>def</span> <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships_hash identifier id'>relationships_hash</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:save_relationship</span><span class='rparen token'>)</span>
+  <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -649,7 +1031,7 @@ use the accessors created by Relatable.</p>
   <div class="discussion">
     <p>Saves the model, calls save_relationship on all relations. It is up to
 the relation to determine whether anything changed, etc. Simply
-calls <code>save_relationship</code> on each relationshp class passing in the
+calls <code>save_relationship</code> on each relationship class passing in the
 following parameters:</p>
 
 <ul>
@@ -671,20 +1053,18 @@ end and they'll be pushed through to the <code>save_relationship</code> method.<
       <pre class="lines">
 
 
-151
-152
-153
-154
-155
-156</pre>
+201
+202
+203
+204
+205</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 151</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 201</span>
 
 <span class='def def kw'>def</span> <span class='save_relationships identifier id'>save_relationships</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='relationships identifier id'>relationships</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
-    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:save_relationship</span><span class='rparen token'>)</span>
-    <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:klass</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='relationship_data identifier id'>relationship_data</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+    <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -768,17 +1148,17 @@ be raised.</p>
       <pre class="lines">
 
 
-215
-216
-217
-218
-219
-220
-221
-222</pre>
+297
+298
+299
+300
+301
+302
+303
+304</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 215</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/relatable.rb', line 297</span>
 
 <span class='def def kw'>def</span> <span class='set_relationship identifier id'>set_relationship</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='key identifier id'>key</span> <span class='assign token'>=</span> <span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
@@ -799,7 +1179,7 @@ be raised.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Feb  2 22:39:04 2010 by 
+  Generated on Tue Feb 16 00:11:14 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

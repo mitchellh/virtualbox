@@ -41,45 +41,61 @@
     
     <iframe id="search_frame"></iframe>
     
-    <div id="content"><div id='filecontents'><h1>What's New in 0.4.x?</h1>
+    <div id="content"><div id='filecontents'><h1>What's New in 0.5.x?</h1>
 
-<h2>"Extra Data" on VMs / Global</h2>
+<h2>HUGE Speed Boost! Very few system calls!</h2>
 
-<p>Extra data is persistent key-value storage which is available as a way to store any information
-wanted. VirtualBox uses it for storing statistics and settings. You can use it for anything!
-Setting extra data on virtual machines is now as easy as a ruby hash:</p>
+<p>Most of the data retrieved by the virtualbox library now comes via XML parsing, rather
+than making calls to <code>VBoxManage</code>. This results in a drastic speedup. The few relationships or
+attributes which require a system call are typically <em>lazy loaded</em> (covered below), so they
+don't incur a performance penalty unless they're used.</p>
 
-<pre class="code"><span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;FooVM&quot;</span><span class='rparen token'>)</span>
-<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='extra_data identifier id'>extra_data</span><span class='lbrack token'>[</span><span class='string val'>&quot;i_was_here&quot;</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>&quot;yes!&quot;</span>
-<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+<p>The one caveat is that you now need to set the path to the global VirtualBox configuration
+XML. The virtualbox library will do its best to guess this path based on the operating
+system, but this is hardly foolproof. To set the virtualbox config path, it is a simple
+one-liner:</p>
+
+<pre class="code"><span class='comment val'># Remember, this won't be necessary MOST of the time</span>
+<span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='Global constant id'>Global</span><span class='dot token'>.</span><span class='vboxconfig identifier id'>vboxconfig</span> <span class='assign token'>=</span> <span class='string val'>&quot;~/path/to/VirtualBox.xml&quot;</span>
 </pre>
 
-<p>Read more about extra data <tt><a href="VirtualBox/ExtraData.html" title="VirtualBox::ExtraData (class)">here</a></tt>.</p>
+<h2>Lazy Loading of Attributes and Relationships</h2>
 
-<h2>Port Forwarding</h2>
+<p>Although still not widely used (will be in future patch releases), some attributes and
+relationships are now <em>lazy loaded</em>. This means that since they're probably expensive
+to load (many system calls, heavy parsing, etc.) they aren't loaded initially. Instead,
+they are only loaded if they're used. This means that you don't incur the penalty cost
+of loading them unless you use it! Fantastic!</p>
 
-<p>If a VM is using NAT for its network, the host machine can't access any outward facing
-services of the guest (for example: a web host, ftp server, etc.). Port forwarding is
-one way to facilitate this need. Port forwarding is straight forward to setup:</p>
+<p>There is no real "example code" for this feature since to the casual user, it happens
+transparently in the background and generally "just works." If you're <em>really</em> curious,
+then feel free to check out any class which derives from <tt><a href="VirtualBox/AbstractModel.html" title="VirtualBox::AbstractModel (class)">VirtualBox::AbstractModel</a></tt>
+and any attribute or relationship with the <code>:lazy =&gt; true</code> option is lazy loaded!</p>
 
-<pre class="code"><span class='vm identifier id'>vm</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='VM constant id'>VM</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;FooVM&quot;</span><span class='rparen token'>)</span>
-<span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='ForwardedPort constant id'>ForwardedPort</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
-<span class='port identifier id'>port</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;http&quot;</span>
-<span class='port identifier id'>port</span><span class='dot token'>.</span><span class='guestport identifier id'>guestport</span> <span class='assign token'>=</span> <span class='integer val'>80</span>
-<span class='port identifier id'>port</span><span class='dot token'>.</span><span class='hostport identifier id'>hostport</span> <span class='assign token'>=</span> <span class='integer val'>8080</span>
-<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='forwarded_ports identifier id'>forwarded_ports</span> <span class='lshft op'>&lt;&lt;</span> <span class='port identifier id'>port</span>
-<span class='vm identifier id'>vm</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+<h2>System Properties</h2>
+
+<p>A small but meaningful update is the ability to view the system properties for the
+host system which VirtualBox is running. This is done via the <tt><a href="VirtualBox/SystemProperty.html" title="VirtualBox::SystemProperty (class)">VirtualBox::SystemProperty</a></tt>
+class, which is simply a <code>Hash</code>. System properties are immutable properties defined
+by the host system, which typically are limits imposed upon VirtualBox, such as
+maximum RAM size or default path to machine files. Retrieving the system properties
+is quite easy:</p>
+
+<pre class="code"><span class='properties identifier id'>properties</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='SystemProperty constant id'>SystemProperty</span><span class='dot token'>.</span><span class='all identifier id'>all</span>
+<span class='properties identifier id'>properties</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='bitor op'>|</span>
+  <span class='puts identifier id'>puts</span> <span class='dstring node'>&quot;#{key} = #{value}&quot;</span>
+<span class='end end kw'>end</span>
 </pre>
 
-<p>Read more about port forwarding <tt><a href="VirtualBox/ForwardedPort.html" title="VirtualBox::ForwardedPort (class)">here</a></tt>.</p>
+<h2>USB Device Relationship on VMs</h2>
 
-<h2>More Ruby Versions Supported!</h2>
-
-<p>Previously, virtualbox only supported 1.8.7. It now supports 1.8.6 and 1.9.x thanks
-to AlekSi.</p></div></div>
+<p>Previously, <tt><a href="VirtualBox/VM.html" title="VirtualBox::VM (class)">VM</a></tt> object would only be able to tell you if there
+were USB devices enabled or not. Now, <code>usbs</code> is a full-fledged relationship
+on VM. This relationship is access just like any other. For more information
+view the <tt><a href="VirtualBox/USB.html" title="VirtualBox::USB (class)">USB</a></tt> class.</p></div></div>
     
     <div id="footer">
-  Generated on Tue Feb  2 22:39:01 2010 by 
+  Generated on Tue Feb 16 00:11:09 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

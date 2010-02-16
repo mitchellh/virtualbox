@@ -138,6 +138,26 @@ to <code>VBoxManage</code> which assumes that it is in your <code>PATH</code>.</
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#parse_xml-class_method" title="parse_xml (class method)">+ (Nokogiri::XML::Document) <strong>parse_xml</strong>(filename) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Reads the XML file and returns a Nokogiri document.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#shell_escape-class_method" title="shell_escape (class method)">+ (Object) <strong>shell_escape</strong>(str) </a>
     
 
@@ -269,15 +289,92 @@ makes testing easier.</p>
       <pre class="lines">
 
 
-61
-62
-63</pre>
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 61</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 74</span>
 
 <span class='def def kw'>def</span> <span class='execute identifier id'>execute</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='rparen token'>)</span>
   <span class='dxstring node'>`#{command}`</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="parse_xml-class_method">
+  
+    + (<tt>Nokogiri::XML::Document</tt>) <strong>parse_xml</strong>(filename) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Reads the XML file and returns a Nokogiri document. Reads the XML data
+from the specified file and returns a Nokogiri document.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>File</span>
+      
+      
+      
+        &mdash;
+        name.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Nokogiri::XML::Document</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+22
+23
+24
+25
+26
+27
+28</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 22</span>
+
+<span class='def def kw'>def</span> <span class='parse_xml identifier id'>parse_xml</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span>
+  <span class='f identifier id'>f</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='comma token'>,</span> <span class='string val'>&quot;r&quot;</span><span class='rparen token'>)</span>
+  <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='Nokogiri constant id'>Nokogiri</span><span class='colon2 op'>::</span><span class='XML constant id'>XML</span><span class='lparen token'>(</span><span class='f identifier id'>f</span><span class='rparen token'>)</span>
+  <span class='f identifier id'>f</span><span class='dot token'>.</span><span class='close identifier id'>close</span>
+
+  <span class='result identifier id'>result</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -308,14 +405,14 @@ it hasn't failed!</p>
       <pre class="lines">
 
 
-68
-69
-70
-71
-72</pre>
+81
+82
+83
+84
+85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 81</span>
 
 <span class='def def kw'>def</span> <span class='shell_escape identifier id'>shell_escape</span><span class='lparen token'>(</span><span class='str identifier id'>str</span><span class='rparen token'>)</span>
   <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/n</span><span class='comma token'>,</span> <span class='string val'>'\\'</span><span class='rparen token'>)</span><span class='dot token'>.</span>
@@ -364,12 +461,12 @@ be addressed another time.</p>
       <pre class="lines">
 
 
-20
-21
-22</pre>
+33
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 20</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 33</span>
 
 <span class='def def kw'>def</span> <span class='success? fid id'>success?</span>
   <span class='$? gvar id'>$?</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
@@ -403,13 +500,13 @@ exit code.</p>
       <pre class="lines">
 
 
-52
-53
-54
-55</pre>
+65
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 65</span>
 
 <span class='def def kw'>def</span> <span class='test identifier id'>test</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='rparen token'>)</span>
   <span class='execute identifier id'>execute</span><span class='lparen token'>(</span><span class='command identifier id'>command</span><span class='rparen token'>)</span>
@@ -478,15 +575,15 @@ call.</p>
       <pre class="lines">
 
 
-42
-43
-44
-45
-46
-47</pre>
+55
+56
+57
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 55</span>
 
 <span class='def def kw'>def</span> <span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='collect! fid id'>collect!</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='arg identifier id'>arg</span><span class='bitor op'>|</span> <span class='shell_escape identifier id'>shell_escape</span><span class='lparen token'>(</span><span class='arg identifier id'>arg</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
@@ -540,12 +637,12 @@ work.</p>
       <pre class="lines">
 
 
-28
-29
-30</pre>
+41
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 28</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/command.rb', line 41</span>
 
 <span class='def def kw'>def</span> <span class='vboxmanage= identifier id'>vboxmanage=</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='@@vboxmanage ivar id'>@@vboxmanage</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span>
@@ -561,7 +658,7 @@ work.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Feb  2 22:39:07 2010 by 
+  Generated on Tue Feb 16 00:11:20 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

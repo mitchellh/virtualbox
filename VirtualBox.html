@@ -58,7 +58,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">lib/virtualbox.rb<span class="defines">,<br />
-  lib/virtualbox/vm.rb,<br /> lib/virtualbox/nic.rb,<br /> lib/virtualbox/dvd.rb,<br /> lib/virtualbox/image.rb,<br /> lib/virtualbox/command.rb,<br /> lib/virtualbox/exceptions.rb,<br /> lib/virtualbox/hard_drive.rb,<br /> lib/virtualbox/extra_data.rb,<br /> lib/virtualbox/shared_folder.rb,<br /> lib/virtualbox/forwarded_port.rb,<br /> lib/virtualbox/abstract_model.rb,<br /> lib/virtualbox/attached_device.rb,<br /> lib/virtualbox/proxies/collection.rb,<br /> lib/virtualbox/storage_controller.rb,<br /> lib/virtualbox/abstract_model/dirty.rb,<br /> lib/virtualbox/abstract_model/relatable.rb,<br /> lib/virtualbox/abstract_model/validatable.rb,<br /> lib/virtualbox/abstract_model/attributable.rb</span>
+  lib/virtualbox/vm.rb,<br /> lib/virtualbox/nic.rb,<br /> lib/virtualbox/usb.rb,<br /> lib/virtualbox/dvd.rb,<br /> lib/virtualbox/media.rb,<br /> lib/virtualbox/image.rb,<br /> lib/virtualbox/global.rb,<br /> lib/virtualbox/command.rb,<br /> lib/virtualbox/exceptions.rb,<br /> lib/virtualbox/extra_data.rb,<br /> lib/virtualbox/hard_drive.rb,<br /> lib/virtualbox/shared_folder.rb,<br /> lib/virtualbox/forwarded_port.rb,<br /> lib/virtualbox/abstract_model.rb,<br /> lib/virtualbox/attached_device.rb,<br /> lib/virtualbox/system_property.rb,<br /> lib/virtualbox/proxies/collection.rb,<br /> lib/virtualbox/storage_controller.rb,<br /> lib/virtualbox/abstract_model/dirty.rb,<br /> lib/virtualbox/abstract_model/relatable.rb,<br /> lib/virtualbox/abstract_model/validatable.rb,<br /> lib/virtualbox/abstract_model/attributable.rb</span>
 </dd>
   
 </dl>
@@ -72,7 +72,7 @@
     
    
     
-      <strong class="classes">Classes:</strong> <a href="VirtualBox/AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a>, <a href="VirtualBox/AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a>, <a href="VirtualBox/Command.html" title="VirtualBox::Command (class)">Command</a>, <a href="VirtualBox/DVD.html" title="VirtualBox::DVD (class)">DVD</a>, <a href="VirtualBox/ExtraData.html" title="VirtualBox::ExtraData (class)">ExtraData</a>, <a href="VirtualBox/ForwardedPort.html" title="VirtualBox::ForwardedPort (class)">ForwardedPort</a>, <a href="VirtualBox/HardDrive.html" title="VirtualBox::HardDrive (class)">HardDrive</a>, <a href="VirtualBox/Image.html" title="VirtualBox::Image (class)">Image</a>, <a href="VirtualBox/Nic.html" title="VirtualBox::Nic (class)">Nic</a>, <a href="VirtualBox/SharedFolder.html" title="VirtualBox::SharedFolder (class)">SharedFolder</a>, <a href="VirtualBox/StorageController.html" title="VirtualBox::StorageController (class)">StorageController</a>, <a href="VirtualBox/VM.html" title="VirtualBox::VM (class)">VM</a>
+      <strong class="classes">Classes:</strong> <a href="VirtualBox/AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a>, <a href="VirtualBox/AttachedDevice.html" title="VirtualBox::AttachedDevice (class)">AttachedDevice</a>, <a href="VirtualBox/Command.html" title="VirtualBox::Command (class)">Command</a>, <a href="VirtualBox/DVD.html" title="VirtualBox::DVD (class)">DVD</a>, <a href="VirtualBox/ExtraData.html" title="VirtualBox::ExtraData (class)">ExtraData</a>, <a href="VirtualBox/ForwardedPort.html" title="VirtualBox::ForwardedPort (class)">ForwardedPort</a>, <a href="VirtualBox/Global.html" title="VirtualBox::Global (class)">Global</a>, <a href="VirtualBox/HardDrive.html" title="VirtualBox::HardDrive (class)">HardDrive</a>, <a href="VirtualBox/Image.html" title="VirtualBox::Image (class)">Image</a>, <a href="VirtualBox/Media.html" title="VirtualBox::Media (class)">Media</a>, <a href="VirtualBox/Nic.html" title="VirtualBox::Nic (class)">Nic</a>, <a href="VirtualBox/SharedFolder.html" title="VirtualBox::SharedFolder (class)">SharedFolder</a>, <a href="VirtualBox/StorageController.html" title="VirtualBox::StorageController (class)">StorageController</a>, <a href="VirtualBox/SystemProperty.html" title="VirtualBox::SystemProperty (class)">SystemProperty</a>, <a href="VirtualBox/USB.html" title="VirtualBox::USB (class)">USB</a>, <a href="VirtualBox/VM.html" title="VirtualBox::VM (class)">VM</a>
     
   
 </p>
@@ -131,12 +131,12 @@
       <pre class="lines">
 
 
-20
-21
-22</pre>
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox.rb', line 20</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox.rb', line 29</span>
 
 <span class='def def kw'>def</span> <span class='version identifier id'>version</span>
   <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='vboxmanage identifier id'>vboxmanage</span><span class='lparen token'>(</span><span class='string val'>&quot;-v&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span>
@@ -152,7 +152,7 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Feb  2 22:39:10 2010 by 
+  Generated on Tue Feb 16 00:11:19 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

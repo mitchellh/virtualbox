@@ -1,0 +1,719 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Class: VirtualBox::Global</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (G)</a> &raquo; 
+    <span class='title'><a href="../VirtualBox.html" title="VirtualBox (module)">VirtualBox</a></span>
+     &raquo; 
+    <span class="title">Global</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: VirtualBox::Global 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></li>
+          
+            <li class="next">VirtualBox::Global</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/virtualbox/global.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Represents the VirtualBox main configuration file (VirtualBox.xml)
+which VirtualBox uses to keep track of all known virtual machines
+and images. This "global" configuration has many relationships which
+allow the user to retrieve a list of all VMs, media, global extra data,
+etc. Indeed, even methods like <tt><a href="VM.html#all-class_method" title="VirtualBox::VM.all (method)">VM.all</a></tt> are implemented using this class.</p>
+
+<h1>Setting the Path to VirtualBox.xml</h1>
+
+<p><strong>This is extremely important.</strong></p>
+
+<p>Much of the virtualbox gem requires a proper path to the global XML configuration
+file for VirtualBox. This path is system and installation dependent. <tt><a href="" title="VirtualBox::Global (class)">Global</a></tt>
+does its best to guess the path by trying the default paths based on the
+platform ruby is running on, but this is hardly foolproof. If you receive an
+<tt><a href="Exceptions/ConfigurationException.html" title="VirtualBox::Exceptions::ConfigurationException (class)">Exceptions::ConfigurationException</a></tt> at some point while running virtualbox,
+you should use <tt><a href="#vboxconfig%3D-class_method" title="VirtualBox::Global.vboxconfig= (method)">Global.vboxconfig=</a></tt> to set the path. An example is below:</p>
+
+<pre class="code"><span class='comment val'># Most installations won't need to do this, since the gem &quot;guesses&quot;</span>
+<span class='comment val'># the path based on OS, but if you need to set vboxconfig path</span>
+<span class='comment val'># explicitly:</span>
+<span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='Global constant id'>Global</span><span class='dot token'>.</span><span class='vboxconfig identifier id'>vboxconfig</span> <span class='assign token'>=</span> <span class='string val'>&quot;~/.MyCustom/VirtualBox.xml&quot;</span>
+</pre>
+
+<h1>Getting Global Data</h1>
+
+<p>To retrieve the global data, use <code>Global.global</code>. This value is <em>cached</em>
+between calls, so subsequent calls will not go through the entire parsing
+process. To force a reload, set the <code>reload</code> parameter to true. Besides
+setting the parameter explicitly, some actions will implicitly force the
+global data to reload on the next call, such as saving a VM or destroying
+an image, for example.</p>
+
+<pre class="code"><span class='comment val'># Retrieve global data for the first time. This will parse all the</span>
+<span class='comment val'># data.</span>
+<span class='global_object identifier id'>global_object</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='Global constant id'>Global</span><span class='dot token'>.</span><span class='global identifier id'>global</span>
+
+<span class='comment val'># Subsequent calls are near-instant:</span>
+<span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='Global constant id'>Global</span><span class='dot token'>.</span><span class='global identifier id'>global</span>
+
+<span class='comment val'># Or we can choose to reload the data...</span>
+<span class='reloaded_object identifier id'>reloaded_object</span> <span class='assign token'>=</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='Global constant id'>Global</span><span class='dot token'>.</span><span class='global identifier id'>global</span><span class='lparen token'>(</span><span class='true true kw'>true</span><span class='rparen token'>)</span>
+</pre>
+
+<h1>Relationships</h1>
+
+<p>While a global object doesn't have attributes, it does have many
+relationships. The relationships are listed below. If you don't
+understand this, read <tt><a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">Relatable</a></tt>.</p>
+
+<pre class="code"><span class='relationship identifier id'>relationship</span> <span class='symbol val'>:vms</span><span class='comma token'>,</span> <span class='VM constant id'>VM</span><span class='comma token'>,</span> <span class='symbol val'>:lazy</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+<span class='relationship identifier id'>relationship</span> <span class='symbol val'>:media</span><span class='comma token'>,</span> <span class='Media constant id'>Media</span>
+<span class='relationship identifier id'>relationship</span> <span class='symbol val'>:extra_data</span><span class='comma token'>,</span> <span class='ExtraData constant id'>ExtraData</span>
+</pre>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="vboxconfig-classvariable" class="">@@vboxconfig =
+            <span class="summary_desc">The path to the global VirtualBox XML configuration file.</span>
+        </dt>
+        <dd><pre class="code"><span class='if if kw'>if</span> <span class='RUBY_PLATFORM constant id'>RUBY_PLATFORM</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='string val'>&quot;darwin&quot;</span><span class='rparen token'>)</span>
+</pre></dd>
+      
+        <dt id="global_data-classvariable" class="">@@global_data =
+            <span class="summary_desc"></span>
+        </dt>
+        <dd><pre class="code"><span class='nil nil kw'>nil</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#config-class_method" title="config (class method)">+ (Nokogiri::XML::Document) <strong>config</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns the XML document of the configuration.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#expand_path-class_method" title="expand_path (class method)">+ (String) <strong>expand_path</strong>(path) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Expands path relative to the configuration file.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#global-class_method" title="global (class method)">+ (Global) <strong>global</strong>(reload = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Retrieves the global data.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#vboxconfig%3D-class_method" title="vboxconfig= (class method)">+ (Object) <strong>vboxconfig</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Sets the path to the VirtualBox.xml file.</span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Global) <strong>initialize</strong>(document) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">A new instance of Global.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#load_relationship-instance_method" title="#load_relationship (instance method)">- (Object) <strong>load_relationship</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+  </ul>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
+  <p class="inherited"><a href="AbstractModel.html#destroy-instance_method" title="VirtualBox::AbstractModel#destroy (method)">#destroy</a>, <a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#lazy_attribute%3F-instance_method" title="VirtualBox::AbstractModel#lazy_attribute? (method)">#lazy_attribute?</a>, <a href="AbstractModel.html#lazy_relationship%3F-instance_method" title="VirtualBox::AbstractModel#lazy_relationship? (method)">#lazy_relationship?</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#populate_relationship-instance_method" title="VirtualBox::AbstractModel#populate_relationship (method)">#populate_relationship</a>, <a href="AbstractModel.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel.html#reload%21-instance_method" title="VirtualBox::AbstractModel#reload! (method)">#reload!</a>, <a href="AbstractModel.html#reload%21-class_method" title="VirtualBox::AbstractModel.reload! (method)">reload!</a>, <a href="AbstractModel.html#reload%3F-class_method" title="VirtualBox::AbstractModel.reload? (method)">reload?</a>, <a href="AbstractModel.html#reloaded%21-class_method" title="VirtualBox::AbstractModel.reloaded! (method)">reloaded!</a>, <a href="AbstractModel.html#save-instance_method" title="VirtualBox::AbstractModel#save (method)">#save</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#validate-instance_method" title="VirtualBox::AbstractModel#validate (method)">#validate</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#lazy_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#lazy_attribute? (method)">#lazy_attribute?</a>, <a href="AbstractModel/Attributable.html#loaded_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#loaded_attribute? (method)">#loaded_attribute?</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Dirty.html" title="VirtualBox::AbstractModel::Dirty (module)">AbstractModel::Dirty</a></h3>
+  <p class="inherited"><a href="AbstractModel/Dirty.html#changed%3F-instance_method" title="VirtualBox::AbstractModel::Dirty#changed? (method)">#changed?</a>, <a href="AbstractModel/Dirty.html#changes-instance_method" title="VirtualBox::AbstractModel::Dirty#changes (method)">#changes</a>, <a href="AbstractModel/Dirty.html#clear_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#clear_dirty! (method)">#clear_dirty!</a>, <a href="AbstractModel/Dirty.html#ignore_dirty-instance_method" title="VirtualBox::AbstractModel::Dirty#ignore_dirty (method)">#ignore_dirty</a>, <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">#method_missing</a>, <a href="AbstractModel/Dirty.html#set_dirty%21-instance_method" title="VirtualBox::AbstractModel::Dirty#set_dirty! (method)">#set_dirty!</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#lazy_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#lazy_relationship? (method)">#lazy_relationship?</a>, <a href="AbstractModel/Relatable.html#loaded_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#loaded_relationship? (method)">#loaded_relationship?</a>, <a href="AbstractModel/Relatable.html#populate_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationship (method)">#populate_relationship</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#read_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#read_relationship (method)">#read_relationship</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationship (method)">#save_relationship</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <a href="AbstractModel/Validatable.html" title="VirtualBox::AbstractModel::Validatable (module)">AbstractModel::Validatable</a></h3>
+  <p class="inherited"><a href="AbstractModel/Validatable.html#add_error-instance_method" title="VirtualBox::AbstractModel::Validatable#add_error (method)">#add_error</a>, <a href="AbstractModel/Validatable.html#clear_errors-instance_method" title="VirtualBox::AbstractModel::Validatable#clear_errors (method)">#clear_errors</a>, <a href="AbstractModel/Validatable.html#errors-instance_method" title="VirtualBox::AbstractModel::Validatable#errors (method)">#errors</a>, <a href="AbstractModel/Validatable.html#valid%3F-instance_method" title="VirtualBox::AbstractModel::Validatable#valid? (method)">#valid?</a>, <a href="AbstractModel/Validatable.html#validate-instance_method" title="VirtualBox::AbstractModel::Validatable#validate (method)">#validate</a>, <a href="AbstractModel/Validatable.html#validates_presence_of-instance_method" title="VirtualBox::AbstractModel::Validatable#validates_presence_of (method)">#validates_presence_of</a></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><a href="" title="VirtualBox::Global (class)">Global</a></tt>) <strong>initialize</strong>(document) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>A new instance of Global</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+117
+118
+119
+120</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/global.rb', line 117</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='document identifier id'>document</span><span class='rparen token'>)</span>
+  <span class='@document ivar id'>@document</span> <span class='assign token'>=</span> <span class='document identifier id'>document</span>
+  <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='@document ivar id'>@document</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+<div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice super">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+      in the class <a href="AbstractModel/Dirty.html#method_missing-instance_method" title="VirtualBox::AbstractModel::Dirty#method_missing (method)">VirtualBox::AbstractModel::Dirty</a>
+    
+  </p>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="config-class_method">
+  
+    + (<tt>Nokogiri::XML::Document</tt>) <strong>config</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns the XML document of the configuration. This will raise an
+<tt><a href="Exceptions/ConfigurationException.html" title="VirtualBox::Exceptions::ConfigurationException (class)">Exceptions::ConfigurationException</a></tt> if the vboxconfig file doesn't
+exist.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Nokogiri::XML::Document</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="Exceptions/ConfigurationException.html" title="VirtualBox::Exceptions::ConfigurationException (class)">Exceptions::ConfigurationException</a></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+104
+105
+106
+107</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/global.rb', line 104</span>
+
+<span class='def def kw'>def</span> <span class='config identifier id'>config</span>
+  <span class='raise identifier id'>raise</span> <span class='Exceptions constant id'>Exceptions</span><span class='colon2 op'>::</span><span class='ConfigurationException constant id'>ConfigurationException</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;The path to the global VirtualBox config must be set. See Global.vboxconfig=&quot;</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exist? fid id'>exist?</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='@@vboxconfig ivar id'>@@vboxconfig</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='Command constant id'>Command</span><span class='dot token'>.</span><span class='parse_xml identifier id'>parse_xml</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='@@vboxconfig ivar id'>@@vboxconfig</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="expand_path-class_method">
+  
+    + (<tt>String</tt>) <strong>expand_path</strong>(path) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Expands path relative to the configuration file.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+112
+113
+114</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/global.rb', line 112</span>
+
+<span class='def def kw'>def</span> <span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='@@vboxconfig ivar id'>@@vboxconfig</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="global-class_method">
+  
+    + (<tt><a href="" title="VirtualBox::Global (class)">Global</a></tt>) <strong>global</strong>(reload = false) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Retrieves the global data. The return value of this call is cached,
+and can be reloaded by setting the <code>reload</code> parameter to true. Besides
+explicitly setting the parameter, some actions within the library
+force global to reload itself on the next call, such as saving a VM,
+or destroying an image.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <span class='name'>reload</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        True if you want to force a reload of the data.
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="" title="VirtualBox::Global (class)">Global</a></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+82
+83
+84
+85
+86
+87
+88
+89</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/global.rb', line 82</span>
+
+<span class='def def kw'>def</span> <span class='global identifier id'>global</span><span class='lparen token'>(</span><span class='reload identifier id'>reload</span> <span class='assign token'>=</span> <span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='@@global_data ivar id'>@@global_data</span> <span class='orop op'>||</span> <span class='reload identifier id'>reload</span> <span class='orop op'>||</span> <span class='reload? fid id'>reload?</span>
+    <span class='@@global_data ivar id'>@@global_data</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='config identifier id'>config</span><span class='rparen token'>)</span>
+    <span class='reloaded! fid id'>reloaded!</span>
+  <span class='end end kw'>end</span>
+
+  <span class='@@global_data ivar id'>@@global_data</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="vboxconfig=-class_method">
+  
+    + (<tt>Object</tt>) <strong>vboxconfig=</strong>(value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Sets the path to the VirtualBox.xml file. This file should already
+exist. VirtualBox itself manages this file, not this library.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>Full</span>
+      
+      
+      
+        &mdash;
+        path to the VirtualBox.xml file
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+95
+96
+97</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/global.rb', line 95</span>
+
+<span class='def def kw'>def</span> <span class='vboxconfig= identifier id'>vboxconfig=</span><span class='lparen token'>(</span><span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='@@vboxconfig ivar id'>@@vboxconfig</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="load_relationship-instance_method">
+  
+    - (<tt>Object</tt>) <strong>load_relationship</strong>(name) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+122
+123
+124</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/global.rb', line 122</span>
+
+<span class='def def kw'>def</span> <span class='load_relationship identifier id'>load_relationship</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='symbol val'>:vms</span><span class='comma token'>,</span> <span class='@document ivar id'>@document</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Feb 16 00:11:14 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

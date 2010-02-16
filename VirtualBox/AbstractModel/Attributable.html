@@ -143,6 +143,53 @@ used to populate it. For this purpose, you can define a custom
 <span class='end end kw'>end</span>
 </pre>
 
+<h2>Lazy Loading Attributes</h2>
+
+<p>While most attributes are fairly trivial to calculate and populate, sometimes
+attributes may have an expensive cost to populate, and are generally not worth
+populating unless a user of the class requests that attribute. This is known as
+<em>lazy loading</em> the attributes. This is possibly by specifying the <code>:lazy</code> option
+on the attribute. In this case, the first time (and <em>only</em> the first time) the
+attribute is requested, <code>load_attribute</code> will be called with the name of the
+attribute as the parameter. This method is then expected to call <code>write_attribute</code>
+on that attribute to give it a value.</p>
+
+<pre class="code"><span class='class class kw'>class</span> <span class='ExpensiveAttributeModel constant id'>ExpensiveAttributeModel</span>
+  <span class='include identifier id'>include</span> <span class='VirtualBox constant id'>VirtualBox</span><span class='colon2 op'>::</span><span class='AbstractModel constant id'>AbstractModel</span><span class='colon2 op'>::</span><span class='Attributable constant id'>Attributable</span>
+  <span class='attribute identifier id'>attribute</span> <span class='symbol val'>:expensive_attribute</span><span class='comma token'>,</span> <span class='symbol val'>:lazy</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+
+  <span class='def def kw'>def</span> <span class='load_attribute identifier id'>load_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='symbol val'>:expensive_attribute</span>
+      <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='perform_expensive_calculation identifier id'>perform_expensive_calculation</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+
+<p>Using the above definition, we could use the class like so:</p>
+
+<pre class="code"><span class='comment val'># Initializing is fast, since no attribute population is done</span>
+<span class='model identifier id'>model</span> <span class='assign token'>=</span> <span class='ExpensiveAttributeModel constant id'>ExpensiveAttributeModel</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+<span class='comment val'># But this is slow, since it has to calculate.</span>
+<span class='puts identifier id'>puts</span> <span class='model identifier id'>model</span><span class='dot token'>.</span><span class='expensive_attribute identifier id'>expensive_attribute</span>
+
+<span class='comment val'># But ONLY THE FIRST TIME. This time is FAST!</span>
+<span class='puts identifier id'>puts</span> <span class='model identifier id'>model</span><span class='dot token'>.</span><span class='expensive_attribute identifier id'>expensive_attribute</span>
+</pre>
+
+<p>In addition to calling <code>load_attribute</code> on initial read, <code>write_attribute</code>
+when performed on a lazy loaded attribute will mark it as "loaded" so there
+will be no load called on the first request. Example, using the above class
+once again:</p>
+
+<pre class="code"><span class='model identifier id'>model</span> <span class='assign token'>=</span> <span class='ExpensiveAttributeModel constant id'>ExpensiveAttributeModel</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='model identifier id'>model</span><span class='dot token'>.</span><span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:expensive_attribute</span><span class='comma token'>,</span> <span class='integer val'>42</span><span class='rparen token'>)</span>
+
+<span class='comment val'># This is FAST, since &quot;load_attribute&quot; is not called</span>
+<span class='puts identifier id'>puts</span> <span class='model identifier id'>model</span><span class='dot token'>.</span><span class='expensive_attribute identifier id'>expensive_attribute</span> <span class='comment val'># =&gt; 42</span>
+</pre>
+
   </div>
 </div>
 <div class="tags">
@@ -226,6 +273,47 @@ used to populate it. For this purpose, you can define a custom
 
   
     <span class="summary_desc">Returns boolean value denoting if an attribute exists.</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#lazy_attribute%3F-instance_method" title="#lazy_attribute? (instance method)">- (Boolean) <strong>lazy_attribute?</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns boolean value denoting if an attribute is "lazy loaded".</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#loaded_attribute%3F-instance_method" title="#loaded_attribute? (instance method)">- (Boolean) <strong>loaded_attribute?</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">Returns boolean value denoting if an attribute has been loaded
+yet.</span>
   
 </li>
 
@@ -338,12 +426,12 @@ used to populate it. For this purpose, you can define a custom
       <pre class="lines">
 
 
-77
-78
-79</pre>
+121
+122
+123</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 121</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='included identifier id'>included</span><span class='lparen token'>(</span><span class='base identifier id'>base</span><span class='rparen token'>)</span>
   <span class='base identifier id'>base</span><span class='dot token'>.</span><span class='extend identifier id'>extend</span> <span class='ClassMethods constant id'>ClassMethods</span>
@@ -381,12 +469,12 @@ used to populate it. For this purpose, you can define a custom
       <pre class="lines">
 
 
-173
-174
-175</pre>
+222
+223
+224</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 173</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 222</span>
 
 <span class='def def kw'>def</span> <span class='attributes identifier id'>attributes</span>
   <span class='@attribute_values ivar id'>@attribute_values</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
@@ -431,15 +519,116 @@ used to populate it. For this purpose, you can define a custom
       <pre class="lines">
 
 
-178
-179
-180</pre>
+227
+228
+229</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 178</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 227</span>
 
 <span class='def def kw'>def</span> <span class='has_attribute? fid id'>has_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="lazy_attribute?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>lazy_attribute?</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns boolean value denoting if an attribute is "lazy loaded"</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+232
+233
+234</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 232</span>
+
+<span class='def def kw'>def</span> <span class='lazy_attribute? fid id'>lazy_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='has_attribute? fid id'>has_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:lazy</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="loaded_attribute?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>loaded_attribute?</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns boolean value denoting if an attribute has been loaded
+yet.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+238
+239
+240</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 238</span>
+
+<span class='def def kw'>def</span> <span class='loaded_attribute? fid id'>loaded_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -485,20 +674,20 @@ attribute name is used.</p>
       <pre class="lines">
 
 
-146
-147
-148
-149
-150
-151</pre>
+190
+191
+192
+193
+194
+195</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 146</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 190</span>
 
 <span class='def def kw'>def</span> <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='attribs identifier id'>attribs</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
     <span class='value_key identifier id'>value_key</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:populate_key</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='key identifier id'>key</span>
-    <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='attribs identifier id'>attribs</span><span class='lbrack token'>[</span><span class='value_key identifier id'>value_key</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+    <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='attribs identifier id'>attribs</span><span class='lbrack token'>[</span><span class='value_key identifier id'>value_key</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='attribs identifier id'>attribs</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='value_key identifier id'>value_key</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -531,17 +720,27 @@ if specified.</p>
       <pre class="lines">
 
 
-166
-167
-168
-169
-170</pre>
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 166</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 210</span>
 
 <span class='def def kw'>def</span> <span class='read_attribute identifier id'>read_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='has_attribute? fid id'>has_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='lazy_attribute? fid id'>lazy_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='loaded_attribute? fid id'>loaded_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+      <span class='comment val'># Load the lazy attribute</span>
+      <span class='load_attribute identifier id'>load_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+
     <span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:default</span><span class='rbrack token'>]</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
@@ -588,13 +787,13 @@ existence is important.</p>
       <pre class="lines">
 
 
-186
-187
-188
-189</pre>
+246
+247
+248
+249</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 186</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 246</span>
 
 <span class='def def kw'>def</span> <span class='readonly_attribute? fid id'>readonly_attribute?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
@@ -631,12 +830,12 @@ module should use the accessor methods, such as <code>name=</code>.</p>
       <pre class="lines">
 
 
-158
-159
-160</pre>
+202
+203
+204</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 158</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/abstract_model/attributable.rb', line 202</span>
 
 <span class='def def kw'>def</span> <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='attributes identifier id'>attributes</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
@@ -652,7 +851,7 @@ module should use the accessor methods, such as <code>name=</code>.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Feb  2 22:39:07 2010 by 
+  Generated on Tue Feb 16 00:11:20 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>

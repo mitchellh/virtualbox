@@ -204,7 +204,7 @@ attributes. If you don't understand what this means, read <tt><a href="AbstractM
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;SharedFolder&gt;) <strong>populate_relationship</strong>(caller, data) </a>
+      <a href="#populate_relationship-class_method" title="populate_relationship (class method)">+ (Array&lt;SharedFolder&gt;) <strong>populate_relationship</strong>(caller, doc) </a>
     
 
     
@@ -399,7 +399,7 @@ only a single parameter.</span>
   
   
   <h3 class="inherited">Methods inherited from <a href="AbstractModel.html" title="VirtualBox::AbstractModel (class)">AbstractModel</a></h3>
-  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel.html#errors-instance_method" title="VirtualBox::AbstractModel#errors (method)">#errors</a>, <a href="AbstractModel.html#existing_record%21-instance_method" title="VirtualBox::AbstractModel#existing_record! (method)">#existing_record!</a>, <a href="AbstractModel.html#inspect-instance_method" title="VirtualBox::AbstractModel#inspect (method)">#inspect</a>, <a href="AbstractModel.html#lazy_attribute%3F-instance_method" title="VirtualBox::AbstractModel#lazy_attribute? (method)">#lazy_attribute?</a>, <a href="AbstractModel.html#lazy_relationship%3F-instance_method" title="VirtualBox::AbstractModel#lazy_relationship? (method)">#lazy_relationship?</a>, <a href="AbstractModel.html#new_record%21-instance_method" title="VirtualBox::AbstractModel#new_record! (method)">#new_record!</a>, <a href="AbstractModel.html#new_record%3F-instance_method" title="VirtualBox::AbstractModel#new_record? (method)">#new_record?</a>, <a href="AbstractModel.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel.html#populate_relationship-instance_method" title="VirtualBox::AbstractModel#populate_relationship (method)">#populate_relationship</a>, <a href="AbstractModel.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel.html#reload%21-class_method" title="VirtualBox::AbstractModel.reload! (method)">reload!</a>, <a href="AbstractModel.html#reload%21-instance_method" title="VirtualBox::AbstractModel#reload! (method)">#reload!</a>, <a href="AbstractModel.html#reload%3F-class_method" title="VirtualBox::AbstractModel.reload? (method)">reload?</a>, <a href="AbstractModel.html#reloaded%21-class_method" title="VirtualBox::AbstractModel.reloaded! (method)">reloaded!</a>, <a href="AbstractModel.html#save_attribute-instance_method" title="VirtualBox::AbstractModel#save_attribute (method)">#save_attribute</a>, <a href="AbstractModel.html#set_relationship-instance_method" title="VirtualBox::AbstractModel#set_relationship (method)">#set_relationship</a>, <a href="AbstractModel.html#write_attribute-instance_method" title="VirtualBox::AbstractModel#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -407,7 +407,7 @@ only a single parameter.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Attributable.html" title="VirtualBox::AbstractModel::Attributable (module)">AbstractModel::Attributable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
+  <p class="inherited"><a href="AbstractModel/Attributable.html#attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#attributes (method)">#attributes</a>, <a href="AbstractModel/Attributable.html#has_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#has_attribute? (method)">#has_attribute?</a>, <a href="AbstractModel/Attributable.html#included-class_method" title="VirtualBox::AbstractModel::Attributable.included (method)">included</a>, <a href="AbstractModel/Attributable.html#lazy_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#lazy_attribute? (method)">#lazy_attribute?</a>, <a href="AbstractModel/Attributable.html#loaded_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#loaded_attribute? (method)">#loaded_attribute?</a>, <a href="AbstractModel/Attributable.html#populate_attributes-instance_method" title="VirtualBox::AbstractModel::Attributable#populate_attributes (method)">#populate_attributes</a>, <a href="AbstractModel/Attributable.html#read_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#read_attribute (method)">#read_attribute</a>, <a href="AbstractModel/Attributable.html#readonly_attribute%3F-instance_method" title="VirtualBox::AbstractModel::Attributable#readonly_attribute? (method)">#readonly_attribute?</a>, <a href="AbstractModel/Attributable.html#write_attribute-instance_method" title="VirtualBox::AbstractModel::Attributable#write_attribute (method)">#write_attribute</a></p>
 
   
   
@@ -423,7 +423,7 @@ only a single parameter.</span>
   
   
   <h3 class="inherited">Methods included from <a href="AbstractModel/Relatable.html" title="VirtualBox::AbstractModel::Relatable (module)">AbstractModel::Relatable</a></h3>
-  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
+  <p class="inherited"><a href="AbstractModel/Relatable.html#destroy_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationship (method)">#destroy_relationship</a>, <a href="AbstractModel/Relatable.html#destroy_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#destroy_relationships (method)">#destroy_relationships</a>, <a href="AbstractModel/Relatable.html#has_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#has_relationship? (method)">#has_relationship?</a>, <a href="AbstractModel/Relatable.html#included-class_method" title="VirtualBox::AbstractModel::Relatable.included (method)">included</a>, <a href="AbstractModel/Relatable.html#lazy_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#lazy_relationship? (method)">#lazy_relationship?</a>, <a href="AbstractModel/Relatable.html#loaded_relationship%3F-instance_method" title="VirtualBox::AbstractModel::Relatable#loaded_relationship? (method)">#loaded_relationship?</a>, <a href="AbstractModel/Relatable.html#populate_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationship (method)">#populate_relationship</a>, <a href="AbstractModel/Relatable.html#populate_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#populate_relationships (method)">#populate_relationships</a>, <a href="AbstractModel/Relatable.html#read_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#read_relationship (method)">#read_relationship</a>, <a href="AbstractModel/Relatable.html#relationship_data-instance_method" title="VirtualBox::AbstractModel::Relatable#relationship_data (method)">#relationship_data</a>, <a href="AbstractModel/Relatable.html#save_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationship (method)">#save_relationship</a>, <a href="AbstractModel/Relatable.html#save_relationships-instance_method" title="VirtualBox::AbstractModel::Relatable#save_relationships (method)">#save_relationships</a>, <a href="AbstractModel/Relatable.html#set_relationship-instance_method" title="VirtualBox::AbstractModel::Relatable#set_relationship (method)">#set_relationship</a></p>
 
   
   
@@ -559,6 +559,9 @@ never be called except internally.</strong></p>
       <pre class="lines">
 
 
+134
+135
+136
 137
 138
 139
@@ -568,13 +571,10 @@ never be called except internally.</strong></p>
 143
 144
 145
-146
-147
-148
-149</pre>
+146</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 137</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 134</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
@@ -615,7 +615,7 @@ never be called except internally.</strong></p>
       <div class="method_details first">
   <p class="signature first" id="populate_relationship-class_method">
   
-    + (<tt>Array&lt;<a href="" title="VirtualBox::SharedFolder (class)">SharedFolder</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, data) 
+    + (<tt>Array&lt;<a href="" title="VirtualBox::SharedFolder (class)">SharedFolder</a>&gt;</tt>) <strong>populate_relationship</strong>(caller, doc) 
   
 
   
@@ -658,23 +658,17 @@ never be called except internally.</strong></p>
 105
 106
 107
-108
-109
-110
-111</pre>
+108</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 98</span>
 
-<span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
+<span class='def def kw'>def</span> <span class='populate_relationship identifier id'>populate_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='doc identifier id'>doc</span><span class='rparen token'>)</span>
   <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='Proxies constant id'>Proxies</span><span class='colon2 op'>::</span><span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='rparen token'>)</span>
 
   <span class='counter identifier id'>counter</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
-  <span class='loop identifier id'>loop</span> <span class='do do kw'>do</span>
-    <span class='break break kw'>break</span> <span class='unless unless_mod kw'>unless</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;SharedFolderNameMachineMapping#{counter}&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
-
-    <span class='folder identifier id'>folder</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='counter identifier id'>counter</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
-    <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='folder identifier id'>folder</span><span class='rparen token'>)</span>
+  <span class='doc identifier id'>doc</span><span class='dot token'>.</span><span class='css identifier id'>css</span><span class='lparen token'>(</span><span class='string val'>&quot;Hardware SharedFolders SharedFolder&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='folder identifier id'>folder</span><span class='bitor op'>|</span>
+    <span class='relation identifier id'>relation</span> <span class='lshft op'>&lt;&lt;</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='counter identifier id'>counter</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='folder identifier id'>folder</span><span class='rparen token'>)</span>
     <span class='counter identifier id'>counter</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
   <span class='end end kw'>end</span>
 
@@ -710,15 +704,15 @@ member of the relationship.</p>
       <pre class="lines">
 
 
+114
+115
+116
 117
 118
-119
-120
-121
-122</pre>
+119</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 117</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 114</span>
 
 <span class='def def kw'>def</span> <span class='save_relationship identifier id'>save_relationship</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='comment val'># Just call save on each folder with the VM</span>
@@ -760,12 +754,12 @@ called by any relationship collection when this object is added.</p>
       <pre class="lines">
 
 
-219
-220
-221</pre>
+214
+215
+216</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 219</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 214</span>
 
 <span class='def def kw'>def</span> <span class='added_to_relationship identifier id'>added_to_relationship</span><span class='lparen token'>(</span><span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
   <span class='write_attribute identifier id'>write_attribute</span><span class='lparen token'>(</span><span class='symbol val'>:parent</span><span class='comma token'>,</span> <span class='parent identifier id'>parent</span><span class='rparen token'>)</span>
@@ -836,20 +830,20 @@ from within the virtual machine.</p>
       <pre class="lines">
 
 
+226
+227
+228
+229
+230
 231
 232
 233
 234
 235
-236
-237
-238
-239
-240
-241</pre>
+236</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 231</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 226</span>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='comment val'># If the name changed, we have to be sure to use the previous</span>
@@ -891,17 +885,17 @@ only a single parameter. View <tt><a href="#initialize-instance_method" title="V
       <pre class="lines">
 
 
+168
+169
+170
+171
+172
 173
 174
-175
-176
-177
-178
-179
-180</pre>
+175</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 173</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 168</span>
 
 <span class='def def kw'>def</span> <span class='initialize_for_data identifier id'>initialize_for_data</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
@@ -942,6 +936,9 @@ parameters.</p>
       <pre class="lines">
 
 
+153
+154
+155
 156
 157
 158
@@ -949,23 +946,16 @@ parameters.</p>
 160
 161
 162
-163
-164
-165
-166
-167
-168</pre>
+163</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 156</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 153</span>
 
 <span class='def def kw'>def</span> <span class='initialize_for_relationship identifier id'>initialize_for_relationship</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='comma token'>,</span> <span class='caller identifier id'>caller</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='rparen token'>)</span>
   <span class='comment val'># Setup the index specific attributes</span>
   <span class='populate_data identifier id'>populate_data</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='bitor op'>|</span>
-    <span class='key identifier id'>key</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:populate_key</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='name identifier id'>name</span>
-    <span class='value identifier id'>value</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{key}#{index}&quot;</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span>
-    <span class='populate_data identifier id'>populate_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
+  <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='bitor op'>|</span>
+    <span class='populate_data identifier id'>populate_data</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
   <span class='end end kw'>end</span>
 
   <span class='populate_attributes identifier id'>populate_attributes</span><span class='lparen token'>(</span><span class='populate_data identifier id'>populate_data</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='lbrace token'>{</span>
@@ -1035,6 +1025,11 @@ parameters.</p>
       <pre class="lines">
 
 
+191
+192
+193
+194
+195
 196
 197
 198
@@ -1049,15 +1044,10 @@ parameters.</p>
 207
 208
 209
-210
-211
-212
-213
-214
-215</pre>
+210</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 196</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 191</span>
 
 <span class='def def kw'>def</span> <span class='save identifier id'>save</span><span class='lparen token'>(</span><span class='raise_errors identifier id'>raise_errors</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='unless unless_mod kw'>unless</span> <span class='changed? fid id'>changed?</span>
@@ -1106,16 +1096,16 @@ parameters.</p>
       <pre class="lines">
 
 
+178
+179
+180
+181
+182
 183
-184
-185
-186
-187
-188
-189</pre>
+184</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 183</span>
+      <pre class="code"><span class="info file"># File 'lib/virtualbox/shared_folder.rb', line 178</span>
 
 <span class='def def kw'>def</span> <span class='validate identifier id'>validate</span>
   <span class='super super kw'>super</span>
@@ -1135,7 +1125,7 @@ parameters.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Feb  2 22:39:07 2010 by 
+  Generated on Tue Feb 16 00:11:15 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.3 (ruby-1.8.7).
 </div>
