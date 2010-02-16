@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{virtualbox}
-  s.version = "0.4.3"
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-02-08}
+  s.date = %q{2010-02-16}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -48,6 +48,8 @@ Gem::Specification.new do |s|
      "lib/virtualbox/proxies/collection.rb",
      "lib/virtualbox/shared_folder.rb",
      "lib/virtualbox/storage_controller.rb",
+     "lib/virtualbox/system_property.rb",
+     "lib/virtualbox/usb.rb",
      "lib/virtualbox/vm.rb",
      "test/test_helper.rb",
      "test/virtualbox/abstract_model/attributable_test.rb",
@@ -68,6 +70,8 @@ Gem::Specification.new do |s|
      "test/virtualbox/proxies/collection_test.rb",
      "test/virtualbox/shared_folder_test.rb",
      "test/virtualbox/storage_controller_test.rb",
+     "test/virtualbox/system_property_test.rb",
+     "test/virtualbox/usb_test.rb",
      "test/virtualbox/vm_test.rb",
      "test/virtualbox_test.rb",
      "virtualbox.gemspec"
@@ -97,6 +101,8 @@ Gem::Specification.new do |s|
      "test/virtualbox/proxies/collection_test.rb",
      "test/virtualbox/shared_folder_test.rb",
      "test/virtualbox/storage_controller_test.rb",
+     "test/virtualbox/system_property_test.rb",
+     "test/virtualbox/usb_test.rb",
      "test/virtualbox/vm_test.rb",
      "test/virtualbox_test.rb"
   ]
