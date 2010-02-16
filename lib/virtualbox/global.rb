@@ -5,8 +5,16 @@ module VirtualBox
   class Global < AbstractModel
     # The path to the global VirtualBox XML configuration file. This is
     # entirely system dependent and can be set with {vboxconfig=}. The default
-    # is set to a Mac OS X path.
-    @@vboxconfig = "~/Library/VirtualBox/VirtualBox.xml"
+    # is guessed based on the platform.
+    #
+    # TODO: Windows
+    @@vboxconfig = if RUBY_PLATFORM.downcase.include?("darwin")
+      "~/Library/VirtualBox/VirtualBox.xml"
+    elsif RUBY_PLATFORM.downcase.include?("linux")
+      "~/.VirtualBox/VirtualBox.xml"
+    else
+      "Unknown"
+    end
 
     relationship :vms, VM, :lazy => true
     relationship :media, Media
