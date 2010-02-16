@@ -14,6 +14,30 @@ module VirtualBox
     include Relatable
     include Validatable
 
+    class <<self
+      # Returns whether or not the class should be reloaded.
+      #
+      # @return [Boolean]
+      def reload?
+        !!@_reload
+      end
+
+      def reload!
+        @_reload = true
+      end
+
+      def reloaded!
+        @_reload = false
+      end
+    end
+
+    # Signals to the class that it should be reloaded. This simply toggles
+    # a boolean value to true. It is up to the subclass to implement functionality
+    # around it. See {reload?}
+    def reload!
+      self.class.reload!
+    end
+
     # Returns a boolean denoting if the record is new or existing. This
     # method is provided for subclasses to use to differentiate between
     # creating a new object or saving an existing one. An example of this
