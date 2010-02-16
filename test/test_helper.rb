@@ -67,7 +67,10 @@ class Test::Unit::TestCase
         <TimeOffset value="0"/>
         <PXEDebug enabled="false"/>
       </BIOS>
-      <USBController enabled="false" enabledEhci="true"/>
+      <USBController enabled="true" enabledEhci="true">
+        <DeviceFilter name="Apple, Inc Apple Keyboard [0069]" active="true" vendorId="05ac" productId="0220" revision="0069" manufacturer="Apple, Inc" product="Apple Keyboard" remote="no"/>
+        <DeviceFilter name="Micron Built-in iSight [0189]" active="false" vendorId="05ac" productId="8501" revision="0189" manufacturer="Micron" product="Built-in iSight" remote="no"/>
+      </USBController>
       <Network>
         <Adapter slot="0" enabled="true" MACAddress="0800279C2E41" cable="true" speed="0" type="Am79C973">
           <NAT/>
