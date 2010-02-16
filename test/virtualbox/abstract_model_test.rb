@@ -20,33 +20,51 @@ class AbstractModelTest < Test::Unit::TestCase
   end
 
   context "reloading" do
-    setup do
-      @model = LazyModel.new
+    context "with a single class" do
+      setup do
+        @model = FakeModel.new
+      end
+
+      teardown do
+        FakeModel.reloaded!
+      end
+
+      should "not want to be reloaded initially" do
+        assert !FakeModel.reload?
+      end
+
+      should "want to be reloaded once signaled by the class method" do
+        FakeModel.reload!
+        assert FakeModel.reload?
+      end
+
+      should "want to be reloaded once signaled by the instance method" do
+        @model.reload!
+        assert FakeModel.reload?
+      end
+
+      should "not want to be reloaded once reloaded! is called" do
+        @model.reload!
+        assert FakeModel.reload?
+        FakeModel.reloaded!
+        assert !FakeModel.reload?
+      end
     end
 
-    teardown do
-      LazyModel.reloaded!
-    end
+    context "with inheritance" do
+      class SubModel < FakeModel
+      end
 
-    should "not want to be reloaded initially" do
-      assert !LazyModel.reload?
-    end
+      setup do
+        @lazy = FakeModel.new
+        @sub = SubModel.new
+      end
 
-    should "want to be reloaded once signaled by the class method" do
-      LazyModel.reload!
-      assert LazyModel.reload?
-    end
-
-    should "want to be reloaded once signaled by the instance method" do
-      @model.reload!
-      assert LazyModel.reload?
-    end
-
-    should "not want to be reloaded once reloaded! is called" do
-      @model.reload!
-      assert LazyModel.reload?
-      LazyModel.reloaded!
-      assert !LazyModel.reload?
+      should "not interfere with each others reload flags" do
+        @lazy.reload!
+        assert !SubModel.reload?
+        assert FakeModel.reload?
+      end
     end
   end
 
