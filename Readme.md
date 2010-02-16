@@ -77,3 +77,11 @@ don't have it already, and do the following:
     rake
 
 This will run the test suite, which should come back all green! Then you're good to go!
+
+## Special Thanks
+
+These folks went above and beyond with contributions to the virtualbox gem, and
+for that, I have to say "thanks!"
+
+* [Kieran Pilkington](http://github.com/KieranP)
+* [Aleksey Palazhchenko](http://github.com/AlekSi)
