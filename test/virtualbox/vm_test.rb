@@ -34,6 +34,12 @@ class VMTest < Test::Unit::TestCase
       assert_equal "on", @vm.state
     end
 
+    should "never have state as dirty" do
+      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "on" })
+      @vm.expects(:clear_dirty!).with(:state).once
+      @vm.state(true)
+    end
+
     should "provide conveniance methods for determining VM state" do
       VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "poweroff" })
       assert_equal "poweroff", @vm.state(true)
@@ -313,14 +319,21 @@ raw
     end
 
     should "save name first if changed, then following values should modify new VM" do
-      save_seq = sequence("save_seq")
       new_name = "foo2"
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--name", new_name).in_sequence(save_seq)
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", new_name, "--ostype", "Zubuntu").in_sequence(save_seq)
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--ostype", "Zubuntu", "--name", new_name)
 
       @vm.name = new_name
       @vm.ostype = "Zubuntu"
       assert @vm.save
+    end
+
+    should "save the new name as the original name after saving" do
+      new_name = "foo2"
+      assert_equal @name, @vm.instance_variable_get(:@original_name)
+
+      @vm.name = new_name
+      assert @vm.save
+      assert_equal new_name, @vm.instance_variable_get(:@original_name)
     end
 
     should "save the relationships as well" do

@@ -305,11 +305,7 @@ module VirtualBox
     def load_attribute(name)
       info = self.class.raw_info(@original_name)
 
-      if name == :state
-        # Simply force a state reload, and it'll write the attribute up
-        write_attribute(:state, info[:vmstate])
-      end
-
+      write_attribute(:state, info[:vmstate]) if name == :state
       write_attribute(:synthcpu, info[:synthcpu]) unless loaded_attribute?(:synthcpu)
     end
 
@@ -323,6 +319,7 @@ module VirtualBox
     def state(reload=false)
       if reload
         load_attribute(:state)
+        clear_dirty!(:state)
       end
 
       read_attribute(:state)
@@ -332,13 +329,21 @@ module VirtualBox
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
     def save(raise_errors=false)
-      # Make sure we save the new name first if that was changed, or
-      # we'll get some inconsistencies later
-      if name_changed?
-        save_attribute(:name, name)
-        @original_name = name
+      # First save all the changed attributes in a single batch
+      saves = changes.inject([]) do |acc, kv|
+        key, values = kv
+        acc << ["--#{key}", values[1]]
       end
 
+      # Flatten to pass into vboxmanage
+      saves.flatten!
+
+      # Save all the attributes in one command
+      Command.vboxmanage("modifyvm", @original_name, *saves)
+
+      # Now clear attributes and call super so relationships are saved
+      @original_name = name
+      clear_dirty!
       super()
 
       # Force reload
@@ -348,15 +353,6 @@ module VirtualBox
     rescue Exceptions::CommandFailedException
       raise if raise_errors
       return false
-    end
-
-    # Saves a single attribute of the virtual machine. This should **not**
-    # be called except interally. Instead, you're probably looking for {#save}.
-    #
-    # **This method typically won't be used except internally.**
-    def save_attribute(key, value)
-      Command.vboxmanage("modifyvm", @original_name, "--#{key}", value)
-      super
     end
 
     # Exports a virtual machine. The virtual machine will be exported
