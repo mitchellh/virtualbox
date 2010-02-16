@@ -41,3 +41,10 @@ is quite easy:
     properties.each do |key, value|
       puts "#{key} = #{value}"
     end
+
+## USB Device Relationship on VMs
+
+Previously, {VirtualBox::VM VM} object would only be able to tell you if there
+were USB devices enabled or not. Now, `usbs` is a full-fledged relationship
+on VM. This relationship is access just like any other. For more information
+view the {VirtualBox::USB USB} class.
