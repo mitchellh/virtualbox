@@ -20,6 +20,7 @@ require 'virtualbox/storage_controller'
 require 'virtualbox/vm'
 require 'virtualbox/media'
 require 'virtualbox/global'
+require 'virtualbox/system_property'
 
 module VirtualBox
   class <<self
