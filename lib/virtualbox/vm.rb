@@ -329,21 +329,24 @@ module VirtualBox
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
     def save(raise_errors=false)
-      # First save all the changed attributes in a single batch
-      saves = changes.inject([]) do |acc, kv|
-        key, values = kv
-        acc << ["--#{key}", values[1]]
+      if changed?
+        # First save all the changed attributes in a single batch
+        saves = changes.inject([]) do |acc, kv|
+          key, values = kv
+          acc << ["--#{key}", values[1]]
+        end
+
+        # Flatten to pass into vboxmanage
+        saves.flatten!
+
+        # Save all the attributes in one command
+        Command.vboxmanage("modifyvm", @original_name, *saves)
+
+        # Now clear attributes and call super so relationships are saved
+        @original_name = name
+        clear_dirty!
       end
 
-      # Flatten to pass into vboxmanage
-      saves.flatten!
-
-      # Save all the attributes in one command
-      Command.vboxmanage("modifyvm", @original_name, *saves)
-
-      # Now clear attributes and call super so relationships are saved
-      @original_name = name
-      clear_dirty!
       super()
 
       # Force reload

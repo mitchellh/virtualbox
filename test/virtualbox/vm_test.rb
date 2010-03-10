@@ -318,6 +318,12 @@ raw
       assert @vm.save
     end
 
+    should "do nothing if no attributes changed" do
+      VirtualBox::Command.expects(:vboxmanage).never
+      assert !@vm.changed?
+      assert @vm.save
+    end
+
     should "save name first if changed, then following values should modify new VM" do
       new_name = "foo2"
       VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--ostype", "Zubuntu", "--name", new_name)
