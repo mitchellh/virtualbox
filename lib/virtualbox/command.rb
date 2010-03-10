@@ -1,4 +1,8 @@
 module VirtualBox
+  def self.version
+    Command.version
+  end
+
   # Used by the rest of the virtualbox library to call shell commands.
   # It also can be used to change the path for your VBoxManage program.
   #

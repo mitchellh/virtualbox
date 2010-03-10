@@ -3,8 +3,13 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class CommandTest < Test::Unit::TestCase
   context "getting the version" do
     setup do
-      VirtualBox::Command.stubs(:execute)
+      VirtualBox::Command.stubs(:execute).returns("foo")
       VirtualBox::Command.stubs(:success?).returns(true)
+    end
+
+    should "be able to call version on VirtualBox and it calls the class method" do
+      version = "foo"
+      assert_equal version, VirtualBox.version
     end
 
     should "run the command with the version flag" do
