@@ -1,6 +1,35 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class CommandTest < Test::Unit::TestCase
+  context "getting the version" do
+    setup do
+      VirtualBox::Command.stubs(:execute)
+      VirtualBox::Command.stubs(:success?).returns(true)
+    end
+
+    should "run the command with the version flag" do
+      VirtualBox::Command.expects(:execute).with("VBoxManage --version").once.returns("7")
+      VirtualBox::Command.version
+    end
+
+    should "return the value of the command if it succeeded" do
+      version = "3.1.4r1940"
+      VirtualBox::Command.expects(:execute).returns(version)
+      assert_equal version, VirtualBox::Command.version
+    end
+
+    should "return the value of nil if the command failed" do
+      VirtualBox::Command.expects(:success?).returns(false)
+      assert_nil VirtualBox::Command.version
+    end
+
+    should "strip the newlines from the result" do
+      version = "3.1.4r1940"
+      VirtualBox::Command.expects(:execute).returns(version + "\n")
+      assert_equal version, VirtualBox::Command.version
+    end
+  end
+
   context "parsing XML" do
     should "open the file, parse it, and close the file" do
       arg = "foo"

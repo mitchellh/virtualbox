@@ -14,6 +14,16 @@ module VirtualBox
     @@vboxmanage = "VBoxManage"
 
     class <<self
+      # Returns a string of the version of VirtualBox installed, or nil if
+      # it can't detect VirtualBox.
+      #
+      # @return [String]
+      def version
+        result = execute("#{@@vboxmanage} --version")
+        return nil unless Command.success?
+        result.chomp
+      end
+
       # Reads the XML file and returns a Nokogiri document. Reads the XML data
       # from the specified file and returns a Nokogiri document.
       #
