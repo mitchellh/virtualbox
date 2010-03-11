@@ -54,11 +54,9 @@ module VirtualBox
     # The path to the global VirtualBox XML configuration file. This is
     # entirely system dependent and can be set with {vboxconfig=}. The default
     # is guessed based on the platform.
-    #
-    # TODO: Windows
     @@vboxconfig = if RUBY_PLATFORM.downcase.include?("darwin")
       "~/Library/VirtualBox/VirtualBox.xml"
-    elsif RUBY_PLATFORM.downcase.include?("linux")
+    elsif RUBY_PLATFORM.downcase.include?("linux") || RUBY_PLATFORM.downcase.include?("mswin")
       "~/.VirtualBox/VirtualBox.xml"
     else
       "Unknown"
