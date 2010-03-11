@@ -93,6 +93,12 @@ module VirtualBox
       # the ruby mailing list. I'm not sure how well it works but so far
       # it hasn't failed!
       def shell_escape(str)
+        if RUBY_PLATFORM.downcase.include?("mswin")
+          # Special case for windows. This is probably not 100% bullet proof
+          # but it gets the job done until we find trouble
+          return "\"#{str}\"" if str =~ /\s/
+        end
+
         str.to_s.gsub(/(?=[^a-zA-Z0-9_.\/\-\x7F-\xFF\n])/n, '\\').
                  gsub(/\n/, "'\n'").
                  sub(/^$/, "''")
