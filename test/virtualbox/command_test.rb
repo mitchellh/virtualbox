@@ -54,6 +54,30 @@ class CommandTest < Test::Unit::TestCase
         assert_equal "400", VirtualBox::Command.shell_escape(400)
       end
     end
+
+    context "unix" do
+      setup do
+        VirtualBox::Platform.stubs(:windows?).returns(false)
+      end
+
+      should "convert properly" do
+        assert_equal "foo\\ bar", VirtualBox::Command.shell_escape("foo bar")
+      end
+    end
+
+    context "windows" do
+      setup do
+        VirtualBox::Platform.stubs(:windows?).returns(true)
+      end
+
+      should "wrap strings with spaces in quotes" do
+        assert_equal '"foo bar"', VirtualBox::Command.shell_escape("foo bar")
+      end
+
+      should "just return the string if it has no spaces" do
+        assert_equal "foo:bar", VirtualBox::Command.shell_escape('foo:bar')
+      end
+    end
   end
 
   context "executing commands" do
