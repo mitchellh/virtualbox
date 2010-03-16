@@ -117,7 +117,7 @@ module VirtualBox
       #
       # @return [String]
       def expand_path(path)
-        File.expand_path(path, File.dirname(@@vboxconfig))
+        File.expand_path(path, File.dirname(vboxconfig))
       end
     end
 

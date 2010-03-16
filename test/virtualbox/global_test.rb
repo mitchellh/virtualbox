@@ -104,7 +104,7 @@ class GlobalTest < Test::Unit::TestCase
 
   context "expanding path" do
     setup do
-      VirtualBox::Global.vboxconfig = "/foo/bar/baz.rb"
+      VirtualBox::Global.stubs(:vboxconfig).returns("/foo/bar/baz.rb")
     end
 
     should "expand the path properly" do
