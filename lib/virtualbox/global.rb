@@ -54,13 +54,7 @@ module VirtualBox
     # The path to the global VirtualBox XML configuration file. This is
     # entirely system dependent and can be set with {vboxconfig=}. The default
     # is guessed based on the platform.
-    @@vboxconfig = if RUBY_PLATFORM.downcase.include?("darwin")
-      "~/Library/VirtualBox/VirtualBox.xml"
-    elsif RUBY_PLATFORM.downcase.include?("linux") || RUBY_PLATFORM.downcase.include?("mswin") || RUBY_PLATFORM.downcase.include?("mingw")
-      "~/.VirtualBox/VirtualBox.xml"
-    else
-      "Unknown"
-    end
+    @@vboxconfig = nil
 
     relationship :vms, VM, :lazy => true
     relationship :media, Media
@@ -94,14 +88,29 @@ module VirtualBox
         @@vboxconfig = value
       end
 
+      # Returns the path to the virtual box configuration file. If the path
+      # has not yet been set, it attempts to infer it based on the
+      # platform ruby is running on.
+      def vboxconfig
+        return @@vboxconfig unless @@vboxconfig.nil?
+
+        if Platform.mac?
+          "~/Library/VirtualBox/VirtualBox.xml"
+        elsif Platform.linux? || Platform.windows?
+          "~/.VirtualBox/VirtualBox.xml"
+        else
+          "Unknown"
+        end
+      end
+
       # Returns the XML document of the configuration. This will raise an
       # {Exceptions::ConfigurationException} if the vboxconfig file doesn't
       # exist.
       #
       # @return [Nokogiri::XML::Document]
       def config
-        raise Exceptions::ConfigurationException.new("The path to the global VirtualBox config must be set. See Global.vboxconfig=") unless File.exist?(File.expand_path(@@vboxconfig))
-        Command.parse_xml(File.expand_path(@@vboxconfig))
+        raise Exceptions::ConfigurationException.new("The path to the global VirtualBox config must be set. See Global.vboxconfig=") unless File.exist?(File.expand_path(vboxconfig))
+        Command.parse_xml(File.expand_path(vboxconfig))
       end
 
       # Expands path relative to the configuration file.
