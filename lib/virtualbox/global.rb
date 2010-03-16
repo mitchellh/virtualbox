@@ -109,7 +109,7 @@ module VirtualBox
       #
       # @return [Nokogiri::XML::Document]
       def config
-        raise Exceptions::ConfigurationException.new("The path to the global VirtualBox config must be set. See Global.vboxconfig=") unless File.exist?(File.expand_path(vboxconfig))
+        raise Exceptions::ConfigurationException.new("The path to the global VirtualBox config must be set. See Global.vboxconfig=") unless File.file?(File.expand_path(vboxconfig))
         Command.parse_xml(File.expand_path(vboxconfig))
       end
 
