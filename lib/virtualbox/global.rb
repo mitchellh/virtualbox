@@ -56,7 +56,7 @@ module VirtualBox
     # is guessed based on the platform.
     @@vboxconfig = if RUBY_PLATFORM.downcase.include?("darwin")
       "~/Library/VirtualBox/VirtualBox.xml"
-    elsif RUBY_PLATFORM.downcase.include?("linux") || RUBY_PLATFORM.downcase.include?("mswin")
+    elsif RUBY_PLATFORM.downcase.include?("linux") || RUBY_PLATFORM.downcase.include?("mswin") || RUBY_PLATFORM.downcase.include?("mingw")
       "~/.VirtualBox/VirtualBox.xml"
     else
       "Unknown"
