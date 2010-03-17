@@ -12,32 +12,49 @@ class GlobalTest < Test::Unit::TestCase
 
     should "return the path if its set" do
       VirtualBox::Global.vboxconfig = "foo"
+      File.expects(:expand_path).with("foo").returns("foo")
       assert_equal "foo", VirtualBox::Global.vboxconfig
     end
 
     should "return Mac-path if on mac" do
+      result = "~/Library/VirtualBox/VirtualBox.xml"
       VirtualBox::Platform.stubs(:mac?).returns(true)
-      assert_equal "~/Library/VirtualBox/VirtualBox.xml", VirtualBox::Global.vboxconfig
+      
+      expanded_result = result + result
+      File.expects(:expand_path).with(result).returns(expanded_result)
+      assert_equal expanded_result, VirtualBox::Global.vboxconfig
     end
 
     should "return Windows-path if on windows" do
+      result = "~/.VirtualBox/VirtualBox.xml"
       VirtualBox::Platform.stubs(:mac?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(true)
-      assert_equal "~/.VirtualBox/VirtualBox.xml", VirtualBox::Global.vboxconfig
+      
+      expanded_result = result + result
+      File.expects(:expand_path).with(result).returns(expanded_result)
+      assert_equal expanded_result, VirtualBox::Global.vboxconfig
     end
 
     should "return Linux-path if on linux" do
+      result = "~/.VirtualBox/VirtualBox.xml"
       VirtualBox::Platform.stubs(:mac?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(false)
       VirtualBox::Platform.stubs(:linux?).returns(true)
-      assert_equal "~/.VirtualBox/VirtualBox.xml", VirtualBox::Global.vboxconfig
+      
+      expanded_result = result + result
+      File.expects(:expand_path).with(result).returns(expanded_result)
+      assert_equal expanded_result, VirtualBox::Global.vboxconfig
     end
 
     should "return 'unknown' otherwise" do
+      result = "Unknown"
       VirtualBox::Platform.stubs(:mac?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(false)
       VirtualBox::Platform.stubs(:linux?).returns(false)
-      assert_equal "Unknown", VirtualBox::Global.vboxconfig
+      
+      expanded_result = result + result
+      File.expects(:expand_path).with(result).returns(expanded_result)
+      assert_equal expanded_result, VirtualBox::Global.vboxconfig
     end
   end
 
@@ -63,41 +80,41 @@ class GlobalTest < Test::Unit::TestCase
       assert !VirtualBox::Global.reload?
     end
   end
+  
+  context "testingn the config path" do
+    setup do
+      @result = "foo"
+      VirtualBox::Global.stubs(:vboxconfig).returns(@result)
+    end
+    
+    should "return true if it is a file" do
+      File.expects(:file?).with(@result).returns(true)
+      assert VirtualBox::Global.vboxconfig?
+    end
+    
+    should "return false if it is not a file" do
+      File.expects(:file?).with(@result).returns(false)
+      assert !VirtualBox::Global.vboxconfig?
+    end
+  end
 
   context "parsing configuration XML" do
     setup do
-      VirtualBox::Command.stubs(:vboxconfig).returns("foo")
-      File.stubs(:file?).returns(true)
+      @vboxconfig = "foo"
+      VirtualBox::Global.stubs(:vboxconfig?).returns(true)
+      VirtualBox::Global.stubs(:vboxconfig).returns(@vboxconfig)
+    end
+
+    should "raise an error if the config XML is invalid" do
       VirtualBox::Command.stubs(:parse_xml)
-    end
-
-    should "check the file with the expanded path" do
-      File.stubs(:expand_path).returns("FOO")
-      File.expects(:file?).with("FOO").returns(true)
-      VirtualBox::Global.config
-    end
-
-    should "raise an error if the config XML doesn't exist" do
-      File.expects(:file?).returns(false)
+      VirtualBox::Global.expects(:vboxconfig?).returns(false)
       assert_raises(VirtualBox::Exceptions::ConfigurationException) do
         VirtualBox::Global.config
       end
     end
 
     should "use Command.parse_xml to parse" do
-      VirtualBox::Command.expects(:parse_xml).with(anything).once
-      VirtualBox::Global.config
-    end
-
-    should "use the set vboxconfig to parse xml" do
-      VirtualBox::Global.vboxconfig = "/foo"
-      VirtualBox::Command.expects(:parse_xml).with("/foo").once
-      VirtualBox::Global.config
-    end
-
-    should "file expand path the vboxconfig path" do
-      VirtualBox::Global.vboxconfig = "foo"
-      VirtualBox::Command.expects(:parse_xml).with(File.expand_path("foo")).once
+      VirtualBox::Command.expects(:parse_xml).with(@vboxconfig).once
       VirtualBox::Global.config
     end
   end

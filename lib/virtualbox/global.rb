@@ -92,15 +92,25 @@ module VirtualBox
       # has not yet been set, it attempts to infer it based on the
       # platform ruby is running on.
       def vboxconfig
-        return @@vboxconfig unless @@vboxconfig.nil?
-
-        if Platform.mac?
-          "~/Library/VirtualBox/VirtualBox.xml"
-        elsif Platform.linux? || Platform.windows?
-          "~/.VirtualBox/VirtualBox.xml"
-        else
-          "Unknown"
+        if @@vboxconfig.nil?
+          if Platform.mac?
+            @@vboxconfig = "~/Library/VirtualBox/VirtualBox.xml"
+          elsif Platform.linux? || Platform.windows?
+            @@vboxconfig = "~/.VirtualBox/VirtualBox.xml"
+          else
+            @@vboxconfig = "Unknown"
+          end
         end
+        
+        File.expand_path(@@vboxconfig)
+      end
+      
+      # Returns a boolean denoting whether or not the vboxconfig value is
+      # valid or not.
+      #
+      # @return [Boolean]
+      def vboxconfig?
+        File.file?(vboxconfig)
       end
 
       # Returns the XML document of the configuration. This will raise an
@@ -109,8 +119,8 @@ module VirtualBox
       #
       # @return [Nokogiri::XML::Document]
       def config
-        raise Exceptions::ConfigurationException.new("The path to the global VirtualBox config must be set. See Global.vboxconfig=") unless File.file?(File.expand_path(vboxconfig))
-        Command.parse_xml(File.expand_path(vboxconfig))
+        raise Exceptions::ConfigurationException.new("The path to the global VirtualBox config must be set. See Global.vboxconfig=") unless vboxconfig?
+        Command.parse_xml(vboxconfig)
       end
 
       # Expands path relative to the configuration file.

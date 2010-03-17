@@ -1,5 +1,5 @@
 begin
-  require File.expand_path('../.bundle/environment', __FILE__)
+  require File.expand_path('../../.bundle/environment', __FILE__)
 rescue LoadError
   # Fallback on doing the resolve at runtime.
   require "rubygems"
