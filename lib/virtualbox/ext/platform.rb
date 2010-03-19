@@ -6,7 +6,7 @@ module VirtualBox
       end
 
       def windows?
-        platform.include?("mswin") || platform.include?("mingw")
+        platform.include?("mswin") || platform.include?("mingw") || platform.include?("cygwin")
       end
 
       def linux?

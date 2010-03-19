@@ -28,6 +28,14 @@ class PlatformTest < Test::Unit::TestCase
         assert VirtualBox::Platform.windows?
       end
     end
+
+    should "return true if it contains cygwin" do
+      success = ["i386-cygwin", "i686-cygwin64", "cygwin"]
+      success.each do |item|
+        VirtualBox::Platform.stubs(:platform).returns(item)
+        assert VirtualBox::Platform.windows?
+      end
+    end
   end
 
   context "linux" do
