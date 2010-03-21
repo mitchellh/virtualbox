@@ -132,6 +132,33 @@ module VirtualBox
       validates_presence_of :hostport
     end
 
+    # Retrieves the device for the forwarded port. This tries to "do the
+    # right thing" depending on the first NIC of the VM parent by either
+    # setting the forwarded port type to "pcnet" or "e1000." If the device
+    # was already set manually, this method will simply return that value
+    # instead.
+    #
+    # @return [String] Device type for the forwarded port
+    def device
+      # Return the current or default value if it is:
+      #  * an existing record, since it was already mucked with, no need to
+      #    modify it again
+      #  * device setting changed, since we should return what the user set
+      #    it to
+      #  * If the parent is nil, since we can't infer the type without a parent
+      return read_attribute(:device) if !new_record? || device_changed? || parent.nil?
+
+      device_map = {
+        "Am79C970A" => "pcnet",
+        "Am79C973" => "pcnet",
+        "82540EM" => "e1000",
+        "82543GC" => "e1000",
+        "82545EM" => "e1000"
+      }
+
+      return device_map[parent.nics[0].nictype]
+    end
+
     # Saves the forwarded port.
     #
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}

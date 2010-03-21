@@ -2,7 +2,12 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class ForwardedPortTest < Test::Unit::TestCase
   setup do
+    @nic = mock("nic")
+    @nic.stubs(:nictype).returns("foo")
+    @nics = [@nic]
+
     @caller = mock("caller")
+    @caller.stubs(:nics).returns(@nics)
   end
 
   context "validations" do
@@ -53,6 +58,54 @@ class ForwardedPortTest < Test::Unit::TestCase
       @ed.stubs(:save)
       @ed.stubs(:delete)
       @caller.stubs(:extra_data).returns(@ed)
+    end
+
+    context "device" do
+      setup do
+        @port.new_record!
+        @port.added_to_relationship(@caller)
+      end
+
+      should "return the value set if it was set" do
+        @port.device = "foo"
+        assert_equal "foo", @port.device
+      end
+
+      should "return the default if parent is nil" do
+        @port.expects(:parent).returns(nil)
+        assert_equal "pcnet", @port.device
+      end
+
+      should "return the default if the record is existing" do
+        @nic.expects(:nictype).never
+        @port.existing_record!
+        assert_equal "pcnet", @port.device
+      end
+
+      should "return pcnet if card is a Am79C970A type" do
+        @nic.expects(:nictype).returns("Am79C970A")
+        assert_equal "pcnet", @port.device
+      end
+
+      should "return pcnet if card is a Am79C973 type" do
+        @nic.expects(:nictype).returns("Am79C973")
+        assert_equal "pcnet", @port.device
+      end
+
+      should "return e1000 if card is a 82540EM type" do
+        @nic.expects(:nictype).returns("82540EM")
+        assert_equal "e1000", @port.device
+      end
+
+      should "return e1000 if card is a 82543GC type" do
+        @nic.expects(:nictype).returns("82543GC")
+        assert_equal "e1000", @port.device
+      end
+
+      should "return e1000 if card is a 82545EM type" do
+        @nic.expects(:nictype).returns("82545EM")
+        assert_equal "e1000", @port.device
+      end
     end
 
     context "saving" do
