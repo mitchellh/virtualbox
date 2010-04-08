@@ -58,7 +58,7 @@ class VMTest < Test::Unit::TestCase
 
         @name = :foo
         @virtual_system.stubs(:descriptions).returns({
-          :name => { :vbox_value => @name }
+          :name => { :auto => @name }
         })
       end
 

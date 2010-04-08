@@ -158,7 +158,7 @@ module VirtualBox
         appliance = Appliance.new(source_path)
         appliance.import
 
-        find(appliance.virtual_systems.first.descriptions[:name][:vbox_value])
+        find(appliance.virtual_systems.first.descriptions[:name][:auto])
       end
 
       def populate_relationship(caller, machines)
