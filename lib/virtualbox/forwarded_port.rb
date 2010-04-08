@@ -156,7 +156,7 @@ module VirtualBox
         :I82545EM => "e1000"
       }
 
-      return device_map[parent.network_adapter[0].adapter_type]
+      return device_map[parent.network_adapters[0].adapter_type]
     end
 
     # Saves the forwarded port.

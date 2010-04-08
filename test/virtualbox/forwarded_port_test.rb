@@ -7,7 +7,7 @@ class ForwardedPortTest < Test::Unit::TestCase
     @nics = [@nic]
 
     @caller = mock("caller")
-    @caller.stubs(:network_adapter).returns(@nics)
+    @caller.stubs(:network_adapters).returns(@nics)
 
     @interface = mock("interface")
   end
