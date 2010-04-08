@@ -45,8 +45,8 @@ module VirtualBox
     end
 
     # Exports the machines to the given path
-    def export
-      interface.write("ovf-1.0", path).wait_for_completion(-1)
+    def export(&block)
+      interface.write("ovf-1.0", path).wait(&block)
     end
 
     # Adds a VM to the appliance

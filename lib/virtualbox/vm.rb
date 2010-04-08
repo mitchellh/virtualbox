@@ -285,11 +285,11 @@ module VirtualBox
     # @param [String] filename The file (not directory) to save the exported
     #   OVF file. This directory will also receive the checksum file and
     #   virtual disks.
-    def export(filename)
+    def export(filename, &block)
       app = Appliance.new
       app.path = filename
       app.add_machine(self)
-      app.export
+      app.export(&block)
     end
 
     # Starts the virtual machine. The virtual machine can be started in a

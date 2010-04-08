@@ -353,5 +353,36 @@ class VMTest < Test::Unit::TestCase
         end
       end
     end
+
+    context "exporting" do
+      setup do
+        @path = "foo.rb"
+        @appliance = mock("appliance")
+        @appliance.stubs(:path=)
+        @appliance.stubs(:add_machine)
+
+        VirtualBox::Appliance.stubs(:new).returns(@appliance)
+      end
+
+      should "create a new appliance with path and export" do
+        result = mock("result")
+        VirtualBox::Appliance.expects(:new).returns(@appliance)
+        @appliance.expects(:path=).with(@path)
+        @appliance.expects(:add_machine).with(@instance)
+        @appliance.expects(:export)
+
+        @instance.export(@path)
+      end
+
+      should "forward any block to the appliance export method" do
+        proc = mock("proc")
+        @appliance.expects(:export).yields(proc)
+        proc.expects(:call)
+
+        @instance.export(@path) do |yielded_proc|
+          yielded_proc.call
+        end
+      end
+    end
   end
 end

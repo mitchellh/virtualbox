@@ -114,13 +114,24 @@ class ApplianceTest < Test::Unit::TestCase
         @progress = mock("progress")
 
         @instance.path = :foo
+        @interface.stubs(:write).returns(@progress)
       end
 
       should "call write on interface and wait for completion" do
         @interface.expects(:write).with("ovf-1.0", @instance.path).once.returns(@progress)
-        @progress.expects(:wait_for_completion).with(-1)
+        @progress.expects(:wait)
 
         @instance.export
+      end
+
+      should "call wait with block given" do
+        proc = mock("proc")
+        @progress.expects(:wait).yields(proc)
+        proc.expects(:call)
+
+        @instance.export do |proc|
+          proc.call
+        end
       end
     end
 
