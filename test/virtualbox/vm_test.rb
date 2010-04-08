@@ -64,11 +64,17 @@ class VMTest < Test::Unit::TestCase
 
       should "create a new appliance with path, import, and return VM" do
         result = mock("result")
+        proc = mock("proc")
         VirtualBox::Appliance.expects(:new).with(@path).returns(@appliance)
-        @appliance.expects(:import)
+        @appliance.expects(:import).yields(proc)
         @klass.expects(:find).with(@name).returns(result)
+        proc.expects(:call)
 
-        assert_equal result, @klass.import(@path)
+        value = @klass.import(@path) do |proc|
+          proc.call
+        end
+
+        assert_equal result, value
       end
     end
 

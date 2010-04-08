@@ -155,9 +155,9 @@ module VirtualBox
       # be imported.
       #
       # @return [VM] The newly imported virtual machine
-      def import(source_path)
+      def import(source_path, &block)
         appliance = Appliance.new(source_path)
-        appliance.import
+        appliance.import(&block)
 
         find(appliance.virtual_systems.first.descriptions[:name][:auto])
       end

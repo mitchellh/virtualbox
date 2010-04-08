@@ -38,8 +38,8 @@ module VirtualBox
     end
 
     # Imports the machines associated with this appliance.
-    def import
-      interface.import_machines.wait_for_completion(-1)
+    def import(&block)
+      interface.import_machines.wait(&block)
     end
 
     # Exports the machines to the given path

@@ -87,13 +87,25 @@ class ApplianceTest < Test::Unit::TestCase
     context "importing" do
       setup do
         @progress = mock("progress")
+
+        @interface.stubs(:import_machines).returns(@progress)
       end
 
       should "call import on interface and wait for completion" do
         @interface.expects(:import_machines).returns(@progress)
-        @progress.expects(:wait_for_completion).with(-1)
+        @progress.expects(:wait)
 
         @instance.import
+      end
+
+      should "call wait with block given" do
+        proc = mock("proc")
+        @progress.expects(:wait).yields(proc)
+        proc.expects(:call)
+
+        @instance.import do |proc|
+          proc.call
+        end
       end
     end
 

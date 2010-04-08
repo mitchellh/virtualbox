@@ -25,6 +25,32 @@ module VirtualBox
         function :wait_for_completion, nil, [T_INT32]
         function :wait_for_operation_completion, nil, [T_UINT32, T_INT32]
         function :cancel, nil, []
+
+        # This method blocks the execution while the operations represented
+        # by this {Progress} object execute, but yields a block every `x`
+        # percent (interval given in parameters).
+        def wait(interval_percent=1, sleep_time=0.5)
+          # If no block is given we just wait until completion, not worrying
+          # about tracking percentages.
+          if !block_given?
+            wait_for_completion(-1)
+            return
+          end
+
+          last_reported = 0
+
+          while last_reported < 100
+            last_reported = percent
+            yield last_reported
+
+            delta = 0
+            while delta < interval_percent
+              sleep sleep_time
+              break if percent >= 100
+              delta = percent - last_reported
+            end
+          end
+        end
       end
     end
   end
