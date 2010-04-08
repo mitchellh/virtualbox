@@ -142,6 +142,7 @@ class ForwardedPortTest < Test::Unit::TestCase
 
       context "a new record" do
         setup do
+          @port.stubs(:valid?).returns(true)
           assert @port.new_record!
         end
 
@@ -150,16 +151,10 @@ class ForwardedPortTest < Test::Unit::TestCase
           assert !@port.new_record?
         end
 
-        should "return false and do nothing if invalid" do
-          @caller.expects(:extra_data).never
-          @port.expects(:valid?).returns(false)
-          assert !@port.save
-        end
-
         should "raise a ValidationFailedException if invalid and raise_errors is true" do
           @port.expects(:valid?).returns(false)
           assert_raises(VirtualBox::Exceptions::ValidationFailedException) {
-            @port.save(true)
+            @port.save
           }
         end
 

@@ -161,23 +161,18 @@ module VirtualBox
 
     # Saves the forwarded port.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def save(raise_errors=false)
+    def save
       return true if !new_record? && !changed?
 
-      if !valid?
-        raise Exceptions::ValidationFailedException.new(errors) if raise_errors
-        return false
-      end
+      raise Exceptions::ValidationFailedException.new(errors) if !valid?
 
-      destroy(raise_errors) if name_changed?
+      destroy if name_changed?
 
       parent.extra_data["#{key_prefix}Protocol"] = protocol
       parent.extra_data["#{key_prefix}GuestPort"] = guestport
       parent.extra_data["#{key_prefix}HostPort"] = hostport
-      result = parent.extra_data.save(raise_errors)
+      result = parent.extra_data.save
 
       clear_dirty!
       existing_record!
@@ -190,13 +185,13 @@ module VirtualBox
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def destroy(raise_errors=false)
+    def destroy
       results = []
 
       if !new_record?
-        results << parent.extra_data.delete("#{key_prefix(true)}Protocol", raise_errors)
-        results << parent.extra_data.delete("#{key_prefix(true)}GuestPort", raise_errors)
-        results << parent.extra_data.delete("#{key_prefix(true)}HostPort", raise_errors)
+        results << parent.extra_data.delete("#{key_prefix(true)}Protocol")
+        results << parent.extra_data.delete("#{key_prefix(true)}GuestPort")
+        results << parent.extra_data.delete("#{key_prefix(true)}HostPort")
 
         new_record!
       end
