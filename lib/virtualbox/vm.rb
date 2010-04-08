@@ -119,6 +119,7 @@ module VirtualBox
     attribute :teleporter_address
     attribute :teleporter_password
     attribute :interface, :readonly => true, :property => false
+    relationship :audio_adapter, :AudioAdapter
     relationship :bios, :BIOS
     relationship :storage_controllers, :StorageController, :dependent => :destroy
     relationship :medium_attachments, :MediumAttachment
