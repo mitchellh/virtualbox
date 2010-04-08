@@ -119,6 +119,14 @@ class ExtraDataTest < Test::Unit::TestCase
       @ed.save
     end
 
+    should "convert values to strings" do
+      @interface.expects(:set_extra_data).never
+      @interface.expects(:set_extra_data).with("bar", "7").once
+
+      @ed["bar"] = 7
+      @ed.save
+    end
+
     should "clear the dirty status of keys" do
       @ed["bar"] = "baz"
       assert @ed.bar_changed?

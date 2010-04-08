@@ -102,7 +102,7 @@ module VirtualBox
     # @return [Boolean] True if command was successful, false otherwise.
     def save
       changes.each do |key, value|
-        interface.set_extra_data(key.to_s, value[1])
+        interface.set_extra_data(key.to_s, value[1].to_s)
 
         clear_dirty!(key)
 
