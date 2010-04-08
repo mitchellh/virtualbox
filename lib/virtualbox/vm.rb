@@ -154,6 +154,10 @@ module VirtualBox
       # the first virtual machine will be returned, although all will
       # be imported.
       #
+      # If a block is given, it will be yielded with the percent of the
+      # import operation, so that the progress of the import can be
+      # tracked.
+      #
       # @return [VM] The newly imported virtual machine
       def import(source_path, &block)
         appliance = Appliance.new(source_path)

@@ -37,7 +37,9 @@ module VirtualBox
       existing_record!
     end
 
-    # Imports the machines associated with this appliance.
+    # Imports the machines associated with this appliance. If a block is given,
+    # it will be yielded every percent that the operation progresses. This can be
+    # done to check the progress of the import.
     def import(&block)
       interface.import_machines.wait(&block)
     end
