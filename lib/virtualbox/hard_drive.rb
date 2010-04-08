@@ -70,15 +70,16 @@ module VirtualBox
   # listed below. If you aren't sure what this means or you can't understand
   # why the below is listed, please read {Attributable}.
   #
-  #     attribute :uuid, :readonly => true
-  #     attribute :location
-  #     attribute :accessible, :readonly => true
-  #     attribute :format, :default => "VDI"
-  #     attribute :size
+  #     attribute :format, :default => "VDI", :property => :format
+  #     attribute :logical_size, :property => :logical_size
+  #     attribute :physical_size, :readonly => true, :property => :size
   #
-  class HardDrive < Image
-    attribute :format, :default => "VDI"
-    attribute :size, :lazy => true
+  # There are more attributes on the {Medium} model, which {HardDrive} inherits
+  # from.
+  class HardDrive < Medium
+    attribute :format, :default => "VDI", :property => :format
+    attribute :logical_size, :property => :logical_size
+    attribute :physical_size, :readonly => true, :property => :size
 
     class <<self
       # Returns an array of all available hard drives as HardDrive
@@ -92,45 +93,15 @@ module VirtualBox
       # Finds one specific hard drive by UUID or file name. If the
       # hard drive can not be found, will return `nil`.
       #
-      # @param [String] id The UUID or name of the hard drive
-      # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-      #   will be raised if the command failed.
+      # @param [String] id The UUID of the hard drive
       # @return [HardDrive]
       def find(id, raise_errors=false)
-        raw = Command.vboxmanage("showhdinfo", id)
-
-        data = raw.split(/\n\n/).collect { |v| parse_block(v) }.find { |v| !v.nil? }
-
-        # Set equivalent fields
-        data[:format] = data[:"storage format"]
-        data[:size] = data[:"logical size"].split(/\s+/)[0] if data.has_key?(:"logical size")
-
-        # Return new object
-        new(data)
-      rescue Exceptions::CommandFailedException
-        raise if raise_errors
-        nil
+        all.find { |hd| hd.uuid == id }
       end
 
-      def populate_relationship(caller, doc)
-        result = Proxies::Collection.new(caller)
-
-        doc.css("MediaRegistry HardDisks HardDisk").each do |hd_node|
-          data = {}
-          hd_node.attributes.each do |key, value|
-            data[key.downcase.to_sym] = value.to_s
-          end
-
-          # Strip the brackets off of UUID
-          data[:uuid] = data[:uuid][1..-2]
-
-          # Expand location relative to config location
-          data[:location] = Global.expand_path(data[:location]) if data[:location]
-
-          result << new(data)
-        end
-
-        result
+      # Override of {Medium.device_type}.
+      def device_type
+        :hard_disk
       end
     end
 
@@ -139,34 +110,27 @@ module VirtualBox
     # here. If no format is specified, the format of the source drive
     # will be used.
     #
-    # @param [String] outputfile The output file. This should be just a
-    #   single filename, since VirtualBox will place it in the hard
-    #   drives folder.
+    # @param [String] outputfile The output file. This can be a full path
+    #   or just a filename. If its just a filename, it will be placed in
+    #   the default hard drives directory.
     # @param [String] format The format to convert to.
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [HardDrive] The new, cloned hard drive, or nil on failure.
-    def clone(outputfile, format="VDI", raise_errors=false)
-      raw = Command.vboxmanage("clonehd", uuid, outputfile, "--format", format, "--remember")
-      return nil unless raw =~ /UUID: (.+?)$/
+    def clone(outputfile, format="VDI")
+      # Get main VirtualBox object
+      virtualbox = Lib.lib.virtualbox
 
-      self.class.find($1.to_s)
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      nil
-    end
+      # Expand path relative to the default hard disk folder. This allows
+      # filenames to exist in the default folder while full paths will use
+      # the paths specified.
+      outputfile = File.expand_path(outputfile, virtualbox.system_properties.default_hard_disk_folder)
 
-    # Override of {Image#image_type}.
-    def image_type
-      "hdd"
-    end
+      # Create the new medium. This simply creates a new IMedium structure
+      new_medium = virtualbox.create_hard_disk(format, outputfile)
 
-    # Validates a hard drive.
-    def validate
-      super
-
-      validates_presence_of :format
-      validates_presence_of :size
+      # Clone the current drive
+      interface.clone_to(new_medium, :standard, nil).wait_for_completion(-1)
     end
 
     # Creates a new hard drive.
@@ -182,14 +146,8 @@ module VirtualBox
         return false
       end
 
-      raw = Command.vboxmanage("createhd", "--filename", location, "--size", size, "--format", read_attribute(:format), "--remember")
-      return nil unless raw =~ /UUID: (.+?)$/
+      # TODO
 
-      # Just replace our attributes with the newly created ones. This also
-      # will set new_record to false.
-      populate_attributes(self.class.find($1.to_s).attributes)
-
-      # Return the success of the command
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
@@ -213,31 +171,6 @@ module VirtualBox
       else
         super
       end
-    end
-
-    # Destroys the hard drive. This deletes the hard drive off
-    # of disk.
-    #
-    # **This operation is not reversable.**
-    #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
-    # @return [Boolean] True if command was successful, false otherwise.
-    def destroy(raise_errors=false)
-      Command.vboxmanage("closemedium", "disk", uuid, "--delete")
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
-    end
-
-    # Lazy load the lazy attributes for this model.
-    def load_attribute(name)
-      # Since the lazy attributes are related, we just load them all at once
-      loaded_hd = self.class.find(uuid, true)
-
-      write_attribute(:size, loaded_hd.size)
-      write_attribute(:accessible, loaded_hd.accessible)
     end
   end
 end

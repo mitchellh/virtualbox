@@ -214,7 +214,11 @@ module VirtualBox
             load_attribute(name.to_sym)
           end
 
-          attributes[name] || self.class.attributes[name][:default]
+          if attributes[name].nil?
+            self.class.attributes[name][:default]
+          else
+            attributes[name]
+          end
         end
       end
 

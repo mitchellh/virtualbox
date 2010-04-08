@@ -40,11 +40,12 @@ module VirtualBox
   #     relationship :devices, AttachedDevice, :dependent => :destroy
   #
   class StorageController < AbstractModel
-    attribute :parent, :readonly => true
-    attribute :name
-    attribute :type
-    attribute :ports, :populate_key => :portcount
-    relationship :devices, AttachedDevice, :dependent => :destroy
+    attribute :parent, :readonly => true, :property => false
+    attribute :interface, :readonly => true, :property => false
+    attribute :name, :readonly => true
+    attribute :port_count
+    attribute :bus, :readonly => true
+    attribute :controller_type
 
     class <<self
       # Populates a relationship with another model.
@@ -52,16 +53,39 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<StorageController>]
-      def populate_relationship(caller, doc)
+      def populate_relationship(caller, data)
+        if data.is_a?(COM::Interface::Machine)
+          populate_array_relationship(caller, data)
+        elsif data.is_a?(MediumAttachment)
+          populate_attachment_relationship(caller, data)
+        end
+      end
+
+      # Populates a has many relationship for a {VM}.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Array<StorageController>]
+      def populate_array_relationship(caller, imachine)
         relation = Proxies::Collection.new(caller)
 
-        counter = 0
-        doc.css("StorageControllers StorageController").each do |sc|
-          relation << new(counter, caller, sc)
-          counter += 1
+        imachine.storage_controllers.each do |icontroller|
+          relation << new(caller, icontroller)
         end
 
         relation
+      end
+
+      # Populates a single relationship for a {MediumAttachment}.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Array<StorageController>]
+      def populate_attachment_relationship(caller, attachment)
+        # Find the storage controller with the matching name
+        attachment.parent.storage_controllers.find do |sc|
+          sc.name == attachment.controller_name
+        end
       end
 
       # Destroys a relationship with another model.
@@ -75,8 +99,8 @@ module VirtualBox
       # member of the relationship.
       #
       # **This method typically won't be used except internally.**
-      def save_relationship(caller, data)
-        data.each do |sc|
+      def save_relationship(caller, controllers)
+        controllers.each do |sc|
           sc.save
         end
       end
@@ -86,19 +110,52 @@ module VirtualBox
     # this method shouldn't be called. Instead, storage controllers
     # can be retrieved through relationships of other models such
     # as {VM}.
-    def initialize(index, caller, data)
+    def initialize(caller, icontroller)
       super()
 
-      @index = index
+      populate_attributes({
+        :parent => caller,
+        :interface => icontroller
+      }, :ignore_relationships => true)
+      load_interface_attributes(icontroller)
+    end
 
-      # Setup the index specific attributes
-      populate_data = {}
-      data.attributes.each do |key,value|
-        populate_data[key.downcase.to_sym] = value.to_s
+    # Retrieves the array of medium attachments related to this storage controller.
+    # This is not implemented as a relationship simply because it would have been
+    # difficult to do so (circular) and its not really necessary.
+    def medium_attachments
+      parent.medium_attachments.find_all do |ma|
+        ma.storage_controller == self
+      end
+    end
+
+    # Saves the storage controller. This method shouldn't be called directly.
+    # Instead, {VM#save} should be called, which will save all attached storage
+    # controllers as well. This will setup the proper parameter for `interface`
+    # here.
+    def save
+      parent.with_open_session do |session|
+        machine = session.machine
+        save_changed_interface_attributes(machine.get_storage_controller_by_name(name))
+        machine.save_settings
+      end
+    end
+
+    # Destroys the storage controller. This first detaches all attachments on this
+    # storage controller. Note that this does *not* delete the media on the attachments,
+    # unless specified by the options.
+    def destroy(*args)
+      # First remove all attachments
+      medium_attachments.each do |ma|
+        ma.destroy(*args)
       end
 
-      populate_attributes(populate_data.merge({:parent => caller}), :ignore_relationships => true)
-      populate_relationship(:devices, data)
+      # Finally, remove ourselves
+      parent.with_open_session do |session|
+        machine = session.machine
+        machine.remove_storage_controller(name)
+        machine.save_settings
+      end
     end
   end
 end

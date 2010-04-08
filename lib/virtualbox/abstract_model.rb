@@ -1,7 +1,10 @@
-require 'virtualbox/abstract_model/attributable'
-require 'virtualbox/abstract_model/dirty'
-require 'virtualbox/abstract_model/relatable'
-require 'virtualbox/abstract_model/validatable'
+['abstract_model/attributable',
+  'abstract_model/interface_attributes',
+  'abstract_model/dirty',
+  'abstract_model/relatable',
+  'abstract_model/validatable'].each do |lib|
+  require File.expand_path(lib, File.dirname(__FILE__))
+end
 
 module VirtualBox
   # AbstractModel is the base class used for most of virtualbox's classes.
@@ -10,6 +13,7 @@ module VirtualBox
   # @abstract
   class AbstractModel
     include Attributable
+    include InterfaceAttributes
     include Dirty
     include Relatable
     include Validatable
@@ -122,6 +126,20 @@ module VirtualBox
       clear_dirty!(key)
     end
 
+    # Saves only changed interface attributes.
+    def save_changed_interface_attributes(interface)
+      changes.each do |key, values|
+        save_interface_attribute(key, interface)
+      end
+    end
+
+    # Overrides {InterfaceAttributes.save_interface_attribute} to clear the
+    # dirty state of the attribute.
+    def save_interface_attribute(key, interface)
+      super
+      clear_dirty!(key)
+    end
+
     # Overriding {Attributable#lazy_attribute?} to always return false for
     # new records, since new records shouldn't load lazy data.
     def lazy_attribute?(*args)
@@ -217,7 +235,7 @@ module VirtualBox
 
       self.class.attributes.each do |name, options|
         value = read_attribute(name)
-        value = if value.is_a?(AbstractModel)
+        value = if value.is_a?(AbstractModel) || value.is_a?(COM::AbstractInterface)
           "#<#{value.class.name}>"
         else
           value.inspect

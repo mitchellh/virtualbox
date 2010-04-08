@@ -1,50 +1,12 @@
-# What's New in 0.5.x?
+# What's New in 0.6.x?
 
-## HUGE Speed Boost! Very few system calls!
+## Native Interface
 
-Most of the data retrieved by the virtualbox library now comes via XML parsing, rather
-than making calls to `VBoxManage`. This results in a drastic speedup. The few relationships or
-attributes which require a system call are typically _lazy loaded_ (covered below), so they
-don't incur a performance penalty unless they're used.
+The VirtualBox gem no longer piggy-backs on top of `VBoxManage` or XML configuration files.
+The gem now uses the native interface provided by VirtualBox to communicate. The result of
+this is a _huge_ speed increase which simply would not have been possible otherwise, and
+stability across versions. In addition to that, the entire VirtualBox API is now at your
+disposal. While the gem itself doesn't yet support creating VMs and so on, the API is available
+for you to do it manually (if you really wanted to!).
 
-The one caveat is that you now need to set the path to the global VirtualBox configuration
-XML. The virtualbox library will do its best to guess this path based on the operating
-system, but this is hardly foolproof. To set the virtualbox config path, it is a simple
-one-liner:
-
-    # Remember, this won't be necessary MOST of the time
-    VirtualBox::Global.vboxconfig = "~/path/to/VirtualBox.xml"
-
-## Lazy Loading of Attributes and Relationships
-
-Although still not widely used (will be in future patch releases), some attributes and
-relationships are now _lazy loaded_. This means that since they're probably expensive
-to load (many system calls, heavy parsing, etc.) they aren't loaded initially. Instead,
-they are only loaded if they're used. This means that you don't incur the penalty cost
-of loading them unless you use it! Fantastic!
-
-There is no real "example code" for this feature since to the casual user, it happens
-transparently in the background and generally "just works." If you're _really_ curious,
-then feel free to check out any class which derives from {VirtualBox::AbstractModel}
-and any attribute or relationship with the `:lazy => true` option is lazy loaded!
-
-## System Properties
-
-A small but meaningful update is the ability to view the system properties for the
-host system which VirtualBox is running. This is done via the {VirtualBox::SystemProperty}
-class, which is simply a `Hash`. System properties are immutable properties defined
-by the host system, which typically are limits imposed upon VirtualBox, such as
-maximum RAM size or default path to machine files. Retrieving the system properties
-is quite easy:
-
-    properties = VirtualBox::SystemProperty.all
-    properties.each do |key, value|
-      puts "#{key} = #{value}"
-    end
-
-## USB Device Relationship on VMs
-
-Previously, {VirtualBox::VM VM} object would only be able to tell you if there
-were USB devices enabled or not. Now, `usbs` is a full-fledged relationship
-on VM. This relationship is access just like any other. For more information
-view the {VirtualBox::USB USB} class.
+Future versions will support more and more of the API.

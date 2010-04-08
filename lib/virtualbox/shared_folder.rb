@@ -85,9 +85,11 @@ module VirtualBox
   #     attribute :hostpath
   #
   class SharedFolder < AbstractModel
-    attribute :parent, :readonly => :readonly
+    attribute :parent, :readonly => true, :property => false
     attribute :name
-    attribute :hostpath
+    attribute :host_path
+    attribute :writable, :default => true
+    attribute :accessible, :readonly => true
 
     class <<self
       # Populates the shared folder relationship for anything which is related to it.
@@ -95,13 +97,11 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<SharedFolder>]
-      def populate_relationship(caller, doc)
+      def populate_relationship(caller, imachine)
         relation = Proxies::Collection.new(caller)
 
-        counter = 1
-        doc.css("Hardware SharedFolders SharedFolder").each do |folder|
-          relation << new(counter, caller, folder)
-          counter += 1
+        imachine.shared_folders.each do |ishared|
+          relation << new(caller, ishared)
         end
 
         relation
@@ -111,10 +111,9 @@ module VirtualBox
       # member of the relationship.
       #
       # **This method typically won't be used except internally.**
-      def save_relationship(caller, data)
-        # Just call save on each folder with the VM
-        data.each do |sf|
-          sf.save
+      def save_relationship(caller, items)
+        items.each do |item|
+          item.save
         end
       end
     end
@@ -127,51 +126,31 @@ module VirtualBox
     # @overload initialize(index, caller, data)
     #   Creates an SharedFolder for a relationship. **This should
     #   never be called except internally.**
-    #   @param [Integer] index Index of the shared folder
     #   @param [Object] caller The parent
     #   @param [Hash] data A hash of data which must be used
     #     to extract the relationship data.
     def initialize(*args)
       super()
 
-      if args.length == 3
-        initialize_for_relationship(*args)
-      elsif args.length == 1
-        initialize_for_data(*args)
-      elsif args.length == 0
-        return
-      else
-        raise NoMethodError.new
+      if args.length == 2
+        initialize_attributes(*args)
       end
     end
 
-    # Initializes the record for use in a relationship. This
-    # is automatically called by {#initialize} if it has three
-    # parameters.
-    #
-    # **This method typically won't be used except internally.**
-    def initialize_for_relationship(index, caller, data)
-      # Setup the index specific attributes
-      populate_data = {}
-      data.attributes.each do |key, value|
-        populate_data[key.downcase.to_sym] = value.to_s
-      end
+    # Initializes the attributes of an existing shared folder.
+    def initialize_attributes(parent, ishared)
+      # Set the parent
+      write_attribute(:parent, parent)
 
-      populate_attributes(populate_data.merge({
-        :parent => caller
-      }))
-    end
+      # Load the interface attributes
+      load_interface_attributes(ishared)
 
-    # Initializes a record with initial data but keeping it a "new
-    # record." This is called automatically if {#initialize} is given
-    # only a single parameter. View {#initialize} for documentation.
-    def initialize_for_data(data)
-      self.class.attributes.each do |name, options|
-        data[options[:populate_key]] = data[name]
-      end
+      # Clear dirtiness, since this should only be called initially and
+      # therefore shouldn't affect dirtiness
+      clear_dirty!
 
-      populate_attributes(data)
-      new_record!
+      # But this is an existing record
+      existing_record!
     end
 
     # Validates a shared folder.
@@ -180,33 +159,36 @@ module VirtualBox
 
       validates_presence_of :parent
       validates_presence_of :name
-      validates_presence_of :hostpath
+      validates_presence_of :host_path
     end
 
     # Saves or creates a shared folder.
-    #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
-    # @return [Boolean] True if command was successful, false otherwise.
-    def save(raise_errors=false)
-      return true unless changed?
+    def save
+      return true if !new_record? && !changed?
+      raise Exceptions::ValidationFailedException.new(errors) if !valid?
 
-      if !valid?
-        raise Exceptions::ValidationFailedException.new(errors) if raise_errors
-        return false
+      if !new_record?
+        # If its not a new record, any changes will require a new shared
+        # folder to be created, so we first destroy it then recreate it.
+        destroy
       end
 
-      # If this isn't a new record, we destroy it first
-      destroy(raise_errors) if !new_record?
+      create
+    end
 
-      Command.vboxmanage("sharedfolder", "add", parent.name, "--name", name, "--hostpath", hostpath)
+    # Creates a new shared folder. This method should not be called directly.
+    # Instead, {save} should always be called, which will do the right thing.
+    def create
+      return unless new_record?
+
+      parent.with_open_session do |session|
+        machine = session.machine
+        machine.create_shared_folder(name, host_path, writable)
+        machine.save_settings
+      end
+
       existing_record!
       clear_dirty!
-
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
     end
 
     # Relationship callback when added to a collection. This is automatically
@@ -219,20 +201,15 @@ module VirtualBox
     # from the host system. Instead, it simply removes the mapping to the
     # virtual machine, meaning it will no longer be possible to mount it
     # from within the virtual machine.
-    #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
-    # @return [Boolean] True if command was successful, false otherwise.
-    def destroy(raise_errors=false)
-      # If the name changed, we have to be sure to use the previous
-      # one.
-      name_value = name_changed? ? name_was : name
+    def destroy
+      parent.with_open_session do |session|
+        machine = session.machine
+        machine.remove_shared_folder(name)
+        machine.save_settings
+      end
 
-      Command.vboxmanage("sharedfolder", "remove", parent.name, "--name", name_value)
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
-    end
+      # Mark as a new record so if it is saved again, it will create it
+      new_record!
+   end
   end
 end

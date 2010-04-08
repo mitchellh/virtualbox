@@ -93,6 +93,8 @@ module VirtualBox
       # @param [Object] value The new value being set
       def set_dirty!(name, current, value)
         if current != value
+          name = name.to_sym
+
           # If its the first time this attribute has changed, store the
           # original value in the first field
           changes[name] ||= [current, nil]

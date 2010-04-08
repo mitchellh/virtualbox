@@ -4,3 +4,4 @@ pkg/*
 test/coverage/*
 .bundle/*
 Gemfile.lock
+test.rb

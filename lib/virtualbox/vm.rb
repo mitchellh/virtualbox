@@ -88,53 +88,52 @@ module VirtualBox
   #     relationship :forwarded_ports, ForwardedPort
   #
   class VM < AbstractModel
-    attribute :uuid, :readonly => true
+    attribute :uuid, :readonly => true, :property => :id
     attribute :name
-    attribute :ostype
+    attribute :os_type_id
     attribute :description, :readonly => true
-    attribute :memory
-    attribute :vram
-    attribute :acpi
-    attribute :ioapic
-    attribute :cpus
-    attribute :synthcpu, :lazy => true
-    attribute :pae
-    attribute :hwvirtex
-    attribute :hwvirtexexcl
-    attribute :nestedpaging
-    attribute :vtxvpid
-    attribute :accelerate3d
-    attribute :accelerate2dvideo
-    attribute :biosbootmenu, :populate_key => :bootmenu
-    attribute :boot1
-    attribute :boot2
-    attribute :boot3
-    attribute :boot4
-    attribute :clipboard
-    attribute :monitorcount
-    attribute :usb
-    attribute :ehci
-    attribute :audio
-    attribute :audiocontroller
-    attribute :audiodriver
-    attribute :vrdp
-    attribute :vrdpport
-    attribute :vrdpauthtype
-    attribute :vrdpauthtimeout
-    attribute :state, :populate_key => :vmstate, :readonly => true, :lazy => true
-    relationship :nics, Nic
-    relationship :usbs, USB
-    relationship :storage_controllers, StorageController, :dependent => :destroy
-    relationship :shared_folders, SharedFolder
-    relationship :extra_data, ExtraData
-    relationship :forwarded_ports, ForwardedPort
+    attribute :memory_size
+    attribute :memory_balloon_size
+    attribute :vram_size
+    attribute :cpu_count
+    attribute :accelerate_3d_enabled
+    attribute :accelerate_2d_video_enabled
+    attribute :clipboard_mode
+    attribute :monitor_count
+    attribute :state, :readonly => true
+    attribute :accessible, :readonly => true
+    attribute :hardware_version
+    attribute :hardware_uuid
+    attribute :statistics_update_interval
+    attribute :firmware_type
+    attribute :snapshot_folder
+    attribute :settings_file_path, :readonly => true
+    attribute :last_state_change, :readonly => true
+    attribute :state_file_path, :readonly => true
+    attribute :log_folder, :readonly => true
+    attribute :snapshot_count, :readonly => true
+    attribute :current_state_modified, :readonly => true
+    attribute :guest_property_notification_patterns
+    attribute :teleporter_enabled
+    attribute :teleporter_port
+    attribute :teleporter_address
+    attribute :teleporter_password
+    attribute :interface, :readonly => true, :property => false
+    relationship :bios, :BIOS
+    relationship :storage_controllers, :StorageController, :dependent => :destroy
+    relationship :medium_attachments, :MediumAttachment
+    relationship :shared_folders, :SharedFolder
+    relationship :extra_data, :ExtraData
+    relationship :forwarded_ports, :ForwardedPort
+    relationship :network_adapters, :NetworkAdapter
+    relationship :usb_controller, :USBController
 
     class <<self
       # Returns an array of all available VMs.
       #
       # @return [Array<VM>]
-      def all(reload=false)
-        Global.global(reload).vms
+      def all
+        Global.global(true).vms
       end
 
       # Finds a VM by UUID or registered name and returns a
@@ -142,20 +141,7 @@ module VirtualBox
       #
       # @return [VM]
       def find(name)
-        all(true).detect { |o| o.name == name || o.uuid == name }
-      end
-
-      # Loads a VM from its XML configuration file. All VMs managed
-      # by VirtualBox have an XML configuration file somewhere. If
-      # given the path, this will instantiate the VM that way. Typically
-      # this method will only be called internally. Users of the class
-      # should use {all} or {find} instead.
-      #
-      # @param [String] location Full path to the XML file.
-      # @return [VM]
-      def load_from_xml(location)
-        vm_doc = Command.parse_xml(location)
-        new(vm_doc)
+        all.detect { |o| o.name == name || o.uuid == name }
       end
 
       # Imports a VM, blocking the entire thread during this time.
@@ -163,68 +149,23 @@ module VirtualBox
       # VM object can be used to make any modifications necessary
       # (RAM, cpus, etc.).
       #
+      # If there are multiple VMs in the OVF file being imported,
+      # the first virtual machine will be returned, although all will
+      # be imported.
+      #
       # @return [VM] The newly imported virtual machine
       def import(source_path)
-        raw = Command.vboxmanage("import", source_path)
-        return nil unless raw
+        appliance = Appliance.new(source_path)
+        appliance.import
 
-        find(parse_vm_name(raw))
+        find(appliance.virtual_systems.first.descriptions[:name][:vbox_value])
       end
 
-      # Gets the VM info (machine readable) for a given VM and returns it
-      # as a hash.
-      #
-      # @return [Hash] Parsed VM info.
-      def raw_info(name)
-        raw = Command.vboxmanage("showvminfo", name, "--machinereadable")
-        parse_vm_info(raw)
-      end
-
-      # Parses the machine-readable format outputted by VBoxManage showvminfo
-      # into a hash. Ignores lines which don't match the format.
-      def parse_vm_info(raw)
-        parsed = {}
-        raw.split("\n").each do |line|
-          # Some lines aren't configuration, we just ignore them
-          next unless line =~ /^"?(.+?)"?="?(.+?)"?$/
-          parsed[$1.downcase.to_sym] = $2.strip
-        end
-
-        parsed
-      end
-
-      # Parses the list of VMs returned by the "list vms" command used
-      # in {VM.all}.
-      #
-      # **This method typically won't be used except internally.**
-      #
-      # @return [Array] Array of virtual machines.
-      def parse_vm_list(raw)
-        results = []
-        raw.split("\n").each do |line|
-          next unless line =~ /^"(.+?)"\s+\{(.+?)\}$/
-          results.push(find($1.to_s))
-        end
-
-        results
-      end
-
-      # Parses the vm name from the import results.
-      #
-      # **This method typically won't be used except internally.**
-      #
-      # @return [String] Parsed VM name
-      def parse_vm_name(raw)
-        return nil unless raw =~ /VM name "(.+?)"/
-        $1.to_s
-      end
-
-      def populate_relationship(caller, doc)
+      def populate_relationship(caller, machines)
         result = Proxies::Collection.new(caller)
 
-        doc.css("Global MachineRegistry MachineEntry").each do |entry|
-          location = Global.expand_path(entry[:src])
-          result << load_from_xml(location)
+        machines.each do |machine|
+          result << new(machine)
         end
 
         result
@@ -237,62 +178,19 @@ module VirtualBox
     # Support for creating new virtual machines will be added shortly.
     # For now, this is only used by {VM.find} and {VM.all} to
     # initialize the VMs.
-    def initialize(data)
+    def initialize(imachine)
       super()
 
-      initialize_attributes(data)
-      populate_relationships(data)
-      @original_name = name
+      write_attribute(:interface, imachine)
+      initialize_attributes(imachine)
     end
 
-    def initialize_attributes(doc)
-      attribute_associations = {
-        :uuid     => ["Machine", :uuid],
-        :name     => ["Machine", :name],
-        :ostype   => ["Machine", :OSType],
-        :description => ["Machine Description"],
-        :memory   => ["Hardware Memory", :RAMSize],
-        :vram     => ["Hardware Display", :VRAMSize],
-        :acpi     => ["Hardware BIOS ACPI", :enabled],
-        :ioapic   => ["Hardware BIOS IOAPIC", :enabled],
-        :cpus     => ["Hardware CPU", :count],
-        :pae      => ["Hardware CPU PAE", :enabled],
-        :hwvirtex => ["Hardware CPU HardwareVirtEx", :enabled],
-        :hwvirtexexcl => ["Hardware CPU HardwareVirtEx", :exclusive],
-        :nestedpaging => ["Hardware CPU HardwareVirtExNestedPaging", :enabled],
-        :vtxvpid  => ["Hardware CPU HardwareVirtExVPID", :enabled],
-        :accelerate3d => ["Hardware Display", :accelerate3D],
-        :accelerate2dvideo => ["Hardware Display", :accelerate2DVideo],
-        :biosbootmenu => ["Hardware BIOS BootMenu", :mode],
-        :boot1    => ["Hardware Boot Order[position=\"1\"]", :device],
-        :boot2    => ["Hardware Boot Order[position=\"2\"]", :device],
-        :boot3    => ["Hardware Boot Order[position=\"3\"]", :device],
-        :boot4    => ["Hardware Boot Order[position=\"4\"]", :device],
-        :clipboard  => ["Hardware Clipboard", :mode],
-        :monitorcount => ["Hardware Display", :monitorCount],
-        :usb  => ["Hardware USBController", :enabled],
-        :ehci => ["Hardware USBController", :enabledEhci],
-        :audio            => ["Hardware AudioAdapter", :enabled],
-        :audiocontroller => ["Hardware AudioAdapter", :controller],
-        :audiodriver     => ["Hardware AudioAdapter", :driver],
-        :vrdp            => ["Hardware RemoteDisplay", :enabled],
-        :vrdpport        => ["Hardware RemoteDisplay", :port],
-        :vrdpauthtype    => ["Hardware RemoteDisplay", :authType],
-        :vrdpauthtimeout => ["Hardware RemoteDisplay", :authTimeout],
-      }
+    def initialize_attributes(machine)
+      # Load the interface attributes
+      load_interface_attributes(machine)
 
-      attribute_associations.each do |name, search_data|
-        css, key = search_data
-        node = doc.css(css)[0]
-
-        # key is passed in for attributes, else you get the element inner text
-        value = (key ? node[key] : node.inner_text) if node
-
-        # Special cases
-        value = value[1..-2] if name == :uuid
-
-        write_attribute(name, value)
-      end
+      # Setup the relationships
+      populate_relationships(machine)
 
       # Clear dirtiness, since this should only be called initially and
       # therefore shouldn't affect dirtiness
@@ -300,13 +198,6 @@ module VirtualBox
 
       # But this is an existing record
       existing_record!
-    end
-
-    def load_attribute(name)
-      info = self.class.raw_info(@original_name)
-
-      write_attribute(:state, info[:vmstate]) if name == :state
-      write_attribute(:synthcpu, info[:synthcpu]) unless loaded_attribute?(:synthcpu)
     end
 
     # State of the virtual machine. Returns the state of the virtual
@@ -318,7 +209,7 @@ module VirtualBox
     # @return [String] Virtual machine state.
     def state(reload=false)
       if reload
-        load_attribute(:state)
+        load_interface_attribute(:state)
         clear_dirty!(:state)
       end
 
@@ -328,34 +219,50 @@ module VirtualBox
     # Saves the virtual machine if modified. This method saves any modified
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
-    def save(raise_errors=false)
-      if changed?
-        # First save all the changed attributes in a single batch
-        saves = changes.inject([]) do |acc, kv|
-          key, values = kv
-          acc << ["--#{key}", values[1]]
-        end
+    def save
+      with_open_session do |session|
+        # Use setters to save the attributes on the locked machine and persist
+        # the settings
+        machine = session.machine
 
-        # Flatten to pass into vboxmanage
-        saves.flatten!
+        # Save all the attributes and relationships
+        save_changed_interface_attributes(machine)
 
-        # Save all the attributes in one command
-        Command.vboxmanage("modifyvm", @original_name, *saves)
+        # Save relationships, which may open their own sessions if necessary
+        save_relationships
+      end
+    end
 
-        # Now clear attributes and call super so relationships are saved
-        @original_name = name
-        clear_dirty!
+    # Opens a direct session with the machine this VM represents and yields
+    # the session object to a block. Many of the VirtualBox's settings can only
+    # be modified with an open session on a machine. An open session is similar
+    # to a write-lock. Once the session is completed, it must be closed, which
+    # this method does as well.
+    def with_open_session
+      # Set the session up
+      session = Lib.lib.session
+
+      close_session = false
+
+      if session.state != :open
+        # Open up a session for this virtual machine
+        interface.parent.open_session(session, uuid)
+
+        # Mark the session to be closed
+        close_session = true
       end
 
-      super()
+      # Yield the block with the session
+      yield session
 
-      # Force reload
-      Global.reload!
+      # Close the session
+      if close_session
+        # Save these settings only if we're closing
+        session.machine.save_settings
 
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      return false
+        # Close the session
+        session.close
+      end
     end
 
     # Exports a virtual machine. The virtual machine will be exported
@@ -373,48 +280,36 @@ module VirtualBox
     # @param [String] filename The file (not directory) to save the exported
     #   OVF file. This directory will also receive the checksum file and
     #   virtual disks.
-    # @option options [String] :product (nil) The name of the product
-    # @option options [String] :producturl (nil) The URL of the product
-    # @option options [String] :vendor (nil) The name of the vendor
-    # @option options [String] :vendorurl (nil) The URL for the vendor
-    # @option options [String] :version (nil) The version information
-    # @option options [String] :eula (nil) License text
-    # @option options [String] :eulafile (nil) License file
-    def export(filename, options={}, raise_error=false)
-      options = options.inject([]) do |acc, kv|
-        acc.push("--#{kv[0]}")
-        acc.push(kv[1])
-      end
-
-      options.unshift("0").unshift("--vsys") unless options.empty?
-
-      raw = Command.vboxmanage("export", @original_name, "-o", filename, *options)
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_error
-      false
+    def export(filename)
+      app = Appliance.new
+      app.path = filename
+      app.add_machine(self)
+      app.export
     end
 
     # Starts the virtual machine. The virtual machine can be started in a
     # variety of modes:
     #
     # * **gui** -- The VirtualBox GUI will open with the screen of the VM.
-    # * **headless** -- The VM will run in the background. No GUI will be
+    # * **vrdp** -- The VM will run in the background. No GUI will be
     #   present at all.
     #
-    # All modes will start their processes and return almost immediately.
-    # Both the GUI and headless mode will not block the ruby process.
+    # This method blocks while the external processes are starting.
     #
     # @param [Symbol] mode Described above.
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def start(mode=:gui, raise_errors=false)
-      Command.vboxmanage("startvm", @original_name, "--type", mode)
+    def start(mode="gui")
+      return false if running?
+
+      # Open a new remote session, this will automatically start the machine
+      # as well
+      session = Lib.lib.session
+      interface.parent.open_remote_session(session, uuid, mode.to_s, "").wait_for_completion(-1)
+
+      # Close our session to release our lock from the machine
+      session.close
+
       true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
     end
 
     # Shuts down the VM by directly calling "acpipowerbutton". Depending on the
@@ -422,65 +317,49 @@ module VirtualBox
     # installations don't respond to the ACPI power button at all. In such cases,
     # {#stop} or {#save_state} may be used instead.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def shutdown(raise_errors=false)
-      control(:acpipowerbutton, raise_errors)
+    def shutdown
+      control(:power_button)
     end
 
     # Stops the VM by directly calling "poweroff." Immediately halts the
     # virtual machine without saving state. This could result in a loss
     # of data. To prevent data loss, see {#shutdown}
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def stop(raise_errors=false)
-      control(:poweroff, raise_errors)
+    def stop
+      control(:power_down)
     end
 
     # Pauses the VM, putting it on hold temporarily. The VM can be resumed
     # again by calling {#resume}
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def pause(raise_errors=false)
-      control(:pause, raise_errors)
+    def pause
+      control(:pause)
     end
 
     # Resume a paused VM.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def resume(raise_errors=false)
-      control(:resume, raise_errors)
+    def resume
+      control(:resume)
     end
 
     # Saves the state of a VM and stops it. The VM can be resumed
     # again by calling "{#start}" again.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def save_state(raise_errors=false)
-      control(:savestate, raise_errors)
+    def save_state
+      control(:save_state)
     end
 
     # Discards any saved state on the current VM. The VM is not destroyed though
     # and can still be started by calling {#start}.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def discard_state(raise_errors=false)
-      Command.vboxmanage("discardstate", @original_name)
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
+    def discard_state
+      control(:forget_saved_state, true)
     end
 
     # Controls the virtual machine. This method is used by {#stop},
@@ -489,15 +368,18 @@ module VirtualBox
     # instead call those.
     #
     # @param [String] command The command to run on controlvm
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def control(command, raise_errors=false)
-      Command.vboxmanage("controlvm", @original_name, command)
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
+    def control(command, *args)
+      # Grab the session using an existing session
+      session = Lib.lib.session
+      interface.parent.open_existing_session(session, uuid)
+
+      # Send the proper command, waiting if we have to
+      result = session.console.send(command, *args)
+      result.wait_for_completion(-1) if result.is_a?(COM::Interface::Progress)
+
+      # Close the session
+      session.close
     end
 
     # Destroys the virtual machine. This method also removes all attached
@@ -507,55 +389,53 @@ module VirtualBox
     #
     # @overload destroy(opts = {})
     #   Passes options to the destroy method.
-    #   @option opts [Boolean] :destroy_image (false) If true, will
-    #     also destroy all attached images such as hard drives, disk
-    #     images, etc.
+    #   @option opts [Boolean] :destroy_medium (false) If true, will
+    #     also unregister attached media. If set to `:delete`, it will
+    #     not only unregister attached media, but will also physically
+    #     remove their respective data.
     def destroy(*args)
-      # Call super first to destroy relationships, necessary before
-      # unregistering a VM
+      # Call super first so destroy is propogated through to relationships
+      # first
       super
 
-      if Command.vboxmanage("unregistervm", @original_name, "--delete")
-        Global.reload!
-        return true
-      else
-        return false
-      end
+      # Finally, destroy this machine and remove the settings file
+      interface.parent.unregister_machine(uuid)
+      interface.delete_settings
     end
 
     # Returns true if the virtual machine state is running
     #
     # @return [Boolean] True if virtual machine state is running
     def running?
-      state == 'running'
+      state == :running
     end
 
     # Returns true if the virtual machine state is powered off
     #
     # @return [Boolean] True if virtual machine state is powered off
     def powered_off?
-      state == 'poweroff'
+      state == :powered_off
     end
 
     # Returns true if the virtual machine state is paused
     #
     # @return [Boolean] True if virtual machine state is paused
     def paused?
-      state == 'paused'
+      state == :paused
     end
 
     # Returns true if the virtual machine state is saved
     #
     # @return [Boolean] True if virtual machine state is saved
     def saved?
-      state == 'saved'
+      state == :saved
     end
 
     # Returns true if the virtual machine state is aborted
     #
     # @return [Boolean] True if virtual machine state is aborted
     def aborted?
-      state == 'aborted'
+      state == :aborted
     end
   end
 end

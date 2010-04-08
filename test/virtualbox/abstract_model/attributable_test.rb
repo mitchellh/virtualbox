@@ -164,7 +164,7 @@ class AttributableTest < Test::Unit::TestCase
       @model = AttributeModel.new
       @model.populate_attributes({
         :foo => "foo",
-        :bar => "bar"
+        :bar => false
       })
 
       @checkstring = "HEY"
@@ -186,6 +186,12 @@ class AttributableTest < Test::Unit::TestCase
     should "be able to read defined attributes" do
       assert_nothing_raised {
         assert_equal "foo", @model.foo
+      }
+    end
+
+    should "understand false values" do
+      assert_nothing_raised {
+        assert_equal false, @model.bar
       }
     end
 

@@ -35,6 +35,7 @@ module VirtualBox
     include AbstractModel::Dirty
 
     attr_accessor :parent
+    attr_reader :interface
 
     @@global_data = nil
 
@@ -57,11 +58,11 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<ExtraData>]
-      def populate_relationship(caller, doc)
-        data = new(caller)
+      def populate_relationship(caller, interface)
+        data = new(caller, interface)
 
-        doc.css("ExtraData ExtraDataItem").each do |extradata|
-          data[extradata["name"].to_s] = extradata["value"].to_s
+        interface.get_extra_data_keys.each do |key|
+          data[key] = interface.get_extra_data(key)
         end
 
         data.clear_dirty!
@@ -80,8 +81,9 @@ module VirtualBox
     # Initializes an extra data object.
     #
     # @param [Hash] data Initial attributes to populate.
-    def initialize(parent=nil)
-      @parent = parent || "global"
+    def initialize(parent, interface)
+      @parent = parent
+      @interface = interface
     end
 
     # Set an extradata key-value pair. Overrides ruby hash implementation
@@ -91,19 +93,6 @@ module VirtualBox
       super
     end
 
-    # Special accessor for parent name attribute. This returns
-    # either the parent name if its a VM object, otherwise
-    # just returns the default.
-    #
-    # @return [String]
-    def parent_name
-      if parent.is_a?(VM)
-        parent.name
-      else
-        parent
-      end
-    end
-
     # Saves extra data. This method does the same thing for both new
     # and existing extra data, since virtualbox will overwrite old data or
     # create it if it doesn't exist.
@@ -111,30 +100,29 @@ module VirtualBox
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def save(raise_errors=false)
+    def save
       changes.each do |key, value|
-        Command.vboxmanage("setextradata", parent_name, key, value[1])
-        clear_dirty!(key)
-      end
+        interface.set_extra_data(key.to_s, value[1])
 
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
+        clear_dirty!(key)
+
+        if value[1].nil?
+          # Remove the key from the hash altogether
+          hash_delete(key.to_s)
+        end
+      end
     end
 
-    # Deletes the extra data.
+    # Alias away the old delete method so its still accessible somehow
+    alias :hash_delete :delete
+
+    # Deletes the specified extra data. This method is deferred, meaning that
+    # although the key itself is marked to be deleted (by setting the value
+    # to nil), the deletion itself does not occur until {#save} is called.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
-    # @return [Boolean] True if command was successful, false otherwise.
-    def delete(key, raise_errors=false)
-      Command.vboxmanage("setextradata", parent_name, key)
-      super(key)
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
+    # @param [String] key The extra data key to delete
+    def delete(key)
+      self[key] = nil
     end
   end
 end

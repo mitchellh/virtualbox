@@ -11,10 +11,9 @@ Windows, Linux, and OS X. After installation, install the gem:
 
     sudo gem install virtualbox
 
-The gem assumes that `VBoxManage` will be available on the `PATH`. If not, before using
-the gem, you must set the path to your `VBoxManage` binary:
-
-    VirtualBox::Command.vboxmanage = "/path/to/my/VBoxManage"
+The gem uses the native COM interface with VirtualBox provides to communicate with
+VirtualBox. On Windows, this is globally available. On Linux-based machines, the gem
+uses Ruby-FFI to talk to a dynamic library. No configuration should be necessary.
 
 ## Basic Usage
 
@@ -33,29 +32,14 @@ Below are some examples:
     vm = VirtualBox::VM.find("my-vm")
 
     # Let's first print out some basic info about the VM
-    puts "Memory: #{vm.memory}"
-
-    vm.storage_controllers.each do |sc|
-      sc.attached_devices.each do |device|
-        puts "Attached Device: #{device.uuid}"
-      end
-    end
+    puts "Memory: #{vm.memory_size}"
 
     # Let's modify the memory and name...
-    vm.memory = 360
+    vm.memory_size = 360
     vm.name = "my-renamed-vm"
 
     # Save it!
     vm.save
-
-Or here is an example of creating a hard drive:
-
-    require 'virtualbox'
-
-    hd = VirtualBox::HardDrive.new
-    hd.location = "foo.vdi"
-    hd.size = 2000 # megabytes
-    hd.save
 
 ## Known Issues or Uncompleted Features
 

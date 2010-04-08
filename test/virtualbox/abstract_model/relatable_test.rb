@@ -6,6 +6,7 @@ class RelatableTest < Test::Unit::TestCase
       "FOO"
     end
   end
+
   class BarRelatee
     def self.set_relationship(caller, old_value, new_value)
     end
@@ -240,6 +241,25 @@ class RelatableTest < Test::Unit::TestCase
 
     should "return false for nonexistent relationships" do
       assert !@model.has_relationship?(:bazs)
+    end
+  end
+
+  context "determining the class of relationships" do
+    class ClassRelatableModel < EmptyRelatableModel
+      relationship :foo, Relatee
+      relationship :bar, "RelatableTest::Relatee"
+    end
+
+    setup do
+      @model = ClassRelatableModel.new
+    end
+
+    should "just return the class for Class types" do
+      assert_equal Relatee, @model.relationship_class(:foo)
+    end
+
+    should "turn string into class" do
+      assert_equal Relatee, @model.relationship_class(:bar)
     end
   end
 

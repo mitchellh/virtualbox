@@ -2,36 +2,11 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class ExtraDataTest < Test::Unit::TestCase
   setup do
-    @raw = <<-raw
-.
-Key: GUI/LastVMSelected, Value: 02573b8e-f628-43ed-b688-e488414e07ac
-Key: GUI/LastWindowPostion, Value: 99,457,770,550
-Key: GUI/SUNOnlineData, Value: triesLeft=0
-Key: GUI/SuppressMessages, Value: ,confirmInputCapture,remindAboutAutoCapture,confirmRemoveMedium,remindAboutInaccessibleMedia,confirmGoingFullscreen,remindAboutMouseIntegrationOn
-Key: GUI/UpdateCheckCount, Value: 13
-Key: GUI/UpdateDate, Value: 1 d, 2010-01-29, stable
-raw
-
-    VirtualBox::Command.stubs(:execute)
-
-    @ed = VirtualBox::ExtraData.new
+    @parent = mock("parent")
+    @interface = mock("interface")
+    @ed = VirtualBox::ExtraData.new(@parent, @interface)
     @ed["foo"] = "bar"
     @ed.clear_dirty!
-  end
-
-  context "attributes" do
-    should "return parent name if its a VM object" do
-      vm = mock("vm")
-      vm.stubs(:is_a?).with(VirtualBox::VM).returns(true)
-      vm.stubs(:name).returns("FOO")
-
-      @ed.parent = vm
-      assert_equal "FOO", @ed.parent_name
-    end
-
-    should "return default otherwise" do
-      assert_equal "global", @ed.parent_name
-    end
   end
 
   context "relationships" do
@@ -41,9 +16,34 @@ raw
     end
 
     context "populating" do
+      setup do
+        @interface = mock("interface")
+        @interface.stubs(:get_extra_data_keys).returns([])
+      end
+
       should "return a ExtraData object" do
-        result = VirtualBox::ExtraData.populate_relationship(@caller, mock_xml_doc)
+        result = VirtualBox::ExtraData.populate_relationship(@caller, @interface)
         assert result.is_a?(VirtualBox::ExtraData)
+      end
+
+      should "not be dirty" do
+        result = VirtualBox::ExtraData.populate_relationship(@caller, @interface)
+        assert !result.changed?
+      end
+
+      should "add the value of each key to the ED hash" do
+        expected_hash = { :a => 1, :b => 2, :c => 4 }
+        @interface.expects(:get_extra_data_keys).returns(expected_hash.keys)
+
+        expected_hash.each do |k, v|
+          @interface.expects(:get_extra_data).with(k).returns(v)
+        end
+
+        result = VirtualBox::ExtraData.populate_relationship(@caller, @interface)
+        assert_equal expected_hash.length, result.length
+        result.each do |k, v|
+          assert_equal expected_hash[k], v
+        end
       end
     end
 
@@ -57,75 +57,9 @@ raw
     end
   end
 
-  context "destroying (deleting)" do
-    setup do
-      @key = "foo"
-    end
-
-    should "call the proper vbox command" do
-      VirtualBox::Command.expects(:vboxmanage).with("setextradata", "global", "foo")
-      assert @ed.delete(@key)
-    end
-
-    should "remove the key from the hash" do
-      assert @ed.has_key?(@key)
-      assert @ed.delete(@key)
-      assert !@ed.has_key?(@key)
-    end
-
-    should "raise an exception if true sent to save and error occured" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-        @ed.delete(@key, true)
-      }
-    end
-
-    should "return false if the command failed" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert !@ed.delete(@key)
-    end
-  end
-
-  context "saving" do
-    setup do
-      @ed["foo"] = "BAR"
-      assert @ed.changed?
-    end
-
-    should "do nothing if there are no changes" do
-      @ed.clear_dirty!
-      VirtualBox::Command.expects(:vboxmanage).never
-      assert @ed.save
-    end
-
-    should "call the proper vbox command" do
-      VirtualBox::Command.expects(:vboxmanage).with("setextradata", "global", "foo", "BAR")
-      assert @ed.save
-    end
-
-    should "return false if the command failed" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert !@ed.save
-    end
-
-    should "raise an exception if true sent to save and error occured" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-        @ed.save(true)
-      }
-    end
-
-    should "clear dirty state" do
-      @ed["value"] = "rawr"
-      assert @ed.changed?
-      assert @ed.save
-      assert !@ed.changed?
-    end
-  end
-
   context "setting dirty state" do
     setup do
-      @ed = VirtualBox::ExtraData.new
+      @ed = VirtualBox::ExtraData.new(@parent, @interface)
     end
 
     should "not be dirty initially" do
@@ -135,7 +69,7 @@ raw
     should "be dirty when setting a value" do
       @ed["foo"] = "bar"
       assert @ed.changed?
-      assert @ed.changes.has_key?("foo")
+      assert @ed.changes.has_key?(:foo)
     end
   end
 
@@ -165,14 +99,48 @@ raw
   end
 
   context "constructor" do
-    should "set the parent with the given argument" do
-      ed = VirtualBox::ExtraData.new("JOEY")
+    should "set the parent and interface with the given argument" do
+      ed = VirtualBox::ExtraData.new("JOEY", @interface)
       assert_equal "JOEY", ed.parent
+      assert_equal @interface, ed.interface
+    end
+  end
+
+  context "saving extra data" do
+    setup do
+      @interface.stubs(:set_extra_data)
     end
 
-    should "be global by default" do
-      ed = VirtualBox::ExtraData.new
-      assert_equal "global", ed.parent
+    should "only save changed keys" do
+      @interface.expects(:set_extra_data).never
+      @interface.expects(:set_extra_data).with("bar", "baz").once
+
+      @ed["bar"] = "baz"
+      @ed.save
+    end
+
+    should "clear the dirty status of keys" do
+      @ed["bar"] = "baz"
+      assert @ed.bar_changed?
+      @ed.save
+      assert !@ed.bar_changed?
+    end
+
+    should "remove nil keys from the hash" do
+      @ed["bar"] = "baz"
+      @ed.save
+      @ed["bar"] = nil
+      assert @ed.bar_changed?
+      @ed.save
+      assert !@ed.keys.include?("bar")
+    end
+  end
+
+  context "deleteting extra data" do
+    should "call set its value to nil" do
+      key = :foo
+      @ed.expects(:[]=).with(key, nil).once
+      @ed.delete(key)
     end
   end
 end

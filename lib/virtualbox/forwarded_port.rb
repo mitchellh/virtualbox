@@ -149,14 +149,14 @@ module VirtualBox
       return read_attribute(:device) if !new_record? || device_changed? || parent.nil?
 
       device_map = {
-        "Am79C970A" => "pcnet",
-        "Am79C973" => "pcnet",
-        "82540EM" => "e1000",
-        "82543GC" => "e1000",
-        "82545EM" => "e1000"
+        :Am79C970A => "pcnet",
+        :Am79C973 => "pcnet",
+        :I82540EM => "e1000",
+        :I82543GC => "e1000",
+        :I82545EM => "e1000"
       }
 
-      return device_map[parent.nics[0].nictype]
+      return device_map[parent.network_adapter[0].adapter_type]
     end
 
     # Saves the forwarded port.

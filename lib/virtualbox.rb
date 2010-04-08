@@ -1,34 +1,11 @@
-$:.unshift(File.expand_path(File.dirname(__FILE__)))
+# Load the glob loader, which will handle the loading of all the other files
+libdir = File.join(File.dirname(__FILE__), "virtualbox")
+require File.expand_path("ext/glob_loader", libdir)
 
-# External Dependencies
-require 'nokogiri'
+# Load them up
+VirtualBox::GlobLoader.glob_require(libdir, %w{ext/platform ext/subclass_listing com abstract_model medium})
 
-# Internal Dependencies
-require 'virtualbox/ext/platform'
-require 'virtualbox/exceptions'
-require 'virtualbox/command'
-require 'virtualbox/abstract_model'
-require 'virtualbox/proxies/collection'
-require 'virtualbox/image'
-require 'virtualbox/attached_device'
-require 'virtualbox/dvd'
-require 'virtualbox/extra_data'
-require 'virtualbox/forwarded_port'
-require 'virtualbox/hard_drive'
-require 'virtualbox/nic'
-require 'virtualbox/usb'
-require 'virtualbox/shared_folder'
-require 'virtualbox/storage_controller'
-require 'virtualbox/vm'
-require 'virtualbox/media'
-require 'virtualbox/global'
-require 'virtualbox/system_property'
-
+# Setup the top-level module methods
 module VirtualBox
-  class <<self
-    # Returns installed VirtualBox version like '3.1.2r56127'.
-    def version
-      Command.vboxmanage("-v").chomp.strip
-    end
-  end
+  extend Version
 end

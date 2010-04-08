@@ -209,8 +209,8 @@ module VirtualBox
       # calls `save_relationship` on the relationship class.
       def save_relationship(name, *args)
         options = self.class.relationships_hash[name]
-        return unless options[:klass].respond_to?(:save_relationship)
-        options[:klass].save_relationship(self, relationship_data[name], *args)
+        return unless relationship_class(name).respond_to?(:save_relationship)
+        relationship_class(name).save_relationship(self, relationship_data[name], *args)
       end
 
       # The equivalent to {Attributable#populate_attributes}, but with
@@ -224,8 +224,8 @@ module VirtualBox
       # Populate a single relationship.
       def populate_relationship(name, data)
         options = self.class.relationships_hash[name]
-        return unless options[:klass].respond_to?(:populate_relationship)
-        relationship_data[name] = options[:klass].populate_relationship(self, data)
+        return unless relationship_class(name).respond_to?(:populate_relationship)
+        relationship_data[name] = relationship_class(name).populate_relationship(self, data)
       end
 
       # Calls `destroy_relationship` on each of the relationships. Any
@@ -244,13 +244,13 @@ module VirtualBox
       # @param [Symbol] name The name of the relationship
       def destroy_relationship(name, *args)
         options = self.class.relationships_hash[name]
-        return unless options && options[:klass].respond_to?(:destroy_relationship)
+        return unless options && relationship_class(name).respond_to?(:destroy_relationship)
 
         # Read relationship, which forces lazy relationships to load, which is
         # probably necessary for destroying
         read_relationship(name)
 
-        options[:klass].destroy_relationship(self, relationship_data[name], *args)
+        relationship_class(name).destroy_relationship(self, relationship_data[name], *args)
       end
 
       # Hash to data associated with relationships. You should instead
@@ -281,6 +281,17 @@ module VirtualBox
         relationship_data.has_key?(key)
       end
 
+      # Returns the class for a given relationship. This method handles converting
+      # a string/symbol into the proper class.
+      #
+      # @return [Class]
+      def relationship_class(key)
+        options = self.class.relationships_hash[key.to_sym]
+        klass = options[:klass]
+        klass = Object.module_eval("#{klass}") unless klass.is_a?(Class)
+        klass
+      end
+
       # Sets a relationship to the given value. This is not guaranteed to
       # do anything, since "set_relationship" will be called on the class
       # that the relationship is associated with and its expected to return
@@ -299,8 +310,8 @@ module VirtualBox
         relationship = self.class.relationships_hash[key]
         return unless relationship
 
-        raise Exceptions::NonSettableRelationshipException.new unless relationship[:klass].respond_to?(:set_relationship)
-        relationship_data[key] = relationship[:klass].set_relationship(self, relationship_data[key], value)
+        raise Exceptions::NonSettableRelationshipException.new unless relationship_class(key).respond_to?(:set_relationship)
+        relationship_data[key] = relationship_class(key).set_relationship(self, relationship_data[key], value)
       end
     end
   end

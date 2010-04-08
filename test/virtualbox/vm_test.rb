@@ -2,421 +2,350 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class VMTest < Test::Unit::TestCase
   setup do
-    @raw_xml = mock_xml
-    @raw_xml_doc = mock_xml_doc
-
-    @name = "foo"
-
-    # Just to be sure nothing is executed
-    VirtualBox::Command.stubs(:execute).returns('')
+    @klass = VirtualBox::VM
+    @interface = mock("interface")
   end
 
-  def create_vm
-    VirtualBox::Command.expects(:parse_xml).returns(@raw_xml_doc)
-    vm = VirtualBox::VM.load_from_xml(@name)
-    assert vm
-    vm
-  end
-
-  context "reading the VM state" do
-    setup do
-      @vm = create_vm
-    end
-
-    should "lazy load the state" do
-      @vm.expects(:load_attribute).with(:state).once
-      @vm.state
-    end
-
-    should "reload the state if true is passed as a parameter" do
-      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "on" })
-      assert_equal "on", @vm.state(true)
-      assert_equal "on", @vm.state
-    end
-
-    should "never have state as dirty" do
-      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "on" })
-      @vm.expects(:clear_dirty!).with(:state).once
-      @vm.state(true)
-    end
-
-    should "provide conveniance methods for determining VM state" do
-      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "poweroff" })
-      assert_equal "poweroff", @vm.state(true)
-      assert @vm.powered_off?
-
-      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "running" })
-      assert_equal "running", @vm.state(true)
-      assert @vm.running?
-
-      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "paused" })
-      assert_equal "paused", @vm.state(true)
-      assert @vm.paused?
-
-      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "saved" })
-      assert_equal "saved", @vm.state(true)
-      assert @vm.saved?
-
-      VirtualBox::VM.expects(:raw_info).returns({ :vmstate => "aborted" })
-      assert_equal "aborted", @vm.state(true)
-      assert @vm.aborted?
-    end
-  end
-
-  context "exporting a VM" do
-    setup do
-      @vm = create_vm
-    end
-
-    should "export the VM with no options if none are passed" do
-      VirtualBox::Command.expects(:vboxmanage).with("export", @name, "-o", "foo")
-      @vm.export("foo")
-    end
-
-    should "export the VM with specified options" do
-      VirtualBox::Command.expects(:vboxmanage).with("export", @name, "-o", "foo", "--vsys", "0", "--foo", :bar)
-      @vm.export("foo", :foo => :bar)
-    end
-
-    should "shell escape all the options" do
-      VirtualBox::Command.expects(:vboxmanage).with("export", @name, "-o", "foo", "--vsys", "0", "--foo", "a space")
-      @vm.export("foo", :foo => "a space")
-    end
-
-    should "return true if the export succeeded" do
-      VirtualBox::Command.expects(:vboxmanage).once
-      assert @vm.export("foo")
-    end
-
-    should "return false if the export failed" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert !@vm.export("foo")
-    end
-
-    should "raise an exception on failure if raise_error is true" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-        @vm.export("foo", {}, true)
-      }
-    end
-  end
-
-  context "controlling a VM (start, stop, pause, etc.)" do
-    setup do
-      @vm = create_vm
-    end
-
-    context "control method" do
-      should "run the given command when 'control' is called" do
-        VirtualBox::Command.expects(:vboxmanage).with("controlvm", @name, :foo)
-        assert @vm.control(:foo)
-      end
-
-      should "return false if the command failed" do
-        VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-        assert !@vm.control(:foo)
-      end
-
-      should "raise an exception if flag is set" do
-        VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-        assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-          @vm.control(:foo, true)
-        }
+  context "class methods" do
+    context "retrieving all machines" do
+      should "return an array of VM objects" do
+        vms = mock("vms")
+        global = mock("global")
+        global.expects(:vms).returns(vms)
+        VirtualBox::Global.expects(:global).returns(global)
+        assert_equal vms, VirtualBox::VM.all
       end
     end
 
-    should "start a VM with the given type" do
-      VirtualBox::Command.expects(:vboxmanage).with("startvm", @name, "--type", :FOO)
-      assert @vm.start(:FOO)
-    end
-
-    should "return false if start failed" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert !@vm.start
-    end
-
-    should "raise an exception if start fails and flag is set" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-        @vm.start(:foo, true)
-      }
-    end
-
-    should "stop a VM with a 'acpipowerbutton'" do
-      @vm.expects(:control).with(:acpipowerbutton, false).returns(true)
-      assert @vm.shutdown
-    end
-
-    should "stop a VM with a 'poweroff'" do
-      @vm.expects(:control).with(:poweroff, false).returns(true)
-      assert @vm.stop
-    end
-
-    should "pause a VM" do
-      @vm.expects(:control).with(:pause, false).returns(true)
-      assert @vm.pause
-    end
-
-    should "resume a VM" do
-      @vm.expects(:control).with(:resume, false).returns(true)
-      assert @vm.resume
-    end
-
-    should "save the state of a VM" do
-      @vm.expects(:control).with(:savestate, false).returns(true)
-      assert @vm.save_state
-    end
-
-    should "discard a saved state of a VM" do
-      VirtualBox::Command.expects(:vboxmanage).with("discardstate", @name)
-      assert @vm.discard_state
-    end
-
-    should "return false if discarding state failed" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert !@vm.discard_state
-    end
-
-    should "raise an exception if discarding state fails and flag is set" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-        @vm.discard_state(true)
-      }
-    end
-  end
-
-  context "destroying" do
-    setup do
-      @vm = create_vm
-    end
-
-    should "destroy all storage controllers before destroying VM" do
-      destroy_seq = sequence("destroy_seq")
-      VirtualBox::StorageController.expects(:destroy_relationship).in_sequence(destroy_seq)
-      VirtualBox::Command.expects(:vboxmanage).with("unregistervm", @name, "--delete").in_sequence(destroy_seq)
-      @vm.destroy
-    end
-
-    should "mark global for reloading" do
-      VirtualBox::Global.expects(:reload!)
-      @vm.destroy
-    end
-  end
-
-  context "finding all VMs" do
-    setup do
-      VirtualBox::VM.reloaded!
-
-      @global = mock("global")
-      @global.stubs(:vms)
-    end
-
-    should "list VMs then parse them" do
-      VirtualBox::Global.expects(:global).with(false).returns(@global)
-      VirtualBox::VM.all
-    end
-
-    should "reload the VMs list if given the reload argument" do
-      VirtualBox::Global.expects(:global).with(true).returns(@global)
-      VirtualBox::VM.all(true)
-    end
-
-    context "parser" do
+    context "finding a VM" do
       setup do
-      @raw = <<-raw
-"foo" {abcdefg}
-"bar"  {zefaldf}
-raw
+        @all = []
+        @klass.stubs(:all).returns(@all)
       end
 
-      should "ignore non-matching lines" do
-        assert VirtualBox::VM.parse_vm_list("HEY YOU").empty?
+      def mock_vm(uuid, name=nil)
+        vm = mock("vm-#{uuid}")
+        vm.stubs(:uuid).returns(uuid)
+        vm.stubs(:name).returns(name)
+        vm
       end
 
-      should "return VM objects for valid lines" do
-        vm_foo = mock("vm_foo")
-        vm_bar = mock("vm_bar")
-        parse_seq = sequence("parse")
-        VirtualBox::VM.expects(:find).with("foo").returns(vm_foo).in_sequence(parse_seq)
-        VirtualBox::VM.expects(:find).with("bar").returns(vm_bar).in_sequence(parse_seq)
+      should "return nil if it doesn't exist" do
+        @all << mock_vm("foo")
+        assert_nil @klass.find("bar")
+      end
 
-        result = VirtualBox::VM.parse_vm_list(@raw)
-        assert !result.empty?
-        assert_equal 2, result.length
-        assert_equal vm_foo, result[0]
-        assert_equal vm_bar, result[1]
+      should "return the matching vm if it is found" do
+        vm = mock_vm("foo")
+        @all << mock_vm("bar")
+        @all << vm
+        assert_equal vm, @klass.find("foo")
+      end
+
+      should "return if matching name is found" do
+        vm = mock_vm(nil, "foo")
+        @all << vm
+        assert_equal vm, @klass.find("foo")
+      end
+    end
+
+    context "importing" do
+      setup do
+        @path = "foo.rb"
+        @appliance = mock("appliance")
+        @virtual_system = mock("virtual_system")
+        @appliance.stubs(:virtual_systems).returns([@virtual_system])
+
+        @name = :foo
+        @virtual_system.stubs(:descriptions).returns({
+          :name => { :vbox_value => @name }
+        })
+      end
+
+      should "create a new appliance with path, import, and return VM" do
+        result = mock("result")
+        VirtualBox::Appliance.expects(:new).with(@path).returns(@appliance)
+        @appliance.expects(:import)
+        @klass.expects(:find).with(@name).returns(result)
+
+        assert_equal result, @klass.import(@path)
+      end
+    end
+
+    context "populating relationship" do
+      setup do
+        @instance = mock("instance")
+
+        @klass.stubs(:new).returns(@instance)
+      end
+
+      should "return a proxied collection" do
+        result = @klass.populate_relationship(nil, [])
+        assert result.is_a?(VirtualBox::Proxies::Collection)
+      end
+
+      should "call new for every machine" do
+        machines = []
+        5.times { |i| machines << mock("m#{i}") }
+
+        expected_result = []
+        new_seq = sequence("new_seq")
+        machines.each do |machine|
+          expected_value = "instance-#{machine.inspect}"
+          @klass.expects(:new).with(machine).in_sequence(new_seq).returns(expected_value)
+          expected_result << expected_value
+        end
+
+        assert_equal expected_result, @klass.populate_relationship(nil, machines)
       end
     end
   end
 
-  context "importing a VM" do
-    setup do
-      @raw = <<-raw
-0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
-Interpreting /Users/mitchellh/base.ovf...
-OK.
-Disks:  vmdisk1 21474836480     -1      http://www.vmware.com/specifications/vmdk.html#sparse   HoboBase.vmdk   379268096 -1       <NULL>
-Virtual system 0:
- 0: Suggested OS type: "Ubuntu"
-    (change with "--vsys 0 --ostype <type>"; use "list ostypes" to list all possible values)
- 1: Suggested VM name "Base_1"
-    (change with "--vsys 0 --vmname <name>")
- 2: Number of CPUs: 1
-raw
-    end
-
-    should "attempt to find the imported VM" do
-      VirtualBox::Command.expects(:vboxmanage).with("import", "whatever").returns(@raw)
-      VirtualBox::VM.expects(:find).with("Base_1").once
-      VirtualBox::VM.import("whatever")
-    end
-
-    should "parse the VM name from the raw string" do
-      assert_equal "Base_1", VirtualBox::VM.parse_vm_name(@raw)
-    end
-
-    should "return nil on parsing the VM name if its invalid" do
-      assert_nil VirtualBox::VM.parse_vm_name("Name foo")
-    end
-  end
-
-  context "saving a changed VM" do
-    setup do
-      @vm = create_vm
-      VirtualBox::AttachedDevice.any_instance.stubs(:save)
-    end
-
-    teardown do
-      VirtualBox::Global.reloaded!
-    end
-
-    should "force a reload on the global class" do
-      VirtualBox::Global.expects(:reload!).once
-      assert @vm.save
-    end
-
-    should "return false if saving fails" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-
-      @vm.ostype = "Zubuntu"
-      assert !@vm.save
-    end
-
-    should "raise an error if saving fails and flag to true" do
-      VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
-
-      @vm.ostype = "Zubuntu"
-      assert_raises(VirtualBox::Exceptions::CommandFailedException) {
-        @vm.save(true)
-      }
-    end
-
-    should "save only the attributes which saved" do
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--ostype", "Zubuntu")
-
-      @vm.ostype = "Zubuntu"
-      assert @vm.save
-    end
-
-    should "do nothing if no attributes changed" do
-      VirtualBox::Command.expects(:vboxmanage).never
-      assert !@vm.changed?
-      assert @vm.save
-    end
-
-    should "save name first if changed, then following values should modify new VM" do
-      new_name = "foo2"
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--ostype", "Zubuntu", "--name", new_name)
-
-      @vm.name = new_name
-      @vm.ostype = "Zubuntu"
-      assert @vm.save
-    end
-
-    should "save the new name as the original name after saving" do
-      new_name = "foo2"
-      assert_equal @name, @vm.instance_variable_get(:@original_name)
-
-      @vm.name = new_name
-      assert @vm.save
-      assert_equal new_name, @vm.instance_variable_get(:@original_name)
-    end
-
-    should "save the relationships as well" do
-      VirtualBox::Nic.expects(:save_relationship).once
-      VirtualBox::StorageController.expects(:save_relationship).once
-      VirtualBox::SharedFolder.expects(:save_relationship).once
-      VirtualBox::ExtraData.expects(:save_relationship).once
-      VirtualBox::ForwardedPort.expects(:save_relationship).once
-      assert @vm.save
-    end
-  end
-
-  context "loading a VM from XML" do
-    should "parse the XML then initializing the class" do
-      VirtualBox::Command.expects(:parse_xml).with("foo").returns(@raw_xml_doc)
-      VirtualBox::VM.expects(:new).with(@raw_xml_doc).once
-      VirtualBox::VM.load_from_xml("foo")
-    end
-
-    should "initialize the attributes when called with an XML document" do
-      VirtualBox::VM.any_instance.expects(:initialize_attributes).once.with(@raw_xml_doc)
-      VirtualBox::VM.new(@raw_xml_doc)
+  context "initializing" do
+    should "load attributes from the machine" do
+      @klass.any_instance.expects(:initialize_attributes).with(@interface).once
+      @klass.new(@interface)
     end
   end
 
   context "initializing attributes" do
-    # TODO: This needs to be tested
-  end
-
-  context "finding a VM by name" do
     setup do
-      @expected = {
-        :name   => "foo",
-        :ostype => "Ubuntu",
-        :uuid   => "8710d3db-d96a-46ed-9004-59fa891fda90"
-      }
+      @klass.any_instance.stubs(:load_interface_attributes)
+      @klass.any_instance.stubs(:populate_relationships)
     end
 
-    should "use the global 'all' array to find the VM" do
-      VirtualBox::VM.expects(:all).with(true).returns([create_vm])
-      vm = VirtualBox::VM.find(@name)
-      assert vm
+    should "load interface attribtues" do
+      @klass.any_instance.expects(:load_interface_attributes).with(@interface).once
+      @klass.new(@interface)
+    end
 
-      @expected.each do |k,v|
-        assert_equal v, vm.read_attribute(k)
+    should "populate relationships" do
+      @klass.any_instance.expects(:populate_relationships).with(@interface).once
+      @klass.new(@interface)
+    end
+
+    should "not be dirty" do
+      @instance = @klass.new(@interface)
+      assert !@instance.changed?
+    end
+
+    should "be existing record" do
+      @instance = @klass.new(@interface)
+      assert !@instance.new_record?
+    end
+  end
+
+  context "instance methods" do
+    setup do
+      @klass.any_instance.stubs(:initialize_attributes)
+      @instance = @klass.new(@interface)
+    end
+
+    def setup_session_mocks
+      @parent = mock("parent")
+      @session = mock("session")
+      @lib = mock("lib")
+      @progress = mock("progress")
+
+      @session.stubs(:close)
+      @progress.stubs(:wait_for_completion)
+      @lib.stubs(:session).returns(@session)
+      @uuid = :foo
+
+      VirtualBox::Lib.stubs(:lib).returns(@lib)
+      @interface.stubs(:parent).returns(@parent)
+      @instance.stubs(:imachine).returns(@interface)
+      @instance.stubs(:uuid).returns(@uuid)
+      @instance.stubs(:running).returns(false)
+    end
+
+    context "destroying" do
+      setup do
+        @instance.stubs(:uuid).returns(:foo)
+
+        @interface_parent = mock("interface_parent")
+        @interface.stubs(:parent).returns(@interface_parent)
+      end
+
+      should "destroy relationships first, then the machine" do
+        destroy_seq = sequence("destroy_seq")
+        VirtualBox::StorageController.expects(:destroy_relationship).in_sequence(destroy_seq)
+        @interface_parent.expects(:unregister_machine).with(@instance.uuid).in_sequence(destroy_seq)
+        @interface.expects(:delete_settings).once.in_sequence(destroy_seq)
+
+        @instance.destroy
       end
     end
 
-    should "return nil if the VM doesn't exist" do
-      VirtualBox::VM.expects(:all).returns([])
-      assert_nil VirtualBox::VM.find("dont exist")
-    end
-  end
+    context "state" do
+      setup do
+        @state = mock("state")
+        @instance.stubs(:read_attribute).with(:state).returns(@state)
+      end
 
-  context "parsing the showvminfo output" do
-    should "lowercase and symbolize the keys" do
-      result = VirtualBox::VM.parse_vm_info("ZING=Zam")
-      assert_equal 1, result.length
-      assert_equal "Zam", result[:zing]
-    end
+      should "just return the state" do
+        assert_equal @state, @instance.state
+      end
 
-    should "ignore quotes for multi-word keys or values" do
-      result = VirtualBox::VM.parse_vm_info('"foo bar"="baz"')
-      assert_equal 1, result.length
-      assert_equal "baz", result[:"foo bar"]
+      should "reload the state if reload is set" do
+        @instance.expects(:load_interface_attribute).with(:state).once
+        assert_equal @state, @instance.state(true)
+      end
     end
 
-    should "ignore the lines which aren't the proper format" do
-      result = VirtualBox::VM.parse_vm_info(<<-block)
-This should not be parsed
-Neither should this
+    context "starting" do
+      setup do
+        setup_session_mocks
+      end
 
-foo=bar
-block
+      should "open remote session using the given mode, wait for completion, then close" do
+        start_seq = sequence('start_seq')
+        mode = "foo"
+        @parent.expects(:open_remote_session).with(@session, @uuid, mode, "").once.returns(@progress).in_sequence(start_seq)
+        @progress.expects(:wait_for_completion).with(-1).in_sequence(start_seq)
+        @session.expects(:close).in_sequence(start_seq)
+        assert @instance.start(mode)
+      end
 
-      assert_equal 1, result.length
-      assert_equal "bar", result[:foo]
+      should "return false if state is running" do
+        @instance.expects(:running?).returns(true)
+        assert !@instance.start(nil)
+      end
+    end
+
+    context "controlling" do
+      setup do
+        setup_session_mocks
+
+        @parent.stubs(:open_existing_session)
+
+        @console = mock("console")
+        @console.stubs(:send)
+        @session.stubs(:console).returns(@console)
+
+        @method = :foo
+      end
+
+      should "get an existing, session, send the command, and close" do
+        method = :foo
+        control_seq = sequence("control_seq")
+        @parent.expects(:open_existing_session).with(@session, @uuid).once.in_sequence(control_seq)
+        @console.expects(:send).with(@method).once.in_sequence(control_seq)
+        @session.expects(:close).in_sequence(control_seq)
+
+        @instance.control(@method)
+      end
+
+      should "wait for completion if an IProgress is returned" do
+        progress = mock("IProgress")
+        progress.stubs(:is_a?).with(VirtualBox::COM::Interface::Progress).returns(true)
+        progress.expects(:wait_for_completion).with(-1).once
+        @console.expects(:send).with(@method).returns(progress)
+        @instance.control(@method)
+      end
+
+      should "forward other args" do
+        @console.expects(:send).with(@method, 1, 2, 3).once
+        @instance.control(@method, 1, 2, 3)
+      end
+    end
+
+    context "control helpers" do
+      should "call the proper control method" do
+        methods = {
+          :shutdown => :power_button,
+          :stop => :power_down,
+          :pause => :pause,
+          :resume => :resume,
+          :save_state => :save_state,
+          :discard_state => [:forget_saved_state, true]
+        }
+
+        methods.each do |method, control|
+          control = [control] unless control.is_a?(Array)
+          @instance.expects(:control).with(*control).once
+          @instance.send(method)
+        end
+      end
+    end
+
+    context "saving" do
+      setup do
+        @session = mock("session")
+        @session.stubs(:machine).returns(@parent)
+
+        @locked_interface = mock("locked_interface")
+      end
+
+      should "open the session, save, and close" do
+        save_seq = sequence("save_seq")
+        @instance.expects(:with_open_session).once.yields(@session).in_sequence(save_seq)
+        @session.expects(:machine).returns(@locked_interface).in_sequence(save_seq)
+        @instance.expects(:save_changed_interface_attributes).with(@locked_interface).in_sequence(save_seq)
+        @instance.expects(:save_relationships).in_sequence(save_seq)
+
+        @instance.save
+      end
+    end
+
+    context "opening a session [direct]" do
+      setup do
+        setup_session_mocks
+
+        @locked_interface = mock("locked_interface")
+        @session.stubs(:machine).returns(@locked_interface)
+        @session.stubs(:state).returns(:closed)
+      end
+
+      should "open the session, save, and close" do
+        save_seq = sequence("save_seq")
+        @proc = Proc.new {}
+
+        @parent.expects(:open_session).with(@session, @uuid).in_sequence(save_seq)
+        @proc.expects(:call).with(@session).once.in_sequence(save_seq)
+        @locked_interface.expects(:save_settings).once.in_sequence(save_seq)
+        @session.expects(:close).in_sequence(save_seq)
+
+        @instance.with_open_session do |session|
+          @proc.call(session)
+        end
+      end
+
+      should "only open the session and close once" do
+        open_seq = sequence("open_seq")
+
+        @parent.expects(:open_session).with(@session, @uuid).in_sequence(open_seq)
+        @locked_interface.expects(:save_settings).once.in_sequence(open_seq)
+        @session.expects(:close).once.in_sequence(open_seq)
+
+        @instance.with_open_session do |session|
+          session.stubs(:state).returns(:open)
+
+          @instance.with_open_session do |subsession|
+            assert_equal session, subsession
+          end
+        end
+      end
+    end
+
+    context "state methods" do
+      should "check the proper results" do
+        methods = {
+          :running? => :running,
+          :powered_off? => :powered_off,
+          :paused? => :paused,
+          :saved? => :saved,
+          :aborted? => :aborted
+        }
+
+        methods.each do |method, value|
+          @instance.stubs(:state).returns(value)
+          assert @instance.send(method)
+
+          @instance.stubs(:state).returns(:nope)
+          assert !@instance.send(method)
+        end
+      end
     end
   end
 end

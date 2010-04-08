@@ -10,7 +10,7 @@ class DirtyTest < Test::Unit::TestCase
     end
 
     def foo=(value)
-      set_dirty!(:foo, @foo, value)
+      set_dirty!("foo", @foo, value)
       @foo = value
     end
 

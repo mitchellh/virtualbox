@@ -9,7 +9,7 @@ begin
     gemspec.authors = ["Mitchell Hashimoto"]
     gemspec.executables = []
 
-    gemspec.add_dependency('nokogiri', '>= 1.4.1')
+    gemspec.add_dependency('ffi', '>= 0.6.3')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

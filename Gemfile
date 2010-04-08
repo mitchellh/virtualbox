@@ -1,7 +1,7 @@
 source :gemcutter
 
 # External Dependencies
-gem "nokogiri", "1.4.1"
+gem "ffi"
 
 # Gems required for testing only.
 group :test do
