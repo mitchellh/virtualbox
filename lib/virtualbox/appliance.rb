@@ -44,7 +44,9 @@ module VirtualBox
       interface.import_machines.wait(&block)
     end
 
-    # Exports the machines to the given path
+    # Exports the machines to the given path. If a block is given, it will be yielded
+    # every percent that the operation progresses. This can be done to check the progress
+    # of the export in real-time.
     def export(&block)
       interface.write("ovf-1.0", path).wait(&block)
     end

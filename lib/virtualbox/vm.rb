@@ -282,6 +282,9 @@ module VirtualBox
     # This method will block until the export is complete, which takes about
     # 60 to 90 seconds on my 2.2 GHz 2009 model MacBook Pro.
     #
+    # If a block is given to the method, then it will be yielded with the
+    # percent progress of the operation (in intervals of 1 percent).
+    #
     # @param [String] filename The file (not directory) to save the exported
     #   OVF file. This directory will also receive the checksum file and
     #   virtual disks.
