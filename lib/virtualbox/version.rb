@@ -3,7 +3,7 @@ module VirtualBox
     # Returns the version string of the VirtualBox installed, ex. "3.1.6"
     def version
       Lib.lib.virtualbox.version
-    rescue LoadError
+    rescue Exception
       nil
     end
 
