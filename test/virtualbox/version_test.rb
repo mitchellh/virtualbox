@@ -21,6 +21,11 @@ class VersionTest < Test::Unit::TestCase
     assert_equal version, @module.version
   end
 
+  should "return nil if an error occurs" do
+    @vbox.expects(:version).raises(LoadError)
+    assert @module.version.nil?
+  end
+
   should "return the revision" do
     revision = mock("revision")
     @vbox.expects(:revision).returns(revision)
