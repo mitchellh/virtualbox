@@ -66,12 +66,15 @@ module VirtualBox
           # arguments from `args`, etc.
           formal_args = spec_to_args(spec, args)
 
-          # Call the function. Error checking TODO.
+          # Call the function.
+          logger.debug("FFI call: #{name} #{args.inspect}")
           call_and_check(ffi_interface.vtbl[name], ffi_interface.vtbl_parent, *formal_args)
 
           # Extract the values from the formal args array, again based on the
           # spec (and the various :out parameters)
-          values_from_formal_args(spec, formal_args)
+          result = values_from_formal_args(spec, formal_args)
+          logger.debug("    = #{result.inspect}")
+          result
         end
 
         #############################################################

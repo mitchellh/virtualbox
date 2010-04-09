@@ -12,6 +12,8 @@ module VirtualBox
   #
   # @abstract
   class AbstractModel
+    include Logger
+
     include Attributable
     include InterfaceAttributes
     include Dirty

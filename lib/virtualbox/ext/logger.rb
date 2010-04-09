@@ -32,7 +32,7 @@ module VirtualBox
     #
     # @return [Logger]
     def logger
-      @@logger ||= Logger.new(@@logger_output)
+      @@logger ||= ::Logger.new(@@logger_output)
     end
   end
 end

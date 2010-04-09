@@ -2,6 +2,8 @@ module VirtualBox
   module COM
     module Implementer
       class Base < AbstractImplementer
+        include Logger
+
         # Finds and returns the `COM::Interface` class associated with the type.
         # If the class does not exist, a `NameError` will be raised.
         #
