@@ -103,7 +103,6 @@ class MediumAttachmentTest < Test::Unit::TestCase
         det_seq = sequence("detach_seq")
         @parent.expects(:with_open_session).yields(@session).in_sequence(det_seq)
         @machine.expects(:detach_device).with(@sc.name, @instance.port, @instance.device).in_sequence(det_seq)
-        @machine.expects(:save_settings).in_sequence(det_seq)
 
         @instance.detach
       end

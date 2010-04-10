@@ -38,9 +38,6 @@ module VirtualBox
 
         # Save them
         save_changed_interface_attributes(machine.bios_settings)
-
-        # Persist settings on the machine
-        machine.save_settings
       end
     end
   end

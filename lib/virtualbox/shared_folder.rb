@@ -184,7 +184,6 @@ module VirtualBox
       parent.with_open_session do |session|
         machine = session.machine
         machine.create_shared_folder(name, host_path, writable)
-        machine.save_settings
       end
 
       existing_record!
@@ -205,7 +204,6 @@ module VirtualBox
       parent.with_open_session do |session|
         machine = session.machine
         machine.remove_shared_folder(name)
-        machine.save_settings
       end
 
       # Mark as a new record so if it is saved again, it will create it

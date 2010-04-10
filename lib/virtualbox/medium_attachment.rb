@@ -48,7 +48,6 @@ module VirtualBox
         machine = session.machine
 
         machine.detach_device(storage_controller.name, port, device)
-        machine.save_settings
       end
     end
 

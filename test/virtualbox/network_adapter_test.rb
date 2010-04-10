@@ -150,7 +150,6 @@ class NetworkAdapterTest < Test::Unit::TestCase
         seq = sequence("sequence")
         @parent.expects(:with_open_session).yields(@session).in_sequence(seq)
         @machine.expects(:get_network_adapter).with(@instance.slot).returns(@adapter).in_sequence(seq)
-        @machine.expects(:save_settings).in_sequence(seq)
 
         @instance.modify_adapter do |adapter|
           assert_equal @adapter, adapter

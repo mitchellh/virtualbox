@@ -157,7 +157,6 @@ class SharedFolderTest < Test::Unit::TestCase
         @instance.writable = true
 
         @machine.stubs(:create_shared_folder)
-        @machine.stubs(:save_settings)
       end
 
       should "do nothing if its an existing record" do
@@ -169,7 +168,6 @@ class SharedFolderTest < Test::Unit::TestCase
       should "create the shared folder" do
         create_seq = sequence("create_seq")
         @machine.expects(:create_shared_folder).with(@instance.name, @instance.host_path, @instance.writable).once.in_sequence(create_seq)
-        @machine.expects(:save_settings).once.in_sequence(create_seq)
         @instance.create
       end
 
@@ -191,13 +189,11 @@ class SharedFolderTest < Test::Unit::TestCase
         @name = "foo"
         @instance.stubs(:name).returns(@name)
         @machine.stubs(:remove_shared_folder).with(@name)
-        @machine.stubs(:save_settings)
       end
 
       should "destroy the shared folder on the parent" do
         destroy_seq = sequence("destroy_seq")
         @machine.expects(:remove_shared_folder).with(@name).in_sequence(destroy_seq)
-        @machine.expects(:save_settings).once.in_sequence(destroy_seq)
 
         @instance.destroy
       end

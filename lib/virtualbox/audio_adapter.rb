@@ -38,9 +38,6 @@ module VirtualBox
 
         # Save them
         save_changed_interface_attributes(machine.audio_adapter)
-
-        # Persist settings on the machine
-        machine.save_settings
       end
     end
   end

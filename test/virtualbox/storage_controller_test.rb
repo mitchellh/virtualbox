@@ -183,7 +183,6 @@ class StorageControllerTest < Test::Unit::TestCase
         destroy_seq = sequence("destroy_seq")
         ma.expects(:destroy).with(1,2,3).once.in_sequence(destroy_seq)
         @machine.expects(:remove_storage_controller).with(@instance.name).in_sequence(destroy_seq)
-        @machine.expects(:save_settings).once.in_sequence(destroy_seq)
 
         @instance.destroy(1,2,3)
       end
@@ -191,7 +190,6 @@ class StorageControllerTest < Test::Unit::TestCase
       should "remove from the parent and save" do
         destroy_seq = sequence("destroy_seq")
         @machine.expects(:remove_storage_controller).with(@instance.name).in_sequence(destroy_seq)
-        @machine.expects(:save_settings).once.in_sequence(destroy_seq)
         @instance.destroy
       end
     end

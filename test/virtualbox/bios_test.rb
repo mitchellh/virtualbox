@@ -76,7 +76,6 @@ class BIOSTest < Test::Unit::TestCase
       should "save the interface settings with the new bios settings" do
         save_seq = sequence("save_seq")
         @instance.expects(:save_changed_interface_attributes).with(@bios_settings).once.in_sequence(save_seq)
-        @machine.expects(:save_settings).in_sequence(save_seq)
         @instance.save
       end
     end

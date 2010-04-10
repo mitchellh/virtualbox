@@ -118,6 +118,7 @@ module VirtualBox
         :interface => icontroller
       }, :ignore_relationships => true)
       load_interface_attributes(icontroller)
+      clear_dirty!
     end
 
     # Retrieves the array of medium attachments related to this storage controller.
@@ -137,7 +138,6 @@ module VirtualBox
       parent.with_open_session do |session|
         machine = session.machine
         save_changed_interface_attributes(machine.get_storage_controller_by_name(name))
-        machine.save_settings
       end
     end
 
@@ -154,7 +154,6 @@ module VirtualBox
       parent.with_open_session do |session|
         machine = session.machine
         machine.remove_storage_controller(name)
-        machine.save_settings
       end
     end
   end

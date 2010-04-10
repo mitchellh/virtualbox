@@ -128,7 +128,6 @@ module VirtualBox
       parent.with_open_session do |session|
         machine = session.machine
         yield machine.get_network_adapter(slot)
-        machine.save_settings
       end
     end
   end
