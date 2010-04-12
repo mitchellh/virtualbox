@@ -29,7 +29,7 @@ module VirtualBox
         # This method blocks the execution while the operations represented
         # by this {Progress} object execute, but yields a block every `x`
         # percent (interval given in parameters).
-        def wait(interval_percent=1, sleep_time=0.5)
+        def wait(interval_percent=1)
           # If no block is given we just wait until completion, not worrying
           # about tracking percentages.
           if !block_given?
@@ -37,18 +37,19 @@ module VirtualBox
             return
           end
 
-          last_reported = 0
+          # Initial value forces the 0% yield
+          last_reported = -100
 
-          while last_reported < 100
-            last_reported = percent
-            yield last_reported
+          while true
+            break if completed || canceled
 
-            delta = 0
-            while delta < interval_percent
-              sleep sleep_time
-              break if percent >= 100
-              delta = percent - last_reported
-            end
+            delta = percent - last_reported
+            last_reported += delta
+            yield last_reported if delta >= interval_percent
+
+            # This either sleeps for half a second or returns on
+            # completion
+            wait_for_completion(500)
           end
         end
       end
