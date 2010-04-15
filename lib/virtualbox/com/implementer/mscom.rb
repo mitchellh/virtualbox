@@ -114,7 +114,7 @@ module VirtualBox
 
         def read_char(value, type)
           # Convert to a boolean
-          !(value == "0")
+          !(value.to_s == "0")
         end
 
         def read_ushort(value, type)

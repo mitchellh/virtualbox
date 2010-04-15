@@ -143,6 +143,8 @@ class COMImplementerMSCOMTest < Test::Unit::TestCase
       should "read char as a boolean value" do
         assert_equal true, @instance.read_char('1', :char)
         assert_equal false, @instance.read_char('0', :char)
+        assert_equal true, @instance.read_char(1, :char)
+        assert_equal false, @instance.read_char(0, :char)
       end
     end
 
