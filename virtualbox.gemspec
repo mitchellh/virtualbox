@@ -5,9 +5,9 @@
 
 Gem::Specification.new do |s|
   s.name = %q{virtualbox}
-  s.version = "0.6.0.pre"
+  s.version = "0.6.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
   s.date = %q{2010-04-15}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
