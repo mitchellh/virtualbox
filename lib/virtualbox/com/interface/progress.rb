@@ -45,7 +45,7 @@ module VirtualBox
 
             delta = percent - last_reported
             last_reported += delta
-            yield last_reported if delta >= interval_percent
+            yield self if delta >= interval_percent
 
             # This either sleeps for half a second or returns on
             # completion
