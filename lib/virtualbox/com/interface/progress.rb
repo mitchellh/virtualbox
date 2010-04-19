@@ -41,8 +41,6 @@ module VirtualBox
           last_reported = -100
 
           while true
-            break if completed || canceled
-
             delta = percent - last_reported
             last_reported += delta
             yield self if delta >= interval_percent
@@ -50,6 +48,8 @@ module VirtualBox
             # This either sleeps for half a second or returns on
             # completion
             wait_for_completion(500)
+
+            break if completed || canceled
           end
         end
       end
