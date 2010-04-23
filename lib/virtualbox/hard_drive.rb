@@ -107,6 +107,7 @@ module VirtualBox
       end
     end
 
+    # Custom getter to convert the physical size from bytes to megabytes.
     def physical_size
       bytes_to_megabytes(read_attribute(:physical_size))
     end
