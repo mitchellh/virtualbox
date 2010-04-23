@@ -54,6 +54,15 @@ class HardDriveTest < Test::Unit::TestCase
       @instance = @klass.new(@interface)
     end
 
+    context "physical size" do
+      should "convert bytes to megabytes" do
+        nonnormalized = 37548181
+        normalized = @instance.bytes_to_megabytes(nonnormalized)
+        @instance.expects(:read_attribute).with(:physical_size).returns(nonnormalized)
+        assert_equal normalized, @instance.physical_size
+      end
+    end
+
     context "cloning" do
       setup do
         @system_properties = mock("system_properties")

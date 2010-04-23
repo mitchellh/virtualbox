@@ -20,4 +20,15 @@ class ByteNormalizerTest < Test::Unit::TestCase
       assert_equal out, @instance.megabytes_to_bytes(input)
     end
   end
+
+  should "convert bytes to megabytes" do
+    expected = {
+      1_048_576 => 1,
+      362_178_150.4 => 345.4
+    }
+
+    expected.each do |input, out|
+      assert_equal out, @instance.bytes_to_megabytes(input)
+    end
+  end
 end

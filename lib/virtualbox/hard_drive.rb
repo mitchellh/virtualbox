@@ -77,6 +77,8 @@ module VirtualBox
   # There are more attributes on the {Medium} model, which {HardDrive} inherits
   # from.
   class HardDrive < Medium
+    include ByteNormalizer
+
     attribute :format, :default => "VDI", :property => :format
     attribute :logical_size, :property => :logical_size
     attribute :physical_size, :readonly => true, :property => :size
@@ -103,6 +105,10 @@ module VirtualBox
       def device_type
         :hard_disk
       end
+    end
+
+    def physical_size
+      bytes_to_megabytes(read_attribute(:physical_size))
     end
 
     # Clone hard drive, possibly also converting formats. All formats
