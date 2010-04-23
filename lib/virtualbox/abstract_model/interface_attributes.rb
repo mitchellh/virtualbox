@@ -28,7 +28,7 @@ module VirtualBox
 
         # Convert the getter to a proc and call it
         getter = spec_to_proc(getter)
-        write_attribute(key, getter.call(interface))
+        write_attribute(key, getter.call(interface, key))
       end
 
       # Saves all the attributes which have an interface setter.
@@ -55,7 +55,7 @@ module VirtualBox
 
         # Convert the setter to a proc and call it
         setter = spec_to_proc(setter)
-        setter.call(interface, read_attribute(key))
+        setter.call(interface, key, read_attribute(key))
       end
 
       # Converts a getter/setter specification to a Proc which can be called
@@ -88,7 +88,7 @@ module VirtualBox
         if spec.is_a?(Symbol)
           # For symbols, wrap up a method send in a Proc and return
           # that
-          return Proc.new { |m, *args| m.send(spec, *args) }
+          return Proc.new { |m, key, *args| m.send(spec, *args) }
         end
       end
     end

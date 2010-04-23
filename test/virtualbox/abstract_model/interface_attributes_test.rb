@@ -32,7 +32,7 @@ class InterfaceAttributesTest < Test::Unit::TestCase
         result = mock("result")
         proc = @instance.spec_to_proc(:foo)
         @interface.expects(:foo).with(1, 2, 3).once.returns(result)
-        assert_equal result, proc.call(@interface, 1, 2, 3)
+        assert_equal result, proc.call(@interface, :key, 1, 2, 3)
       end
     end
 
