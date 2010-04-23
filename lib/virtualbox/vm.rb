@@ -121,6 +121,7 @@ module VirtualBox
     attribute :interface, :readonly => true, :property => false
     relationship :audio_adapter, :AudioAdapter
     relationship :bios, :BIOS
+    relationship :hw_virt, :HWVirtualization
     relationship :storage_controllers, :StorageController, :dependent => :destroy
     relationship :medium_attachments, :MediumAttachment
     relationship :shared_folders, :SharedFolder
