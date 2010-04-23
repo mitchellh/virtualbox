@@ -25,14 +25,14 @@ class InterfaceAttributesTest < Test::Unit::TestCase
         result = mock("result")
         proc = @instance.spec_to_proc(:foo)
         @interface.expects(:foo).once.returns(result)
-        assert_equal result, proc.call(@interface)
+        assert_equal result, proc.call(nil, @interface)
       end
 
       should "forward all parameters" do
         result = mock("result")
         proc = @instance.spec_to_proc(:foo)
         @interface.expects(:foo).with(1, 2, 3).once.returns(result)
-        assert_equal result, proc.call(@interface, :key, 1, 2, 3)
+        assert_equal result, proc.call(nil, @interface, :key, 1, 2, 3)
       end
     end
 

@@ -50,4 +50,54 @@ class HWVirtualizationTest < Test::Unit::TestCase
       assert !@instance.new_record?
     end
   end
+
+  context "instance methods" do
+    setup do
+      @klass.any_instance.stubs(:load_interface_attributes)
+
+      @parent = mock("parent")
+      @interface = mock("interface")
+      @instance = @klass.new(@parent, @interface)
+    end
+
+    context "getting a property" do
+      setup do
+        @key = :foo
+      end
+
+      should "call proper function on interface" do
+        result = mock("result")
+        @interface.expects(:get_hw_virt_ex_property).with(@key).returns(result)
+        assert_equal result, @instance.get_property(@interface, @key)
+      end
+    end
+
+    context "setting a property" do
+      setup do
+        @key = :foo
+        @value = :bar
+      end
+
+      should "call proper function on interface" do
+        @interface.expects(:set_hw_virt_ex_property).with(@key, @value).once
+        @instance.set_property(@interface, @key, @value)
+      end
+    end
+
+    context "saving" do
+      setup do
+        @bios_settings = mock("bios_settings")
+        @session = mock("session")
+        @machine = mock("machine")
+        @session.stubs(:machine).returns(@machine)
+        @parent.stubs(:with_open_session).yields(@session)
+      end
+
+      should "save the interface settings with the new bios settings" do
+        save_seq = sequence("save_seq")
+        @instance.expects(:save_changed_interface_attributes).with(@machine).once.in_sequence(save_seq)
+        @instance.save
+      end
+    end
+  end
 end
