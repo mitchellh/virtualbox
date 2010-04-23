@@ -27,6 +27,40 @@ class AttributableTest < Test::Unit::TestCase
     end
   end
 
+  context "attribute scopes" do
+    class AttributeScopeA < EmptyAttributeModel
+      attribute :foo
+      attribute_scope(:bar => 7) do
+        attribute :foo2
+
+        attribute_scope(:baz => 3) do
+          attribute :bazzed
+        end
+      end
+
+      attribute :foo3, :bar => 10
+    end
+
+    setup do
+      @klass = AttributeScopeA
+    end
+
+    should "use attribute scope" do
+      assert_equal 7, @klass.attributes[:foo2][:bar]
+    end
+
+    should "not use attribute scope outside of the block" do
+      assert !@klass.attributes[:foo].has_key?(:bar)
+      assert_equal 10, @klass.attributes[:foo3][:bar]
+    end
+
+    should "properly nest" do
+      bazzed = @klass.attributes[:bazzed]
+      assert_equal 3, bazzed[:baz]
+      assert_equal 7, bazzed[:bar]
+    end
+  end
+
   context "attribute options" do
     context "custom populate keys" do
       class CustomPopulateModel < AttributeModel

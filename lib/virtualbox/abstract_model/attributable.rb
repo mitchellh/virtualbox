@@ -137,7 +137,8 @@ module VirtualBox
         #   a custom populate key to use for {Attributable#populate_attributes}
         def attribute(name, options = {})
           name = name.to_sym
-          attributes[name] = options
+          attributes[name] = @__attribute_scope || {}
+          attributes[name].merge!(options)
 
           # Create the method for reading this attribute
           define_method(name) { read_attribute(name) }
@@ -151,6 +152,19 @@ module VirtualBox
           elsif method_defined?("#{name}=")
             undef_method("#{name}=")
           end
+        end
+
+        # Defines the specified scope for all attributes within the block.
+        # The scope is reset to the previous value once the block ends. Multiple
+        # scopes can be nested and they'll inherit from each other.
+        def attribute_scope(options, &block)
+          @__attribute_scope ||= {}
+          old_value = @__attribute_scope
+          @__attribute_scope = old_value.merge(options)
+
+          instance_eval(&block)
+
+          @__attribute_scope = old_value
         end
 
         # Returns the hash of attributes and their associated options.
