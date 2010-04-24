@@ -19,7 +19,12 @@ module VirtualBox
         # Reads a property from the interface with the given name.
         def read_property(name, opts)
           # First get the basic value from the COM object
-          value = @object[COM::FFI::Util.camelize(name.to_s)]
+          method = COM::FFI::Util.camelize(name.to_s)
+          value = if ruby_version >= 1.9
+            @object.send(method)
+          else
+            @object[method]
+          end
 
           # Then depending on the value type, we either return as-is or
           # must wrap it up in another interface class
@@ -30,7 +35,14 @@ module VirtualBox
         # value.
         def write_property(name, value, opts)
           # Set the property with a prepared value
-          @object[COM::FFI::Util.camelize(name.to_s)] = spec_to_args([opts[:value_type]], [value]).first
+          method = COM::FFI::Util.camelize(name.to_s)
+          value = spec_to_args([opts[:value_type]], [value]).first
+
+          if ruby_version >= 1.9
+            @object.send("#{method}=", value)
+          else
+            @object[method] = value
+          end
         end
 
         # Calls a function from the interface with the given name

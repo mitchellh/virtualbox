@@ -4,6 +4,13 @@ module VirtualBox
       class Base < AbstractImplementer
         include Logger
 
+        # Returns the Ruby version as a float
+        #
+        # @return [Float]
+        def ruby_version
+          RUBY_VERSION.to_f
+        end
+
         # Finds and returns the `COM::Interface` class associated with the type.
         # If the class does not exist, a `NameError` will be raised.
         #

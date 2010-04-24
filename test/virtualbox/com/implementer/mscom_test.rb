@@ -59,26 +59,70 @@ class COMImplementerMSCOMTest < Test::Unit::TestCase
     end
 
     context "reading a property" do
-      should "read the property on the object and return it" do
-        name = :foo_bar
-        value = mock("value")
-        result = mock("result")
-        opts = { :value_type => :foo }
-        @object.expects(:[]).with('FooBar').once.returns(value)
-        @instance.expects(:returnable_value).with(value, opts[:value_type]).returns(result)
+      context "with ruby 1.8" do
+        setup do
+          @instance.stubs(:ruby_version).returns(1.8)
+        end
 
-        assert_equal result, @instance.read_property(name, opts)
+        should "read the property on the object and return it" do
+          name = :foo_bar
+          value = mock("value")
+          result = mock("result")
+          opts = { :value_type => :foo }
+          @object.expects(:[]).with('FooBar').once.returns(value)
+          @instance.expects(:returnable_value).with(value, opts[:value_type]).returns(result)
+
+          assert_equal result, @instance.read_property(name, opts)
+        end
+      end
+
+      context "with ruby 1.9" do
+        setup do
+          @instance.stubs(:ruby_version).returns(1.9)
+        end
+
+        should "read the property on the object and return it" do
+          name = :foo_bar
+          value = mock("value")
+          result = mock("result")
+          opts = { :value_type => :foo }
+          @object.expects(:FooBar).once.returns(value)
+          @instance.expects(:returnable_value).with(value, opts[:value_type]).returns(result)
+
+          assert_equal result, @instance.read_property(name, opts)
+        end
       end
     end
 
     context "writing a property" do
-      should "convert the args and set it on the object" do
-        name = :foo_bar
-        opts = { :value_type => :foo }
-        @instance.expects(:spec_to_args).with([:foo], [:value]).returns([:modified])
-        @object.expects(:[]=).with('FooBar', :modified).once
+      context "on ruby 1.8" do
+        setup do
+          @instance.stubs(:ruby_version).returns(1.8)
+        end
 
-        @instance.write_property(name, :value, opts)
+        should "convert the args and set it on the object" do
+          name = :foo_bar
+          opts = { :value_type => :foo }
+          @instance.expects(:spec_to_args).with([:foo], [:value]).returns([:modified])
+          @object.expects(:[]=).with('FooBar', :modified).once
+
+          @instance.write_property(name, :value, opts)
+        end
+      end
+
+      context "on ruby 1.9" do
+        setup do
+          @instance.stubs(:ruby_version).returns(1.9)
+        end
+
+        should "convert the args and set it on the object" do
+          name = :foo_bar
+          opts = { :value_type => :foo }
+          @instance.expects(:spec_to_args).with([:foo], [:value]).returns([:modified])
+          @object.expects(:FooBar=).with(:modified).once
+
+          @instance.write_property(name, :value, opts)
+        end
       end
     end
 
