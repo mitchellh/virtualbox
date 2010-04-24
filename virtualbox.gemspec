@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-04-19}
+  s.date = %q{2010-04-23}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -113,6 +113,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/com/util.rb",
      "lib/virtualbox/dvd.rb",
      "lib/virtualbox/exceptions.rb",
+     "lib/virtualbox/ext/byte_normalizer.rb",
      "lib/virtualbox/ext/glob_loader.rb",
      "lib/virtualbox/ext/logger.rb",
      "lib/virtualbox/ext/platform.rb",
@@ -121,6 +122,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/forwarded_port.rb",
      "lib/virtualbox/global.rb",
      "lib/virtualbox/hard_drive.rb",
+     "lib/virtualbox/hw_virtualization.rb",
      "lib/virtualbox/lib.rb",
      "lib/virtualbox/media.rb",
      "lib/virtualbox/medium.rb",
@@ -156,12 +158,14 @@ Gem::Specification.new do |s|
      "test/virtualbox/com/mscom_interface_test.rb",
      "test/virtualbox/com/util_test.rb",
      "test/virtualbox/dvd_test.rb",
+     "test/virtualbox/ext/byte_normalizer_test.rb",
      "test/virtualbox/ext/platform_test.rb",
      "test/virtualbox/ext/subclass_listing_test.rb",
      "test/virtualbox/extra_data_test.rb",
      "test/virtualbox/forwarded_port_test.rb",
      "test/virtualbox/global_test.rb",
      "test/virtualbox/hard_drive_test.rb",
+     "test/virtualbox/hw_virtualization_test.rb",
      "test/virtualbox/lib_test.rb",
      "test/virtualbox/medium_attachment_test.rb",
      "test/virtualbox/medium_test.rb",
@@ -205,12 +209,14 @@ Gem::Specification.new do |s|
      "test/virtualbox/com/mscom_interface_test.rb",
      "test/virtualbox/com/util_test.rb",
      "test/virtualbox/dvd_test.rb",
+     "test/virtualbox/ext/byte_normalizer_test.rb",
      "test/virtualbox/ext/platform_test.rb",
      "test/virtualbox/ext/subclass_listing_test.rb",
      "test/virtualbox/extra_data_test.rb",
      "test/virtualbox/forwarded_port_test.rb",
      "test/virtualbox/global_test.rb",
      "test/virtualbox/hard_drive_test.rb",
+     "test/virtualbox/hw_virtualization_test.rb",
      "test/virtualbox/lib_test.rb",
      "test/virtualbox/medium_attachment_test.rb",
      "test/virtualbox/medium_test.rb",
