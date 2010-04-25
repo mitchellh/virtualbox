@@ -42,7 +42,7 @@ module VirtualBox
   #     attribute :uuid, :readonly => true
   #     attribute :name
   #     attribute :ostype
-  #     attribute :description, :readonly => true
+  #     attribute :description
   #     attribute :memory
   #     attribute :vram
   #     attribute :acpi
@@ -91,7 +91,7 @@ module VirtualBox
     attribute :uuid, :readonly => true, :property => :id
     attribute :name
     attribute :os_type_id
-    attribute :description, :readonly => true
+    attribute :description
     attribute :memory_size
     attribute :memory_balloon_size
     attribute :vram_size
