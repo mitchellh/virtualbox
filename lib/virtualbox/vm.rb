@@ -215,7 +215,7 @@ module VirtualBox
     # @return [String] Virtual machine state.
     def state(reload=false)
       if reload
-        load_interface_attribute(:state)
+        load_interface_attribute(:state, interface)
         clear_dirty!(:state)
       end
 

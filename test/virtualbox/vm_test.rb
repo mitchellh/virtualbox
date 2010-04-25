@@ -186,7 +186,9 @@ class VMTest < Test::Unit::TestCase
     context "state" do
       setup do
         @state = mock("state")
+        @interface = mock("interface")
         @instance.stubs(:read_attribute).with(:state).returns(@state)
+        @instance.stubs(:interface).returns(@interface)
       end
 
       should "just return the state" do
@@ -194,7 +196,7 @@ class VMTest < Test::Unit::TestCase
       end
 
       should "reload the state if reload is set" do
-        @instance.expects(:load_interface_attribute).with(:state).once
+        @instance.expects(:load_interface_attribute).with(:state, @instance.interface).once
         assert_equal @state, @instance.state(true)
       end
     end
