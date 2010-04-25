@@ -412,6 +412,13 @@ module VirtualBox
       interface.delete_settings
     end
 
+    # Returns true if the virtual machine state is starting
+    #
+    # @return [Boolean] True if virtual machine state is starting
+    def starting?
+      state == :starting
+    end
+
     # Returns true if the virtual machine state is running
     #
     # @return [Boolean] True if virtual machine state is running

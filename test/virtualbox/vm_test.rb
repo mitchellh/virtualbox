@@ -337,6 +337,7 @@ class VMTest < Test::Unit::TestCase
     context "state methods" do
       should "check the proper results" do
         methods = {
+          :starting? => :starting,
           :running? => :running,
           :powered_off? => :powered_off,
           :paused? => :paused,
