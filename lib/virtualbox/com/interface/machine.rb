@@ -75,7 +75,7 @@ module VirtualBox
         function :remove_cpu_id_leaf, nil, [T_UINT32]
         function :remove_all_cpu_id_leafs, nil, []
         function :get_hw_virt_ex_property, T_BOOL, [:HWVirtExPropertyType]
-        function :set_hw_virt_ex_property, T_BOOL, [:HWVirtExPropertyType]
+        function :set_hw_virt_ex_property, nil, [:HWVirtExPropertyType, T_BOOL]
         function :save_settings, nil, []
         function :discard_settings, nil, []
         function :delete_settings, nil, []
