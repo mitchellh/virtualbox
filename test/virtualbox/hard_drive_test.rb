@@ -68,25 +68,73 @@ class HardDriveTest < Test::Unit::TestCase
         @system_properties = mock("system_properties")
         @virtualbox = mock("virtualbox")
         @lib = mock("lib")
+        @new_medium = mock("new_medium")
 
+        @hard_disk_format = "VDI"
         @hard_disk_folder = "foobar"
 
         VirtualBox::Lib.stubs(:lib).returns(@lib)
         @lib.stubs(:virtualbox).returns(@virtualbox)
         @virtualbox.stubs(:system_properties).returns(@system_properties)
+        @system_properties.stubs(:default_hard_disk_format).returns(@hard_disk_format)
         @system_properties.stubs(:default_hard_disk_folder).returns(@hard_disk_folder)
       end
 
       should "clone the hard drive" do
-        format = "VDI"
-        new_medium = mock("new_medium")
         progress = mock("progress")
-        @virtualbox.expects(:create_hard_disk).with(format, "/foo.vdi").returns(new_medium)
-        @interface.expects(:clone_to).with(new_medium, :standard, nil).returns(progress)
+        @instance.expects(:create_hard_disk_medium).with("/foo.vdi", nil).returns(@new_medium)
+        @interface.expects(:clone_to).with(@new_medium, :standard, nil).returns(progress)
         progress.expects(:wait_for_completion).with(-1)
 
         @instance.clone("/foo.vdi")
       end
     end
   end
+
+  context "creating a hard drive" do
+    setup do
+      @klass.any_instance.stubs(:initialize_attributes)
+      @instance = @klass.new
+
+      @system_properties = mock("system_properties")
+      @virtualbox = mock("virtualbox")
+      @lib = mock("lib")
+      @new_medium = mock("new_medium")
+
+      @hard_disk_format = "VDI"
+      @hard_disk_folder = "foobar"
+
+      VirtualBox::Lib.stubs(:lib).returns(@lib)
+      @lib.stubs(:virtualbox).returns(@virtualbox)
+      @virtualbox.stubs(:system_properties).returns(@system_properties)
+      @system_properties.stubs(:default_hard_disk_format).returns(@hard_disk_format)
+      @system_properties.stubs(:default_hard_disk_folder).returns(@hard_disk_folder)
+    end
+
+    should "return false unless the record is new" do
+      @instance.stubs(:new_record?).returns(false)
+      assert_equal false, @instance.create
+    end
+
+    should "raise exception unless the record is valid" do
+      @instance.stubs(:location).returns(nil)
+      assert_raises(VirtualBox::Exceptions::ValidationFailedException) do
+        @instance.create
+      end
+    end
+
+    should "create the hard drive" do
+      logical_size = 1000
+      progress = mock("progress")
+      @instance.stubs(:location).returns(@hard_disk_folder)
+      @instance.stubs(:format).returns(@hard_disk_format)
+      @instance.stubs(:logical_size).returns(logical_size)
+      @instance.expects(:create_hard_disk_medium).with(@hard_disk_folder, @hard_disk_format).returns(@new_medium)
+      @new_medium.expects(:create_base_storage).with(logical_size, :standard).returns(progress)
+      progress.expects(:wait_for_completion).with(-1)
+
+      @instance.create
+    end
+  end
+
 end

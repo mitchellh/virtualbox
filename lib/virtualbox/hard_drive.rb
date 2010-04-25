@@ -8,16 +8,18 @@ module VirtualBox
   #
   #     VirtualBox::HardDrive.all
   #
-  # Or:
+  # Or use find with the UUID of the HardDrive:
   #
-  #     VirtualBox::HardDrive.find("Foo.vdi")
+  #     VirtualBox::HardDrive.find("4a896f0b-b3a3-4dec-8c26-8406c6fccd6e")
   #
   # # Creating a Hard Drive
   #
-  # The hard drive is one of the few data items at the moment which supports
-  # new creation. Below is a simple example of how this works:
+  # Hard Drives can be created by intilizing an empty hard drive, assigning
+  # values to the necessary attributes, and calling save on the object.
+  # Below is a simple example of how this works:
   #
   #     hd = VirtualBox::HardDrive.new
+  #     hd.format = "VDI" # Or any format list with `VBoxManage list hddbackends`
   #     hd.location = "foo.vdi"
   #     hd.size = 2400 # in megabytes
   #     hd.save
@@ -26,38 +28,32 @@ module VirtualBox
   #     hd.uuid
   #     hd.location # will return a full path now
   #
-  # Although `VDI` is the default format for newly created hard drives, other
-  # formats are supported:
-  #
-  #     hd = VirtualBox::HardDrive.new
-  #     hd.format = "VMDK"
-  #     hd.location = "bar.vmdk"
-  #     hd.size = 9001 # Its over 9000! (If you don't understand the reference, just ignore this comment)
-  #     hd.save
-  #
-  # Any formats listed by your VirtualBox installation's `VBoxManage list hddbackends` command
-  # can be used with the virtualbox gem.
-  #
   # # Destroying Hard Drives
   #
-  # Hard drives can also be deleted, which will completely remove them from
-  # disk. **This operation is not reversable**.
+  # Hard drives can also be deleted. **This operation is not reversable**.
   #
-  #     hd = VirtualBox::HardDrive.find("foo")
+  #     hd = VirtualBox::HardDrive.find("...")
   #     hd.destroy
+  #
+  # This will only unregister the Hard Drive from VirtualBox and will not destroy
+  # the storage space on the disk. To destroy the storage space, pass `true` to
+  # the destroy method, example:
+  #
+  #     hd.destroy(true)
   #
   # # Cloning Hard Drives
   #
-  # Hard drives can just as easily be cloned as they can be created or destroyed.
+  # Hard Drives can just as easily be cloned as they can be created or destroyed.
   #
-  #     hd = VirtualBox::HardDrive.find("foo")
-  #     cloned_hd = hd.clone("bar")
+  #     hd = VirtualBox::HardDrive.find("...")
+  #     cloned_hd = hd.clone("bar.vdi")
   #
   # In addition to simply cloning hard drives, this command can be used to
-  # clone to a different format:
+  # clone to a different format. If the format is not passed in (as with the
+  # the above example, the system default format will be used). example:
   #
-  #     hd = VirtualBox::HardDrive.find("foo")
-  #     hd.clone("bar", "VMDK") # Will clone and convert to VMDK format
+  #     hd = VirtualBox::HardDrive.find("...")
+  #     hd.clone("bar.vmdk", "VMDK") # Will clone and convert to VMDK format
   #
   # # Attributes
   #
@@ -70,17 +66,20 @@ module VirtualBox
   # listed below. If you aren't sure what this means or you can't understand
   # why the below is listed, please read {Attributable}.
   #
-  #     attribute :format, :default => "VDI", :property => :format
-  #     attribute :logical_size, :property => :logical_size
+  #     attribute :format, :default => "VDI"
+  #     attribute :location
+  #     attribute :logical_size
   #     attribute :physical_size, :readonly => true, :property => :size
   #
   # There are more attributes on the {Medium} model, which {HardDrive} inherits
   # from.
+  #
   class HardDrive < Medium
     include ByteNormalizer
 
-    attribute :format, :default => "VDI", :property => :format
-    attribute :logical_size, :property => :logical_size
+    attribute :format, :default => "VDI"
+    attribute :location
+    attribute :logical_size
     attribute :physical_size, :readonly => true, :property => :size
 
     class <<self
@@ -89,16 +88,16 @@ module VirtualBox
       #
       # @return [Array<HardDrive>]
       def all
-        Global.global.media.hard_drives
+        Global.global(true).media.hard_drives
       end
 
-      # Finds one specific hard drive by UUID or file name. If the
-      # hard drive can not be found, will return `nil`.
+      # Finds one specific hard drive by UUID. If the hard drive
+      # can not be found, will return `nil`.
       #
       # @param [String] id The UUID of the hard drive
       # @return [HardDrive]
-      def find(id, raise_errors=false)
-        all.find { |hd| hd.uuid == id }
+      def find(id)
+        all.detect { |hd| hd.uuid == id }
       end
 
       # Override of {Medium.device_type}.
@@ -107,58 +106,109 @@ module VirtualBox
       end
     end
 
+    # Overwrite the AbstractModel initialize to make the imedium parameter
+    # optional so that new Hard Drives can be created
+    def initialize(imedium = nil)
+      super if imedium
+    end
+
     # Custom getter to convert the physical size from bytes to megabytes.
     def physical_size
       bytes_to_megabytes(read_attribute(:physical_size))
     end
 
-    # Clone hard drive, possibly also converting formats. All formats
-    # supported by your local VirtualBox installation are supported
-    # here. If no format is specified, the format of the source drive
-    # will be used.
+    # Validates a hard drive for the minimum attributes required to
+    # create or save.
+    def validate
+      super
+
+      validates_presence_of :format
+      validates_presence_of :location
+      validates_presence_of :logical_size
+    end
+
+    # Creates a new {COM::Interface::Medium} instance. This simply creates
+    # the new {COM::Interface::Medium} structure. It does not (and shouldn't)
+    # create the storage space on the host system. See the create method for
+    # an example on to create the storage space.
     #
     # @param [String] outputfile The output file. This can be a full path
     #   or just a filename. If its just a filename, it will be placed in
-    #   the default hard drives directory.
-    # @param [String] format The format to convert to.
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
-    # @return [HardDrive] The new, cloned hard drive, or nil on failure.
-    def clone(outputfile, format="VDI")
+    #   the default hard drives directory. Should not be present already.
+    # @param [String] format The format to convert to. If not present, the
+    #   systems default will be used.
+    # @return [COM::Interface::Medium] The new {COM::Interface::Medium} instance
+    #   or will raise a {Exceptions::MediumCreationFailedException} on failure.
+    def create_hard_disk_medium(outputfile, format = nil)
       # Get main VirtualBox object
       virtualbox = Lib.lib.virtualbox
+
+      # Assign the default format if it isn't set yet
+      format ||= virtualbox.system_properties.default_hard_disk_format
 
       # Expand path relative to the default hard disk folder. This allows
       # filenames to exist in the default folder while full paths will use
       # the paths specified.
       outputfile = File.expand_path(outputfile, virtualbox.system_properties.default_hard_disk_folder)
 
-      # Create the new medium. This simply creates a new IMedium structure
+      # If the outputfile path is in use by another Hard Drive, lets fail
+      # now with a meaningful exception rather than simply return a nil
+      raise Exceptions::MediumLocationInUseException.new(outputfile) if File.exist?(outputfile)
+
+      # Create the new {COM::Interface::Medium} instance.
       new_medium = virtualbox.create_hard_disk(format, outputfile)
 
-      # Clone the current drive
+      # Raise an error if the creation of the {COM::Interface::Medium}
+      # instance failed
+      raise Exceptions::MediumCreationFailedException.new unless new_medium
+
+      # Return the new {COM::Interface::Medium} instance.
+      new_medium
+    end
+
+    # Clone hard drive, possibly also converting formats. All formats
+    # supported by your local VirtualBox installation are supported
+    # here. If no format is specified, the systems default will be used.
+    #
+    # @param [String] outputfile The output file. This can be a full path
+    #   or just a filename. If its just a filename, it will be placed in
+    #   the default hard drives directory. Should not be present already.
+    # @param [String] format The format to convert to. If not present, the
+    #   systems default will be used.
+    # @return [HardDrive] The new, cloned hard drive, or nil on failure.
+    def clone(outputfile, format = nil)
+      # Create the new Hard Disk medium
+      new_medium = create_hard_disk_medium(outputfile, format)
+
+      # Clone the current drive onto the new Hard Disk medium
       interface.clone_to(new_medium, :standard, nil).wait_for_completion(-1)
+
+      # Locate the newly cloned hard drive
+      self.class.find(new_medium.id) if new_medium.respond_to?(:id)
     end
 
     # Creates a new hard drive.
     #
     # **This method should NEVER be called. Call {#save} instead.**
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def create(raise_errors=false)
-      if !valid?
-        raise Exceptions::ValidationFailedException.new(errors) if raise_errors
-        return false
-      end
+    def create
+      return false unless new_record?
+      raise Exceptions::ValidationFailedException.new(errors) if !valid?
 
-      # TODO
+      # Create the new Hard Disk medium
+      new_medium = create_hard_disk_medium(location, format)
 
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
+      # Create the storage on the host system
+      new_medium.create_base_storage(logical_size, :standard).wait_for_completion(-1)
+
+      # Update the current Hard Drive instance with the uuid and
+      # other attributes assigned after storage was written
+      write_attribute(:interface, new_medium)
+      initialize_attributes(new_medium)
+
+      # If the uuid is present, then everything worked
+      uuid && !uuid.to_s.empty?
     end
 
     # Saves the hard drive object. If the hard drive is new,
@@ -168,13 +218,13 @@ module VirtualBox
     # Currently, **saving existing hard drives does nothing**.
     # This is a limitation of VirtualBox, rather than the library itself.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def save(raise_errors=false)
+    def save
+      return true if !new_record? && !changed?
+      raise Exceptions::ValidationFailedException.new(errors) if !valid?
+
       if new_record?
-        # Create a new hard drive
-        create(raise_errors)
+        create # Create a new hard drive
       else
         super
       end

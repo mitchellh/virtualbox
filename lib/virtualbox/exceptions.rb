@@ -6,6 +6,8 @@ module VirtualBox
 
     class NonSettableRelationshipException < Exception; end
     class ValidationFailedException < Exception; end
+    class MediumLocationInUseException < Exception; end
+    class MediumCreationFailedException < Exception; end
 
     class FFIException < Exception
       attr_accessor :data
