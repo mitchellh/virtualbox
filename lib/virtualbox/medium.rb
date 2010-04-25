@@ -5,7 +5,8 @@ module VirtualBox
   class Medium < AbstractModel
     include SubclassListing
 
-    attribute :uuid, :readonly => :true, :property => :id
+    attribute :uuid, :readonly => true, :property => :id
+    attribute :type, :readonly => true
     attribute :description, :readonly => true
     attribute :location, :readonly => true
     attribute :state, :readonly => true, :property => :refresh_state
