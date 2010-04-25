@@ -173,7 +173,12 @@ class COMImplementerFFITest < Test::Unit::TestCase
         assert_equal [1], @instance.spec_to_args(spec, args)
       end
 
-      should "replace array types with two parameters" do
+      should "replace in array types with two parameters" do
+        @array = [true, false, false]
+        assert_equal [@array.length, [1, 0, 0]], @instance.spec_to_args([[VirtualBox::COM::T_BOOL]], [@array])
+      end
+
+      should "replace out array types with two parameters" do
         @counter_pointer = mock("count_pointer")
         @pointer = mock("pointer")
 

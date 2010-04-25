@@ -129,45 +129,58 @@ module VirtualBox
         def spec_to_args(spec, args=[])
           args = args.dup
 
-          spec = spec.collect do |item|
-            if item.is_a?(Array) && item[0] == :out
-              if item[1].is_a?(Array)
-                # For arrays we need two pointers: one for size, and one for the
-                # actual array
-                [pointer_for_type(T_UINT32), pointer_for_type(item[1][0])]
-              else
-                pointer_for_type(item[1])
-              end
-            elsif item == WSTRING
-              # We have to convert the arg to a unicode string
-              string_to_utf16(args.shift)
-            elsif item == T_BOOL
-              args.shift ? 1 : 0
-            elsif item.to_s[0,1] == item.to_s[0,1].upcase
-              # Try to get the class from the interfaces
-              interface = interface_klass(item.to_sym)
+          results = spec.inject([]) do |results, item|
+            single_type_to_arg(args, item, results)
+          end
+        end
 
-              if interface.superclass == COM::AbstractInterface
-                # For interfaces, get the instance, then dig deep to get the pointer
-                # to the VtblParent, which is what the API expects
-                instance = args.shift
-
-                if !instance.nil?
-                  instance.implementer.ffi_interface.vtbl_parent
-                else
-                  # If the argument was nil, just pass a nil pointer as the argument
-                  nil
-                end
-              elsif interface.superclass == COM::AbstractEnum
-                # For enums, we need the value of the enum
-                interface.index(args.shift.to_sym)
-              end
+        # Converts a single type and args list to the proper formal args list
+        def single_type_to_arg(args, item, results)
+          if item.is_a?(Array) && item[0] == :out
+            if item[1].is_a?(Array)
+              # For arrays we need two pointers: one for size, and one for the
+              # actual array
+              results << pointer_for_type(T_UINT32)
+              results << pointer_for_type(item[1][0])
             else
-              # Simply replace spec item with next item in args
-              # list
-              args.shift
+              results << pointer_for_type(item[1])
             end
-          end.flatten
+          elsif item.is_a?(Array) && item.length == 1
+            # Convert the array to a size, then array parameter
+            data = args.shift
+            results << data.length
+            results << data.inject([]) do |converted_data, single|
+              single_type_to_arg([single], item[0], converted_data)
+            end
+          elsif item == WSTRING
+            # We have to convert the arg to a unicode string
+            results << string_to_utf16(args.shift)
+          elsif item == T_BOOL
+            results << (args.shift ? 1 : 0)
+          elsif item.to_s[0,1] == item.to_s[0,1].upcase
+            # Try to get the class from the interfaces
+            interface = interface_klass(item.to_sym)
+
+            if interface.superclass == COM::AbstractInterface
+              # For interfaces, get the instance, then dig deep to get the pointer
+              # to the VtblParent, which is what the API expects
+              instance = args.shift
+
+              results << if !instance.nil?
+                instance.implementer.ffi_interface.vtbl_parent
+              else
+                # If the argument was nil, just pass a nil pointer as the argument
+                nil
+              end
+            elsif interface.superclass == COM::AbstractEnum
+              # For enums, we need the value of the enum
+              results << interface.index(args.shift.to_sym)
+            end
+          else
+            # Simply replace spec item with next item in args
+            # list
+            results << args.shift
+          end
         end
 
         # Takes a spec and a formal parameter list and returns the output from
