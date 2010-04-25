@@ -231,7 +231,11 @@ module VirtualBox
       if new_record?
         create # Create a new hard drive
       else
-        super
+        # Mediums like Hard Drives are not updatable, they need to be recreated
+        # Because Hard Drives contain info and paritions, it's easier to error
+        # out now than try and do some complicated logic
+        msg = "Hard Drives cannot be updated. You need to create one from scratch."
+        raise Exceptions::MediumNotUpdatableException.new(msg)
       end
     end
   end
