@@ -117,6 +117,11 @@ module VirtualBox
       bytes_to_megabytes(read_attribute(:physical_size))
     end
 
+    # Get an array of machines attached to this Virtual Machine
+    def machines
+      interface.machine_ids.collect { |id| VirtualBox::VM.find(id) }
+    end
+
     # Validates a hard drive for the minimum attributes required to
     # create or save.
     def validate
