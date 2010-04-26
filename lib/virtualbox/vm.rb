@@ -122,6 +122,7 @@ module VirtualBox
     relationship :audio_adapter, :AudioAdapter
     relationship :bios, :BIOS
     relationship :hw_virt, :HWVirtualization
+    relationship :cpu, :CPU
     relationship :storage_controllers, :StorageController, :dependent => :destroy
     relationship :medium_attachments, :MediumAttachment
     relationship :shared_folders, :SharedFolder
