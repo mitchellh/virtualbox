@@ -141,6 +141,7 @@ module VirtualBox
           attributes[name].merge!(options)
 
           # Create the method for reading this attribute
+          define_method("#{name}?") { read_attribute(name) } if options[:boolean]
           define_method(name) { read_attribute(name) }
 
           # Create the writer method for it unless the attribute is readonly,

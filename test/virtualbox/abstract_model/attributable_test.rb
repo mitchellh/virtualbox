@@ -8,6 +8,7 @@ class AttributableTest < Test::Unit::TestCase
   class AttributeModel < EmptyAttributeModel
     attribute :foo
     attribute :bar
+    attribute :boolean_bar, :boolean => true
 
     def initialize
       super
@@ -209,6 +210,13 @@ class AttributableTest < Test::Unit::TestCase
       assert atts.is_a?(Hash)
       assert atts.has_key?(:foo)
       assert atts.has_key?(:bar)
+    end
+
+    should "be able to access boolean values with a '?'" do
+      @model.boolean_bar = true
+      assert @model.boolean_bar?
+      @model.boolean_bar = false
+      assert !@model.boolean_bar?
     end
 
     should "be able to write defined attributes" do

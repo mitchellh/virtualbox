@@ -4,10 +4,10 @@ module VirtualBox
     attribute :parent, :readonly => true, :property => false
     attribute_scope(:property_getter => Proc.new { |instance, *args| instance.get_property(*args) },
                     :property_setter => Proc.new { |instance, *args| instance.set_property(*args) }) do
-      attribute :enabled
-      attribute :exclusive
-      attribute :vpid
-      attribute :nested_paging
+      attribute :enabled, :boolean => true
+      attribute :exclusive, :boolean => true
+      attribute :vpid, :boolean => true
+      attribute :nested_paging, :boolean => true
     end
 
     class <<self

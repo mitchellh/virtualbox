@@ -35,11 +35,11 @@ module VirtualBox
   class NetworkAdapter < AbstractModel
     attribute :parent, :readonly => true, :property => false
     attribute :slot, :readonly => true
-    attribute :enabled
+    attribute :enabled, :boolean => true
     attribute :attachment_type
     attribute :adapter_type
     attribute :mac_address
-    attribute :cable_connected
+    attribute :cable_connected, :boolean => true
     attribute :nat_network
     attribute :internal_network
     attribute :host_interface

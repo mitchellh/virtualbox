@@ -2,8 +2,8 @@ module VirtualBox
   # Represents the BIOS settings of a {VM}.
   class BIOS < AbstractModel
     attribute :parent, :readonly => true, :property => false
-    attribute :acpi_enabled
-    attribute :io_apic_enabled
+    attribute :acpi_enabled, :boolean => true
+    attribute :io_apic_enabled, :boolean => true
 
     class <<self
       # Populates a relationship with another model.

@@ -88,8 +88,8 @@ module VirtualBox
     attribute :parent, :readonly => true, :property => false
     attribute :name
     attribute :host_path
-    attribute :writable, :default => true
-    attribute :accessible, :readonly => true
+    attribute :writable, :default => true, :boolean => true
+    attribute :accessible, :readonly => true, :boolean => true
 
     class <<self
       # Populates the shared folder relationship for anything which is related to it.

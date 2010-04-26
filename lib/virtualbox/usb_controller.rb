@@ -4,8 +4,8 @@ module VirtualBox
   class USBController < AbstractModel
     attribute :parent, :readonly => true, :property => false
     attribute :interface, :readonly => true, :property => false
-    attribute :enabled
-    attribute :enabled_ehci
+    attribute :enabled, :boolean => true
+    attribute :enabled_ehci, :boolean => true
     attribute :usb_standard, :readonly => true
 
     class <<self

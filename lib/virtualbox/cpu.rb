@@ -4,8 +4,8 @@ module VirtualBox
     attribute :parent, :readonly => true, :property => false
     attribute_scope(:property_getter => Proc.new { |instance, *args| instance.get_property(*args) },
                     :property_setter => Proc.new { |instance, *args| instance.set_property(*args) }) do
-      attribute :pae
-      attribute :synthetic
+      attribute :pae, :boolean => true
+      attribute :synthetic, :boolean => true
     end
 
     class <<self

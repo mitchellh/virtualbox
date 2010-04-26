@@ -96,12 +96,12 @@ module VirtualBox
     attribute :memory_balloon_size
     attribute :vram_size
     attribute :cpu_count
-    attribute :accelerate_3d_enabled
-    attribute :accelerate_2d_video_enabled
+    attribute :accelerate_3d_enabled, :boolean => true
+    attribute :accelerate_2d_video_enabled, :boolean => true
     attribute :clipboard_mode
     attribute :monitor_count
     attribute :state, :readonly => true
-    attribute :accessible, :readonly => true
+    attribute :accessible, :readonly => true, :boolean => true
     attribute :hardware_version
     attribute :hardware_uuid
     attribute :statistics_update_interval
@@ -114,7 +114,7 @@ module VirtualBox
     attribute :snapshot_count, :readonly => true
     attribute :current_state_modified, :readonly => true
     attribute :guest_property_notification_patterns
-    attribute :teleporter_enabled
+    attribute :teleporter_enabled, :boolean => true
     attribute :teleporter_port
     attribute :teleporter_address
     attribute :teleporter_password

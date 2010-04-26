@@ -1,7 +1,7 @@
 module VirtualBox
   class AudioAdapter < AbstractModel
     attribute :parent, :readonly => true, :property => false
-    attribute :enabled
+    attribute :enabled, :boolean => true
     attribute :audio_controller
     attribute :audio_driver
 
