@@ -8,7 +8,7 @@ module VirtualBox
     attribute :online, :readonly => true, :boolean => true
     attribute :interface, :readonly => true, :property => false
     relationship :machine, :VM, :lazy => true
-    # TODO: Children
+    relationship :children, :Snapshot, :lazy => true
 
     class <<self
       # Populates a relationship with another model. Since a snapshot
@@ -19,6 +19,8 @@ module VirtualBox
       def populate_relationship(caller, data)
         if data.is_a?(COM::Interface::Machine)
           populate_machine_relationship(caller, data)
+        elsif data.is_a?(Array)
+          populate_children_relationship(caller, data)
         else
           raise Exceptions::Exception.new("Invalid relationship data for Snapshot: #{data}")
         end
@@ -35,6 +37,21 @@ module VirtualBox
         snapshot = machine.current_snapshot
         snapshot ? new(machine.current_snapshot) : nil
       end
+
+      # Populates the snapshot child tree relationship.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Array<Snapshot>]
+      def populate_children_relationship(caller, snapshots)
+        result = Proxies::Collection.new(caller)
+
+        snapshots.each do |snapshot|
+          result << new(snapshot)
+        end
+
+        result
+      end
     end
 
     # Initializes a new snapshot. This should never be called on its own.
@@ -50,9 +67,6 @@ module VirtualBox
       # Load the interface attributes
       load_interface_attributes(snapshot)
 
-      # Setup the relationships
-      populate_relationships(snapshot)
-
       # Clear dirtiness, since this should only be called initially and
       # therefore shouldn't affect dirtiness
       clear_dirty!
@@ -66,6 +80,7 @@ module VirtualBox
     # **This method should only be called internally.**
     def load_relationship(name)
       populate_relationship(:machine, interface.machine)
+      populate_relationship(:children, interface.children)
     end
   end
 end

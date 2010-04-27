@@ -18,6 +18,11 @@ class SnapshotTest < Test::Unit::TestCase
         @klass.expects(:populate_machine_relationship).with(@caller, vm).once
         @klass.populate_relationship(@caller, vm)
       end
+
+      should "call populate_children_relationship for an array" do
+        @klass.expects(:populate_children_relationship).with(@caller, [1,2,3]).once
+        @klass.populate_relationship(@caller, [1,2,3])
+      end
     end
 
     context "populating machine relationship" do
@@ -37,6 +42,34 @@ class SnapshotTest < Test::Unit::TestCase
       should "return nil if there is no current snapshot" do
         @machine.expects(:current_snapshot).returns(nil)
         assert_nil @klass.populate_machine_relationship(@caller, @machine)
+      end
+    end
+
+    context "populating children relationship" do
+      setup do
+        @instance = mock("instance")
+
+        @klass.stubs(:new).returns(@instance)
+      end
+
+      should "return a proxied collection" do
+        result = @klass.populate_children_relationship(nil, [])
+        assert result.is_a?(VirtualBox::Proxies::Collection)
+      end
+
+      should "call new for every machine" do
+        snapshots = []
+        5.times { |i| snapshots << mock("s#{i}") }
+
+        expected_result = []
+        new_seq = sequence("new_seq")
+        snapshots.each do |snapshot|
+          expected_value = "instance-#{snapshot.inspect}"
+          @klass.expects(:new).with(snapshot).in_sequence(new_seq).returns(expected_value)
+          expected_result << expected_value
+        end
+
+        assert_equal expected_result, @klass.populate_children_relationship(nil, snapshots)
       end
     end
   end
