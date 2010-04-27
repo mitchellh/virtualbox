@@ -477,8 +477,11 @@ class VMTest < Test::Unit::TestCase
         root = mock("root_snapshot")
         root.stubs(:parent).returns(nil)
 
+        parent = mock("parent")
+        parent.stubs(:parent).returns(root)
+
         snapshot = mock("snapshot")
-        snapshot.stubs(:parent).returns(root)
+        snapshot.stubs(:parent).returns(parent)
 
         @instance.stubs(:current_snapshot).returns(snapshot)
         assert_equal root, @instance.root_snapshot
