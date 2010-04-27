@@ -158,7 +158,7 @@ module VirtualBox
       # the first virtual machine will be returned, although all will
       # be imported.
       #
-      # If a block is given, it will be yielded with the percent of the
+      # If a block is given, it will be yielded with the progress of the
       # import operation, so that the progress of the import can be
       # tracked.
       #
@@ -302,7 +302,7 @@ module VirtualBox
     # 60 to 90 seconds on my 2.2 GHz 2009 model MacBook Pro.
     #
     # If a block is given to the method, then it will be yielded with the
-    # percent progress of the operation (in intervals of 1 percent).
+    # progress of the operation.
     #
     # @param [String] filename The file (not directory) to save the exported
     #   OVF file. This directory will also receive the checksum file and
@@ -312,6 +312,21 @@ module VirtualBox
       app.path = filename
       app.add_machine(self)
       app.export(&block)
+    end
+
+    # Take a snapshot of the current state of the machine. This method can be
+    # called while the VM is running and also while it is powered off. This
+    # method will block while the snapshot is being taken.
+    #
+    # If a block is given to this method, it will yield with a progress
+    # object which can be used to get the progress of the operation.
+    #
+    # @param [String] name Name of the snapshot.
+    # @param [String] description Description of the snapshot.
+    def take_snapshot(name, description="", &block)
+      with_open_session do |session|
+        session.console.take_snapshot(name, description).wait(&block)
+      end
     end
 
     # Starts the virtual machine. The virtual machine can be started in a

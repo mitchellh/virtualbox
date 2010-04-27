@@ -422,5 +422,37 @@ class VMTest < Test::Unit::TestCase
         end
       end
     end
+
+    context "taking a snapshot" do
+      setup do
+        setup_session_mocks
+
+        @progress = mock("progress")
+        @progress.stubs(:wait)
+
+        @console = mock("console")
+        @console.stubs(:take_snapshot).returns(@progress)
+        @session.stubs(:console).returns(@console)
+
+        @instance.stubs(:with_open_session).yields(@session)
+      end
+
+      should "take a snapshot on the console and wait" do
+        name = "foo"
+        description = "baz"
+        @console.expects(:take_snapshot).with(name, description).returns(@progress)
+        @instance.take_snapshot(name, description)
+      end
+
+      should "wait and pass in the given block, if given" do
+        foo = mock("foo")
+        @progress.expects(:wait).yields(foo)
+        foo.expects(:called).once
+
+        @instance.take_snapshot(nil, nil) do |obj|
+          obj.called
+        end
+      end
+    end
   end
 end
