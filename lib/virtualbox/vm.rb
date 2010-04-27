@@ -16,9 +16,29 @@ module VirtualBox
   # objects. This is best shown through example:
   #
   #     vm = VirtualBox::VM.find("MyWindowsXP")
-  #     vm.memory = 256
+  #     vm.memory_size = 256
   #     vm.name = "WindowsXP"
   #     vm.save
+  #
+  # # Controlling Virtual Machines
+  #
+  # Virtual machines can be controlled using the basic {#start}, {#stop}, etc.
+  # methods. The current state of the VM can also be retrieved via the {#state}
+  # method. An example of this use is shown below:
+  #
+  #     if vm.powered_off?
+  #       vm.start
+  #     end
+  #
+  # # Taking a Snapshot
+  #
+  # Snapshots allow virtual machine states to be saved at a given point in time
+  # without having to stop the machine. This state can then be restored later.
+  # VirtualBox handles this by creating a differencing image which allows the hard
+  # drive to even retain its exact state. Taking a snapshot is extremely simple:
+  #
+  #     vm = VirtualBox::VM.find("MyWindowsXP")
+  #     vm.take_snapshot("My Snapshot", "A description of my snapshot")
   #
   # # Attributes and Relationships
   #
@@ -39,40 +59,37 @@ module VirtualBox
   # This is copied directly from the class header, but lists all available
   # attributes. If you don't understand what this means, read {Attributable}.
   #
-  #     attribute :uuid, :readonly => true
+  #     attribute :uuid, :readonly => true, :property => :id
   #     attribute :name
-  #     attribute :ostype
+  #     attribute :os_type_id
   #     attribute :description
-  #     attribute :memory
-  #     attribute :vram
-  #     attribute :acpi
-  #     attribute :ioapic
-  #     attribute :cpus
-  #     attribute :synthcpu
-  #     attribute :pae
-  #     attribute :hwvirtex
-  #     attribute :hwvirtexexcl
-  #     attribute :nestedpaging
-  #     attribute :vtxvpid
-  #     attribute :accelerate3d
-  #     attribute :accelerate2dvideo
-  #     attribute :biosbootmenu, :populate_key => :bootmenu
-  #     attribute :boot1
-  #     attribute :boot2
-  #     attribute :boot3
-  #     attribute :boot4
-  #     attribute :clipboard
-  #     attribute :monitorcount
-  #     attribute :usb
-  #     attribute :ehci
-  #     attribute :audio
-  #     attribute :audiocontroller
-  #     attribute :audiodriver
-  #     attribute :vrdp
-  #     attribute :vrdpport
-  #     attribute :vrdpauthtype
-  #     attribute :vrdpauthtimeout
-  #     attribute :state, :populate_key => :vmstate, :readonly => true
+  #     attribute :memory_size
+  #     attribute :memory_balloon_size
+  #     attribute :vram_size
+  #     attribute :cpu_count
+  #     attribute :accelerate_3d_enabled, :boolean => true
+  #     attribute :accelerate_2d_video_enabled, :boolean => true
+  #     attribute :clipboard_mode
+  #     attribute :monitor_count
+  #     attribute :state, :readonly => true
+  #     attribute :accessible, :readonly => true, :boolean => true
+  #     attribute :hardware_version
+  #     attribute :hardware_uuid
+  #     attribute :statistics_update_interval
+  #     attribute :firmware_type
+  #     attribute :snapshot_folder
+  #     attribute :settings_file_path, :readonly => true
+  #     attribute :last_state_change, :readonly => true
+  #     attribute :state_file_path, :readonly => true
+  #     attribute :log_folder, :readonly => true
+  #     attribute :snapshot_count, :readonly => true
+  #     attribute :current_state_modified, :readonly => true
+  #     attribute :guest_property_notification_patterns
+  #     attribute :teleporter_enabled, :boolean => true
+  #     attribute :teleporter_port
+  #     attribute :teleporter_address
+  #     attribute :teleporter_password
+  #     attribute :interface, :readonly => true, :property => false
   #
   # ## Relationships
   #
@@ -80,12 +97,19 @@ module VirtualBox
   # to other things. The relationships are listed below. If you don't
   # understand this, read {Relatable}.
   #
-  #     relationship :nics, Nic
-  #     relationship :usbs, USB
-  #     relationship :storage_controllers, StorageController, :dependent => :destroy
-  #     relationship :shared_folders, SharedFolder
-  #     relationship :extra_data, ExtraData
-  #     relationship :forwarded_ports, ForwardedPort
+  #     relationship :audio_adapter, :AudioAdapter
+  #     relationship :bios, :BIOS
+  #     relationship :hw_virt, :HWVirtualization
+  #     relationship :cpu, :CPU
+  #     relationship :vrdp_server, :VRDPServer
+  #     relationship :storage_controllers, :StorageController, :dependent => :destroy
+  #     relationship :medium_attachments, :MediumAttachment
+  #     relationship :shared_folders, :SharedFolder
+  #     relationship :extra_data, :ExtraData
+  #     relationship :forwarded_ports, :ForwardedPort
+  #     relationship :network_adapters, :NetworkAdapter
+  #     relationship :usb_controller, :USBController
+  #     relationship :current_snapshot, :Snapshot
   #
   class VM < AbstractModel
     attribute :uuid, :readonly => true, :property => :id
