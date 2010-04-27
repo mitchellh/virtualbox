@@ -131,6 +131,7 @@ module VirtualBox
     relationship :forwarded_ports, :ForwardedPort
     relationship :network_adapters, :NetworkAdapter
     relationship :usb_controller, :USBController
+    relationship :current_snapshot, :Snapshot
 
     class <<self
       # Returns an array of all available VMs.
