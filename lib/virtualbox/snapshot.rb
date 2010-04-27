@@ -7,6 +7,7 @@ module VirtualBox
     attribute :time_stamp, :readonly => true
     attribute :online, :readonly => true, :boolean => true
     attribute :interface, :readonly => true, :property => false
+    relationship :parent, :Snapshot, :lazy => true
     relationship :machine, :VM, :lazy => true
     relationship :children, :Snapshot, :lazy => true
 
@@ -21,6 +22,8 @@ module VirtualBox
           populate_machine_relationship(caller, data)
         elsif data.is_a?(Array)
           populate_children_relationship(caller, data)
+        elsif data.is_a?(COM::Interface::Snapshot) || data.nil?
+          populate_parent_relationship(caller, data)
         else
           raise Exceptions::Exception.new("Invalid relationship data for Snapshot: #{data}")
         end
@@ -36,6 +39,17 @@ module VirtualBox
         # taken. In that case, we just return nil.
         snapshot = machine.current_snapshot
         snapshot ? new(machine.current_snapshot) : nil
+      end
+
+      # Populates the VM relationship as the "current snapshot."
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Snapshot]
+      def populate_parent_relationship(caller, parent)
+        # If the parent is nil then that means the child is the root
+        # snapshot
+        parent ? new(parent) : nil
       end
 
       # Populates the snapshot child tree relationship.
@@ -79,6 +93,7 @@ module VirtualBox
     #
     # **This method should only be called internally.**
     def load_relationship(name)
+      populate_relationship(:parent, interface.parent)
       populate_relationship(:machine, interface.machine)
       populate_relationship(:children, interface.children)
     end

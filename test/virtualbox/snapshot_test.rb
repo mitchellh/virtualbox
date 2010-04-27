@@ -23,6 +23,19 @@ class SnapshotTest < Test::Unit::TestCase
         @klass.expects(:populate_children_relationship).with(@caller, [1,2,3]).once
         @klass.populate_relationship(@caller, [1,2,3])
       end
+
+      should "call populate_parent_relationship for a snapshot" do
+        ss = mock("snapshot")
+        ss.stubs(:is_a?).returns(false)
+        ss.stubs(:is_a?).with(VirtualBox::COM::Interface::Snapshot).returns(true)
+        @klass.expects(:populate_parent_relationship).with(@caller, ss).once
+        @klass.populate_relationship(@caller, ss)
+      end
+
+      should "call populate_parent_relationship for nil" do
+        @klass.expects(:populate_parent_relationship).with(@caller, nil).once
+        @klass.populate_relationship(@caller, nil)
+      end
     end
 
     context "populating machine relationship" do
@@ -42,6 +55,23 @@ class SnapshotTest < Test::Unit::TestCase
       should "return nil if there is no current snapshot" do
         @machine.expects(:current_snapshot).returns(nil)
         assert_nil @klass.populate_machine_relationship(@caller, @machine)
+      end
+    end
+
+    context "populating parent relationship" do
+      setup do
+        @caller = mock("caller")
+        @parent = mock("parent")
+      end
+
+      should "just initialize with data" do
+        result = mock("result")
+        @klass.expects(:new).with(@parent).once.returns(result)
+        assert_equal result, @klass.populate_parent_relationship(@caller, @parent)
+      end
+
+      should "return nil if there is no parent" do
+        assert_nil @klass.populate_parent_relationship(@caller, nil)
       end
     end
 
