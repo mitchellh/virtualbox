@@ -165,6 +165,13 @@ class VMTest < Test::Unit::TestCase
       @instance.stubs(:running).returns(false)
     end
 
+    context "reloading" do
+      should "just reload the attributes" do
+        @instance.expects(:initialize_attributes).with(@interface).once
+        @instance.reload
+      end
+    end
+
     context "destroying" do
       setup do
         @instance.stubs(:uuid).returns(:foo)

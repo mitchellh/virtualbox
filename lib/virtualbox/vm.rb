@@ -208,6 +208,13 @@ module VirtualBox
       existing_record!
     end
 
+    # Reload the model so that all the attributes and relationships are
+    # up to date. This method will automatically discard any changes to
+    # the VM and any of its relationships.
+    def reload
+      initialize_attributes(interface)
+    end
+
     # State of the virtual machine. Returns the state of the virtual
     # machine. This state will represent the state that was assigned
     # when the VM was found unless `reload` is set to `true`.
@@ -215,8 +222,8 @@ module VirtualBox
     # @param [Boolean] reload If true, will reload the state to current
     #   value.
     # @return [String] Virtual machine state.
-    def state(reload=false)
-      if reload
+    def state(state_reload=false)
+      if state_reload
         load_interface_attribute(:state, interface)
         clear_dirty!(:state)
       end
