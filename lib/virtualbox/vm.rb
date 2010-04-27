@@ -303,6 +303,23 @@ module VirtualBox
       current
     end
 
+    # Find a snapshot by name or UUID. This allows you to find a snapshot by a given
+    # name, rather than having to resort to traversing the entire tree structure
+    # manually.
+    def find_snapshot(name)
+      find_helper = lambda do |name, root|
+        return nil if root.nil?
+        return root if root.name == name || root.uuid == name
+
+        root.children.each do |child|
+          result = find_helper.call(name, child)
+          return result unless result.nil?
+        end
+      end
+
+      find_helper.call(name, root_snapshot)
+    end
+
     # Opens a direct session with the machine this VM represents and yields
     # the session object to a block. Many of the VirtualBox's settings can only
     # be modified with an open session on a machine. An open session is similar

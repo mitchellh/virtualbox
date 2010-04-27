@@ -487,5 +487,14 @@ class VMTest < Test::Unit::TestCase
         assert_equal root, @instance.root_snapshot
       end
     end
+
+    context "finding a snapshot" do
+      should "return nil if there is no root snapshot" do
+        @instance.stubs(:current_snapshot).returns(nil)
+        assert_nil @instance.find_snapshot("foo")
+      end
+
+      # TODO: Testing traversing the snapshot tree. Too many mocks :S
+    end
   end
 end
