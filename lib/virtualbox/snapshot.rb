@@ -1,5 +1,24 @@
 module VirtualBox
-  # Represents a virtual machine snapshot.
+  # Represents a virtual machine snapshot. Snapshots allow users of virtual
+  # machines to make a lightweight "snapshot" of a virtual machine at any
+  # moment. This snapshot can be taken while the virtual machine is running
+  # or while its powered off. Snapshotting creates a differencing image for
+  # the hard drive which allows a virtual machine to restore itself to the
+  # exact state of where it was snapshotted.
+  #
+  # # Getting Snapshots
+  #
+  # Snapshots are accessed from the `current_snapshot` relationship on {VM}.
+  # There is no other way to access snapshots. After getting the current
+  # snapshot, you can easily traverse the tree of snapshots by accessing
+  # `parent` or `children` on the snapshot. An example follows:
+  #
+  #     vm = VirtualBox::VM.find("MyWindowsXP")
+  #     p vm.current_snapshot # the current snapshot
+  #     p vm.current_snapshot.children # The children of the current snapshot
+  #     p vm.current_snapshot.parent # The current snapshot's parent
+  #     p vm.current_snapshot.parent.parent.children # You get the idea.
+  #
   class Snapshot < AbstractModel
     attribute :uuid, :readonly => true, :property => :id
     attribute :name
