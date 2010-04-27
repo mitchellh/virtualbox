@@ -178,5 +178,37 @@ class SnapshotTest < Test::Unit::TestCase
         end
       end
     end
+
+    context "restoring" do
+      setup do
+        @machine = mock("machine")
+        @session = mock("session")
+        @console = mock("console")
+        @progress = mock("progress")
+
+        @instance.stubs(:machine).returns(@machine)
+        @machine.stubs(:with_open_session).yields(@session)
+        @session.stubs(:console).returns(@console)
+        @console.stubs(:restore_snapshot).returns(@progress)
+        @progress.stubs(:wait)
+      end
+
+      should "restore the proper snapshot" do
+        @console.expects(:restore_snapshot).with(@instance.interface).once.returns(@progress)
+        @progress.expects(:wait)
+
+        @instance.restore
+      end
+
+      should "pass in block to the wait method" do
+        foo = mock("foo")
+        @progress.expects(:wait).yields(foo)
+        foo.expects(:called).once
+
+        @instance.restore do |obj|
+          obj.called
+        end
+      end
+    end
   end
 end

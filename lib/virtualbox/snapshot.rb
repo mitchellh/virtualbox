@@ -24,6 +24,19 @@ module VirtualBox
   # To take a snapshot, call the {VM#take_snapshot} method. Please view
   # the documentation on that method for more information.
   #
+  # # Restoring a Snapshot
+  #
+  # To restore a snapshot, call the {#restore} method. A simple example
+  # is shown below:
+  #
+  #     vm = VirtualBox::VM.find("MyWindowsXP")
+  #     snapshot = vm.current_snapshot.parent
+  #     snapshot.restore
+  #
+  # **Note:** The VM object will not immediately update to reflect any settings
+  # changes or current snapshot changes from the restore. To grab the updates,
+  # either load a new VM object or call {VM#reload}.
+  #
   # # Deleting a Snapshot
   #
   # To delete a snapshot, simply find the snapshot of interest and call
@@ -133,6 +146,18 @@ module VirtualBox
       populate_relationship(:parent, interface.parent)
       populate_relationship(:machine, interface.machine)
       populate_relationship(:children, interface.children)
+    end
+
+    # Restore a snapshot. This will restore this snapshot's virtual machine
+    # to the state that this snapshot represents. This method will block while
+    # the restore occurs.
+    #
+    # If a block is given to the function, it will be yielded with a progress
+    # object which can be used to track the progress of the operation.
+    def restore(&block)
+      machine.with_open_session do |session|
+        session.console.restore_snapshot(interface).wait(&block)
+      end
     end
 
     # Destroy a snapshot. This will physically remove the snapshot. Once this

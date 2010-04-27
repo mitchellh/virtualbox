@@ -336,6 +336,7 @@ class VMTest < Test::Unit::TestCase
         setup_session_mocks
 
         @locked_interface = mock("locked_interface")
+        @locked_interface.stubs(:state).returns(:powered_off)
         @session.stubs(:machine).returns(@locked_interface)
         @session.stubs(:state).returns(:closed)
       end
@@ -352,6 +353,17 @@ class VMTest < Test::Unit::TestCase
         @instance.with_open_session do |session|
           @proc.call(session)
         end
+      end
+
+      should "not save settings when the state is saved" do
+        @locked_interface.stubs(:state).returns(:saved)
+
+        save_seq = sequence("save_seq")
+        @parent.expects(:open_session).with(@session, @uuid).in_sequence(save_seq)
+        @locked_interface.expects(:save_settings).never
+        @session.expects(:close).in_sequence(save_seq)
+
+        @instance.with_open_session { |session| }
       end
 
       should "only open the session and close once" do

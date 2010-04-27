@@ -305,8 +305,9 @@ module VirtualBox
 
       # Close the session
       if close_session
-        # Save these settings only if we're closing
-        session.machine.save_settings
+        # Save these settings only if we're closing and only if the state
+        # is not saved, since that doesn't allow the machine to be saved.
+        session.machine.save_settings if session.machine.state != :saved
 
         # Close the session
         session.close
