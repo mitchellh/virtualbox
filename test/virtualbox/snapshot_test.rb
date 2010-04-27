@@ -144,5 +144,39 @@ class SnapshotTest < Test::Unit::TestCase
       @klass.any_instance.stubs(:initialize_attributes)
       @instance = @klass.new(@interface)
     end
+
+    context "destroying" do
+      setup do
+        @machine = mock("machine")
+        @session = mock("session")
+        @console = mock("console")
+        @progress = mock("progress")
+        @uuid = "UUID!"
+
+        @instance.stubs(:uuid).returns(@uuid)
+        @instance.stubs(:machine).returns(@machine)
+        @machine.stubs(:with_open_session).yields(@session)
+        @session.stubs(:console).returns(@console)
+        @console.stubs(:delete_snapshot).returns(@progress)
+        @progress.stubs(:wait)
+      end
+
+      should "delete the proper snapshot" do
+        @console.expects(:delete_snapshot).with(@instance.uuid).once.returns(@progress)
+        @progress.expects(:wait)
+
+        @instance.destroy
+      end
+
+      should "pass in block to the wait method" do
+        foo = mock("foo")
+        @progress.expects(:wait).yields(foo)
+        foo.expects(:called).once
+
+        @instance.destroy do |obj|
+          obj.called
+        end
+      end
+    end
   end
 end

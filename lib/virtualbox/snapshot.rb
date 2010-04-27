@@ -19,6 +19,24 @@ module VirtualBox
   #     p vm.current_snapshot.parent # The current snapshot's parent
   #     p vm.current_snapshot.parent.parent.children # You get the idea.
   #
+  # # Taking a Snapshot
+  #
+  # To take a snapshot, call the {VM#take_snapshot} method. Please view
+  # the documentation on that method for more information.
+  #
+  # # Deleting a Snapshot
+  #
+  # To delete a snapshot, simply find the snapshot of interest and call
+  # it's {#destroy} method. A quick example is shown below:
+  #
+  #     vm = VirtualBox::VM.find("MyWindowsXP")
+  #     snapshot = vm.current_snapshot # Grab the current snapshot
+  #     snapshot.destroy # Destroy it
+  #
+  # Note that this doesn't actually affect the `current_snapshot`
+  # relationship on the VM. To update all the proper values, you have to call
+  # {VM#reload}.
+  #
   class Snapshot < AbstractModel
     attribute :uuid, :readonly => true, :property => :id
     attribute :name
@@ -115,6 +133,20 @@ module VirtualBox
       populate_relationship(:parent, interface.parent)
       populate_relationship(:machine, interface.machine)
       populate_relationship(:children, interface.children)
+    end
+
+    # Destroy a snapshot. This will physically remove the snapshot. Once this
+    # method is called, there is no undo. If this snapshot is a parent of other
+    # snapshots, the differencing image of this snapshot will be merged with
+    # the child snapshots so no data is lost. This process can sometimes take
+    # some time. This method will block while this process occurs.
+    #
+    # If a block is given to the function, it will be yielded with a progress
+    # object which can be used to track the progress of the operation.
+    def destroy(&block)
+      machine.with_open_session do |session|
+        session.console.delete_snapshot(uuid).wait(&block)
+      end
     end
   end
 end
