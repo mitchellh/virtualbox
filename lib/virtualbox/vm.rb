@@ -50,6 +50,15 @@ module VirtualBox
   #     vm = VirtualBox::VM.find("MyWindowsXP")
   #     p vm.root_snapshot.children.length
   #
+  # # Finding Snapshots
+  #
+  # While traversing the entire snapshot tree can be useful, it is often more
+  # useful to be able to simply find a snapshot by name. For this, use the
+  # {#find_snapshot} method:
+  #
+  #     vm = VirtualBox::VM.find("MyWindowsXP")
+  #     p vm.find_snapshot("PreSP3")
+  #
   # # Attributes and Relationships
   #
   # Properties of the virtual machine are exposed using standard ruby instance
