@@ -37,6 +37,10 @@ module VirtualBox
       end
     end
 
+    # Initializes a new snapshot. This should never be called on its own.
+    # Snapshots should be accessed beginning with the `current_snapshot` on
+    # a VM, and can be further accessed by traversing the parent/child tree
+    # of the snapshot.
     def initialize(snapshot)
       write_attribute(:interface, snapshot)
       initialize_attributes(snapshot)
@@ -55,6 +59,13 @@ module VirtualBox
 
       # But this is an existing record
       existing_record!
+    end
+
+    # Loads the lazy relationships.
+    #
+    # **This method should only be called internally.**
+    def load_relationship(name)
+      populate_relationship(:machine, interface.machine)
     end
   end
 end

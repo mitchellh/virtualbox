@@ -78,7 +78,35 @@ class VMTest < Test::Unit::TestCase
       end
     end
 
-    context "populating relationship" do
+    context "populating relationships" do
+      setup do
+        @caller = mock("caller")
+      end
+
+      should "call populate_array_relationship for arrays" do
+        @klass.expects(:populate_array_relationship).with(@caller, []).once
+        @klass.populate_relationship(@caller, [])
+      end
+
+      should "call populate_single_relationship for non-arrays" do
+        @klass.expects(:populate_single_relationship).with(@caller, nil).once
+        @klass.populate_relationship(@caller, nil)
+      end
+    end
+
+    context "populating single relationships" do
+      setup do
+        @machine = mock("interface")
+      end
+
+      should "return a new machine" do
+        result = mock("result")
+        @klass.expects(:new).with(@machine).returns(result)
+        assert_equal result, @klass.populate_single_relationship(nil, @machine)
+      end
+    end
+
+    context "populating array relationship" do
       setup do
         @instance = mock("instance")
 
@@ -86,7 +114,7 @@ class VMTest < Test::Unit::TestCase
       end
 
       should "return a proxied collection" do
-        result = @klass.populate_relationship(nil, [])
+        result = @klass.populate_array_relationship(nil, [])
         assert result.is_a?(VirtualBox::Proxies::Collection)
       end
 
@@ -102,7 +130,7 @@ class VMTest < Test::Unit::TestCase
           expected_result << expected_value
         end
 
-        assert_equal expected_result, @klass.populate_relationship(nil, machines)
+        assert_equal expected_result, @klass.populate_array_relationship(nil, machines)
       end
     end
   end

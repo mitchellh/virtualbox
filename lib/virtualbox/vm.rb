@@ -171,6 +171,14 @@ module VirtualBox
       end
 
       def populate_relationship(caller, machines)
+        machines.is_a?(Array) ? populate_array_relationship(caller, machines) : populate_single_relationship(caller, machines)
+      end
+
+      def populate_single_relationship(caller, machine)
+        new(machine)
+      end
+
+      def populate_array_relationship(caller, machines)
         result = Proxies::Collection.new(caller)
 
         machines.each do |machine|
