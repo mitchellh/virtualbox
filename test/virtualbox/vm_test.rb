@@ -466,5 +466,23 @@ class VMTest < Test::Unit::TestCase
         end
       end
     end
+
+    context "root snapshot" do
+      should "return nil if the current snapshot is nil" do
+        @instance.stubs(:current_snapshot).returns(nil)
+        assert_nil @instance.root_snapshot
+      end
+
+      should "return the proper root snapshot" do
+        root = mock("root_snapshot")
+        root.stubs(:parent).returns(nil)
+
+        snapshot = mock("snapshot")
+        snapshot.stubs(:parent).returns(root)
+
+        @instance.stubs(:current_snapshot).returns(snapshot)
+        assert_equal root, @instance.root_snapshot
+      end
+    end
   end
 end

@@ -40,6 +40,16 @@ module VirtualBox
   #     vm = VirtualBox::VM.find("MyWindowsXP")
   #     vm.take_snapshot("My Snapshot", "A description of my snapshot")
   #
+  # # Traversing Snapshots
+  #
+  # Snapshots are represented by a tree-like structure. There is a root snapshot
+  # and that snapshot has many children which may in turn have their own children.
+  # The easiest way to traverse this structure is to use the {#root_snapshot}
+  # VM method and traverse the structure like any tree structure:
+  #
+  #     vm = VirtualBox::VM.find("MyWindowsXP")
+  #     p vm.root_snapshot.children.length
+  #
   # # Attributes and Relationships
   #
   # Properties of the virtual machine are exposed using standard ruby instance
@@ -279,6 +289,18 @@ module VirtualBox
         # Save relationships, which may open their own sessions if necessary
         save_relationships
       end
+    end
+
+    # Returns the root snapshot of this virtual machine. This root snapshot
+    # can be used to traverse the tree of snapshots.
+    #
+    # @return [Snapshot]
+    def root_snapshot
+      return nil if current_snapshot.nil?
+
+      current = current_snapshot
+      current = current.parent while current.parent != nil
+      current
     end
 
     # Opens a direct session with the machine this VM represents and yields
