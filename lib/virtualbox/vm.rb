@@ -161,6 +161,9 @@ module VirtualBox
     attribute :teleporter_port
     attribute :teleporter_address
     attribute :teleporter_password
+    attribute :boot_order, :readonly => true,
+      :property_getter => Proc.new { |instance, *args| instance.get_boot_order(*args) },
+      :property_setter => Proc.new { |instance, *args| instance.set_boot_order(*args) }
     attribute :interface, :readonly => true, :property => false
     relationship :audio_adapter, :AudioAdapter
     relationship :bios, :BIOS
@@ -560,6 +563,28 @@ module VirtualBox
     # @return [Boolean] True if virtual machine state is aborted
     def aborted?
       state == :aborted
+    end
+
+    # Loads the boot order for this virtual machine. This method should
+    # never be called directly. Instead, use the `boot_order` attribute
+    # to read and modify the boot order.
+    def get_boot_order(interface, key)
+      max_boot = Global.global.system_properties.max_boot_position
+
+      (1..max_boot).inject([]) do |order, position|
+        order << interface.get_boot_order(position)
+        order
+      end
+    end
+
+    # Sets the boot order for this virtual machine. This method should
+    # never be called directly. Instead, modify the `boot_order` array.
+    def set_boot_order(interface, key, value)
+      max_boot = Global.global.system_properties.max_boot_position
+
+      (1..max_boot).each do |position|
+        interface.set_boot_order(position, value[position - 1])
+      end
     end
   end
 end

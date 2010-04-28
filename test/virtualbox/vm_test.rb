@@ -509,5 +509,51 @@ class VMTest < Test::Unit::TestCase
 
       # TODO: Testing traversing the snapshot tree. Too many mocks :S
     end
+
+    context "getting the boot order" do
+      setup do
+        @max = 4
+        @global = mock("global")
+        @sys_props = mock("system_properties")
+
+        @sys_props.stubs(:max_boot_position).returns(@max)
+        @global.stubs(:system_properties).returns(@sys_props)
+        VirtualBox::Global.stubs(:global).returns(@global)
+      end
+
+      should "get the boot order for each up to max" do
+        expected = (1..@max).inject([]) do |acc, pos|
+          result = mock("p#{pos}")
+          @interface.expects(:get_boot_order).with(pos).returns(result)
+          acc << result
+          acc
+        end
+
+        assert_equal expected, @instance.get_boot_order(@interface, nil)
+      end
+    end
+
+    context "setting the boot order" do
+      setup do
+        @max = 4
+        @global = mock("global")
+        @sys_props = mock("system_properties")
+
+        @sys_props.stubs(:max_boot_position).returns(@max)
+        @global.stubs(:system_properties).returns(@sys_props)
+        VirtualBox::Global.stubs(:global).returns(@global)
+      end
+
+      should "set the boot order for each up to max" do
+        expected = (1..@max).inject([]) do |acc, pos|
+          result = mock("p#{pos}")
+          @interface.expects(:set_boot_order).with(pos, result)
+          acc << result
+          acc
+        end
+
+        @instance.set_boot_order(@interface, nil, expected)
+      end
+    end
   end
 end
