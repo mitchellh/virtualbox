@@ -361,7 +361,12 @@ class VMTest < Test::Unit::TestCase
         @locked_interface.expects(:save_settings).raises(Exception)
         @session.expects(:close).once
 
-        assert_raises(Exception) { @instance.with_open_session {} }
+        assert_raises(Exception) do
+          @instance.with_open_session do
+            # After this point, state should be open
+            @session.stubs(:state).returns(:open)
+          end
+        end
       end
 
       should "open the session, save, and close" do

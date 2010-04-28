@@ -1,8 +1,8 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class USBControllerTest < Test::Unit::TestCase
+class USBDeviceFilterTestTest < Test::Unit::TestCase
   setup do
-    @klass = VirtualBox::USBController
+    @klass = VirtualBox::USBDeviceFilter
     @interface = mock("interface")
   end
 
@@ -16,16 +16,10 @@ class USBControllerTest < Test::Unit::TestCase
   context "initializing attributes" do
     setup do
       @klass.any_instance.stubs(:load_interface_attributes)
-      @klass.any_instance.stubs(:populate_relationships)
     end
 
     should "load interface attribtues" do
       @klass.any_instance.expects(:load_interface_attributes).with(@interface).once
-      @klass.new(@parent, @interface)
-    end
-
-    should "populate relationships" do
-      @klass.any_instance.expects(:populate_relationships).with(@interface).once
       @klass.new(@parent, @interface)
     end
 
@@ -57,19 +51,28 @@ class USBControllerTest < Test::Unit::TestCase
 
         @klass.stubs(:new).returns(@instance)
 
-        @controller_interface = mock("controller_interface")
-        @interface.stubs(:usb_controller).returns(@controller_interface)
+        @device_filters = [mock("device_filters")]
+        @interface.stubs(:device_filters).returns(@device_filters)
       end
 
-      should "return a USBController instance" do
+      should "return a collection" do
         result = @klass.populate_relationship(nil, @interface)
-        assert_equal @instance, result
+        assert result.is_a?(VirtualBox::Proxies::Collection)
       end
 
-      should "call new with the interface" do
-        @klass.expects(:new).with(@parent, @controller_interface).returns(@instance)
-        result = @klass.populate_relationship(nil, @interface)
-        assert_equal @instance, result
+      should "call new for every filter" do
+        @device_filters.clear
+        5.times { |i| @device_filters << mock("m#{i}") }
+
+        expected_result = []
+        new_seq = sequence("new_seq")
+        @device_filters.each do |filter|
+          expected_value = "instance-#{filter.inspect}"
+          @klass.expects(:new).with(filter).in_sequence(new_seq).returns(expected_value)
+          expected_result << expected_value
+        end
+
+        assert_equal expected_result, @klass.populate_relationship(nil, @interface)
       end
     end
 
@@ -88,24 +91,7 @@ class USBControllerTest < Test::Unit::TestCase
   context "instance methods" do
     setup do
       @klass.any_instance.stubs(:load_interface_attributes)
-      @klass.any_instance.stubs(:populate_relationship)
       @instance = @klass.new(@parent, @interface)
-    end
-
-    context "saving" do
-      setup do
-        @session = mock("session")
-        @machine = mock("machine")
-        @usb_controller = mock("usb_controller")
-        @session.stubs(:machine).returns(@machine)
-        @machine.stubs(:usb_controller).returns(@usb_controller)
-        @parent.stubs(:with_open_session).yields(@session)
-      end
-
-      should "save on the locked interface" do
-        @instance.expects(:save_changed_interface_attributes).with(@usb_controller).once
-        @instance.save
-      end
     end
   end
 end
