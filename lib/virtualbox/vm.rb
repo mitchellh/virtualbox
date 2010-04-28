@@ -371,7 +371,7 @@ module VirtualBox
       # exception is raised. Otherwise, we may or may not close the session,
       # depending how deeply nested this call to `with_open_session` is.
       # (see close_session boolean above)
-      session.close
+      session.close if session.state == :open
 
       # Reraise the exception, we're not actually catching it to handle it
       raise
