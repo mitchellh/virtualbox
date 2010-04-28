@@ -366,7 +366,11 @@ module VirtualBox
         session.close
       end
     rescue Exception
-      # Close the session so we don't get locked out
+      # Close the session so we don't get locked out. We use a rescue block
+      # here instead of an "ensure" since we ONLY want this to occur if an
+      # exception is raised. Otherwise, we may or may not close the session,
+      # depending how deeply nested this call to `with_open_session` is.
+      # (see close_session boolean above)
       session.close
 
       # Reraise the exception, we're not actually catching it to handle it
