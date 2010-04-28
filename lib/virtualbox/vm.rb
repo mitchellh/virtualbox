@@ -431,11 +431,10 @@ module VirtualBox
       # as well
       session = Lib.lib.session
       interface.parent.open_remote_session(session, uuid, mode.to_s, "").wait_for_completion(-1)
-
-      # Close our session to release our lock from the machine
-      session.close
-
       true
+    ensure
+      # Be sure to close that session!
+      session.close if session && session.state == :open
     end
 
     # Shuts down the VM by directly calling "acpipowerbutton". Depending on the
@@ -503,9 +502,9 @@ module VirtualBox
       # Send the proper command, waiting if we have to
       result = session.console.send(command, *args)
       result.wait_for_completion(-1) if result.is_a?(COM::Interface::Progress)
-
+    ensure
       # Close the session
-      session.close
+      session.close if session && session.state == :open
     end
 
     # Destroys the virtual machine. This method also removes all attached

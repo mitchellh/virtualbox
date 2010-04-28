@@ -242,6 +242,7 @@ class VMTest < Test::Unit::TestCase
         setup_session_mocks
 
         @instance.stubs(:running?).returns(false)
+        @session.stubs(:state).returns(:open)
       end
 
       should "open remote session using the given mode, wait for completion, then close" do
@@ -268,6 +269,7 @@ class VMTest < Test::Unit::TestCase
         @console = mock("console")
         @console.stubs(:send)
         @session.stubs(:console).returns(@console)
+        @session.stubs(:state).returns(:open)
 
         @method = :foo
       end
