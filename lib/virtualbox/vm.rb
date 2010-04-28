@@ -365,6 +365,12 @@ module VirtualBox
         # Close the session
         session.close
       end
+    rescue Exception
+      # Close the session so we don't get locked out
+      session.close
+
+      # Reraise the exception, we're not actually catching it to handle it
+      raise
     end
 
     # Exports a virtual machine. The virtual machine will be exported

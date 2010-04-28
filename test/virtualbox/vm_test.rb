@@ -352,6 +352,14 @@ class VMTest < Test::Unit::TestCase
         @locked_interface.stubs(:state).returns(:powered_off)
         @session.stubs(:machine).returns(@locked_interface)
         @session.stubs(:state).returns(:closed)
+        @parent.stubs(:open_session)
+      end
+
+      should "close the session if an exception is raised" do
+        @locked_interface.expects(:save_settings).raises(Exception)
+        @session.expects(:close).once
+
+        assert_raises(Exception) { @instance.with_open_session {} }
       end
 
       should "open the session, save, and close" do
