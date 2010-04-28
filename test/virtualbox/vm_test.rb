@@ -226,12 +226,13 @@ class VMTest < Test::Unit::TestCase
         @instance.stubs(:interface).returns(@interface)
       end
 
-      should "just return the state" do
+      should "reload and return the state" do
+        @instance.expects(:load_interface_attribute).with(:state, @instance.interface).once
         assert_equal @state, @instance.state
       end
 
-      should "reload the state if reload is set" do
-        @instance.expects(:load_interface_attribute).with(:state, @instance.interface).once
+      should "not reload the state if suppress is given" do
+        @instance.expects(:load_interface_attribute).never
         assert_equal @state, @instance.state(true)
       end
     end
@@ -239,6 +240,8 @@ class VMTest < Test::Unit::TestCase
     context "starting" do
       setup do
         setup_session_mocks
+
+        @instance.stubs(:running?).returns(false)
       end
 
       should "open remote session using the given mode, wait for completion, then close" do
@@ -318,6 +321,8 @@ class VMTest < Test::Unit::TestCase
         @session.stubs(:machine).returns(@parent)
 
         @locked_interface = mock("locked_interface")
+
+        @instance.stubs(:saved?).returns(false)
       end
 
       should "open the session, save, and close" do
@@ -328,6 +333,14 @@ class VMTest < Test::Unit::TestCase
         @instance.expects(:save_relationships).in_sequence(save_seq)
 
         @instance.save
+      end
+
+      should "raise an exception if saved" do
+        @instance.stubs(:saved?).returns(true)
+
+        assert_raises(VirtualBox::Exceptions::ReadonlyVMStateException) {
+          @instance.save
+        }
       end
     end
 

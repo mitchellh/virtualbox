@@ -9,6 +9,7 @@ module VirtualBox
     class MediumLocationInUseException < Exception; end
     class MediumCreationFailedException < Exception; end
     class MediumNotUpdatableException < Exception; end
+    class ReadonlyVMStateException < Exception; end
 
     class FFIException < Exception
       attr_accessor :data

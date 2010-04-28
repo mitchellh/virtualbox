@@ -274,8 +274,8 @@ module VirtualBox
     # @param [Boolean] reload If true, will reload the state to current
     #   value.
     # @return [String] Virtual machine state.
-    def state(state_reload=false)
-      if state_reload
+    def state(suppress_state_reload=false)
+      if !suppress_state_reload
         load_interface_attribute(:state, interface)
         clear_dirty!(:state)
       end
@@ -287,6 +287,8 @@ module VirtualBox
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
     def save
+      raise Exceptions::ReadonlyVMStateException.new("VM must not be in saved state to modify.") if saved?
+
       with_open_session do |session|
         # Use setters to save the attributes on the locked machine and persist
         # the settings

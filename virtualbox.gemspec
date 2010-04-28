@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-04-25}
+  s.date = %q{2010-04-27}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -111,6 +111,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/com/interface/vrdp_server.rb",
      "lib/virtualbox/com/mscom_interface.rb",
      "lib/virtualbox/com/util.rb",
+     "lib/virtualbox/cpu.rb",
      "lib/virtualbox/dvd.rb",
      "lib/virtualbox/exceptions.rb",
      "lib/virtualbox/ext/byte_normalizer.rb",
@@ -130,12 +131,14 @@ Gem::Specification.new do |s|
      "lib/virtualbox/network_adapter.rb",
      "lib/virtualbox/proxies/collection.rb",
      "lib/virtualbox/shared_folder.rb",
+     "lib/virtualbox/snapshot.rb",
      "lib/virtualbox/storage_controller.rb",
      "lib/virtualbox/system_properties.rb",
      "lib/virtualbox/usb_controller.rb",
      "lib/virtualbox/version.rb",
      "lib/virtualbox/virtual_system_description.rb",
      "lib/virtualbox/vm.rb",
+     "lib/virtualbox/vrdp_server.rb",
      "test/test_helper.rb",
      "test/virtualbox/abstract_model/attributable_test.rb",
      "test/virtualbox/abstract_model/dirty_test.rb",
@@ -157,6 +160,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/com/implementer/mscom_test.rb",
      "test/virtualbox/com/mscom_interface_test.rb",
      "test/virtualbox/com/util_test.rb",
+     "test/virtualbox/cpu_test.rb",
      "test/virtualbox/dvd_test.rb",
      "test/virtualbox/ext/byte_normalizer_test.rb",
      "test/virtualbox/ext/platform_test.rb",
@@ -172,12 +176,14 @@ Gem::Specification.new do |s|
      "test/virtualbox/network_adapter_test.rb",
      "test/virtualbox/proxies/collection_test.rb",
      "test/virtualbox/shared_folder_test.rb",
+     "test/virtualbox/snapshot_test.rb",
      "test/virtualbox/storage_controller_test.rb",
      "test/virtualbox/system_properties_test.rb",
      "test/virtualbox/usb_controller_test.rb",
      "test/virtualbox/version_test.rb",
      "test/virtualbox/virtual_system_description_test.rb",
      "test/virtualbox/vm_test.rb",
+     "test/virtualbox/vrdp_server_test.rb",
      "test/virtualbox_test.rb",
      "virtualbox.gemspec"
   ]
@@ -208,6 +214,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/com/implementer/mscom_test.rb",
      "test/virtualbox/com/mscom_interface_test.rb",
      "test/virtualbox/com/util_test.rb",
+     "test/virtualbox/cpu_test.rb",
      "test/virtualbox/dvd_test.rb",
      "test/virtualbox/ext/byte_normalizer_test.rb",
      "test/virtualbox/ext/platform_test.rb",
@@ -223,12 +230,14 @@ Gem::Specification.new do |s|
      "test/virtualbox/network_adapter_test.rb",
      "test/virtualbox/proxies/collection_test.rb",
      "test/virtualbox/shared_folder_test.rb",
+     "test/virtualbox/snapshot_test.rb",
      "test/virtualbox/storage_controller_test.rb",
      "test/virtualbox/system_properties_test.rb",
      "test/virtualbox/usb_controller_test.rb",
      "test/virtualbox/version_test.rb",
      "test/virtualbox/virtual_system_description_test.rb",
      "test/virtualbox/vm_test.rb",
+     "test/virtualbox/vrdp_server_test.rb",
      "test/virtualbox_test.rb"
   ]
 
