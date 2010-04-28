@@ -76,10 +76,17 @@ module VirtualBox
     end
 
     def load_relationship(name)
-      populate_relationship(:vms, lib.virtualbox.machines)
-      populate_relationship(:media, lib)
-      populate_relationship(:extra_data, lib.virtualbox)
-      populate_relationship(:system_properties, lib.virtualbox.system_properties)
+      # "Lazy loaded" associations table. These associate the relationship
+      # with the data it needs to load. The data is wrapped in lambdas so
+      # that the evaluation doesn't occur unless necessary.
+      relationships = {
+        :vms => lambda { lib.virtualbox.machines },
+        :media => lambda { lib },
+        :extra_data => lambda { lib.virtualbox },
+        :system_properties => lambda { lib.virtualbox.system_properties }
+      }
+
+      populate_relationship(name, relationships[name].call)
     end
   end
 end
