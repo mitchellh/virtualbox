@@ -331,6 +331,7 @@ class VMTest < Test::Unit::TestCase
         save_seq = sequence("save_seq")
         @instance.expects(:with_open_session).once.yields(@session).in_sequence(save_seq)
         @session.expects(:machine).returns(@locked_interface).in_sequence(save_seq)
+        @instance.expects(:save_interface_attribute).with(:boot_order, @locked_interface).in_sequence(save_seq)
         @instance.expects(:save_changed_interface_attributes).with(@locked_interface).in_sequence(save_seq)
         @instance.expects(:save_relationships).in_sequence(save_seq)
 

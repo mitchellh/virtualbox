@@ -297,6 +297,9 @@ module VirtualBox
         # the settings
         machine = session.machine
 
+        # Save the boot order
+        save_interface_attribute(:boot_order, machine)
+
         # Save all the attributes and relationships
         save_changed_interface_attributes(machine)
 
