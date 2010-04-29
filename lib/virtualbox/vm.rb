@@ -593,6 +593,8 @@ module VirtualBox
     # never be called directly. Instead, modify the `boot_order` array.
     def set_boot_order(interface, key, value)
       max_boot = Global.global.system_properties.max_boot_position
+      value = value.dup
+      value.concat(Array.new(max_boot - value.size)) if value.size < max_boot
 
       (1..max_boot).each do |position|
         interface.set_boot_order(position, value[position - 1])

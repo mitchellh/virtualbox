@@ -570,6 +570,18 @@ class VMTest < Test::Unit::TestCase
 
         @instance.set_boot_order(@interface, nil, expected)
       end
+
+      should "set the boot order for max items even if value has less than the proper amount" do
+        items = [1, 2]
+        items.concat(Array.new(@max - items.size))
+        items.each_with_index do |item, i|
+          @interface.expects(:set_boot_order).with(i + 1, item).once
+        end
+
+        assert_equal @max, items.size # sanity
+
+        @instance.set_boot_order(@interface, nil, items)
+      end
     end
   end
 end
