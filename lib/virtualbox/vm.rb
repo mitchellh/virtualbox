@@ -161,7 +161,7 @@ module VirtualBox
     attribute :teleporter_port
     attribute :teleporter_address
     attribute :teleporter_password
-    attribute :boot_order, :readonly => true,
+    attribute :boot_order,
       :property_getter => Proc.new { |instance, *args| instance.get_boot_order(*args) },
       :property_setter => Proc.new { |instance, *args| instance.set_boot_order(*args) }
     attribute :interface, :readonly => true, :property => false
