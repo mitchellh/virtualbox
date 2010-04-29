@@ -527,6 +527,16 @@ class VMTest < Test::Unit::TestCase
         assert_nil @instance.find_snapshot("foo")
       end
 
+      should "return nil if the snapshot is not found" do
+        snapshot = mock("snapshot")
+        snapshot.stubs(:name).returns("wrong")
+        snapshot.stubs(:uuid).returns(nil)
+        snapshot.stubs(:children).returns([])
+        @instance.stubs(:root_snapshot).returns(snapshot)
+
+        assert_nil @instance.find_snapshot("bar")
+      end
+
       # TODO: Testing traversing the snapshot tree. Too many mocks :S
     end
 

@@ -332,6 +332,8 @@ module VirtualBox
           result = find_helper.call(name, child)
           return result unless result.nil?
         end
+
+        nil
       end
 
       find_helper.call(name, root_snapshot)
