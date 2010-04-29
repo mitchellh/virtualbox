@@ -268,6 +268,7 @@ module VirtualBox
     # the VM and any of its relationships.
     def reload
       initialize_attributes(interface)
+      self
     end
 
     # State of the virtual machine. Returns the state of the virtual
@@ -539,6 +540,10 @@ module VirtualBox
         end
 
         destroy_snapshot.call(root_snapshot)
+
+        # Reload ourselves before continuing since snapshots do some
+        # crazy things.
+        reload
       end
 
       # Call super first so destroy is propogated through to relationships

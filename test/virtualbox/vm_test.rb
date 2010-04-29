@@ -194,9 +194,17 @@ class VMTest < Test::Unit::TestCase
     end
 
     context "reloading" do
+      setup do
+        @instance.stubs(:initialize_attributes)
+      end
+
       should "just reload the attributes" do
         @instance.expects(:initialize_attributes).with(@interface).once
         @instance.reload
+      end
+
+      should "return itself" do
+        assert @instance.equal?(@instance.reload)
       end
     end
 
@@ -214,6 +222,7 @@ class VMTest < Test::Unit::TestCase
         snapshot.stubs(:children).returns([])
         @instance.stubs(:root_snapshot).returns(snapshot)
         snapshot.expects(:destroy).once.in_sequence(destroy_seq)
+        @instance.expects(:reload).once.in_sequence(destroy_seq)
         VirtualBox::StorageController.expects(:destroy_relationship).in_sequence(destroy_seq)
         @interface_parent.expects(:unregister_machine).with(@instance.uuid).in_sequence(destroy_seq)
         @interface.expects(:delete_settings).once.in_sequence(destroy_seq)

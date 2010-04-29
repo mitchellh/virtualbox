@@ -11,6 +11,7 @@ module VirtualBox
     attribute :location, :readonly => true
     attribute :state, :readonly => true, :property => :refresh_state
     attribute :interface, :readonly => true, :property => false
+    relationship :children, :Medium, :lazy => true
 
     class <<self
       # Populates a relationship with another model. Depending on the data sent
@@ -105,6 +106,11 @@ module VirtualBox
 
       # But this is an existing record
       existing_record!
+    end
+
+    def load_relationship(name)
+      # Populate children
+      populate_relationship(name, interface.children)
     end
 
     # Returns the basename of the images location (the file name +extension)
