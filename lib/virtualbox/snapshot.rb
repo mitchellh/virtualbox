@@ -148,6 +148,14 @@ module VirtualBox
       populate_relationship(:children, interface.children)
     end
 
+    # Timestamp that the snapshot was taken. This method overwrites the
+    # typical attribute so it can return a Time object.
+    def time_stamp
+      # Seconds, microseconds, since the time stamp is in milliseconds
+      value = read_attribute(:time_stamp)
+      Time.at(value / 1000, (value % 1000) * 1000)
+    end
+
     # Restore a snapshot. This will restore this snapshot's virtual machine
     # to the state that this snapshot represents. This method will block while
     # the restore occurs.

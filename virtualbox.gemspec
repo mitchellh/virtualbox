@@ -9,12 +9,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-04-27}
+  s.date = %q{2010-04-28}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
-    "LICENSE",
-     "TODO"
+    "LICENSE"
   ]
   s.files = [
     ".gitignore",
@@ -23,7 +22,6 @@ Gem::Specification.new do |s|
      "LICENSE",
      "Rakefile",
      "Readme.md",
-     "TODO",
      "VERSION",
      "docs/GettingStarted.md",
      "docs/WhatsNew.md",
@@ -135,6 +133,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/storage_controller.rb",
      "lib/virtualbox/system_properties.rb",
      "lib/virtualbox/usb_controller.rb",
+     "lib/virtualbox/usb_device_filter.rb",
      "lib/virtualbox/version.rb",
      "lib/virtualbox/virtual_system_description.rb",
      "lib/virtualbox/vm.rb",
@@ -180,6 +179,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/storage_controller_test.rb",
      "test/virtualbox/system_properties_test.rb",
      "test/virtualbox/usb_controller_test.rb",
+     "test/virtualbox/usb_device_filter_test.rb",
      "test/virtualbox/version_test.rb",
      "test/virtualbox/virtual_system_description_test.rb",
      "test/virtualbox/vm_test.rb",
@@ -234,6 +234,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/storage_controller_test.rb",
      "test/virtualbox/system_properties_test.rb",
      "test/virtualbox/usb_controller_test.rb",
+     "test/virtualbox/usb_device_filter_test.rb",
      "test/virtualbox/version_test.rb",
      "test/virtualbox/virtual_system_description_test.rb",
      "test/virtualbox/vm_test.rb",

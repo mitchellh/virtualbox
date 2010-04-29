@@ -145,6 +145,23 @@ class SnapshotTest < Test::Unit::TestCase
       @instance = @klass.new(@interface)
     end
 
+    context "timestamp" do
+      setup do
+        @time = Time.at(Time.now.to_i, 0)
+        @timestamp = @time.to_i * 1000
+        @instance.stubs(:read_attribute).with(:time_stamp).returns(@timestamp)
+      end
+
+      should "convert to a Time object" do
+        assert @instance.time_stamp.is_a?(Time)
+      end
+
+      should "convert to a proper Time object" do
+        value = @instance.time_stamp
+        assert @time.eql?(value), "#{@time} != #{value}"
+      end
+    end
+
     context "destroying" do
       setup do
         @machine = mock("machine")
