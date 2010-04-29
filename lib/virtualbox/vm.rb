@@ -526,6 +526,19 @@ module VirtualBox
     #     not only unregister attached media, but will also physically
     #     remove their respective data.
     def destroy(*args)
+      # Destroy all snapshots first (by destroying the root, all children
+      # are automatically destroyed)
+      if root_snapshot
+        destroy_snapshot = lambda do |snapshot|
+          return if snapshot.nil?
+
+          snapshot.children.each { |c| destroy_snapshot.call(c) }
+          snapshot.destroy
+        end
+
+        destroy_snapshot.call(root_snapshot)
+      end
+
       # Call super first so destroy is propogated through to relationships
       # first
       super

@@ -208,8 +208,12 @@ class VMTest < Test::Unit::TestCase
         @interface.stubs(:parent).returns(@interface_parent)
       end
 
-      should "destroy relationships first, then the machine" do
+      should "destroy snapshots, relationships, then the machine" do
         destroy_seq = sequence("destroy_seq")
+        snapshot = mock("snapshot")
+        snapshot.stubs(:children).returns([])
+        @instance.stubs(:root_snapshot).returns(snapshot)
+        snapshot.expects(:destroy).once.in_sequence(destroy_seq)
         VirtualBox::StorageController.expects(:destroy_relationship).in_sequence(destroy_seq)
         @interface_parent.expects(:unregister_machine).with(@instance.uuid).in_sequence(destroy_seq)
         @interface.expects(:delete_settings).once.in_sequence(destroy_seq)
