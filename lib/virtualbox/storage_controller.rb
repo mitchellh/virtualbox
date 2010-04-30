@@ -54,7 +54,7 @@ module VirtualBox
       #
       # @return [Array<StorageController>]
       def populate_relationship(caller, data)
-        if data.is_a?(COM::Interface::Machine)
+        if data.is_a?(COM::Util.versioned_interface(:Machine))
           populate_array_relationship(caller, data)
         elsif data.is_a?(MediumAttachment)
           populate_attachment_relationship(caller, data)

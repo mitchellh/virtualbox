@@ -29,7 +29,7 @@ class COMImplementerBaseTest < Test::Unit::TestCase
       should "get from COM::Interface and return" do
         result = mock("result")
         type_name = :foo
-        VirtualBox::COM::Interface.expects(:const_get).with(type_name).returns(result)
+        VirtualBox::COM::FFI::Util.expects(:interface_klass).with(type_name).returns(result)
         assert_equal result, @instance.interface_klass(type_name)
       end
     end

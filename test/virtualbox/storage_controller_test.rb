@@ -16,7 +16,7 @@ class StorageControllerTest < Test::Unit::TestCase
       end
 
       should "populate array relationship if IMachine is given" do
-        @interface.expects(:is_a?).with(VirtualBox::COM::Interface::Machine).returns(true)
+        @interface.expects(:is_a?).with(VirtualBox::COM::Util.versioned_interface(:Machine)).returns(true)
         @klass.expects(:populate_array_relationship).once.with(@parent, @interface)
         @klass.populate_relationship(@parent, @interface)
       end

@@ -6,6 +6,21 @@ module VirtualBox
       # function spec to a FFI parameter list to dereferencing pointers.
       class Util
         class <<self
+          # Finds and returns the `COM::Interface` class associated with the type.
+          # If the class does not exist, a `NameError` will be raised.
+          #
+          # @return [Class]
+          def interface_klass(type)
+            ::VirtualBox::COM::Util.versioned_interface(type)
+          end
+
+          # Finds the versioned interface for the FFI module.
+          #
+          # @return [Class]
+          def versioned_interface(interface)
+            ::VirtualBox::COM::FFI.const_get(::VirtualBox::COM::Util.version_const).const_get(interface)
+          end
+
           # Converts a function spec from {AbstractInterface} to an FFI
           # function spec. This handles custom types (unicode strings,
           # arrays, and out-parameters) and will return a perfectly valid
@@ -33,7 +48,7 @@ module VirtualBox
               elsif item.to_s[0,1] == item.to_s[0,1].upcase
                 begin
                   # Try to get the class from the interfaces
-                  interface = COM::Interface.const_get(item.to_sym)
+                  interface = interface_klass(item.to_sym)
 
                   if interface.superclass == COM::AbstractInterface
                     :pointer

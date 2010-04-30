@@ -16,7 +16,7 @@ module VirtualBox
         #
         # @return [Class]
         def interface_klass(type)
-          COM::Interface.const_get(type)
+          ::VirtualBox::COM::FFI::Util.interface_klass(type)
         end
 
         # Gives the C type and inferred type of a parameter type. Quite confusing
@@ -37,7 +37,7 @@ module VirtualBox
               c_type = :pointer
             else
               # Try to get the class from the interfaces
-              interface = COM::Interface.const_get(type)
+              interface = interface_klass(type)
 
               c_type = :pointer
 

@@ -8,7 +8,7 @@ class COMImplementerFFITest < Test::Unit::TestCase
   context "initializing" do
     setup do
       @interface = mock("interface")
-      @interface.stubs(:class).returns(VirtualBox::COM::Interface::Session)
+      @interface.stubs(:class).returns(VirtualBox::COM::Util.versioned_interface(:Session))
 
       @ffi = mock("ffi")
 
@@ -17,7 +17,7 @@ class COMImplementerFFITest < Test::Unit::TestCase
 
     should "initialize the FFI interface associated with the AbstractInterface" do
       result = mock("result")
-      VirtualBox::COM::FFI::Session.expects(:new).with(@pointer).once.returns(result)
+      VirtualBox::COM::FFI::Util.versioned_interface(:Session).expects(:new).with(@pointer).once.returns(result)
       instance = @klass.new(@interface, @ffi, @pointer)
       assert_equal result, instance.ffi_interface
     end

@@ -26,8 +26,8 @@ module VirtualBox
       # Grab all the descriptions, iterate over each, and add to the hash of
       # descriptions. This multiple loop method is used instead of `get_description` since
       # that method doesn't work well with MSCOM.
-      COM::Interface::VirtualSystemDescriptionType.each_with_index do |type, index|
-        COM::Interface::VirtualSystemDescriptionValueType.each_with_index do |value_type, value_index|
+      COM::Util.versioned_interface(:VirtualSystemDescriptionType).each_with_index do |type, index|
+        COM::Util.versioned_interface(:VirtualSystemDescriptionValueType).each_with_index do |value_type, value_index|
           value = ivsd.get_values_by_type(type, value_type)
           if value && value != [] && value != [nil]
             descriptions[type] ||= {}
