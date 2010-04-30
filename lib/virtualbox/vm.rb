@@ -287,6 +287,38 @@ module VirtualBox
       read_attribute(:state)
     end
 
+    # Validates the virtual machine
+    def validate
+      super
+
+      validates_presence_of :name, :os_type_id, :memory_size, :vram_size, :cpu_count
+      validates_numericality_of :memory_balloon_size, :monitor_count, :statistics_update_interval
+      validates_inclusion_of :accelerate_3d_enabled, :accelerate_2d_video_enabled, :teleporter_enabled, :in => [true, false]
+
+      validates_format_of :name, :with => /^[\w\d\s-]+$/, :message => 'must only contain letters, numbers, underscores, and dashes.'
+
+      if !errors_on(:name)
+        # Only validate the name if the name has no errors already
+        vms_of_same_name = self.class.find(name)
+        add_error(:name, 'must not be used by another virtual machine.') if vms_of_same_name && vms_of_same_name.uuid != uuid
+      end
+
+      validates_inclusion_of :os_type_id, :in => VirtualBox::Global.global.lib.virtualbox.guest_os_types.collect { |os| os.id }
+
+      min_guest_ram, max_guest_ram = Global.global.system_properties.min_guest_ram, Global.global.system_properties.max_guest_ram
+      validates_inclusion_of :memory_size, :in => (min_guest_ram..max_guest_ram), :message => "must be between #{min_guest_ram} and #{max_guest_ram}."
+      validates_inclusion_of :memory_balloon_size, :in => (0..max_guest_ram), :message => "must be between 0 and #{max_guest_ram}."
+
+      min_guest_vram, max_guest_vram = Global.global.system_properties.min_guest_vram, Global.global.system_properties.max_guest_vram
+      validates_inclusion_of :vram_size, :in => (min_guest_vram..max_guest_vram), :message => "must be between #{min_guest_vram} and #{max_guest_vram}."
+
+      min_guest_cpu_count, max_guest_cpu_count = Global.global.system_properties.min_guest_cpu_count, Global.global.system_properties.max_guest_cpu_count
+      validates_inclusion_of :cpu_count, :in => (min_guest_cpu_count..max_guest_cpu_count), :message => "must be between #{min_guest_cpu_count} and #{max_guest_cpu_count}."
+
+      validates_inclusion_of :clipboard_mode, :in => COM::Interface::ClipboardMode.map
+      validates_inclusion_of :firmware_type, :in => COM::Interface::FirmwareType.map
+    end
+
     # Saves the virtual machine if modified. This method saves any modified
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
