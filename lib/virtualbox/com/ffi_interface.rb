@@ -86,7 +86,7 @@ module VirtualBox
 
         logger.debug("    -- Valid version")
         true
-      rescue Exception
+      rescue Exception => e
         logger.debug("    -- Invalid version")
         false
       end
