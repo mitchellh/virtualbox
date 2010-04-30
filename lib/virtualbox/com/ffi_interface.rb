@@ -2,6 +2,7 @@ module VirtualBox
   module COM
     class FFIInterface
       extend ::FFI::Library
+      include Logger
 
       # Constant used to initialize the XPCOM C interface
       XPCOMC_VERSION = 0x00020000
@@ -67,6 +68,8 @@ module VirtualBox
 
       # Initializes the FFI interface for a specific version.
       def initialize_for_version(version)
+        logger.debug("FFI init: Trying version #{version}")
+
         # Setup the FFI classes
         VirtualBox::COM::FFI.setup(version)
         virtualbox_klass = COM::Util.versioned_interface(:VirtualBox)
@@ -81,8 +84,10 @@ module VirtualBox
         @virtualbox = virtualbox_klass.new(Implementer::FFI, self, virtualbox_ptr.get_pointer(0))
         @session = session_klass.new(Implementer::FFI, self, session_ptr.get_pointer(0))
 
+        logger.debug("    -- Valid version")
         true
       rescue Exception
+        logger.debug("    -- Invalid version")
         false
       end
     end
