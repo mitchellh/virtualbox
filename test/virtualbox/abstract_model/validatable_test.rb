@@ -125,6 +125,18 @@ class ValidatableTest < Test::Unit::TestCase
         @model.bars = "bar"
         assert @model.validates_presence_of(:foos, :bars)
       end
+
+      should "add error message if invalid" do
+        @model.foos = nil
+        assert !@model.validates_presence_of(:foos)
+        assert_equal "can't be blank.", @model.errors[:foos].first
+      end
+
+      should "use custom error message if given" do
+        @model.foos = nil
+        assert !@model.validates_presence_of(:foos, :message => "can't be nil.")
+        assert_equal "can't be nil.", @model.errors[:foos].first
+      end
     end
 
     context "validates_format_of" do

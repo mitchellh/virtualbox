@@ -37,14 +37,27 @@ module VirtualBox
         true
       end
 
+      # Validates the presence (non-emptiness) of a field or fields. This
+      # validation fails if the specified fields are either blank ("") or
+      # nil.
+      #
+      # Additionally, a custom error message can be specified:
+      #
+      #     validates_presence_of :foo, :bar
+      #     validates_presence_of :baz, :message => "must not be blank!"
+      #
+      # @return [Boolean]
       def validates_presence_of(*fields)
-        options = fields.last.is_a?(Hash) ? fields.pop : Hash.new
+        options = {
+          :message => "can't be blank."
+        }
+
+        options.merge!(fields.last.is_a?(Hash) ? fields.pop : {})
 
         fields.collect { |field|
           value = send(field)
           if value.nil? || value.to_s.empty?
-            message = options[:message] || "can't be blank."
-            add_error(field, message)
+            add_error(field, options[:message])
             false
           else
             true
