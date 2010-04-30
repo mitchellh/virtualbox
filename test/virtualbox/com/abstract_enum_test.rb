@@ -12,6 +12,7 @@ class COMAbstractEnumTest < Test::Unit::TestCase
       assert_equal :a, @enum[0]
       assert_equal :b, @enum[1]
       assert_equal :c, @enum[2]
+      assert_equal [:a, :b, :c], @enum.map
     end
 
     should "do the reverse mapping of value to index" do

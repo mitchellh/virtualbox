@@ -9,9 +9,10 @@ module VirtualBox
         # Defines the mapping of int => symbol for the given Enum.
         # The parameter to this can be an Array or Hash or anything which
         # can be indexed with `[]` and an integer and returns a value of
-        # some sort.
-        def map(value)
-          @map = value
+        # some sort. If value is left nil, it will return the current mapping
+        def map(value = nil)
+          @map = value if value
+          @map
         end
 
         # Returns the symbol associatd with the given key
