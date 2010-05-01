@@ -3,12 +3,30 @@ module VirtualBox
     # Provides validation methods for a class. Unlike ActiveRecord,
     # validations are instance-level rather than class-level.
     module Validatable
+      # Returns the errors on a model. The structure of this is a hash, keyed
+      # by the field name. The value of each member in the hash is an array of
+      # error messages.
+      #
+      # @return [Hash]
       def errors
         @errors ||= {}
       end
 
+      # Returns the errors on a specific field. This returns nil if there are
+      # no errors, otherwise it returns an array of error messages.
       def errors_on(field)
         @errors[field.to_sym]
+      end
+
+      # Adds an error to a field. The error is a message.
+      def add_error(field, error)
+        errors[field] ||= []
+        errors[field].push(error)
+      end
+
+      # Clears all the errors from a model.
+      def clear_errors
+        @errors = {}
       end
 
       def full_error_messages
@@ -22,21 +40,23 @@ module VirtualBox
         full_error_messages
       end
 
-      def add_error(field, error)
-        errors[field] ||= []
-        errors[field].push(error)
-      end
-
-      def clear_errors
-        @errors = {}
-      end
-
+      # This method calls the validate method on the model (which any subclass
+      # is expected to implement), and then checks that the validations didn't
+      # add any errors.
+      #
+      # @return [Boolean]
       def valid?
         validate
         errors.empty?
       end
 
-      # Subclasses should override this method.
+      # Subclasses should override this method. Validation can be done any
+      # way an implementer feels. Helper methods such as {#validates_presence_of},
+      # {#validates_inclusion_of}, etc. exist, but they're use isn't required.
+      # {#add_error} can be used to add an error to any field. By convention
+      # this method should return `true` or `false` to signal any errors.
+      #
+      # @return [Boolean]
       def validate
         true
       end
@@ -69,6 +89,10 @@ module VirtualBox
         }.compact.all? { |v| v == true }
       end
 
+      # Validates the format of a field with a given regular expression.
+      #
+      #     validates_format_of :foo, :with => /\d+/
+      #
       def validates_format_of(*fields)
         options = fields.last.is_a?(Hash) ? fields.pop : Hash.new
 
@@ -86,7 +110,10 @@ module VirtualBox
         }.compact.all? { |v| v == true }
       end
 
-      # Don't need to use this if you also use validates_inclusion_of
+      # Validates the numericality of a specific field.
+      #
+      #     validates_numericality_of :field
+      #
       def validates_numericality_of(*fields)
         options = fields.last.is_a?(Hash) ? fields.pop : Hash.new
 
@@ -104,6 +131,12 @@ module VirtualBox
         }.compact.all? { |v| v == true }
       end
 
+      # Validates that a field's value is within a specific range,
+      # array, etc.
+      #
+      #     validates_inclusion_of :foo, :in => [1,2,3]
+      #     validates_inclusion_of :bar, :in => (1..6)
+      #
       def validates_inclusion_of(*fields)
         options = fields.last.is_a?(Hash) ? fields.pop : Hash.new
 
