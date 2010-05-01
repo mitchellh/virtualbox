@@ -323,6 +323,7 @@ module VirtualBox
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
     def save
+      return false unless valid?
       raise Exceptions::ReadonlyVMStateException.new("VM must not be in saved state to modify.") if saved?
 
       with_open_session do |session|
@@ -339,6 +340,8 @@ module VirtualBox
         # Save relationships, which may open their own sessions if necessary
         save_relationships
       end
+
+      true
     end
 
     # Returns the root snapshot of this virtual machine. This root snapshot

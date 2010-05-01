@@ -338,6 +338,8 @@ class VMTest < Test::Unit::TestCase
         @locked_interface = mock("locked_interface")
 
         @instance.stubs(:saved?).returns(false)
+        @instance.stubs(:valid?).returns(true)
+        @instance.stubs(:with_open_session)
       end
 
       should "open the session, save, and close" do
@@ -357,6 +359,15 @@ class VMTest < Test::Unit::TestCase
         assert_raises(VirtualBox::Exceptions::ReadonlyVMStateException) {
           @instance.save
         }
+      end
+
+      should "return false if not valid" do
+        @instance.stubs(:valid?).returns(false)
+        assert !@instance.save
+      end
+
+      should "return true if save succeeds" do
+        assert @instance.save
       end
     end
 
