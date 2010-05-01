@@ -7,6 +7,10 @@ module VirtualBox
         @errors ||= {}
       end
 
+      def errors_on(field)
+        @errors[field.to_sym]
+      end
+
       def full_error_messages
         full_error_messages = Array.new
         errors.each do |field_name, messages|

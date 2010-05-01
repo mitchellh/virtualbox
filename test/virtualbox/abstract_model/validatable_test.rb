@@ -43,6 +43,12 @@ class ValidatableTest < Test::Unit::TestCase
       @model.add_error(:foo, "should be bar.")
       assert_equal ['Foo should be bar.'], @model.full_error_messages
     end
+
+    should "be able to get the errors on a specific field" do
+      @model.add_error(:foo, "an error.")
+      assert @model.errors_on(:bar).nil?
+      assert @model.errors_on(:foo)
+    end
   end
 
   context "validity" do
