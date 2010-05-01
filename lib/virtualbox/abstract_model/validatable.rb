@@ -72,11 +72,9 @@ module VirtualBox
       #
       # @return [Boolean]
       def validates_presence_of(*fields)
-        options = {
+        options = __validates_extract_options(fields, {
           :message => "can't be blank."
-        }
-
-        options.merge!(fields.last.is_a?(Hash) ? fields.pop : {})
+        })
 
         fields.collect { |field|
           value = send(field)
@@ -94,7 +92,10 @@ module VirtualBox
       #     validates_format_of :foo, :with => /\d+/
       #
       def validates_format_of(*fields)
-        options = fields.last.is_a?(Hash) ? fields.pop : Hash.new
+        options = __validates_extract_options(fields, {
+          :with => nil,
+          :message => "is not properly formatted."
+        })
 
         fields.collect { |field|
           value = send(field)
@@ -103,8 +104,7 @@ module VirtualBox
           if options[:with] && value =~ options[:with]
             true
           else
-            message = options[:message] || "is not properly formatted."
-            add_error(field, message)
+            add_error(field, options[:message])
             false
           end
         }.compact.all? { |v| v == true }
@@ -115,7 +115,9 @@ module VirtualBox
       #     validates_numericality_of :field
       #
       def validates_numericality_of(*fields)
-        options = fields.last.is_a?(Hash) ? fields.pop : Hash.new
+        options = __validates_extract_options(fields, {
+          :message => "is not a number."
+        })
 
         fields.collect { |field|
           value = send(field)
@@ -124,8 +126,7 @@ module VirtualBox
           if value.is_a?(Numeric) && value.to_s =~ /^\d$/
             true
           else
-            message = options[:message] || "is not a number."
-            add_error(field, message)
+            add_error(field, options[:message])
             false
           end
         }.compact.all? { |v| v == true }
@@ -138,7 +139,10 @@ module VirtualBox
       #     validates_inclusion_of :bar, :in => (1..6)
       #
       def validates_inclusion_of(*fields)
-        options = fields.last.is_a?(Hash) ? fields.pop : Hash.new
+        options = __validates_extract_options(fields, {
+          :in => nil,
+          :message => "value %s is not included in the list."
+        })
 
         fields.collect { |field|
           value = send(field)
@@ -147,11 +151,16 @@ module VirtualBox
           if options[:in] && options[:in].include?(value)
             true
           else
-            message = (options[:message] || "value %s is not included in the list.") % value
+            message = options[:message] % value
             add_error(field, message)
             false
           end
         }.compact.all? { |v| v == true }
+      end
+
+      # Internal method. Should never be called.
+      def __validates_extract_options(fields, defaults)
+        defaults.merge(fields.last.is_a?(Hash) ? fields.pop : {})
       end
     end
   end

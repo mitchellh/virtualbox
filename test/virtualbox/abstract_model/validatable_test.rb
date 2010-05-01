@@ -75,6 +75,30 @@ class ValidatableTest < Test::Unit::TestCase
     end
   end
 
+  context "extracting options hash from multi-param functions" do
+    setup do
+      @model = ValidatableModel.new
+    end
+
+    should "modify the initial fields array" do
+      fields = [{}]
+      @model.__validates_extract_options(fields, {})
+      assert fields.empty?
+    end
+
+    should "not modify the initial fields array if not a hash at the end" do
+      fields = [:foo]
+      @model.__validates_extract_options(fields, {})
+      assert_equal [:foo], fields
+    end
+
+    should "return the defaults hash merged with the given options" do
+      fields = [{ :foo => :bar }]
+      result = @model.__validates_extract_options(fields, { :foo => 0, :bar => :baz })
+      assert_equal({ :foo => :bar, :bar => :baz }, result)
+    end
+  end
+
   context "specific validations" do
     setup do
       @model = ValidatableModel.new
