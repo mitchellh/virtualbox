@@ -37,6 +37,16 @@ module VirtualBox
       existing_record!
     end
 
+    def validate
+      super
+
+      validates_inclusion_of :enabled, :allow_multi_connection, :reuse_single_connection, :in => [true, false]
+      validates_format_of :ports, :with => /^[\d\s\-\.]+$/, :message => "must only contain numbers, spaces, dashes or periods."
+      validates_format_of :net_address, :with => /^[\w\d\-\.]+$/, :message => "must only contain latters, numbers, dashes or periods."
+      validates_inclusion_of :auth_type, :in => COM::Interface::VRDPAuthType.map
+      validates_numericality_of :auth_timeout
+    end
+
     def save
       parent.with_open_session do |session|
         machine = session.machine

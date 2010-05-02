@@ -127,9 +127,13 @@ module VirtualBox
     def validate
       super
 
-      validates_presence_of :format
+      medium_formats = Global.global.system_properties.medium_formats.collect { |mf| mf.id }
+      validates_inclusion_of :format, :in => medium_formats, :message => "must be one of the following: #{medium_formats.join(', ')}."
+
       validates_presence_of :location
-      validates_presence_of :logical_size
+
+      max_vdi_size = Global.global.system_properties.max_vdi_size
+      validates_inclusion_of :logical_size, :in => (0..max_vdi_size), :message => "must be between 0 and #{max_vdi_size}."
     end
 
     # Creates a new {COM::Interface::Medium} instance. This simply creates

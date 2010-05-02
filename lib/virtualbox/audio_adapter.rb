@@ -32,6 +32,14 @@ module VirtualBox
       existing_record!
     end
 
+    def validate
+      super
+
+      validates_inclusion_of :enabled, :in => [true, false]
+      validates_inclusion_of :audio_controller, :in => COM::Interface::AudioControllerType.map
+      validates_inclusion_of :audio_driver, :in => COM::Interface::AudioDriverType.map
+    end
+
     def save
       parent.with_open_session do |session|
         machine = session.machine

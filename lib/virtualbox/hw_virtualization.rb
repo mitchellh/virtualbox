@@ -45,6 +45,12 @@ module VirtualBox
       interface.set_hw_virt_ex_property(key, value)
     end
 
+    def validate
+      super
+
+      validates_inclusion_of :enabled, :exclusive, :vpid, :nested_paging, :in => [true, false]
+    end
+
     def save
       parent.with_open_session do |session|
         machine = session.machine

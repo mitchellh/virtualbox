@@ -43,6 +43,12 @@ module VirtualBox
       interface.set_cpu_property(key, value)
     end
 
+    def validate
+      super
+
+      validates_inclusion_of :pae, :synthetic, :in => [true, false]
+    end
+
     def save
       parent.with_open_session do |session|
         machine = session.machine

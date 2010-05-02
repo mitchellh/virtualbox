@@ -32,6 +32,12 @@ module VirtualBox
       existing_record!
     end
 
+    def validate
+      super
+
+      validates_inclusion_of :acpi_enabled, :io_apic_enabled, :in => [true, false]
+    end
+
     def save
       parent.with_open_session do |session|
         machine = session.machine
