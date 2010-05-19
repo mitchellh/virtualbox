@@ -147,6 +147,13 @@ class ApplianceTest < Test::Unit::TestCase
         @machine_interface.expects(:export).with(@interface).once
         @instance.add_machine(@machine)
       end
+
+      should "add to the description for each option given" do
+        sys = mock("sys")
+        @machine_interface.expects(:export).with(@interface).once.returns(sys)
+        sys.expects(:add_description).with(:foo, :bar, :bar)
+        @instance.add_machine(@machine, { :foo => :bar })
+      end
     end
   end
 end

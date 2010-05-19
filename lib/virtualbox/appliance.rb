@@ -52,8 +52,11 @@ module VirtualBox
     end
 
     # Adds a VM to the appliance
-    def add_machine(vm)
-      vm.interface.export(interface)
+    def add_machine(vm, options = {})
+      sys_desc = vm.interface.export(interface)
+      options.each do |key, value|
+        sys_desc.add_description(key, value, value)
+      end
     end
   end
 end

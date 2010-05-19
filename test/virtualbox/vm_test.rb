@@ -469,12 +469,13 @@ class VMTest < Test::Unit::TestCase
 
       should "create a new appliance with path and export" do
         result = mock("result")
+        options = mock("options")
         VirtualBox::Appliance.expects(:new).returns(@appliance)
         @appliance.expects(:path=).with(@path)
-        @appliance.expects(:add_machine).with(@instance)
+        @appliance.expects(:add_machine).with(@instance, options)
         @appliance.expects(:export)
 
-        @instance.export(@path)
+        @instance.export(@path, options)
       end
 
       should "forward any block to the appliance export method" do
