@@ -314,8 +314,8 @@ module VirtualBox
       min_guest_cpu_count, max_guest_cpu_count = Global.global.system_properties.min_guest_cpu_count, Global.global.system_properties.max_guest_cpu_count
       validates_inclusion_of :cpu_count, :in => (min_guest_cpu_count..max_guest_cpu_count), :message => "must be between #{min_guest_cpu_count} and #{max_guest_cpu_count}."
 
-      validates_inclusion_of :clipboard_mode, :in => COM::Interface::ClipboardMode.map
-      validates_inclusion_of :firmware_type, :in => COM::Interface::FirmwareType.map
+      validates_inclusion_of :clipboard_mode, :in => COM::Util.versioned_interface(:ClipboardMode).map
+      validates_inclusion_of :firmware_type, :in => COM::Util.versioned_interface(:FirmwareType).map
     end
 
     # Saves the virtual machine if modified. This method saves any modified

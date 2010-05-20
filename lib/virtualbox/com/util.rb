@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     class Util
-      class <<self
+      class << self
         # Returns a boolean true/false whether the given COM interface
         # exists.
         #
