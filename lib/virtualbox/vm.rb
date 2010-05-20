@@ -292,6 +292,7 @@ module VirtualBox
       super
 
       validates_presence_of :name, :os_type_id, :memory_size, :vram_size, :cpu_count
+      validates_numericality_of :memory_balloon_size, :monitor_count
       validates_inclusion_of :accelerate_3d_enabled, :accelerate_2d_video_enabled, :teleporter_enabled, :in => [true, false]
 
       validates_format_of :name, :with => /^[\w\d\s-]+$/, :message => 'must only contain letters, numbers, spaces, underscores, and dashes.'
