@@ -68,11 +68,11 @@ module VirtualBox
       #
       # **This method typically won't be used except internally.**
       def populate_relationship(caller, data)
-        if data.is_a?(COM::Interface::Machine)
+        if data.is_a?(COM::Util.versioned_interface(:Machine))
           populate_machine_relationship(caller, data)
         elsif data.is_a?(Array)
           populate_children_relationship(caller, data)
-        elsif data.is_a?(COM::Interface::Snapshot) || data.nil?
+        elsif data.is_a?(COM::Util.versioned_interface(:Snapshot)) || data.nil?
           populate_parent_relationship(caller, data)
         else
           raise Exceptions::Exception.new("Invalid relationship data for Snapshot: #{data}")

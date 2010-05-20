@@ -299,7 +299,7 @@ class VMTest < Test::Unit::TestCase
 
       should "wait for completion if an IProgress is returned" do
         progress = mock("IProgress")
-        progress.stubs(:is_a?).with(VirtualBox::COM::Interface::Progress).returns(true)
+        progress.stubs(:is_a?).with(VirtualBox::COM::Util.versioned_interface(:Progress)).returns(true)
         progress.expects(:wait_for_completion).with(-1).once
         @console.expects(:send).with(@method).returns(progress)
         @instance.control(@method)

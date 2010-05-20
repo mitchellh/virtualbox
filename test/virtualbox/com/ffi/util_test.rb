@@ -5,6 +5,26 @@ class COMFFIUtilTest < Test::Unit::TestCase
     @klass = VirtualBox::COM::FFI::Util
   end
 
+  context "interface class" do
+    should "return the result from getting from the COM util" do
+      interface = mock("interface")
+      result = mock("result")
+      VirtualBox::COM::Util.expects(:versioned_interface).with(interface).returns(result)
+      assert_equal result, @klass.interface_klass(interface)
+    end
+  end
+
+  context "versioned interface" do
+    should "get the current FFI interface associated with the current version" do
+      result = mock("result")
+      version_module = mock("vmod")
+      interface = mock("interface")
+      VirtualBox::COM::FFI.expects(:const_get).with(::VirtualBox::COM::Util.version_const).returns(version_module)
+      version_module.expects(:const_get).with(interface).returns(result)
+      assert_equal result, @klass.versioned_interface(interface)
+    end
+  end
+
   context "converting function specs to FFI parameter lists" do
     def assert_spec(spec, expected)
       result = @klass.spec_to_ffi(spec)
@@ -75,7 +95,9 @@ class COMFFIUtilTest < Test::Unit::TestCase
         "ip_address" => "IPAddress",
         "max_vdi_size" => "MaxVDISize",
         "cpu_count" => "CPUCount",
-        "recommended_hdd" => "RecommendedHDD"
+        "recommended_hdd" => "RecommendedHDD",
+        "rtc_use_utc" => "RTCUseUTC",
+        "use_host_io_cache" => "UseHostIOCache"
       }
 
       tests.each do |arg, expected|

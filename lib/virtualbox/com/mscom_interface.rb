@@ -14,8 +14,9 @@ module VirtualBox
 
       def initialize_mscom
         require 'win32ole'
-        @virtualbox = Interface::VirtualBox.new(Implementer::MSCOM, self, WIN32OLE.new("VirtualBox.VirtualBox"))
-        @session = Interface::Session.new(Implementer::MSCOM, self, WIN32OLE.new("VirtualBox.Session"))
+        COM::Util.set_interface_version("3.1.x")
+        @virtualbox = COM::Util.versioned_interface(:VirtualBox).new(Implementer::MSCOM, self, WIN32OLE.new("VirtualBox.VirtualBox"))
+        @session = COM::Util.versioned_interface(:Session).new(Implementer::MSCOM, self, WIN32OLE.new("VirtualBox.Session"))
       end
     end
   end

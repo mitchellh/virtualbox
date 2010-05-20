@@ -8,11 +8,20 @@ module VirtualBox
       # FFI specific types
       NSRESULT_TYPE = :uint
 
+      # Creates all the FFI classes for a given version.
+      def self.for_version(version, &block)
+        @__module = Module.new
+        ::VirtualBox::COM::Util.set_interface_version(version)
+        const_set(::VirtualBox::COM::Util.version_const, @__module)
+        instance_eval(&block)
+        @__module = Kernel
+      end
+
       # Returns a Class which creates an FFI interface to the specified
       # com interface and potentially a parent class as well.
       def self.create_interface(interface, parent=nil)
         klass = Class.new(Interface)
-        const_set(interface, klass)
+        @__module.const_set(interface, klass)
         klass.com_interface(interface, parent)
         klass
       end
@@ -39,7 +48,7 @@ module VirtualBox
           # put into the struct in the order defined in the {AbstractInterface}.
           def com_interface(interface, parent=nil)
             # Create the parent class and vtbl class
-            interface = ::VirtualBox::COM::Interface.const_get(interface)
+            interface = ::VirtualBox::COM::Util.versioned_interface(interface)
             define_vtbl_parent_for_interface(interface)
             define_vtbl_for_interface(interface, parent)
           end
@@ -79,7 +88,7 @@ module VirtualBox
           def define_interface_parent(parent)
             return if parent.nil?
 
-            parent_klass = Object.module_eval("::VirtualBox::COM::FFI::#{parent}::Vtbl")
+            parent_klass = Object.module_eval("::VirtualBox::COM::FFI::#{::VirtualBox::COM::Util.version_const}::#{parent}::Vtbl")
             layout_args << [:superklass, parent_klass]
           end
 

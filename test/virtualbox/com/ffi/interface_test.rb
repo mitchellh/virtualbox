@@ -10,13 +10,13 @@ class COMFFIInterfaceTest < Test::Unit::TestCase
   context "specifying a com interface" do
     setup do
       @com_interface = mock("com_interface")
-      VirtualBox::COM::Interface.stubs(:const_get).returns(@com_interface)
+      VirtualBox::COM::Util.stubs(:versioned_interface).returns(@com_interface)
       @klass.stubs(:define_vtbl_parent_for_interface)
       @klass.stubs(:define_vtbl_for_interface)
     end
 
     should "get the interface with respect to the COM interfaces" do
-      VirtualBox::COM::Interface.expects(:const_get).with(@interface).returns(@com_interface)
+      VirtualBox::COM::Util.expects(:versioned_interface).with(@interface).returns(@com_interface)
       @klass.com_interface(@interface, @parent)
     end
 
@@ -94,7 +94,7 @@ class COMFFIInterfaceTest < Test::Unit::TestCase
     should "get the class in the context of the FFI namespace" do
       name = :foo
       klass = mock("klass")
-      Object.expects(:module_eval).with("::VirtualBox::COM::FFI::#{name}::Vtbl").returns(klass)
+      Object.expects(:module_eval).with("::VirtualBox::COM::FFI::#{VirtualBox::COM::Util.version_const}::#{name}::Vtbl").returns(klass)
       @klass.layout_args.expects(:<<).with([:superklass, klass])
       @klass.define_interface_parent(name)
     end
@@ -228,7 +228,7 @@ class COMFFIInterfaceTest < Test::Unit::TestCase
   context "initializing vtbl" do
     setup do
       @pointer = mock("pointer")
-      @klass = VirtualBox::COM::FFI::VirtualBox
+      @klass = VirtualBox::COM::FFI::Util.versioned_interface(:VirtualBox)
     end
 
     should "initialize the VtblParent then the Vtbl" do

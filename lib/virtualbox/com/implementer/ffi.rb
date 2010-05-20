@@ -30,7 +30,7 @@ module VirtualBox
           klass_name = interface.class.to_s.split("::").last
 
           # Get the associated FFI class
-          COM::FFI.const_get(klass_name)
+          COM::FFI.const_get(::VirtualBox::COM::Util.version_const).const_get(klass_name)
         end
 
         # Reads a property from the interface with the given name.
@@ -67,7 +67,7 @@ module VirtualBox
           formal_args = spec_to_args(spec, args)
 
           # Call the function.
-          logger.debug("FFI call: #{name} #{args.inspect}")
+          logger.debug("FFI call: #{name} #{args.inspect} #{formal_args.inspect}")
           call_and_check(ffi_interface.vtbl[name], ffi_interface.vtbl_parent, *formal_args)
 
           # Extract the values from the formal args array, again based on the

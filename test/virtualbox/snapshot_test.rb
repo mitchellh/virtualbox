@@ -14,7 +14,7 @@ class SnapshotTest < Test::Unit::TestCase
 
       should "call populate_machine_relationship for VMs" do
         vm = mock("vm")
-        vm.stubs(:is_a?).with(VirtualBox::COM::Interface::Machine).returns(true)
+        vm.stubs(:is_a?).with(VirtualBox::COM::Util.versioned_interface(:Machine)).returns(true)
         @klass.expects(:populate_machine_relationship).with(@caller, vm).once
         @klass.populate_relationship(@caller, vm)
       end
@@ -27,7 +27,7 @@ class SnapshotTest < Test::Unit::TestCase
       should "call populate_parent_relationship for a snapshot" do
         ss = mock("snapshot")
         ss.stubs(:is_a?).returns(false)
-        ss.stubs(:is_a?).with(VirtualBox::COM::Interface::Snapshot).returns(true)
+        ss.stubs(:is_a?).with(VirtualBox::COM::Util.versioned_interface(:Snapshot)).returns(true)
         @klass.expects(:populate_parent_relationship).with(@caller, ss).once
         @klass.populate_relationship(@caller, ss)
       end

@@ -147,7 +147,8 @@ module VirtualBox
     attribute :accessible, :readonly => true, :boolean => true
     attribute :hardware_version
     attribute :hardware_uuid
-    attribute :statistics_update_interval
+    # TODO: Removed in 3.2.x, how should we handle this?
+    # attribute :statistics_update_interval
     attribute :firmware_type
     attribute :snapshot_folder
     attribute :settings_file_path, :readonly => true
@@ -546,7 +547,7 @@ module VirtualBox
 
       # Send the proper command, waiting if we have to
       result = session.console.send(command, *args)
-      result.wait_for_completion(-1) if result.is_a?(COM::Interface::Progress)
+      result.wait_for_completion(-1) if result.is_a?(COM::Util.versioned_interface(:Progress))
     ensure
       # Close the session
       session.close if session && session.state == :open
