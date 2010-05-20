@@ -100,7 +100,10 @@ module VirtualBox
               "vdi" => "VDI",
               "cpu" => "CPU",
               "ram" => "RAM",
-              "hdd" => "HDD"
+              "hdd" => "HDD",
+              "rtc" => "RTC",
+              "utc" => "UTC",
+              "io" => "IO"
             }
 
             parts = string.to_s.split(/_/).collect do |part|

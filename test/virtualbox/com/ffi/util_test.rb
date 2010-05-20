@@ -95,7 +95,9 @@ class COMFFIUtilTest < Test::Unit::TestCase
         "ip_address" => "IPAddress",
         "max_vdi_size" => "MaxVDISize",
         "cpu_count" => "CPUCount",
-        "recommended_hdd" => "RecommendedHDD"
+        "recommended_hdd" => "RecommendedHDD",
+        "rtc_use_utc" => "RTCUseUTC",
+        "use_host_io_cache" => "UseHostIOCache"
       }
 
       tests.each do |arg, expected|

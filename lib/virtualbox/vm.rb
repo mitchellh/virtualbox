@@ -147,7 +147,8 @@ module VirtualBox
     attribute :accessible, :readonly => true, :boolean => true
     attribute :hardware_version
     attribute :hardware_uuid
-    attribute :statistics_update_interval
+    # TODO: Removed in 3.2.x, how should we handle this?
+    # attribute :statistics_update_interval
     attribute :firmware_type
     attribute :snapshot_folder
     attribute :settings_file_path, :readonly => true
