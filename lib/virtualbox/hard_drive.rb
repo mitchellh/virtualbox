@@ -82,7 +82,7 @@ module VirtualBox
     attribute :logical_size
     attribute :physical_size, :readonly => true, :property => :size
 
-    class <<self
+    class << self
       # Returns an array of all available hard drives as HardDrive
       # objects.
       #

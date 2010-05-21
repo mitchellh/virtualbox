@@ -95,6 +95,7 @@ class HardDriveTest < Test::Unit::TestCase
     setup do
       @klass.any_instance.stubs(:initialize_attributes)
       @instance = @klass.new
+      @instance.stubs(:validate)
 
       @system_properties = mock("system_properties")
       @virtualbox = mock("virtualbox")
@@ -117,7 +118,7 @@ class HardDriveTest < Test::Unit::TestCase
     end
 
     should "raise exception unless the record is valid" do
-      @instance.stubs(:location).returns(nil)
+      @instance.stubs(:valid?).returns(false)
       assert_raises(VirtualBox::Exceptions::ValidationFailedException) do
         @instance.create
       end

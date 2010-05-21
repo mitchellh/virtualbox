@@ -5,7 +5,7 @@ module VirtualBox
     attribute :audio_controller
     attribute :audio_driver
 
-    class <<self
+    class << self
       # Populates a relationship with another model.
       #
       # **This method typically won't be used except internally.**
@@ -36,8 +36,8 @@ module VirtualBox
       super
 
       validates_inclusion_of :enabled, :in => [true, false]
-      validates_inclusion_of :audio_controller, :in => COM::Interface::AudioControllerType.map
-      validates_inclusion_of :audio_driver, :in => COM::Interface::AudioDriverType.map
+      validates_inclusion_of :audio_controller, :in => COM::Util.versioned_interface(:AudioControllerType).map
+      validates_inclusion_of :audio_driver, :in => COM::Util.versioned_interface(:AudioDriverType).map
     end
 
     def save
