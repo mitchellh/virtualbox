@@ -4,18 +4,19 @@ class AbstractImplementerTest < Test::Unit::TestCase
   setup do
     @klass = VirtualBox::COM::AbstractImplementer
     @interface = mock("interface")
+    @lib = mock("lib")
   end
 
   context "initialization" do
     should "make the interface accessible" do
-      instance = @klass.new(@interface)
+      instance = @klass.new(@interface, @lib)
       assert_equal @interface, instance.interface
     end
   end
 
   context "base methods" do
     setup do
-      @instance = @klass.new(@interface)
+      @instance = @klass.new(@interface, @lib)
     end
 
     should "implement the read_property function" do

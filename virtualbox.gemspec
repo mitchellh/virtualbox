@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-05-20}
+  s.date = %q{2010-05-22}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/com/abstract_enum.rb",
      "lib/virtualbox/com/abstract_implementer.rb",
      "lib/virtualbox/com/abstract_interface.rb",
+     "lib/virtualbox/com/base_interface.rb",
      "lib/virtualbox/com/ffi/interface.rb",
      "lib/virtualbox/com/ffi/interfaces.rb",
      "lib/virtualbox/com/ffi/util.rb",
@@ -173,6 +174,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/com/interface/3.2.x/vrdp_auth_type.rb",
      "lib/virtualbox/com/interface/3.2.x/vrdp_server.rb",
      "lib/virtualbox/com/mscom_interface.rb",
+     "lib/virtualbox/com/nil_interface.rb",
      "lib/virtualbox/com/util.rb",
      "lib/virtualbox/cpu.rb",
      "lib/virtualbox/dvd.rb",

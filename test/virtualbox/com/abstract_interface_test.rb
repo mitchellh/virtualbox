@@ -91,7 +91,8 @@ class AbstractInterfaceTest < Test::Unit::TestCase
 
   context "instance methods" do
     setup do
-      @interface = BasicAITest.new(@impl)
+      @lib = VirtualBox::COM::NilInterface.new
+      @interface = BasicAITest.new(@impl, @lib)
     end
 
     context "checking for property existence" do

@@ -2,7 +2,6 @@ module VirtualBox
   module COM
     module Implementer
       class MSCOM < Base
-        attr_reader :lib
         attr_reader :object
 
         # Initializes the MSCOM implementer.
@@ -10,9 +9,8 @@ module VirtualBox
         # @param [AbstractInterface] inteface
         # @param [FFI::Pointer] pointer
         def initialize(interface, lib_base, object)
-          super(interface)
+          super(interface, lib_base)
 
-          @lib = lib_base
           @object = object
         end
 

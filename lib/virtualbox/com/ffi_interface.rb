@@ -1,6 +1,6 @@
 module VirtualBox
   module COM
-    class FFIInterface
+    class FFIInterface < BaseInterface
       extend ::FFI::Library
       include Logger
 
@@ -17,7 +17,7 @@ module VirtualBox
       attr_reader :virtualbox
       attr_reader :session
 
-      class <<self
+      class << self
         # Sets up the FFI interface and also initializes the interface,
         # returning an instance of {FFIInterface}.
         def create(lib_path=nil)
@@ -41,6 +41,7 @@ module VirtualBox
       end
 
       def initialize
+        super
         initialize_com
       end
 
@@ -49,10 +50,12 @@ module VirtualBox
       def initialize_com
         # Get the pointer to the XPCOMC struct which contains the functions
         # to initialize
-        xpcom_pointer = self.class.VBoxGetXPCOMCFunctions(XPCOMC_VERSION)
-        @xpcom = FFI::VBOXXPCOMC.new(xpcom_pointer)
+        on_lib_thread do
+          xpcom_pointer = self.class.VBoxGetXPCOMCFunctions(XPCOMC_VERSION)
+          @xpcom = FFI::VBOXXPCOMC.new(xpcom_pointer)
 
-        initialize_singletons
+          initialize_singletons
+        end
       end
 
       # Initializes the VirtualBox and Session interfaces. It goes through

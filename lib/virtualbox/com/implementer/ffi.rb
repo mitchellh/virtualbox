@@ -3,7 +3,6 @@ module VirtualBox
     module Implementer
       class FFI < Base
         attr_reader :ffi_interface
-        attr_reader :lib
 
         # Initializes the FFI implementer which takes an {VirtualBox::COM::AbstractInterface AbstractInterface}
         # instant and FFI pointer and initializes everything required to
@@ -12,9 +11,8 @@ module VirtualBox
         # @param [VirtualBox::COM::AbstractInteface] inteface
         # @param [FFI::Pointer] pointer
         def initialize(interface, lib_base, pointer)
-          super(interface)
+          super(interface, lib_base)
 
-          @lib = lib_base
           @ffi_interface = ffi_class.new(pointer)
         end
 

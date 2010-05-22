@@ -39,7 +39,7 @@ module VirtualBox
         attr_reader :vtbl_parent
         attr_reader :vtbl
 
-        class <<self
+        class << self
           # Sets up the args to the FFI::Struct `layout` method. This
           # method defines all the callbacks necessary for working with
           # FFI and also sets up any layout args to send in. The way the

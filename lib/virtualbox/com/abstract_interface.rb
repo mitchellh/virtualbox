@@ -33,8 +33,9 @@ module VirtualBox
     #
     class AbstractInterface
       attr_reader :implementer
+      attr_reader :lib
 
-      class <<self
+      class << self
         # Adds a function to the interface with the given name and function
         # spec. The spec determines the arguments required, the order they
         # are required in, and any out-arguments.
@@ -108,28 +109,35 @@ module VirtualBox
       end
 
       # Initializes the interface with the given implementer
-      def initialize(implementer, *args)
+      def initialize(implementer, lib, *args)
         # Instantiate the implementer and set it
-        @implementer = implementer.new(self, *args)
+        @lib = lib
+        @implementer = implementer.new(self, lib, *args)
       end
 
       # Reads a property with the given name by calling the read_property
       # method on the implementer.
       def read_property(name)
-        # Just call it on the implementer
-        @implementer.read_property(name, member(name))
+        lib.on_lib_thread do
+          # Just call it on the implementer
+          @implementer.read_property(name, member(name))
+        end
       end
 
       # Writes a property with the given name and value by calling the
       # `write_property` method on the implementer.
       def write_property(name, value)
-        @implementer.write_property(name, value, member(name))
+        lib.on_lib_thread do
+          @implementer.write_property(name, value, member(name))
+        end
       end
 
       # Calls a function with the given name by calling call_function on the
       # implementer.
       def call_function(name, *args)
-        @implementer.call_function(name, args, member(name))
+        lib.on_lib_thread do
+          @implementer.call_function(name, args, member(name))
+        end
       end
 
       # Returns a boolean if a given function exists or not

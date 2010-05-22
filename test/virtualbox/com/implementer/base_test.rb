@@ -4,11 +4,12 @@ class COMImplementerBaseTest < Test::Unit::TestCase
   setup do
     @klass = VirtualBox::COM::Implementer::Base
     @interface = mock("interface")
+    @lib = mock("lib")
   end
 
   context "with an instance" do
     setup do
-      @instance = @klass.new(@interface)
+      @instance = @klass.new(@interface, @lib)
     end
 
     context "inferring types" do

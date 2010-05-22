@@ -8,6 +8,7 @@ module VirtualBox
     # Windows (COM) and Unix (XPCOM), which have different calling conventions.
     class AbstractImplementer
       attr_reader :interface
+      attr_reader :lib
 
       # Initializes an implementer for the given {AbstractInterface}. The
       # implementor's other methods, such as {read_property} or
@@ -15,8 +16,9 @@ module VirtualBox
       # the interface.
       #
       # @param [AbstractInterface] interface
-      def initialize(interface)
+      def initialize(interface, lib)
         @interface = interface
+        @lib = lib
       end
 
       # Read a property of the interface.
