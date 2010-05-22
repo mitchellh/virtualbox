@@ -14,6 +14,10 @@ module VirtualBox
             # We were woken up! We should have a task. Run it and be done.
             Thread.current[:return] = Thread.current[:task].call if Thread.current[:task]
             Thread.current[:waiter].run if Thread.current[:waiter]
+
+            # Set the task and waiter to nil
+            Thread.current[:task] = nil
+            Thread.current[:waiter] = nil
           end
         end
       end
