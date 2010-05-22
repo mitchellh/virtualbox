@@ -4,20 +4,21 @@ module VirtualBox
   module COM
     class BaseInterface
       def initialize
-        @mutex = Mutex.new
         @lib_thread = Thread.new do
           while true
             # Stop the thread initially, we'll get woken up manually when we
             # have work to do.
-            Thread.stop unless Thread.current[:task]
+            unless Thread.current[:task]
+              # Be sure to clear the waiter tasks
+              Thread.current[:waiter].run if Thread.current[:waiter]
+              Thread.current[:waiter] = nil
+
+              Thread.stop
+            end
 
             # We were woken up! We should have a task. Run it and be done.
             Thread.current[:return] = Thread.current[:task].call if Thread.current[:task]
-            Thread.current[:waiter].run if Thread.current[:waiter]
-
-            # Set the task and waiter to nil
             Thread.current[:task] = nil
-            Thread.current[:waiter] = nil
           end
         end
       end
@@ -28,22 +29,26 @@ module VirtualBox
       # good idea in general so that multiple API calls aren't firing
       # at once.
       def on_lib_thread(&task)
-        @mutex.synchronize do
-          # Create the completion checking thread which just sleeps.
-          waiter = Thread.new { Thread.stop }
+        # If we're already on the lib thread, then just run it!
+        return task.call if Thread.current == @lib_thread
 
-          # Set the task and the waiter thread on the worker and start up the
-          # worker.
-          @lib_thread[:task] = task
-          @lib_thread[:waiter] = waiter
-          @lib_thread.run
+        # Our "mutex"
+        @lib_thread[:waiter].join if @lib_thread[:waiter]
 
-          # Wait on the waiter, which marks completion
-          waiter.join
+        # Create the completion checking thread which just sleeps.
+        waiter = Thread.new { Thread.stop }
 
-          # Return the return value
-          @lib_thread[:return]
-        end
+        # Set the task and the waiter thread on the worker and start up the
+        # worker.
+        @lib_thread[:task] = task
+        @lib_thread[:waiter] = waiter
+        @lib_thread.run
+
+        # Wait on the waiter, which marks completion
+        waiter.join
+
+        # Return the return value
+        @lib_thread[:return]
       end
     end
   end

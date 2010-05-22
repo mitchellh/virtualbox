@@ -25,7 +25,7 @@ module VirtualBox
     attr_reader :virtualbox
     attr_reader :session
 
-    class <<self
+    class << self
       # Resets the initialized library (if there is any). This is primarily only
       # used for testing.
       def reset!

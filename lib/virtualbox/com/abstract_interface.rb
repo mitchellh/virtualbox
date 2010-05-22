@@ -118,26 +118,20 @@ module VirtualBox
       # Reads a property with the given name by calling the read_property
       # method on the implementer.
       def read_property(name)
-        lib.on_lib_thread do
-          # Just call it on the implementer
-          @implementer.read_property(name, member(name))
-        end
+        # Just call it on the implementer
+        @implementer.read_property(name, member(name))
       end
 
       # Writes a property with the given name and value by calling the
       # `write_property` method on the implementer.
       def write_property(name, value)
-        lib.on_lib_thread do
-          @implementer.write_property(name, value, member(name))
-        end
+        @implementer.write_property(name, value, member(name))
       end
 
       # Calls a function with the given name by calling call_function on the
       # implementer.
       def call_function(name, *args)
-        lib.on_lib_thread do
-          @implementer.call_function(name, args, member(name))
-        end
+        @implementer.call_function(name, args, member(name))
       end
 
       # Returns a boolean if a given function exists or not
