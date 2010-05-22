@@ -51,6 +51,9 @@ module VirtualBox
               wait_for_completion(500)
 
               break if completed || canceled
+
+              # Pass off execution so other threads can run
+              Thread.pass
             end
           end
         end
