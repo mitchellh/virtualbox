@@ -17,8 +17,8 @@ class RelatableTest < Test::Unit::TestCase
   end
 
   class RelatableModel < EmptyRelatableModel
-    relationship :foos, Relatee
-    relationship :bars, BarRelatee
+    relationship :foos, RelatableTest::Relatee
+    relationship :bars, RelatableTest::BarRelatee
   end
 
   setup do
@@ -246,8 +246,8 @@ class RelatableTest < Test::Unit::TestCase
 
   context "determining the class of relationships" do
     class ClassRelatableModel < EmptyRelatableModel
-      relationship :foo, Relatee
-      relationship :bar, "RelatableTest::Relatee"
+      relationship :foo, RelatableTest::Relatee
+      relationship :bar, "RelatableTest::BarRelatee"
     end
 
     setup do
@@ -259,7 +259,7 @@ class RelatableTest < Test::Unit::TestCase
     end
 
     should "turn string into class" do
-      assert_equal Relatee, @model.relationship_class(:bar)
+      assert_equal BarRelatee, @model.relationship_class(:bar)
     end
   end
 
