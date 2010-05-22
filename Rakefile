@@ -32,7 +32,7 @@ begin
     t.options += ['--title', 'VirtualBox Ruby Library Documentation']
   end
 rescue LoadError
-  puts "Yard not available. Install it with: gem install yard"
+  puts "Yard not available. Install it with: gem install yard bluecloth"
 end
 
 begin
