@@ -50,12 +50,10 @@ module VirtualBox
       def initialize_com
         # Get the pointer to the XPCOMC struct which contains the functions
         # to initialize
-        on_lib_thread do
-          xpcom_pointer = self.class.VBoxGetXPCOMCFunctions(XPCOMC_VERSION)
-          @xpcom = FFI::VBOXXPCOMC.new(xpcom_pointer)
+        xpcom_pointer = self.class.VBoxGetXPCOMCFunctions(XPCOMC_VERSION)
+        @xpcom = FFI::VBOXXPCOMC.new(xpcom_pointer)
 
-          initialize_singletons
-        end
+        initialize_singletons
       end
 
       # Initializes the VirtualBox and Session interfaces. It goes through

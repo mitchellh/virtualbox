@@ -4,21 +4,15 @@ module VirtualBox
   module COM
     class BaseInterface
       def initialize
-        @lib_thread = Thread.new do
+        @task_queue = Queue.new
+
+        @lib_thread = Thread.new(@task_queue) do |queue|
           while true
-            # Stop the thread initially, we'll get woken up manually when we
-            # have work to do.
-            unless Thread.current[:task]
-              # Be sure to clear the waiter tasks
-              Thread.current[:waiter].run if Thread.current[:waiter]
-              Thread.current[:waiter] = nil
+            task, result = queue.pop
 
-              Thread.stop
-            end
-
-            # We were woken up! We should have a task. Run it and be done.
-            Thread.current[:return] = Thread.current[:task].call if Thread.current[:task]
-            Thread.current[:task] = nil
+            # Run the task, set the return value, and run the waiter
+            # which will simply finish that thread
+            result << task.call
           end
         end
       end
@@ -32,23 +26,12 @@ module VirtualBox
         # If we're already on the lib thread, then just run it!
         return task.call if Thread.current == @lib_thread
 
-        # Our "mutex"
-        @lib_thread[:waiter].join if @lib_thread[:waiter]
+        # Add the task to the queue
+        result = Queue.new
+        @task_queue << [task, result]
 
-        # Create the completion checking thread which just sleeps.
-        waiter = Thread.new { Thread.stop }
-
-        # Set the task and the waiter thread on the worker and start up the
-        # worker.
-        @lib_thread[:task] = task
-        @lib_thread[:waiter] = waiter
-        @lib_thread.run
-
-        # Wait on the waiter, which marks completion
-        waiter.join
-
-        # Return the return value
-        @lib_thread[:return]
+        # Pop the result off of the result queue
+        result.pop
       end
     end
   end

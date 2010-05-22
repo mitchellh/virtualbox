@@ -14,15 +14,13 @@ module VirtualBox
       end
 
       def initialize_mscom
-        on_lib_thread do
-          require 'win32ole'
+        require 'win32ole'
 
-          # TODO: Dynamic version finding
-          COM::Util.set_interface_version("3.1.x")
+        # TODO: Dynamic version finding
+        COM::Util.set_interface_version("3.1.x")
 
-          @virtualbox = COM::Util.versioned_interface(:VirtualBox).new(Implementer::MSCOM, self, WIN32OLE.new("VirtualBox.VirtualBox"))
-          @session = COM::Util.versioned_interface(:Session).new(Implementer::MSCOM, self, WIN32OLE.new("VirtualBox.Session"))
-        end
+        @virtualbox = COM::Util.versioned_interface(:VirtualBox).new(Implementer::MSCOM, self, WIN32OLE.new("VirtualBox.VirtualBox"))
+        @session = COM::Util.versioned_interface(:Session).new(Implementer::MSCOM, self, WIN32OLE.new("VirtualBox.Session"))
       end
     end
   end
