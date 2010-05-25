@@ -15,6 +15,18 @@ class VersionTest < Test::Unit::TestCase
     @module = VersionTestMod
   end
 
+  context "checking if supported version of VirtualBox" do
+    should "return true if version is not nil" do
+      @module.stubs(:version).returns(:foo)
+      assert @module.supported?
+    end
+
+    should "return false if version is nil" do
+      @module.stubs(:version).returns(nil)
+      assert !@module.supported?
+    end
+  end
+
   should "return the version" do
     version = mock("version")
     @vbox.expects(:version).returns(version)
