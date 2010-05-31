@@ -31,7 +31,7 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
         new_seq = sequence("new_seq")
         collection.each do |item|
           expected_value = "instance-#{item.inspect}"
-          @klass.expects(:new).with(@parent, item).in_sequence(new_seq).returns(expected_value)
+          @klass.expects(:new).with(item).in_sequence(new_seq).returns(expected_value)
           expected_result << expected_value
         end
 
@@ -43,7 +43,7 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
   context "initializing" do
     should "load attributes from the machine" do
       @klass.any_instance.expects(:initialize_attributes).with(@interface).once
-      @klass.new(@parent, @interface)
+      @klass.new(@interface)
     end
   end
 
@@ -54,16 +54,16 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
 
     should "load interface attribtues" do
       @klass.any_instance.expects(:load_interface_attributes).with(@interface).once
-      @klass.new(@parent, @interface)
+      @klass.new(@interface)
     end
 
     should "not be dirty" do
-      @instance = @klass.new(@parent, @interface)
+      @instance = @klass.new(@interface)
       assert !@instance.changed?
     end
 
     should "be existing record" do
-      @instance = @klass.new(@parent, @interface)
+      @instance = @klass.new(@interface)
       assert !@instance.new_record?
     end
   end
@@ -74,7 +74,9 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
 
       @parent = mock("parent")
       @interface = mock("interface")
-      @instance = @klass.new(@parent, @interface)
+      @instance = @klass.new(@interface)
+      @collection = VirtualBox::Proxies::Collection.new(@parent)
+      @collection << @instance
     end
 
     # Coming soon

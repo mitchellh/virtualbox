@@ -4,6 +4,7 @@ module VirtualBox
   # and host-only. This class represents both.
   class HostNetworkInterface < AbstractModel
     attribute :parent, :readonly => true, :property => false
+    attribute :parent_collection, :readonly => true, :property => false
     attribute :name, :readonly => true
     attribute :uuid, :readonly => true, :property => :id
     attribute :network_name, :readonly => true
@@ -28,20 +29,25 @@ module VirtualBox
         relation = Proxies::Collection.new(caller)
 
         ihost.network_interfaces.each do |inet|
-          relation << new(caller, inet)
+          relation << new(inet)
         end
 
         relation
       end
     end
 
-    def initialize(parent, inet)
-      populate_attributes({:parent => parent}, :ignore_relationships => true)
+    def initialize(inet)
       initialize_attributes(inet)
     end
 
     def initialize_attributes(inet)
       load_interface_attributes(inet)
+      existing_record!
+    end
+
+    def added_to_relationship(proxy)
+      write_attribute(:parent, proxy.parent)
+      write_attribute(:parent_collection, proxy)
     end
   end
 end
