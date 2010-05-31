@@ -193,6 +193,9 @@ module VirtualBox
         results << parent.extra_data.delete("#{key_prefix(true)}GuestPort")
         results << parent.extra_data.delete("#{key_prefix(true)}HostPort")
 
+        # Remove it from any collection
+        parent_collection.delete(self, true) if parent_collection
+
         new_record!
       end
 

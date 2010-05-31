@@ -188,6 +188,12 @@ class SharedFolderTest < Test::Unit::TestCase
         @machine.stubs(:remove_shared_folder).with(@name)
       end
 
+      should "remove itself from it's collection" do
+        assert @collection.include?(@instance)
+        @instance.destroy
+        assert !@collection.include?(@instance)
+      end
+
       should "destroy the shared folder on the parent" do
         destroy_seq = sequence("destroy_seq")
         @machine.expects(:remove_shared_folder).with(@name).in_sequence(destroy_seq)

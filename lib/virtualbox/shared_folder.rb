@@ -210,6 +210,9 @@ module VirtualBox
         machine.remove_shared_folder(name)
       end
 
+      # Remove it from it's parent collection
+      parent_collection.delete(self, true) if parent_collection
+
       # Mark as a new record so if it is saved again, it will create it
       new_record!
    end

@@ -196,6 +196,12 @@ class ForwardedPortTest < Test::Unit::TestCase
         @port.existing_record!
       end
 
+      should "remove itself from it's collection" do
+        assert @collection.include?(@port)
+        @port.destroy
+        assert !@collection.include?(@port)
+      end
+
       should "call delete on the extra data for each key" do
         @ed = mock("ed")
         @ed.expects(:delete).times(3)
