@@ -16,10 +16,16 @@ class HostTest < Test::Unit::TestCase
   context "initializing attributes" do
     setup do
       @klass.any_instance.stubs(:load_interface_attributes)
+      @klass.any_instance.stubs(:populate_relationship)
     end
 
     should "load interface attribtues" do
       @klass.any_instance.expects(:load_interface_attributes).with(@interface).once
+      @klass.new(@interface)
+    end
+
+    should "populate the relationships" do
+      @klass.any_instance.expects(:populate_relationship).with(:network_interfaces, @interface).once
       @klass.new(@interface)
     end
 
@@ -74,6 +80,7 @@ class HostTest < Test::Unit::TestCase
   context "instance methods" do
     setup do
       @klass.any_instance.stubs(:load_interface_attributes)
+      @klass.any_instance.stubs(:populate_relationship)
       @instance = @klass.new(@interface)
     end
 

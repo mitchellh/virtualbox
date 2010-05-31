@@ -16,6 +16,7 @@ module VirtualBox
     attribute :os_version, :readonly => true
     attribute :utc_time, :readonly => true
     attribute :acceleration_3d_available, :readonly => true
+    relationship :network_interfaces, :HostNetworkInterface
 
     class << self
       # Populates the system properties relationship for anything
@@ -51,6 +52,9 @@ module VirtualBox
 
       # Load the attributes from the interface
       load_interface_attributes(interface)
+
+      # Get the relationships setup
+      populate_relationship(:network_interfaces, interface)
 
       # Clear dirty and mark as existing
       clear_dirty!
