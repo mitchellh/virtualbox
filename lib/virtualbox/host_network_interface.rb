@@ -69,6 +69,15 @@ module VirtualBox
       write_attribute(:parent_collection, proxy)
     end
 
+    # Reloads the information regarding this host only network
+    # interface.
+    def reload
+      # Find the interface again and reload the data
+      inet = parent.interface.find_host_network_interface_by_id(uuid)
+      initialize_attributes(inet)
+      self
+    end
+
     # Destroy the host only network interface. Warning: If any VMs are
     # currently attached to this network interface, their networks
     # will fail to work after removing this. Therefore, one should be

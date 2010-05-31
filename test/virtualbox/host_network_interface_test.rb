@@ -91,6 +91,20 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
       @collection << @instance
     end
 
+    context "reloading" do
+      setup do
+        @interface = mock("parent_interface")
+        @parent.stubs(:interface).returns(@interface)
+      end
+
+      should "reload based on the interface found by the parent" do
+        result = mock("result")
+        @interface.expects(:find_host_network_interface_by_id).with(@instance.uuid).once.returns(result)
+        @instance.expects(:initialize_attributes).with(result).once
+        assert_equal @instance, @instance.reload
+      end
+    end
+
     context "destroying" do
       setup do
         @interface = mock("parent_interface")
