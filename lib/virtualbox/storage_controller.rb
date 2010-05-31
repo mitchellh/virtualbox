@@ -47,7 +47,7 @@ module VirtualBox
     attribute :bus, :readonly => true
     attribute :controller_type
 
-    class <<self
+    class << self
       # Populates a relationship with another model.
       #
       # **This method typically won't be used except internally.**

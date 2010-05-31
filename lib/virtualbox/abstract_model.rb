@@ -20,7 +20,7 @@ module VirtualBox
     include Relatable
     include Validatable
 
-    class <<self
+    class << self
       # Returns whether or not the class should be reloaded.
       #
       # @return [Boolean]

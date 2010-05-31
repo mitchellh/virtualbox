@@ -45,7 +45,7 @@ module VirtualBox
     attribute :host_interface
     attribute :interface, :readonly => true, :property => false
 
-    class <<self
+    class << self
       # Populates the nic relationship for anything which is related to it.
       #
       # **This method typically won't be used except internally.**

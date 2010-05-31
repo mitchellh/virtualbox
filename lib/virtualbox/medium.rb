@@ -13,7 +13,7 @@ module VirtualBox
     attribute :interface, :readonly => true, :property => false
     relationship :children, :Medium, :lazy => true
 
-    class <<self
+    class << self
       # Populates a relationship with another model. Depending on the data sent
       # through as the `media` parameter, this can either return a single value
       # or an array of values. {Global}, for example, has a relationship of media,

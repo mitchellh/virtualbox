@@ -9,7 +9,7 @@ module VirtualBox
     attribute :usb_standard, :readonly => true
     relationship :device_filters, :USBDeviceFilter
 
-    class <<self
+    class << self
       # Populates the USB controller relationship for anything
       # which is related to it.
       #

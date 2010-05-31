@@ -5,7 +5,7 @@ module VirtualBox
       # with the FFI interface. These functions range from converting a
       # function spec to a FFI parameter list to dereferencing pointers.
       class Util
-        class <<self
+        class << self
           # Finds and returns the `COM::Interface` class associated with the type.
           # If the class does not exist, a `NameError` will be raised.
           #

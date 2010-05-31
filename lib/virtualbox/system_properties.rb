@@ -26,7 +26,7 @@ module VirtualBox
     attribute :log_history_count
     attribute :default_audio_driver, :readonly => true
 
-    class <<self
+    class << self
       # Populates the system properties relationship for anything
       # which is related to it.
       #

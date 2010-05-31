@@ -1,6 +1,6 @@
 module VirtualBox
   class Platform
-    class <<self
+    class << self
       def mac?
         platform.include?("darwin")
       end

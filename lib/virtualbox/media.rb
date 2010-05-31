@@ -5,7 +5,7 @@ module VirtualBox
     relationship :hard_drives, :HardDrive
     relationship :dvds, :DVD
 
-    class <<self
+    class << self
       def populate_relationship(caller, lib)
         new(caller, lib)
       end

@@ -11,7 +11,7 @@ module VirtualBox
     relationship :medium, :Medium
     relationship :storage_controller, :StorageController
 
-    class <<self
+    class << self
       # Populates a relationship with another model.
       #
       # **This method typically won't be used except internally.**

@@ -5,7 +5,7 @@ module VirtualBox
     attribute :interface, :readonly => true
     attribute :descriptions, :readonly => true, :default => {}
 
-    class <<self
+    class << self
       def populate_relationship(caller, data)
         result = Proxies::Collection.new(caller)
 

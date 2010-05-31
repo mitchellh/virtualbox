@@ -45,7 +45,7 @@ module VirtualBox
 
     @@global_data = nil
 
-    class <<self
+    class << self
       # Retrieves the global data. The return value of this call is cached,
       # and can be reloaded by setting the `reload` parameter to true. Besides
       # explicitly setting the parameter, some actions within the library

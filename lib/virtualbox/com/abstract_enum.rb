@@ -5,7 +5,7 @@ module VirtualBox
     class AbstractEnum
       extend Enumerable
 
-      class <<self
+      class << self
         # Defines the mapping of int => symbol for the given Enum.
         # The parameter to this can be an Array or Hash or anything which
         # can be indexed with `[]` and an integer and returns a value of

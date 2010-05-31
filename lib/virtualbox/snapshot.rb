@@ -61,7 +61,7 @@ module VirtualBox
     relationship :machine, :VM, :lazy => true
     relationship :children, :Snapshot, :lazy => true
 
-    class <<self
+    class << self
       # Populates a relationship with another model. Since a snapshot
       # can be in a relationship with multiple items, this method forwards
       # to other methods such as {populate_vm_relationship}.

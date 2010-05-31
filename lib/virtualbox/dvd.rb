@@ -12,7 +12,7 @@ module VirtualBox
   #     DVD.all
   #
   class DVD < Medium
-    class <<self
+    class << self
       # Returns an array of all available DVDs as DVD objects
       def all
         Global.global.media.dvds

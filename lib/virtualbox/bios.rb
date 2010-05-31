@@ -5,7 +5,7 @@ module VirtualBox
     attribute :acpi_enabled, :boolean => true
     attribute :io_apic_enabled, :boolean => true
 
-    class <<self
+    class << self
       # Populates a relationship with another model.
       #
       # **This method typically won't be used except internally.**

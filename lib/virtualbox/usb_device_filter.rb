@@ -16,7 +16,7 @@ module VirtualBox
     attribute :remote
     attribute :masked_interfaces
 
-    class <<self
+    class << self
       # Populates the USB controller relationship for anything
       # which is related to it.
       #
