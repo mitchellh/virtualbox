@@ -3,11 +3,35 @@ require File.join(File.dirname(__FILE__), '..', '..', 'test_helper')
 class CollectionTest < Test::Unit::TestCase
   setup do
     @parent = mock("parent")
-    @collection = VirtualBox::Proxies::Collection.new(@parent)
+    @item_klass = mock("item_klass")
+    @klass = VirtualBox::Proxies::Collection
+    @collection = @klass.new(@parent, @item_klass)
   end
 
   should "be a subclass of Array" do
     assert @collection.is_a?(Array)
+  end
+
+  context "creating" do
+    should "call create on the item klass and put it in the array" do
+      result = mock("result")
+      @item_klass.expects(:create).with(@parent).returns(result)
+      @collection.create
+      assert @collection.include?(result)
+    end
+
+    should "pass in any additional arguments if given" do
+      blah = mock("some blah")
+      @collection = @klass.new(@parent, @item_klass, blah)
+      @item_klass.expects(:create).with(@parent, blah).returns(nil)
+      @collection.create
+    end
+
+    should "do nothing if klass doesn't respond to create" do
+      previous_length = @collection.length
+      assert_nothing_raised { assert_nil @collection.create }
+      assert_equal previous_length, @collection.length
+    end
   end
 
   context "element callbacks" do
