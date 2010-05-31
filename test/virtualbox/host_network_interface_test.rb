@@ -38,6 +38,23 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
         assert_equal expected_result, @klass.populate_relationship(@parent, @interface)
       end
     end
+
+    context "creating" do
+      setup do
+        @interface = mock("interface")
+        @inet = mock("inet")
+        @progress = mock("progress")
+      end
+
+      should "create and return new instance" do
+        result = mock("result")
+        @interface.expects(:create_host_only_network_interface).returns([@inet, @progress]).once
+        @progress.expects(:wait)
+        @klass.expects(:new).with(@inet).returns(result)
+
+        assert_equal result, @klass.create(nil, @interface)
+      end
+    end
   end
 
   context "initializing" do

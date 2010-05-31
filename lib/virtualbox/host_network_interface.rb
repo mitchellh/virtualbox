@@ -26,13 +26,29 @@ module VirtualBox
       #
       # @return [Array<HostNetworkInterface>]
       def populate_relationship(caller, ihost)
-        relation = Proxies::Collection.new(caller)
+        relation = Proxies::Collection.new(caller, self, ihost)
 
         ihost.network_interfaces.each do |inet|
           relation << new(inet)
         end
 
         relation
+      end
+
+      # Creates a host only network interface. This method should not
+      # be called directly. Instead, the `create` method on the
+      # `Global#host` relationship should be called instead. Example:
+      #
+      #     VirtualBox::Global.global.host.network_interfaces.create
+      #
+      # The above will create a host only network interface, add it to
+      # the collection, and will return the instance of the new
+      # interface.
+      def create(proxy, interface)
+        inet, progress = interface.create_host_only_network_interface
+        progress.wait
+
+        new(inet)
       end
     end
 

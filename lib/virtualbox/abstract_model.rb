@@ -237,7 +237,7 @@ module VirtualBox
 
       self.class.attributes.each do |name, options|
         value = read_attribute(name)
-        value = if value.is_a?(AbstractModel) || value.is_a?(COM::AbstractInterface)
+        value = if value.is_a?(AbstractModel) || value.is_a?(COM::AbstractInterface) || value.is_a?(Proxies::Collection)
           "#<#{value.class.name}>"
         else
           value.inspect
