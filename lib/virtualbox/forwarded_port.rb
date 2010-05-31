@@ -67,7 +67,8 @@ module VirtualBox
   #     attribute :hostport
   #
   class ForwardedPort < AbstractModel
-    attribute :parent, :readonly => true
+    attribute :parent, :readonly => true, :property => false
+    attribute :parent_collection, :readonly => true, :property => false
     attribute :name
     attribute :instance, :default => "0"
     attribute :device, :default => "pcnet"
@@ -89,6 +90,7 @@ module VirtualBox
 
           port = new({
             :parent => caller,
+            :parent_collection => relation,
             :name => $4.to_s,
             :instance => $3.to_s,
             :device => $2.to_s,
@@ -199,8 +201,9 @@ module VirtualBox
 
     # Relationship callback when added to a collection. This is automatically
     # called by any relationship collection when this object is added.
-    def added_to_relationship(parent)
-      write_attribute(:parent, parent)
+    def added_to_relationship(proxy)
+      write_attribute(:parent, proxy.parent)
+      write_attribute(:parent_collection, proxy)
     end
 
     # Returns the prefix to be used for the extra data key. Forwarded ports

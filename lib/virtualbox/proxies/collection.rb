@@ -29,7 +29,7 @@ module VirtualBox
       end
 
       def <<(item)
-        item.added_to_relationship(@parent) if item.respond_to?(:added_to_relationship)
+        item.added_to_relationship(self) if item.respond_to?(:added_to_relationship)
         push(item)
       end
 
@@ -39,9 +39,9 @@ module VirtualBox
         end
       end
 
-      def delete(item)
-        return unless super
-        item.removed_from_relationship(@parent) if item.respond_to?(:removed_from_relationship)
+      def delete(item, no_callback=false)
+        return unless super(item)
+        item.removed_from_relationship(self) if !no_callback && item.respond_to?(:removed_from_relationship)
       end
     end
   end

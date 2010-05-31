@@ -14,11 +14,13 @@ class ForwardedPortTest < Test::Unit::TestCase
 
   context "validations" do
     setup do
+      @collection = VirtualBox::Proxies::Collection.new(@caller)
+
       @port = VirtualBox::ForwardedPort.new
       @port.name = "foo"
       @port.guestport = "22"
       @port.hostport = "2222"
-      @port.added_to_relationship(@caller)
+      @port.added_to_relationship(@collection)
     end
 
     should "be valid with all fields" do
@@ -49,11 +51,15 @@ class ForwardedPortTest < Test::Unit::TestCase
   context "with an instance" do
     setup do
       @port = VirtualBox::ForwardedPort.new({
-        :parent => @caller,
         :name => "foo",
         :guestport => "22",
         :hostport => "2222"
       })
+
+      @collection = VirtualBox::Proxies::Collection.new(@caller)
+      @collection << @port
+
+      @port.clear_dirty!
 
       @ed = mock("extradata")
       @ed.stubs(:[]=)
@@ -65,7 +71,7 @@ class ForwardedPortTest < Test::Unit::TestCase
     context "device" do
       setup do
         @port.new_record!
-        @port.added_to_relationship(@caller)
+        @port.added_to_relationship(@collection)
       end
 
       should "return the value set if it was set" do
@@ -246,6 +252,7 @@ class ForwardedPortTest < Test::Unit::TestCase
         assert_equal "22", object.guestport
         assert_equal "2222", object.hostport
         assert_equal "TCP", object.protocol
+        assert_equal @objects, object.parent_collection
       end
 
       should "be existing records" do

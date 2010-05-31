@@ -86,6 +86,7 @@ module VirtualBox
   #
   class SharedFolder < AbstractModel
     attribute :parent, :readonly => true, :property => false
+    attribute :parent_collection, :readonly => true, :property => false
     attribute :name
     attribute :host_path
     attribute :writable, :default => true, :boolean => true
@@ -101,7 +102,7 @@ module VirtualBox
         relation = Proxies::Collection.new(caller)
 
         imachine.shared_folders.each do |ishared|
-          relation << new(caller, ishared)
+          relation << new(ishared)
         end
 
         relation
@@ -123,25 +124,22 @@ module VirtualBox
     #   should be attached to a VM and saved.
     #   @param [Hash] data (optional) A hash which contains initial attribute
     #     values for the SharedFolder.
-    # @overload initialize(index, caller, data)
+    # @overload initialize(interface)
     #   Creates an SharedFolder for a relationship. **This should
     #   never be called except internally.**
     #   @param [Object] caller The parent
     #   @param [Hash] data A hash of data which must be used
     #     to extract the relationship data.
-    def initialize(*args)
+    def initialize(data=nil)
       super()
 
-      if args.length == 2
-        initialize_attributes(*args)
+      if data
+        initialize_attributes(data)
       end
     end
 
     # Initializes the attributes of an existing shared folder.
-    def initialize_attributes(parent, ishared)
-      # Set the parent
-      write_attribute(:parent, parent)
-
+    def initialize_attributes(ishared)
       # Load the interface attributes
       load_interface_attributes(ishared)
 
@@ -192,8 +190,14 @@ module VirtualBox
 
     # Relationship callback when added to a collection. This is automatically
     # called by any relationship collection when this object is added.
-    def added_to_relationship(parent)
-      write_attribute(:parent, parent)
+    def added_to_relationship(proxy)
+      was_clean = parent.nil? && !changed?
+
+      write_attribute(:parent, proxy.parent)
+      write_attribute(:parent_collection, proxy)
+
+      # This keeps existing records not dirty when added to collection
+      clear_dirty! if !new_record? && was_clean
     end
 
     # Destroys the shared folder. This doesn't actually delete the folder
