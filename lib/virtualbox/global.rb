@@ -42,6 +42,7 @@ module VirtualBox
     relationship :media, :Media, :lazy => true
     relationship :extra_data, :ExtraData, :lazy => true
     relationship :system_properties, :SystemProperties, :lazy => true
+    relationship :host, :Host, :lazy => true
 
     @@global_data = nil
 
@@ -83,7 +84,8 @@ module VirtualBox
         :vms => lambda { lib.virtualbox.machines },
         :media => lambda { lib },
         :extra_data => lambda { lib.virtualbox },
-        :system_properties => lambda { lib.virtualbox.system_properties }
+        :system_properties => lambda { lib.virtualbox.system_properties },
+        :host => lambda { lib.virtualbox.host }
       }
 
       populate_relationship(name, relationships[name].call)
