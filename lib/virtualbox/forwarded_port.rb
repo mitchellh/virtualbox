@@ -75,7 +75,7 @@ module VirtualBox
     attribute :guestport
     attribute :hostport
 
-    class <<self
+    class << self
       # Populates a relationship with another model.
       #
       # **This method typically won't be used except internally.**
@@ -182,8 +182,6 @@ module VirtualBox
 
     # Destroys the port forwarding mapping.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def destroy
       results = []

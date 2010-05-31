@@ -91,7 +91,7 @@ module VirtualBox
     attribute :writable, :default => true, :boolean => true
     attribute :accessible, :readonly => true, :boolean => true
 
-    class <<self
+    class << self
       # Populates the shared folder relationship for anything which is related to it.
       #
       # **This method typically won't be used except internally.**

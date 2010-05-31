@@ -145,9 +145,10 @@ class ExtraDataTest < Test::Unit::TestCase
   end
 
   context "deleteting extra data" do
-    should "call set its value to nil" do
+    should "remove it from the interface and the hash" do
       key = :foo
-      @ed.expects(:[]=).with(key, nil).once
+      @interface.expects(:set_extra_data).with(key.to_s, nil).once
+      @ed.expects(:hash_delete).with(key.to_s)
       @ed.delete(key)
     end
   end

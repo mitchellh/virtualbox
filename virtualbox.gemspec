@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-05-22}
+  s.date = %q{2010-05-30}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [

@@ -39,7 +39,7 @@ module VirtualBox
 
     @@global_data = nil
 
-    class <<self
+    class << self
       # Gets the global extra data. This will "cache" the data for
       # future use unless you set the `reload` paramter to true.
       #
@@ -116,13 +116,12 @@ module VirtualBox
     # Alias away the old delete method so its still accessible somehow
     alias :hash_delete :delete
 
-    # Deletes the specified extra data. This method is deferred, meaning that
-    # although the key itself is marked to be deleted (by setting the value
-    # to nil), the deletion itself does not occur until {#save} is called.
+    # Deletes the specified extra data.
     #
     # @param [String] key The extra data key to delete
     def delete(key)
-      self[key] = nil
+      interface.set_extra_data(key.to_s, nil)
+      hash_delete(key.to_s)
     end
   end
 end
