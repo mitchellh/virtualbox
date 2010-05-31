@@ -21,7 +21,7 @@ module VirtualBox
         item =  nil
 
         if @item_klass.respond_to?(:create)
-          item = @item_klass.create(parent, *@other)
+          item = @item_klass.create(self, *@other)
           self << item
         end
 

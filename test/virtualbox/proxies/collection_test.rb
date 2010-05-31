@@ -15,7 +15,7 @@ class CollectionTest < Test::Unit::TestCase
   context "creating" do
     should "call create on the item klass and put it in the array" do
       result = mock("result")
-      @item_klass.expects(:create).with(@parent).returns(result)
+      @item_klass.expects(:create).with(@collection).returns(result)
       @collection.create
       assert @collection.include?(result)
     end
@@ -23,7 +23,7 @@ class CollectionTest < Test::Unit::TestCase
     should "pass in any additional arguments if given" do
       blah = mock("some blah")
       @collection = @klass.new(@parent, @item_klass, blah)
-      @item_klass.expects(:create).with(@parent, blah).returns(nil)
+      @item_klass.expects(:create).with(@collection, blah).returns(nil)
       @collection.create
     end
 
