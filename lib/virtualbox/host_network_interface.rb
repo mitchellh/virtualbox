@@ -5,6 +5,7 @@ module VirtualBox
   class HostNetworkInterface < AbstractModel
     attribute :parent, :readonly => true, :property => false
     attribute :parent_collection, :readonly => true, :property => false
+    attribute :interface, :readonly => true, :property => false
     attribute :name, :readonly => true
     attribute :uuid, :readonly => true, :property => :id
     attribute :network_name, :readonly => true
@@ -57,6 +58,8 @@ module VirtualBox
     end
 
     def initialize_attributes(inet)
+      write_attribute(:interface, inet)
+
       load_interface_attributes(inet)
       existing_record!
     end
@@ -64,6 +67,20 @@ module VirtualBox
     def added_to_relationship(proxy)
       write_attribute(:parent, proxy.parent)
       write_attribute(:parent_collection, proxy)
+    end
+
+    # Destroy the host only network interface. Warning: If any VMs are
+    # currently attached to this network interface, their networks
+    # will fail to work after removing this. Therefore, one should be
+    # careful to make sure to remove all VMs from this network prior
+    # to destroying it.
+    def destroy
+      parent.interface.remove_host_only_network_interface(uuid).wait
+
+      # Remove from collection
+      parent_collection.delete(self, true) if parent_collection
+
+      true
     end
   end
 end

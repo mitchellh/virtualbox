@@ -74,11 +74,6 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
       @klass.new(@interface)
     end
 
-    should "not be dirty" do
-      @instance = @klass.new(@interface)
-      assert !@instance.changed?
-    end
-
     should "be existing record" do
       @instance = @klass.new(@interface)
       assert !@instance.new_record?
@@ -96,6 +91,26 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
       @collection << @instance
     end
 
-    # Coming soon
+    context "destroying" do
+      setup do
+        @interface = mock("parent_interface")
+        @progress = mock("progress")
+        @progress.stubs(:wait)
+        @parent.stubs(:interface).returns(@interface)
+        @interface.stubs(:remove_host_only_network_interface).returns(@progress)
+      end
+
+      should "remove the network interface from VirtualBox" do
+        @interface.expects(:remove_host_only_network_interface).with(@instance.uuid).returns(@progress)
+
+        @instance.destroy
+      end
+
+      should "remove the instance from it's collection" do
+        assert @collection.include?(@instance)
+        @instance.destroy
+        assert !@collection.include?(@instance)
+      end
+    end
   end
 end
