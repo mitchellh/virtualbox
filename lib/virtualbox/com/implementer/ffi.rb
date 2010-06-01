@@ -66,7 +66,7 @@ module VirtualBox
 
           # Call the function.
           logger.debug("FFI call: #{name} #{args.inspect} #{formal_args.inspect}")
-          call_and_check(ffi_interface.vtbl[name], ffi_interface.vtbl_parent, *formal_args)
+          call_and_check(name, ffi_interface.vtbl_parent, *formal_args)
 
           # Extract the values from the formal args array, again based on the
           # spec (and the various :out parameters)
@@ -83,7 +83,7 @@ module VirtualBox
         # Checks the result of a method call for an error, and if an error
         # occurs, then raises an exception.
         def call_and_check(function, *args)
-          result = function.call(*args)
+          result = ffi_interface.vtbl[function].call(*args)
 
           # Ignore NS_ERROR_NOT_IMPLEMENTED, since it seems to be raised for
           # things which aren't really exceptional

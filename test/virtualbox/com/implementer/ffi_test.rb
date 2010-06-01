@@ -79,8 +79,7 @@ class COMImplementerFFITest < Test::Unit::TestCase
         @formal = [:foo]
 
         @instance.expects(:spec_to_args).with(@spec, @args).returns(@formal)
-        @vtbl.expects(:[]).with(@name).returns(@proc)
-        @instance.expects(:call_and_check).with(@proc, @vtbl_parent, *@formal)
+        @instance.expects(:call_and_check).with(@name, @vtbl_parent, *@formal)
         @instance.expects(:values_from_formal_args).with(@spec, @formal).returns(result)
         assert_equal result, @instance.call_vtbl_function(@name, @spec, @args)
       end
@@ -90,33 +89,37 @@ class COMImplementerFFITest < Test::Unit::TestCase
       setup do
         @function = mock("function")
         @function.stubs(:call).returns(0)
+
+        @name = :foo
+        @vtbl = { @name => @function}
+        @ffi_interface.stubs(:vtbl).returns(@vtbl)
       end
 
       should "raise an exception if an error occurred" do
         @function.expects(:call).returns(0x8000_4002)
         assert_raises(VirtualBox::Exceptions::FFIException) {
-          @instance.call_and_check(@function)
+          @instance.call_and_check(@name)
         }
       end
 
       should "not raise an exception if an error did not occur" do
         @function.expects(:call).returns(0x0000_0000)
         assert_nothing_raised {
-          @instance.call_and_check(@function)
+          @instance.call_and_check(@name)
         }
       end
 
       should "not raise an exception for NS_ERROR_NOT_IMPLEMENTED" do
         @function.expects(:call).returns(0x8000_4001)
         assert_nothing_raised {
-          @instance.call_and_check(@function)
+          @instance.call_and_check(@name)
         }
       end
 
       should "forward arguments" do
         @function.expects(:call).with(1,2,3).returns(0)
         assert_nothing_raised {
-          @instance.call_and_check(@function, 1, 2, 3)
+          @instance.call_and_check(@name, 1, 2, 3)
         }
       end
     end
