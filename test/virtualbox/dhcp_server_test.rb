@@ -136,5 +136,30 @@ class DHCPServerTest < Test::Unit::TestCase
         assert !@collection.include?(@instance)
       end
     end
+
+    context "host network" do
+      setup do
+        @host = mock("host")
+        @network_interfaces = []
+        @parent.stubs(:host).returns(@host)
+        @host.stubs(:network_interfaces).returns(@network_interfaces)
+      end
+
+      should "do nothing if not a DHCP server for a host interface" do
+        @instance.stubs(:network_name).returns("foo")
+        assert_nil @instance.host_network
+      end
+
+      should "return the matching network interface" do
+        name = "foo"
+        ni = mock("net_interface")
+        ni.stubs(:interface_type).returns(:host_only)
+        ni.stubs(:name).returns(name)
+
+        @network_interfaces << ni
+        @instance.stubs(:network_name).returns("HostInterfaceNetworking-#{name}")
+        assert_equal ni, @instance.host_network
+      end
+    end
   end
 end

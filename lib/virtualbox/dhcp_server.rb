@@ -75,5 +75,15 @@ module VirtualBox
       parent_collection.delete(self, true)
       true
     end
+
+    # Returns the host network associated with this DHCP server, if it
+    # exists.
+    def host_network
+      return nil unless network_name =~ /^HostInterfaceNetworking-(.+?)$/
+
+      parent.host.network_interfaces.detect do |i|
+        i.interface_type == :host_only && i.name == $1.to_s
+      end
+    end
   end
 end
