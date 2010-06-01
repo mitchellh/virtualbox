@@ -72,6 +72,13 @@ class DHCPServerTest < Test::Unit::TestCase
       @collection << @instance
     end
 
+    context "saving" do
+      should "save the changed attributes" do
+        @instance.expects(:save_changed_interface_attributes).with(@instance.interface).once
+        @instance.save
+      end
+    end
+
     context "destroying" do
       setup do
         @lib = mock("lib")

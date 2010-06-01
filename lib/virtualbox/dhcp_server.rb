@@ -43,6 +43,10 @@ module VirtualBox
       write_attribute(:parent_collection, proxy)
     end
 
+    def save
+      save_changed_interface_attributes(interface)
+    end
+
     # Removes the DHCP server.
     def destroy
       parent.lib.virtualbox.remove_dhcp_server(interface)
