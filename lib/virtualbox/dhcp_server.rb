@@ -25,6 +25,15 @@ module VirtualBox
 
         relation
       end
+
+      # Creates a DHCP server for the given network name.
+      # This method should not be called directly, its recommended that you call
+      # the `create` method on the `dhcp_servers` relationship on
+      # `VirtualBox::Global` object.
+      def create(proxy, network_name)
+        interface = proxy.parent.lib.virtualbox.create_dhcp_server(network_name)
+        new(interface)
+      end
     end
 
     def initialize(raw)

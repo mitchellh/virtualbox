@@ -35,6 +35,27 @@ class DHCPServerTest < Test::Unit::TestCase
         assert_equal expected_result, @klass.populate_relationship(@parent, collection)
       end
     end
+
+    context "creating" do
+      setup do
+        @lib = mock("lib")
+        @virtualbox = mock("virtualbox")
+        @proxy = mock("proxy")
+
+        @lib.stubs(:virtualbox).returns(@virtualbox)
+        @parent.stubs(:lib).returns(@lib)
+        @proxy.stubs(:parent).returns(@parent)
+      end
+
+      should "create the dhcp server" do
+        name = :foo
+        interface = mock("interface")
+        result = mock("result")
+        @virtualbox.expects(:create_dhcp_server).with(name).once.returns(interface)
+        @klass.expects(:new).with(interface).returns(result)
+        assert_equal result, @klass.create(@proxy, name)
+      end
+    end
   end
 
   context "initializing" do
