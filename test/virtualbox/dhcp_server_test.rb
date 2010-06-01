@@ -72,6 +72,26 @@ class DHCPServerTest < Test::Unit::TestCase
       @collection << @instance
     end
 
-    # TODO
+    context "destroying" do
+      setup do
+        @lib = mock("lib")
+        @virtualbox = mock("virtualbox")
+        @lib.stubs(:virtualbox).returns(@virtualbox)
+        @parent.stubs(:lib).returns(@lib)
+
+        @virtualbox.stubs(:remove_dhcp_server)
+      end
+
+      should "destroy the DHCP server" do
+        @virtualbox.expects(:remove_dhcp_server).with(@interface).once
+        @instance.destroy
+      end
+
+      should "remove from collection" do
+        assert @collection.include?(@instance)
+        @instance.destroy
+        assert !@collection.include?(@instance)
+      end
+    end
   end
 end
