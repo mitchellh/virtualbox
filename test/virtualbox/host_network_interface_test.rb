@@ -87,8 +87,35 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
       @parent = mock("parent")
       @interface = mock("interface")
       @instance = @klass.new(@interface)
+      @instance.stubs(:interface).returns(@interface)
       @collection = VirtualBox::Proxies::Collection.new(@parent)
       @collection << @instance
+    end
+
+    context "enabling static IPV4" do
+      setup do
+        @interface.stubs(:enable_static_ip_config)
+        @instance.stubs(:reload)
+      end
+
+      should "enable the ip config" do
+        ip = :foo
+        netmask = :bar
+        @interface.expects(:enable_static_ip_config).with(ip, netmask).once
+        @instance.enable_static(ip, netmask)
+      end
+
+      should "by default use the current network mask" do
+        ip = :foo
+        @interface.expects(:enable_static_ip_config).with(ip, @instance.network_mask).once
+        @instance.enable_static(ip)
+      end
+
+      should "reload the instance" do
+        result = mock("result")
+        @instance.expects(:reload).returns(result)
+        assert_equal result, @instance.enable_static(:foo)
+      end
     end
 
     context "reloading" do

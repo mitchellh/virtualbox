@@ -69,6 +69,16 @@ module VirtualBox
       write_attribute(:parent_collection, proxy)
     end
 
+    # Sets up the static IPV4 configuration for the host only network
+    # interface. This allows the caller to set the IPV4 address of the
+    # interface as well as the netmask.
+    def enable_static(ip, netmask=nil)
+      netmask ||= network_mask
+
+      interface.enable_static_ip_config(ip, netmask)
+      reload
+    end
+
     # Reloads the information regarding this host only network
     # interface.
     def reload
