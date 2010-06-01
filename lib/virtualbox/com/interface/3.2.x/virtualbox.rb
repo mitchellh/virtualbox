@@ -49,6 +49,17 @@ module VirtualBox
           function :open_session, nil, [:Session, WSTRING]
           function :open_remote_session, :Progress, [:Session, WSTRING, WSTRING, WSTRING]
           function :open_existing_session, nil, [:Session, WSTRING]
+
+          # TODO: The following two are wrong, they don't take a
+          # string as input
+          function :register_callback, nil, [WSTRING]
+          function :unregister_callback, nil, [WSTRING]
+
+          function :wait_for_property_change, nil, [WSTRING, T_UINT32, [:out, WSTRING], [:out, WSTRING]]
+          function :create_dhcp_server, :DHCPServer, [WSTRING]
+          function :find_dhcp_server_by_network_name, :DHCPServer, [WSTRING]
+          function :remove_dhcp_server, nil, [:DHCPServer]
+          function :check_firmware_present, T_BOOL, [:FirmwareType, WSTRING, [:out, WSTRING], [:out, WSTRING]]
         end
       end
     end
