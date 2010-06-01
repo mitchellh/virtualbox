@@ -27,6 +27,12 @@ class CollectionTest < Test::Unit::TestCase
       @collection.create
     end
 
+    should "pass in additional arguments from the call" do
+      result = mock("result")
+      @item_klass.expects(:create).with(@collection, :foo).returns(result)
+      assert_equal result, @collection.create(:foo)
+    end
+
     should "do nothing if klass doesn't respond to create" do
       previous_length = @collection.length
       assert_nothing_raised { assert_nil @collection.create }

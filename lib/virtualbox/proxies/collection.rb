@@ -17,11 +17,12 @@ module VirtualBox
       # instance. The item is automatically put into this
       # collection. `create` happens immediately, meaning that even
       # without a `save`, the item will already exist.
-      def create
+      def create(*args)
         item =  nil
 
         if @item_klass.respond_to?(:create)
-          item = @item_klass.create(self, *@other)
+          args = @other + args
+          item = @item_klass.create(self, *args)
           self << item
         end
 
