@@ -73,6 +73,21 @@ class DHCPServerTest < Test::Unit::TestCase
     end
 
     context "saving" do
+      setup do
+        @instance.stubs(:save_changed_interface_attributes)
+      end
+
+      should "set configuration if something changed" do
+        @instance.ip_address = "7"
+        @interface.expects(:set_configuration).once
+        @instance.save
+      end
+
+      should "not set configuration if nothing changed" do
+        @interface.expects(:set_configuration).never
+        @instance.save
+      end
+
       should "save the changed attributes" do
         @instance.expects(:save_changed_interface_attributes).with(@instance.interface).once
         @instance.save

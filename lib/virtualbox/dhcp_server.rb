@@ -4,11 +4,11 @@ module VirtualBox
     attribute :parent_collection, :readonly => true, :property => false
     attribute :interface, :readonly => true, :property => false
     attribute :enabled
-    attribute :ip_address, :readonly => true
-    attribute :network_mask, :readonly => true
+    attribute :ip_address
+    attribute :network_mask
     attribute :network_name, :readonly => true
-    attribute :lower_ip, :readonly => true
-    attribute :upper_ip, :readonly => true
+    attribute :lower_ip
+    attribute :upper_ip
 
     class << self
       # Populates a relationship with another model.
@@ -44,6 +44,19 @@ module VirtualBox
     end
 
     def save
+      configs = [:ip_address, :network_mask, :lower_ip, :upper_ip]
+      configs_changed = configs.map { |key| changed?(key) }.any? { |i| i }
+
+      if configs_changed
+        interface.set_configuration(ip_address, network_mask, lower_ip, upper_ip)
+
+        # Clear the dirtiness so that the abstract model doesn't try
+        # to save the attributes
+        configs.each do |key|
+          clear_dirty!(key)
+        end
+      end
+
       save_changed_interface_attributes(interface)
     end
 
