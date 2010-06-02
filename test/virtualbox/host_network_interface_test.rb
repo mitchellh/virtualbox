@@ -178,10 +178,19 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
         @progress.stubs(:wait)
         @parent.stubs(:interface).returns(@interface)
         @interface.stubs(:remove_host_only_network_interface).returns(@progress)
+        @instance.stubs(:dhcp_server).returns(nil)
       end
 
       should "remove the network interface from VirtualBox" do
         @interface.expects(:remove_host_only_network_interface).with(@instance.uuid).returns(@progress)
+
+        @instance.destroy
+      end
+
+      should "destroy the DHCP server if it exists" do
+        server = mock("server")
+        @instance.stubs(:dhcp_server).returns(server)
+        server.expects(:destroy).once
 
         @instance.destroy
       end

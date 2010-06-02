@@ -112,6 +112,7 @@ module VirtualBox
     # to destroying it.
     def destroy
       parent.interface.remove_host_only_network_interface(uuid).wait
+      dhcp_server.destroy if dhcp_server
 
       # Remove from collection
       parent_collection.delete(self, true) if parent_collection
