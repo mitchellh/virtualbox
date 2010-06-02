@@ -179,6 +179,13 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
         @parent.stubs(:interface).returns(@interface)
         @interface.stubs(:remove_host_only_network_interface).returns(@progress)
         @instance.stubs(:dhcp_server).returns(nil)
+        @instance.stubs(:interface_type).returns(:host_only)
+      end
+
+      should "do nothing if bridged" do
+        @instance.stubs(:interface_type).returns(:bridged)
+        @interface.expects(:remove_host_only_network_interface).never
+        assert !@instance.destroy
       end
 
       should "remove the network interface from VirtualBox" do

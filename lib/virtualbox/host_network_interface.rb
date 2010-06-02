@@ -111,6 +111,8 @@ module VirtualBox
     # careful to make sure to remove all VMs from this network prior
     # to destroying it.
     def destroy
+      return false if interface_type == :bridged
+
       parent.interface.remove_host_only_network_interface(uuid).wait
       dhcp_server.destroy if dhcp_server
 
