@@ -2,14 +2,15 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class HostTest < Test::Unit::TestCase
   setup do
+    @parent = mock("parent")
     @klass = VirtualBox::Host
     @interface = mock("interface")
   end
 
   context "initializing" do
     should "load attributes from the machine" do
-      @klass.any_instance.expects(:initialize_attributes).with(@interface).once
-      @klass.new(@interface)
+      @klass.any_instance.expects(:initialize_attributes).with(@parent, @interface).once
+      @klass.new(@parent, @interface)
     end
   end
 
@@ -21,26 +22,26 @@ class HostTest < Test::Unit::TestCase
 
     should "load interface attribtues" do
       @klass.any_instance.expects(:load_interface_attributes).with(@interface).once
-      @klass.new(@interface)
+      @klass.new(@parent, @interface)
     end
 
     should "populate the relationships" do
       @klass.any_instance.expects(:populate_relationship).with(:network_interfaces, @interface).once
-      @klass.new(@interface)
+      @klass.new(@parent, @interface)
     end
 
     should "setup the interface" do
-      instance = @klass.new(@interface)
+      instance = @klass.new(@parent, @interface)
       assert_equal @interface, instance.interface
     end
 
     should "not be dirty" do
-      @instance = @klass.new(@interface)
+      @instance = @klass.new(@parent, @interface)
       assert !@instance.changed?
     end
 
     should "be existing record" do
-      @instance = @klass.new(@interface)
+      @instance = @klass.new(@parent, @interface)
       assert !@instance.new_record?
     end
   end
@@ -49,7 +50,6 @@ class HostTest < Test::Unit::TestCase
     context "populating relationship" do
       setup do
         @instance = mock("instance")
-
         @klass.stubs(:new).returns(@instance)
       end
 
@@ -59,7 +59,7 @@ class HostTest < Test::Unit::TestCase
       end
 
       should "call new for every shared folder" do
-        @klass.expects(:new).with(@interface).returns(@instance)
+        @klass.expects(:new).with(nil, @interface).returns(@instance)
         result = @klass.populate_relationship(nil, @interface)
         assert_equal @instance, result
       end
@@ -81,7 +81,7 @@ class HostTest < Test::Unit::TestCase
     setup do
       @klass.any_instance.stubs(:load_interface_attributes)
       @klass.any_instance.stubs(:populate_relationship)
-      @instance = @klass.new(@interface)
+      @instance = @klass.new(@parent, @interface)
     end
 
     context "saving" do

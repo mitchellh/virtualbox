@@ -69,6 +69,23 @@ module VirtualBox
       write_attribute(:parent_collection, proxy)
     end
 
+    # Gets the DHCP server associated with the network interface. Only
+    # host only network interfaces have dhcp servers. If a DHCP server
+    # doesn't exist for this network interface, one will be created.
+    def dhcp_server
+      return nil if interface_type != :host_only
+
+      # Try to find the dhcp server in the list of DHCP servers.
+      dhcp_name = "HostInterfaceNetworking-#{name}"
+      result = parent.parent.dhcp_servers.find do |dhcp|
+        dhcp.network_name == dhcp_name
+      end
+
+      # If no DHCP server is found, create one
+      result = parent.parent.dhcp_servers.create(dhcp_name) if result.nil?
+      result
+    end
+
     # Sets up the static IPV4 configuration for the host only network
     # interface. This allows the caller to set the IPV4 address of the
     # interface as well as the netmask.

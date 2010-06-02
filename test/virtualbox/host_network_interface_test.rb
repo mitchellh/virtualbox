@@ -88,8 +88,47 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
       @interface = mock("interface")
       @instance = @klass.new(@interface)
       @instance.stubs(:interface).returns(@interface)
+      @instance.stubs(:parent).returns(@parent)
       @collection = VirtualBox::Proxies::Collection.new(@parent)
       @collection << @instance
+    end
+
+    context "dhcp server" do
+      setup do
+        @host = mock("host")
+        @dhcp_servers = []
+        @parent.stubs(:parent).returns(@host)
+        @host.stubs(:dhcp_servers).returns(@dhcp_servers)
+        @instance.stubs(:interface_type).returns(:host_only)
+
+        @name = "foo"
+        @instance.stubs(:name).returns(@name)
+      end
+
+      def stub_dhcp_server(name, prefix=true)
+        name = "HostInterfaceNetworking-#{name}" if prefix
+
+        dhcp = mock("dhcp")
+        dhcp.stubs(:network_name).returns(name)
+        dhcp
+      end
+
+      should "return nil if interface type isn't host only" do
+        @instance.stubs(:interface_type).returns(:bridged)
+        assert_nil @instance.dhcp_server
+      end
+
+      should "return the DHCP server if it finds one" do
+        server = stub_dhcp_server(@name)
+        @dhcp_servers << server
+        assert_equal server, @instance.dhcp_server
+      end
+
+      should "create a DHCP server if it can't find one" do
+        result = mock("result")
+        @dhcp_servers.expects(:create).with("HostInterfaceNetworking-#{@name}").once.returns(result)
+        assert_equal result, @instance.dhcp_server
+      end
     end
 
     context "enabling static IPV4" do

@@ -7,6 +7,7 @@ module VirtualBox
   # parts represent data which is stored in the VirtualBox "registry"
   # (such as the dvd drives, host only network interfaces, etc.)
   class Host < AbstractModel
+    attribute :parent, :readonly => true, :property => false
     attribute :interface, :readonly => true, :property => false
     attribute :processor_count, :readonly => true
     attribute :processor_online_count, :readonly => true
@@ -26,7 +27,7 @@ module VirtualBox
       #
       # @return [SystemProperties]
       def populate_relationship(caller, data)
-        new(data)
+        new(caller, data)
       end
 
       # Saves the relationship. This simply calls {#save} on the
@@ -41,13 +42,14 @@ module VirtualBox
     # Initializes the system properties object. This shouldn't be called
     # directly. Instead `Global#system_properties` should be used to
     # retrieve this object.
-    def initialize(raw)
-      initialize_attributes(raw)
+    def initialize(caller, raw)
+      initialize_attributes(caller, raw)
     end
 
     # Initializes the attributes of an existing shared folder.
-    def initialize_attributes(raw)
-      # Save the interface to an attribute
+    def initialize_attributes(caller, raw)
+      # Save the interface and parent
+      write_attribute(:parent, caller)
       write_attribute(:interface, raw)
 
       # Load the attributes from the interface
