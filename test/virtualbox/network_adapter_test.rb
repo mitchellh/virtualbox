@@ -98,6 +98,35 @@ class NetworkAdapterTest < Test::Unit::TestCase
       @instance = @klass.new(@parent, @interface)
     end
 
+    context "host interface object" do
+      setup do
+        @network_interfaces = []
+        @host = mock("host")
+        VirtualBox::Global.global.stubs(:host).returns(@host)
+        @host.stubs(:network_interfaces).returns(@network_interfaces)
+      end
+
+      def stub_interface(name)
+        interface = mock("interface")
+        interface.stubs(:name).returns(name)
+        @network_interfaces << interface
+        interface
+      end
+
+      should "return the network interface associated with the adapter" do
+        name = "foo"
+        result = stub_interface(name)
+        @instance.host_interface = name
+        assert_equal result, @instance.host_interface_object
+      end
+
+      should "return nil if the interface is not found" do
+        stub_interface("foo")
+        @instance.host_interface = "bar"
+        assert_nil @instance.host_interface_object
+      end
+    end
+
     context "saving" do
       setup do
         @adapter = mock("adapter")

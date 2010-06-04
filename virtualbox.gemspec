@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-05-30}
+  s.date = %q{2010-06-03}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -177,6 +177,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/com/nil_interface.rb",
      "lib/virtualbox/com/util.rb",
      "lib/virtualbox/cpu.rb",
+     "lib/virtualbox/dhcp_server.rb",
      "lib/virtualbox/dvd.rb",
      "lib/virtualbox/exceptions.rb",
      "lib/virtualbox/ext/byte_normalizer.rb",
@@ -188,6 +189,8 @@ Gem::Specification.new do |s|
      "lib/virtualbox/forwarded_port.rb",
      "lib/virtualbox/global.rb",
      "lib/virtualbox/hard_drive.rb",
+     "lib/virtualbox/host.rb",
+     "lib/virtualbox/host_network_interface.rb",
      "lib/virtualbox/hw_virtualization.rb",
      "lib/virtualbox/lib.rb",
      "lib/virtualbox/media.rb",
@@ -227,6 +230,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/com/mscom_interface_test.rb",
      "test/virtualbox/com/util_test.rb",
      "test/virtualbox/cpu_test.rb",
+     "test/virtualbox/dhcp_server_test.rb",
      "test/virtualbox/dvd_test.rb",
      "test/virtualbox/ext/byte_normalizer_test.rb",
      "test/virtualbox/ext/platform_test.rb",
@@ -235,6 +239,8 @@ Gem::Specification.new do |s|
      "test/virtualbox/forwarded_port_test.rb",
      "test/virtualbox/global_test.rb",
      "test/virtualbox/hard_drive_test.rb",
+     "test/virtualbox/host_network_interface_test.rb",
+     "test/virtualbox/host_test.rb",
      "test/virtualbox/hw_virtualization_test.rb",
      "test/virtualbox/lib_test.rb",
      "test/virtualbox/medium_attachment_test.rb",
@@ -264,6 +270,7 @@ Gem::Specification.new do |s|
      "test/test_helper.rb",
      "test/virtualbox/network_adapter_test.rb",
      "test/virtualbox/storage_controller_test.rb",
+     "test/virtualbox/host_test.rb",
      "test/virtualbox/vm_test.rb",
      "test/virtualbox/virtual_system_description_test.rb",
      "test/virtualbox/vrdp_server_test.rb",
@@ -276,6 +283,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/abstract_model/relatable_test.rb",
      "test/virtualbox/abstract_model/dirty_test.rb",
      "test/virtualbox/abstract_model/interface_attributes_test.rb",
+     "test/virtualbox/host_network_interface_test.rb",
      "test/virtualbox/lib_test.rb",
      "test/virtualbox/system_properties_test.rb",
      "test/virtualbox/snapshot_test.rb",
@@ -284,6 +292,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/dvd_test.rb",
      "test/virtualbox/hard_drive_test.rb",
      "test/virtualbox/abstract_model_test.rb",
+     "test/virtualbox/dhcp_server_test.rb",
      "test/virtualbox/proxies/collection_test.rb",
      "test/virtualbox/com/implementer/base_test.rb",
      "test/virtualbox/com/implementer/mscom_test.rb",

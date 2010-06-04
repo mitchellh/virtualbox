@@ -98,6 +98,14 @@ module VirtualBox
       existing_record!
     end
 
+    # Gets the host interface object associated with the class if it
+    # exists.
+    def host_interface_object
+      VirtualBox::Global.global.host.network_interfaces.find do |ni|
+        ni.name == host_interface
+      end
+    end
+
     # Save a network adapter.
     def save
       modify_adapter do |adapter|
