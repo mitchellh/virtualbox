@@ -165,8 +165,11 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
 
       should "create a DHCP server if it can't find one" do
         result = mock("result")
-        @dhcp_servers.expects(:create).with("HostInterfaceNetworking-#{@name}").once.returns(result)
-        assert_equal result, @instance.dhcp_server
+      end
+
+      should "not create a DHCP if specified and not found" do
+        @dhcp_servers.expects(:create).never
+        assert_nil @instance.dhcp_server(false)
       end
     end
 

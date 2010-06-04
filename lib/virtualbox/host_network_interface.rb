@@ -72,7 +72,7 @@ module VirtualBox
     # Gets the DHCP server associated with the network interface. Only
     # host only network interfaces have dhcp servers. If a DHCP server
     # doesn't exist for this network interface, one will be created.
-    def dhcp_server
+    def dhcp_server(create_if_not_found=true)
       return nil if interface_type != :host_only
 
       # Try to find the dhcp server in the list of DHCP servers.
@@ -82,7 +82,7 @@ module VirtualBox
       end
 
       # If no DHCP server is found, create one
-      result = parent.parent.dhcp_servers.create(dhcp_name) if result.nil?
+      result = parent.parent.dhcp_servers.create(dhcp_name) if result.nil? && create_if_not_found
       result
     end
 
@@ -126,7 +126,7 @@ module VirtualBox
       return false if interface_type == :bridged
 
       parent.interface.remove_host_only_network_interface(uuid).wait
-      dhcp_server.destroy if dhcp_server
+      dhcp_server.destroy if dhcp_server(false)
 
       # Remove from collection
       parent_collection.delete(self, true) if parent_collection
