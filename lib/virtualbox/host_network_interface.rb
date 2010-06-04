@@ -86,6 +86,18 @@ module VirtualBox
       result
     end
 
+    # Gets the VMs which have an adapter which is attached to this
+    # network interface.
+    def attached_vms
+      parent.parent.vms.find_all do |vm|
+        result = vm.network_adapters.find do |adapter|
+          adapter.host_interface == name
+        end
+
+        !result.nil?
+      end
+    end
+
     # Sets up the static IPV4 configuration for the host only network
     # interface. This allows the caller to set the IPV4 address of the
     # interface as well as the netmask.

@@ -93,6 +93,45 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
       @collection << @instance
     end
 
+    context "attached VMs" do
+      setup do
+        @parent_parent = mock("parentparent")
+        @parent.stubs(:parent).returns(@parent_parent)
+
+        @vms = []
+        @parent_parent.stubs(:vms).returns(@vms)
+      end
+
+      def stub_vm(*interfaces)
+        adapters = []
+        vm = mock("vm")
+        vm.stubs(:network_adapters).returns(adapters)
+
+        interfaces.each do |name|
+          adapter = mock("adapter")
+          adapter.stubs(:host_interface).returns(name)
+          adapters << adapter
+        end
+
+        vm
+      end
+
+      should "return no VMs if none are using the interface" do
+        assert @instance.attached_vms.empty?
+      end
+
+      should "return only the VMs which are using the interface" do
+        name = "foo"
+        @instance.stubs(:name).returns(name)
+        result = stub_vm(name)
+        @vms << stub_vm("bar")
+        @vms << result
+        @vms << stub_vm("baz")
+
+        assert_equal [result], @instance.attached_vms
+      end
+    end
+
     context "dhcp server" do
       setup do
         @host = mock("host")
