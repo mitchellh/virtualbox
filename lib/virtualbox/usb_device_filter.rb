@@ -3,6 +3,7 @@ module VirtualBox
   # is a relationship to {USBController} objects.
   class USBDeviceFilter < AbstractModel
     attribute :parent, :readonly => true, :property => false
+    attribute :parent_collection, :readonly => true, :property => false
     attribute :interface, :readonly => true, :property => false
     attribute :name
     attribute :active, :boolean => true
@@ -42,13 +43,12 @@ module VirtualBox
       end
     end
 
-    def initialize(parent, iusb)
-      initialize_attributes(parent, iusb)
+    def initialize(iusb)
+      initialize_attributes(iusb)
     end
 
-    def initialize_attributes(parent, iusb)
+    def initialize_attributes(iusb)
       # Write the parent and interface attributes
-      write_attribute(:parent, parent)
       write_attribute(:interface, iusb)
 
       # Load the interface attributes
@@ -57,6 +57,11 @@ module VirtualBox
       # Clear dirty and mark as existing
       clear_dirty!
       existing_record!
+    end
+
+    def added_to_relationship(proxy)
+      write_attribute(:parent, proxy.parent)
+      write_attribute(:parent_collection, proxy)
     end
 
     # Saves the USB device.
