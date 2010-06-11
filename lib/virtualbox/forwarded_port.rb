@@ -165,7 +165,6 @@ module VirtualBox
     #
     # @return [Boolean] True if command was successful, false otherwise.
     def save
-      p "FP: #{name}"
       return true if !new_record? && !changed?
       raise Exceptions::ValidationFailedException.new(errors) if !valid?
 
