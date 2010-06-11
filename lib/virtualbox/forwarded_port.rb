@@ -112,7 +112,7 @@ module VirtualBox
       #
       # **This method typically won't be used except internally.**
       def save_relationship(caller, data)
-        data.each do |fp|
+        data.dup.each do |fp|
           fp.save
         end
       end
@@ -165,11 +165,11 @@ module VirtualBox
     #
     # @return [Boolean] True if command was successful, false otherwise.
     def save
+      p "FP: #{name}"
       return true if !new_record? && !changed?
-
       raise Exceptions::ValidationFailedException.new(errors) if !valid?
 
-      destroy if name_changed?
+      destroy if !new_record? && name_changed?
 
       parent.extra_data["#{key_prefix}Protocol"] = protocol
       parent.extra_data["#{key_prefix}GuestPort"] = guestport
