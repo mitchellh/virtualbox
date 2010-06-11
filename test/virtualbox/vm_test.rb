@@ -318,14 +318,28 @@ class VMTest < Test::Unit::TestCase
           :stop => :power_down,
           :pause => :pause,
           :resume => :resume,
-          :save_state => :save_state,
-          :discard_state => [:forget_saved_state, true]
+          :save_state => :save_state
         }
 
         methods.each do |method, control|
           control = [control] unless control.is_a?(Array)
           @instance.expects(:control).with(*control).once
           @instance.send(method)
+        end
+      end
+
+      context "discard state" do
+        setup do
+          @session = mock("session")
+          @console = mock("console")
+          @session.stubs(:console).returns(@console)
+          @instance.stubs(:with_open_session)
+        end
+
+        should "discard the session in an open state" do
+          @instance.expects(:with_open_session).yields(@session)
+          @console.expects(:forget_saved_state).with(true).once
+          @instance.discard_state
         end
       end
     end
