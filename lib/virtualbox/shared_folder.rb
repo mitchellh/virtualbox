@@ -113,7 +113,7 @@ module VirtualBox
       #
       # **This method typically won't be used except internally.**
       def save_relationship(caller, items)
-        items.each do |item|
+        items.dup.each do |item|
           item.save
         end
       end
