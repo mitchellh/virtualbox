@@ -121,7 +121,7 @@ module VirtualBox
     # @param [Hash] data The initial attributes to populate.
     def initialize(data={})
       super()
-      populate_attributes(data)
+      populate_attributes(data) if !data.empty?
     end
 
     # Validates a forwarded port.

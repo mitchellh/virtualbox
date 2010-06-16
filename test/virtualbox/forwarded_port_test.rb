@@ -2,6 +2,8 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class ForwardedPortTest < Test::Unit::TestCase
   setup do
+    @klass = VirtualBox::ForwardedPort
+
     @nic = mock("nic")
     @nic.stubs(:adapter_type).returns(:foo)
     @nics = [@nic]
@@ -16,7 +18,7 @@ class ForwardedPortTest < Test::Unit::TestCase
     setup do
       @collection = VirtualBox::Proxies::Collection.new(@caller)
 
-      @port = VirtualBox::ForwardedPort.new
+      @port = @klass.new
       @port.name = "foo"
       @port.guestport = "22"
       @port.hostport = "2222"
@@ -50,7 +52,7 @@ class ForwardedPortTest < Test::Unit::TestCase
 
   context "with an instance" do
     setup do
-      @port = VirtualBox::ForwardedPort.new({
+      @port = @klass.new({
         :name => "foo",
         :guestport => "22",
         :hostport => "2222"
@@ -66,6 +68,12 @@ class ForwardedPortTest < Test::Unit::TestCase
       @ed.stubs(:save)
       @ed.stubs(:delete)
       @caller.stubs(:extra_data).returns(@ed)
+    end
+
+    context "initializing a new record" do
+      should "be a new record" do
+        assert @klass.new.new_record?
+      end
     end
 
     context "device" do
