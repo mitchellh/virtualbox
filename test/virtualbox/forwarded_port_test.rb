@@ -71,8 +71,16 @@ class ForwardedPortTest < Test::Unit::TestCase
     end
 
     context "initializing a new record" do
+      setup do
+        @port = @klass.new
+      end
+
       should "be a new record" do
-        assert @klass.new.new_record?
+        assert @port.new_record?
+      end
+
+      should "not be dirty" do
+        assert !@port.changed?
       end
     end
 
@@ -157,7 +165,8 @@ class ForwardedPortTest < Test::Unit::TestCase
       context "a new record" do
         setup do
           @port.stubs(:valid?).returns(true)
-          assert @port.new_record!
+          @port.new_record!
+          assert @port.new_record?
         end
 
         should "no longer be a new record after saving" do
