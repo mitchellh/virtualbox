@@ -12,6 +12,7 @@ class InterfaceAttributesTest < Test::Unit::TestCase
     attribute :foo3, :property => :grab_foo3, :readonly => true
     attribute :foo4, :property => :put_foo4
     attribute :bar, :property => false
+    attribute :ver, :version => "3.1.3"
   end
 
   context "converting spec to a proc" do
@@ -64,6 +65,18 @@ class InterfaceAttributesTest < Test::Unit::TestCase
       @instance.load_interface_attribute(:bar, @interface)
     end
 
+    should "return immediately if version mismatch" do
+      VirtualBox.stubs(:version).returns("3.2.4")
+      @interface.expects(:ver).never
+      @instance.load_interface_attribute(:ver, @interface)
+    end
+
+    should "load the attribute if version matches" do
+      VirtualBox.stubs(:version).returns("3.1.3")
+      @interface.expects(:ver).returns("foo")
+      @instance.load_interface_attribute(:ver, @interface)
+    end
+
     should "use the getter specified if exists" do
       key = :foo2
       @interface.expects(:get_foo).returns(:bar)
@@ -109,6 +122,18 @@ class InterfaceAttributesTest < Test::Unit::TestCase
     should "return immediately if attribute doesn't have an interface setter" do
       @proc.expects(:call).never
       @instance.save_interface_attribute(:bar, @interface)
+    end
+
+    should "return immediately if version mismatch" do
+      VirtualBox.stubs(:version).returns("3.2.4")
+      @interface.expects(:ver).never
+      @instance.save_interface_attribute(:ver, @interface)
+    end
+
+    should "load the attribute if version matches" do
+      VirtualBox.stubs(:version).returns("3.1.3")
+      @interface.expects(:ver=)
+      @instance.save_interface_attribute(:ver, @interface)
     end
 
     should "save the attribute with the value of the proc" do

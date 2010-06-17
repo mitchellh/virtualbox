@@ -23,6 +23,7 @@ module VirtualBox
         return unless has_attribute?(key)
         options = self.class.attributes[key.to_sym]
         return if options.has_key?(:property) && !options[:property]
+        return if options.has_key?(:version) && !version_match?(options[:version], VirtualBox.version)
         getter = options[:property] || options[:property_getter] || key.to_sym
         return unless getter
 
@@ -49,6 +50,7 @@ module VirtualBox
         options = self.class.attributes[key.to_sym]
         return if options[:readonly]
         return if options.has_key?(:property) && !options[:property]
+        return if options.has_key?(:version) && !version_match?(options[:version], VirtualBox.version)
 
         setter = options[:property] || options[:property_setter] || "#{key}=".to_sym
         return unless setter
