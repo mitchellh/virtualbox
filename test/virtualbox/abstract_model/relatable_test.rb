@@ -216,12 +216,30 @@ class RelatableTest < Test::Unit::TestCase
   end
 
   context "reading relationships" do
+    class VersionedRelatableModel < RelatableModel
+      relationship :ver, :Ver, :version => "3.1"
+    end
+
     setup do
-      @model = RelatableModel.new
+      @model = VersionedRelatableModel.new
     end
 
     should "provide a read method for relationships" do
       assert_nothing_raised { @model.foos }
+    end
+
+    should "raise an exception if invalid version for versioned relationships" do
+      VirtualBox.stubs(:version).returns("3.0.14")
+      assert_raises(VirtualBox::Exceptions::UnsupportedVersionException) {
+        @model.ver
+      }
+    end
+
+    should "not raise an exception if valid version for versioned relationship" do
+      VirtualBox.stubs(:version).returns("3.1.8")
+      assert_nothing_raised {
+        @model.ver
+      }
     end
   end
 

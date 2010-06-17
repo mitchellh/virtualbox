@@ -1,3 +1,5 @@
+require 'virtualbox/abstract_model/version_matcher'
+
 module VirtualBox
   class AbstractModel
     # Provides simple relationship features to any class. These relationships
@@ -119,6 +121,8 @@ module VirtualBox
     # relationship, it will first load the relationship, since destroy typically
     # depends on some data of the relationship.
     module Relatable
+      include VersionMatcher
+
       def self.included(base)
         base.extend ClassMethods
       end
@@ -181,6 +185,9 @@ module VirtualBox
       # Reads a relationship. This is equivalent to {Attributable#read_attribute},
       # but for relationships.
       def read_relationship(name)
+        options = self.class.relationships_hash[name.to_sym]
+        assert_version_match(options[:version], VirtualBox.version) if options[:version]
+
         if lazy_relationship?(name) && !loaded_relationship?(name)
           load_relationship(name)
         end
