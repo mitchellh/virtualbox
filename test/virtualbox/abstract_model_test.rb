@@ -84,16 +84,6 @@ class AbstractModelTest < Test::Unit::TestCase
       assert !@model.lazy_attribute?(:foo)
       assert !@model.lazy_relationship?(:foos)
     end
-
-    should "only save loaded relationships" do
-      @model.existing_record!
-      assert @model.lazy_relationship?(:foos)
-      assert @model.lazy_relationship?(:bars)
-      @model.stubs(:loaded_relationship?).with(:foos).returns(false)
-      @model.stubs(:loaded_relationship?).with(:bars).returns(true)
-      @model.expects(:save_relationship).with(:bars).once
-      @model.save
-    end
   end
 
   context "inspecting" do

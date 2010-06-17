@@ -194,14 +194,34 @@ class RelatableTest < Test::Unit::TestCase
   end
 
   context "saving relationships" do
+    class RelatableWithLazyModel < RelatableModel
+      relationship :bazs, RelatableTest::Relatee, :lazy => true
+
+      def load_relationship(name)
+        populate_relationship(:bazs, "foo")
+      end
+    end
+
     setup do
-      @model = RelatableModel.new
+      @model = RelatableWithLazyModel.new
     end
 
     should "call save_relationship for all relationships" do
       @model.expects(:save_relationship).with(:foos)
       @model.expects(:save_relationship).with(:bars)
+      @model.expects(:save_relationship).with(:bazs)
       @model.save_relationships
+    end
+
+    should "not call save_relationship on non-loaded relations" do
+      Relatee.expects(:save_relationship).never
+      @model.save_relationship(:bazs)
+    end
+
+    should "call save_relationship on loaded lazy relationships" do
+      @model.load_relationship(:bazs)
+      Relatee.expects(:save_relationship).once
+      @model.save_relationship(:bazs)
     end
 
     should "call save_relationship on the related class" do
@@ -282,8 +302,13 @@ class RelatableTest < Test::Unit::TestCase
   end
 
   context "populating relationships" do
+    class PopulatingRelatableModel < RelatableModel
+      relationship :bazs, RelatableTest::Relatee, :version => "3.1"
+    end
+
     setup do
-      @model = RelatableModel.new
+      @model = PopulatingRelatableModel.new
+      VirtualBox.stubs(:version).returns("3.1.4")
     end
 
     should "be able to populate a single relationship" do
@@ -291,15 +316,22 @@ class RelatableTest < Test::Unit::TestCase
       @model.populate_relationship(:foos, @data)
     end
 
+    should "not populate versioned relationships if version mismatch" do
+      VirtualBox.stubs(:version).returns("3.0.4")
+      Relatee.expects(:populate_relationship).never
+      @model.populate_relationship(:bazs, @data)
+    end
+
     should "call populate_relationship on the related class" do
       populate_seq = sequence("populate_seq")
       @model.expects(:populate_relationship).with(:foos, @data).once.in_sequence(populate_seq)
       @model.expects(:populate_relationship).with(:bars, @data).once.in_sequence(populate_seq)
+      @model.expects(:populate_relationship).with(:bazs, @data).once.in_sequence(populate_seq)
       @model.populate_relationships(@data)
     end
 
     should "properly save returned value as the value for the relationship" do
-      Relatee.expects(:populate_relationship).once.returns("HEY")
+      Relatee.expects(:populate_relationship).twice.returns("HEY")
       @model.populate_relationships(@data)
       assert_equal "HEY", @model.foos
     end

@@ -136,6 +136,7 @@ class NetworkAdapterTest < Test::Unit::TestCase
       should "save the attachment type and interface attributes on the open adapter" do
         @instance.expects(:save_attachment_type).with(@adapter).once
         @instance.expects(:save_changed_interface_attributes).with(@adapter).once
+        @instance.expects(:save_relationships).once
         @instance.save
       end
     end

@@ -216,6 +216,7 @@ module VirtualBox
       # calls `save_relationship` on the relationship class.
       def save_relationship(name, *args)
         options = self.class.relationships_hash[name]
+        return if lazy_relationship?(name) && !loaded_relationship?(name)
         return unless relationship_class(name).respond_to?(:save_relationship)
         relationship_class(name).save_relationship(self, relationship_data[name], *args)
       end
@@ -232,6 +233,7 @@ module VirtualBox
       def populate_relationship(name, data)
         options = self.class.relationships_hash[name]
         return unless relationship_class(name).respond_to?(:populate_relationship)
+        return if options[:version] && !version_match?(options[:version], VirtualBox.version)
         relationship_data[name] = relationship_class(name).populate_relationship(self, data)
       end
 

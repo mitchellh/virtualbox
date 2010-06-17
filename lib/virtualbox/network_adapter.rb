@@ -120,6 +120,8 @@ module VirtualBox
         save_attachment_type(adapter)
         save_changed_interface_attributes(adapter)
       end
+
+      save_relationships
     end
 
     # Saves the attachment type. This should never be called directly. Instead,
