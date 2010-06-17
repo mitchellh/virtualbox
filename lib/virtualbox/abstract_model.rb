@@ -225,6 +225,16 @@ module VirtualBox
       end
     end
 
+    # Gets the root machine of an AbstractModel by traversing a
+    # `parent` attribute until it reaches a type of {VM}.
+    #
+    # @return [VM]
+    def parent_machine
+      current = parent
+      current = current.parent while current && !current.is_a?(VM)
+      current
+    end
+
     # Creates a human-readable format for this model. This method overrides the
     # default `#<class>` syntax since this doesn't work well for AbstractModels.
     # Instead, it abbreviates it, instead showing all the attributes and their

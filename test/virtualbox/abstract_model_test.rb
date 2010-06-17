@@ -187,6 +187,34 @@ class AbstractModelTest < Test::Unit::TestCase
     end
   end
 
+  context "parent machine" do
+    setup do
+      # Create a subclass of VM and no-op the initialize so it doesn't
+      # try to populate VM attributes or relationships
+      @root = Class.new(VirtualBox::VM)
+      @root.class_eval("def initialize; end")
+      @root = @root.new
+
+      @leaf = @root
+      3.times do |i|
+        child = Class.new(VirtualBox::AbstractModel)
+        child.attribute(:parent, :readonly => true, :property => false)
+        child = child.new
+        child.write_attribute(:parent, @leaf)
+        @leaf = child
+      end
+    end
+
+    should "get the parent" do
+      # Sanity test
+      assert_equal @root, @leaf.parent.parent.parent
+      assert @root.is_a?(VirtualBox::VM)
+
+      # Actual test
+      assert_equal @root, @leaf.parent_machine
+    end
+  end
+
   context "subclasses" do
     class FakeTwoModel < FakeModel
       attribute :baz
