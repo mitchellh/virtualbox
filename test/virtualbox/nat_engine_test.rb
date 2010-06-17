@@ -77,10 +77,29 @@ class NATEngineTest < Test::Unit::TestCase
     end
 
     context "saving" do
+      setup do
+        @engine = mock("engine")
+        @instance.stubs(:modify_engine).yields(@engine)
+      end
+
       should "save the interface attributes and relationships" do
-        @instance.expects(:save_changed_interface_attributes).with(@interface).once
+        @instance.expects(:save_changed_interface_attributes).with(@engine).once
         @instance.expects(:save_relationships).once
         @instance.save
+      end
+    end
+
+    context "modify engine" do
+      setup do
+        @adapter = mock("adapter")
+        @adapter.stubs(:nat_driver).returns(mock("nat_driver"))
+        @parent.stubs(:modify_adapter).yields(@adapter)
+      end
+
+      should "yield the NAT engine" do
+        @instance.modify_engine do |engine|
+          assert_equal @adapter.nat_driver, engine
+        end
       end
     end
   end

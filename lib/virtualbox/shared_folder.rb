@@ -179,7 +179,7 @@ module VirtualBox
     def create
       return unless new_record?
 
-      parent.with_open_session do |session|
+      parent_machine.with_open_session do |session|
         machine = session.machine
         machine.create_shared_folder(name, host_path, writable)
       end

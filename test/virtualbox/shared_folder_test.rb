@@ -89,6 +89,7 @@ class SharedFolderTest < Test::Unit::TestCase
     setup do
       @klass.any_instance.stubs(:load_interface_attributes)
       @instance = @klass.new(@interface)
+      @instance.stubs(:parent_machine).returns(@parent)
       @collection = VirtualBox::Proxies::Collection.new(@parent)
       @collection << @instance
 

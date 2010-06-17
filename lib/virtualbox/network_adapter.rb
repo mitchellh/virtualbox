@@ -142,7 +142,7 @@ module VirtualBox
     # Opens a session, yields the adapter and then saves the machine at
     # the end
     def modify_adapter
-      parent.with_open_session do |session|
+      parent_machine.with_open_session do |session|
         machine = session.machine
         yield machine.get_network_adapter(slot)
       end

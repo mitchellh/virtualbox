@@ -138,7 +138,9 @@ module VirtualBox
       raise Exceptions::ValidationFailedException.new(errors) if !valid?
       destroy if !new_record?
 
-      parent.interface.add_redirect(name, protocol, "", hostport, "", guestport)
+      parent.modify_engine do |nat|
+        nat.add_redirect(name, protocol, "", hostport, "", guestport)
+      end
 
       clear_dirty!
       existing_record!

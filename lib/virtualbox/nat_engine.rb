@@ -55,8 +55,17 @@ module VirtualBox
     end
 
     def save
-      save_changed_interface_attributes(interface)
-      save_relationships
+      modify_engine do |nat|
+        save_changed_interface_attributes(nat)
+        save_relationships
+      end
+    end
+
+    # Helper method to get the mutable `INATEngine` interface.
+    def modify_engine
+      parent.modify_adapter do |adapter|
+        yield adapter.nat_driver
+      end
     end
   end
 end

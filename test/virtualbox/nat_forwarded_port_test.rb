@@ -82,10 +82,11 @@ class NATForwardedPortTest < Test::Unit::TestCase
       context "an existing record" do
         setup do
           @port.existing_record!
+          @caller.stubs(:modify_engine)
         end
 
         should "not do anything and return true if its unchanged" do
-          @caller.expects(:extra_data).never
+          @caller.expects(:modify_engine).never
           assert @port.save
         end
 
@@ -107,6 +108,8 @@ class NATForwardedPortTest < Test::Unit::TestCase
           @port.stubs(:valid?).returns(true)
           @port.new_record!
           assert @port.new_record?
+
+          @caller.stubs(:modify_engine)
         end
 
         should "no longer be a new record after saving" do
@@ -127,7 +130,9 @@ class NATForwardedPortTest < Test::Unit::TestCase
         end
 
         should "add the redirect to the nat engine" do
-          @interface.expects(:add_redirect).with(@port.name,
+          nat = mock("nat")
+          @caller.stubs(:modify_engine).yields(nat)
+          nat.expects(:add_redirect).with(@port.name,
                                                  @port.protocol,
                                                  "", @port.hostport,
                                                  "", @port.guestport)

@@ -172,6 +172,7 @@ class NetworkAdapterTest < Test::Unit::TestCase
         @machine = mock("machine")
         @session = mock("session")
         @session.stubs(:machine).returns(@machine)
+        @instance.expects(:parent_machine).returns(@parent)
 
         @adapter = mock("adapter")
       end
