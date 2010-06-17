@@ -25,6 +25,14 @@ module VirtualBox
         return nil if inat.nil?
         new(caller, inat)
       end
+
+      # Saves the relationship. This simply calls {#save} on every
+      # member of the relationship.
+      #
+      # **This method typically won't be used except internally.**
+      def save_relationship(caller, item)
+        item.save
+      end
     end
 
     def initialize(caller, inat)
@@ -44,6 +52,11 @@ module VirtualBox
       # Clear dirty and set as existing
       clear_dirty!
       existing_record!
+    end
+
+    def save
+      save_changed_interface_attributes(interface)
+      save_relationships
     end
   end
 end

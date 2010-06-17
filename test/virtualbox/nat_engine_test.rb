@@ -59,5 +59,29 @@ class NATEngineTest < Test::Unit::TestCase
         assert_equal @interface, result.interface
       end
     end
+
+    context "saving relationship" do
+      should "call save on each item" do
+        item = mock("item")
+        item.expects(:save)
+        @klass.save_relationship(nil, item)
+      end
+    end
+  end
+
+  context "instance methods" do
+    setup do
+      @klass.any_instance.stubs(:load_interface_attributes)
+      @klass.any_instance.stubs(:populate_relationships)
+      @instance = @klass.new(@parent, @interface)
+    end
+
+    context "saving" do
+      should "save the interface attributes and relationships" do
+        @instance.expects(:save_changed_interface_attributes).with(@interface).once
+        @instance.expects(:save_relationships).once
+        @instance.save
+      end
+    end
   end
 end
