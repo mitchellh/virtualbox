@@ -44,6 +44,7 @@ module VirtualBox
     attribute :internal_network
     attribute :host_interface
     attribute :interface, :readonly => true, :property => false
+    relationship :nat_driver, :NATEngine, :version => "3.2", :lazy => true
 
     class << self
       # Populates the nic relationship for anything which is related to it.
@@ -96,6 +97,13 @@ module VirtualBox
 
       # But this is an existing record
       existing_record!
+    end
+
+    def load_relationship(name)
+      # Lazy load the NAT driver. This is only supported by VirtualBox
+      # 3.2 and higher. This restriction is checked when the
+      # relationship attribute is accessed.
+      populate_relationship(:nat_driver, interface.nat_driver)
     end
 
     # Gets the host interface object associated with the class if it

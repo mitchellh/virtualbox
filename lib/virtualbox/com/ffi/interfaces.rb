@@ -5,6 +5,9 @@ module VirtualBox
       # file should be conditionally loaded based on OS, so that Windows users
       # don't have to wait for all this translation to occur.
       def self.setup(version)
+        # TODO: This is so hacky and hard to maintain. Can we
+        # programatically get the modules in a namespace and
+        # instantiate them somehow?
         for_version version do
           create_interface(:NSISupports)
           create_interface(:NSIException, :NSISupports)
@@ -39,6 +42,11 @@ module VirtualBox
 
           create_interface(:HostUSBDevice, :USBDevice)
           create_interface(:HostUSBDeviceFilter, :USBDeviceFilter)
+
+          # 3.2.x interfaces
+          if version == "3.2.x"
+            create_interface(:NATEngine, :NSISupports)
+          end
         end
       end
     end
