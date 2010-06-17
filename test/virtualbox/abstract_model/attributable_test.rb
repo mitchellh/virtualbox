@@ -195,11 +195,16 @@ class AttributableTest < Test::Unit::TestCase
   end
 
   context "reading and writing attributes" do
+    class VersionedAttributeModel < AttributeModel
+      attribute :ver, :version => "3.1"
+    end
+
     setup do
-      @model = AttributeModel.new
+      @model = VersionedAttributeModel.new
       @model.populate_attributes({
         :foo => "foo",
-        :bar => false
+        :bar => false,
+        :ver => "ver"
       })
 
       @checkstring = "HEY"
@@ -228,6 +233,22 @@ class AttributableTest < Test::Unit::TestCase
     should "be able to read defined attributes" do
       assert_nothing_raised {
         assert_equal "foo", @model.foo
+      }
+    end
+
+    should "raise an exception if version not supported" do
+      VirtualBox.stubs(:version).returns("3.0.14")
+
+      assert_raises(VirtualBox::Exceptions::UnsupportedVersionException) {
+        @model.ver
+      }
+    end
+
+    should "read value if version supported" do
+      VirtualBox.stubs(:version).returns("3.1.8")
+
+      assert_nothing_raised {
+        assert_equal "ver", @model.ver
       }
     end
 

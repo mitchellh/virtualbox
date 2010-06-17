@@ -10,6 +10,7 @@ module VirtualBox
     class MediumCreationFailedException < Exception; end
     class MediumNotUpdatableException < Exception; end
     class ReadonlyVMStateException < Exception; end
+    class UnsupportedVersionException < Exception; end
 
     class FFIException < Exception
       attr_accessor :data

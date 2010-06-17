@@ -1,3 +1,5 @@
+require 'virtualbox/abstract_model/version_matcher'
+
 module VirtualBox
   class AbstractModel
     # Module which can be included into any other class which allows
@@ -36,6 +38,18 @@ module VirtualBox
     #
     # The example above applies a default value to format. So if no value
     # is ever given to it, `format` would return `VDI`.
+    #
+    # ## Attributes for a Specific VirtualBox Version
+    #
+    # Attributes change with different VirtualBox versions. One way to
+    # provide version-specific behavior is to specify the version
+    # which the attribute applies to.
+    #
+    #     attribute :name, :version => "3.2"
+    #     attribute :age, :version => "3.1"
+    #
+    # These versions only apply to major and minor releases of
+    # VirtualBox. Patch releases can't be specified (such as "3.2.4")
     #
     # ## Populating Multiple Attributes
     #
@@ -118,6 +132,8 @@ module VirtualBox
     #     puts model.expensive_attribute # => 42
     #
     module Attributable
+      include VersionMatcher
+
       def self.included(base)
         base.extend ClassMethods
       end
@@ -224,13 +240,16 @@ module VirtualBox
       # if specified.
       def read_attribute(name)
         if has_attribute?(name)
+          options = self.class.attributes[name]
+
+          assert_version_match(options[:version], VirtualBox.version) if options[:version]
           if lazy_attribute?(name) && !loaded_attribute?(name)
             # Load the lazy attribute
             load_attribute(name.to_sym)
           end
 
           if attributes[name].nil?
-            self.class.attributes[name][:default]
+            options[:default]
           else
             attributes[name]
           end
