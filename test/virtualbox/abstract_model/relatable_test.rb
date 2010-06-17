@@ -196,6 +196,7 @@ class RelatableTest < Test::Unit::TestCase
   context "saving relationships" do
     class RelatableWithLazyModel < RelatableModel
       relationship :bazs, RelatableTest::Relatee, :lazy => true
+      relationship :vers, RelatableTest::Relatee, :version => "3.1"
 
       def load_relationship(name)
         populate_relationship(:bazs, "foo")
@@ -204,18 +205,26 @@ class RelatableTest < Test::Unit::TestCase
 
     setup do
       @model = RelatableWithLazyModel.new
+      VirtualBox.stubs(:version).returns("3.1.3")
     end
 
     should "call save_relationship for all relationships" do
       @model.expects(:save_relationship).with(:foos)
       @model.expects(:save_relationship).with(:bars)
       @model.expects(:save_relationship).with(:bazs)
+      @model.expects(:save_relationship).with(:vers)
       @model.save_relationships
     end
 
     should "not call save_relationship on non-loaded relations" do
       Relatee.expects(:save_relationship).never
       @model.save_relationship(:bazs)
+    end
+
+    should "not call save_relationship on relationships with mismatched versions" do
+      VirtualBox.stubs(:version).returns("3.2.4")
+      Relatee.expects(:save_relationship).never
+      @model.save_relationship(:vers)
     end
 
     should "call save_relationship on loaded lazy relationships" do

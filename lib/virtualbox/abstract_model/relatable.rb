@@ -217,6 +217,7 @@ module VirtualBox
       def save_relationship(name, *args)
         options = self.class.relationships_hash[name]
         return if lazy_relationship?(name) && !loaded_relationship?(name)
+        return if options[:version] && !version_match?(options[:version], VirtualBox.version)
         return unless relationship_class(name).respond_to?(:save_relationship)
         relationship_class(name).save_relationship(self, relationship_data[name], *args)
       end
