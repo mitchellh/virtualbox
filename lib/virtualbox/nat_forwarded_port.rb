@@ -153,7 +153,9 @@ module VirtualBox
     def destroy
       return if new_record?
       previous_name = name_changed? ? name_was : name
-      parent.interface.remove_redirect(previous_name)
+      parent.modify_engine do |nat|
+        nat.remove_redirect(previous_name)
+      end
       parent_collection.delete(self, true) if parent_collection
       new_record!
       true

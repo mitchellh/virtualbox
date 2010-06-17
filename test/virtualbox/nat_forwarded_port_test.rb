@@ -144,6 +144,9 @@ class NATForwardedPortTest < Test::Unit::TestCase
     context "destroying" do
       setup do
         @interface.stubs(:remove_redirect)
+        @nat = mock("nat")
+        @nat.stubs(:remove_redirect)
+        @caller.stubs(:modify_engine).yields(@nat)
       end
 
       should "remove itself from it's collection" do
@@ -153,13 +156,13 @@ class NATForwardedPortTest < Test::Unit::TestCase
       end
 
       should "remove the redirect from the nat engine interface" do
-        @interface.expects(:remove_redirect).with(@port.name).once
+        @nat.expects(:remove_redirect).with(@port.name).once
         @port.destroy
       end
 
       should "do nothing if the record is new" do
         @port.new_record!
-        @caller.expects(:extra_data).never
+        @nat.expects(:remove_redirect).never
         @port.destroy
       end
 
