@@ -52,6 +52,7 @@ class NATEngineTest < Test::Unit::TestCase
 
       should "return an initialized NATEngine" do
         @klass.any_instance.stubs(:load_interface_attributes)
+        @klass.any_instance.stubs(:populate_relationships)
         result = @klass.populate_relationship(@parent, @interface)
         assert result.is_a?(@klass)
         assert_equal @parent, result.parent

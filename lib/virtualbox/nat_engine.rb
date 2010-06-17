@@ -13,6 +13,7 @@ module VirtualBox
     attribute :dns_proxy
     attribute :dns_use_host_resolver
     attribute :interface, :readonly => true, :property => false
+    relationship :forwarded_ports, :NATForwardedPort
 
     class << self
       # Populates the NAT engine for anything which is related to it.
@@ -38,6 +39,7 @@ module VirtualBox
 
       # Load the interface attributes associated with this model
       load_interface_attributes(inat)
+      populate_relationships(inat)
 
       # Clear dirty and set as existing
       clear_dirty!

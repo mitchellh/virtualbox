@@ -112,7 +112,7 @@ class AbstractModelTest < Test::Unit::TestCase
 
     should "turn attributes which are AbstractInterfaces into classes" do
       @model.foo = VirtualBox::COM::Util.versioned_interface(:VirtualBox).new(VirtualBox::COM::Implementer::Nil, nil)
-      assert_equal "#<AbstractModelTest::FakeModel :bar=nil, :bars=..., :foo=#<VirtualBox::COM::Interface::Version_3_1_X::VirtualBox>, :foos=...>", @model.inspect
+      assert_equal "#<AbstractModelTest::FakeModel :bar=nil, :bars=..., :foo=#<VirtualBox::COM::Interface::Version_3_2_X::VirtualBox>, :foos=...>", @model.inspect
     end
   end
 
