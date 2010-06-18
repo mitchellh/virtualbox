@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{virtualbox}
-  s.version = "0.7.1"
+  s.version = "0.7.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-06-11}
+  s.date = %q{2010-06-17}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/abstract_model/interface_attributes.rb",
      "lib/virtualbox/abstract_model/relatable.rb",
      "lib/virtualbox/abstract_model/validatable.rb",
+     "lib/virtualbox/abstract_model/version_matcher.rb",
      "lib/virtualbox/appliance.rb",
      "lib/virtualbox/audio_adapter.rb",
      "lib/virtualbox/bios.rb",
@@ -196,6 +197,8 @@ Gem::Specification.new do |s|
      "lib/virtualbox/media.rb",
      "lib/virtualbox/medium.rb",
      "lib/virtualbox/medium_attachment.rb",
+     "lib/virtualbox/nat_engine.rb",
+     "lib/virtualbox/nat_forwarded_port.rb",
      "lib/virtualbox/network_adapter.rb",
      "lib/virtualbox/proxies/collection.rb",
      "lib/virtualbox/shared_folder.rb",
@@ -214,6 +217,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/abstract_model/interface_attributes_test.rb",
      "test/virtualbox/abstract_model/relatable_test.rb",
      "test/virtualbox/abstract_model/validatable_test.rb",
+     "test/virtualbox/abstract_model/version_matcher_test.rb",
      "test/virtualbox/abstract_model_test.rb",
      "test/virtualbox/appliance_test.rb",
      "test/virtualbox/audio_adapter_test.rb",
@@ -245,6 +249,8 @@ Gem::Specification.new do |s|
      "test/virtualbox/lib_test.rb",
      "test/virtualbox/medium_attachment_test.rb",
      "test/virtualbox/medium_test.rb",
+     "test/virtualbox/nat_engine_test.rb",
+     "test/virtualbox/nat_forwarded_port_test.rb",
      "test/virtualbox/network_adapter_test.rb",
      "test/virtualbox/proxies/collection_test.rb",
      "test/virtualbox/shared_folder_test.rb",
@@ -274,10 +280,12 @@ Gem::Specification.new do |s|
      "test/virtualbox/vm_test.rb",
      "test/virtualbox/virtual_system_description_test.rb",
      "test/virtualbox/vrdp_server_test.rb",
+     "test/virtualbox/nat_forwarded_port_test.rb",
      "test/virtualbox/appliance_test.rb",
      "test/virtualbox/medium_attachment_test.rb",
      "test/virtualbox/audio_adapter_test.rb",
      "test/virtualbox/cpu_test.rb",
+     "test/virtualbox/abstract_model/version_matcher_test.rb",
      "test/virtualbox/abstract_model/validatable_test.rb",
      "test/virtualbox/abstract_model/attributable_test.rb",
      "test/virtualbox/abstract_model/relatable_test.rb",
@@ -315,7 +323,8 @@ Gem::Specification.new do |s|
      "test/virtualbox/ext/byte_normalizer_test.rb",
      "test/virtualbox/ext/subclass_listing_test.rb",
      "test/virtualbox/ext/platform_test.rb",
-     "test/virtualbox/version_test.rb"
+     "test/virtualbox/version_test.rb",
+     "test/virtualbox/nat_engine_test.rb"
   ]
 
   if s.respond_to? :specification_version then
