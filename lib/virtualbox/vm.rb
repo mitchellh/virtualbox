@@ -174,7 +174,7 @@ module VirtualBox
     relationship :medium_attachments, :MediumAttachment
     relationship :shared_folders, :SharedFolder
     relationship :extra_data, :ExtraData
-    relationship :forwarded_ports, :ForwardedPort
+    relationship :forwarded_ports, :ForwardedPort, :version => "3.1"
     relationship :network_adapters, :NetworkAdapter
     relationship :usb_controller, :USBController
     relationship :current_snapshot, :Snapshot
