@@ -33,5 +33,9 @@ class VersionMatcherTest < Test::Unit::TestCase
       assert_equal %W[3 2], @klass.split_version("3.2.0")
       assert_equal %W[3 1], @klass.split_version("3.1.1.1.1")
     end
+
+    should "return an empty array if it can't split" do
+      assert_equal [], @klass.split_version(nil)
+    end
   end
 end

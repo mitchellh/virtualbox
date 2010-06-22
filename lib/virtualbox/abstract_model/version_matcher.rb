@@ -26,6 +26,8 @@ module VirtualBox
       # @return [Array]
       def split_version(version)
         version.split(/\./)[0,2]
+      rescue Exception
+        []
       end
     end
   end
