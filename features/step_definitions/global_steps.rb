@@ -2,6 +2,10 @@ Given /the global object/ do
   @object = VirtualBox::Global.global(true)
 end
 
+Given /the "(.+?)" relationship/ do |relationship|
+  @relationship = @object.send(relationship)
+end
+
 When /I read the "(.+?)"/ do |property|
   @value = @object.send(property)
 end
