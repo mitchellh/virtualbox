@@ -1,9 +1,8 @@
-class VBoxManage
-  @@executable = 'VBoxManage'
-
-  class << self
-    def execute(*args)
-      `#{@@executable} #{args.join(" ")}`.chomp
-    end
+module VBoxManage
+  def vboxmanage_output
+    combined_output.chomp
   end
 end
+
+# Include this so steps can use it
+World(VBoxManage)

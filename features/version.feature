@@ -5,12 +5,12 @@ Feature: VirtualBox version information
 
   Scenario: Reading the version
     When I try to read the virtualbox "version"
-    Then the result should match output
+    Then the result should match version output
 
   Scenario: Reading the revision
     When I try to read the virtualbox "revision"
-    Then the result should match output
+    Then the result should match version output
 
   Scenario: Checking if VirtualBox supported
     When I try to read the virtualbox "supported?"
-    Then the result should match output
+    Then the result should match version output
