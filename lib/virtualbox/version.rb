@@ -20,7 +20,7 @@ module VirtualBox
 
     # Returns the revision string of the VirtualBox installed, ex. "51742"
     def revision
-      Lib.lib.virtualbox.revision
+      Lib.lib.virtualbox.revision.to_s
     end
   end
 end

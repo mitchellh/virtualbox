@@ -1,0 +1,13 @@
+begin
+  require 'cucumber'
+  require 'cucumber/rake/task'
+
+  namespace :test do
+    Cucumber::Rake::Task.new(:integration) do |t|
+      t.cucumber_opts = "features --format pretty"
+    end
+  end
+rescue LoadError
+  puts "Cucumber not available. Feature testing not available."
+  puts "Install it with: gem install cucumber"
+end

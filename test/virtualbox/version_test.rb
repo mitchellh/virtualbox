@@ -39,8 +39,7 @@ class VersionTest < Test::Unit::TestCase
   end
 
   should "return the revision" do
-    revision = mock("revision")
-    @vbox.expects(:revision).returns(revision)
-    assert_equal revision, @module.revision
+    @vbox.expects(:revision).returns(7)
+    assert_equal "7", @module.revision
   end
 end

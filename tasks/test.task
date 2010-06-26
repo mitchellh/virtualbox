@@ -1,8 +1,10 @@
 require 'rake/testtask'
 
-task :default => :test
+task :default => "test:units"
 
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.pattern = 'test/**/*_test.rb'
+namespace :test do
+  Rake::TestTask.new(:units) do |t|
+    t.libs << "test"
+    t.pattern = 'test/**/*_test.rb'
+  end
 end
