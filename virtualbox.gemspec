@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-06-17}
+  s.date = %q{2010-06-26}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -211,6 +211,10 @@ Gem::Specification.new do |s|
      "lib/virtualbox/virtual_system_description.rb",
      "lib/virtualbox/vm.rb",
      "lib/virtualbox/vrdp_server.rb",
+     "tasks/jeweler.task",
+     "tasks/rcov.task",
+     "tasks/test.task",
+     "tasks/yard.task",
      "test/test_helper.rb",
      "test/virtualbox/abstract_model/attributable_test.rb",
      "test/virtualbox/abstract_model/dirty_test.rb",

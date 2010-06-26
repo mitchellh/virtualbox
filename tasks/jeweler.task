@@ -1,0 +1,17 @@
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "virtualbox"
+    gemspec.summary = "Create and modify virtual machines in VirtualBox using pure ruby."
+    gemspec.description = "Create and modify virtual machines in VirtualBox using pure ruby."
+    gemspec.email = "mitchell.hashimoto@gmail.com"
+    gemspec.homepage = "http://github.com/mitchellh/virtualbox"
+    gemspec.authors = ["Mitchell Hashimoto"]
+    gemspec.executables = []
+
+    gemspec.add_dependency('ffi', '>= 0.6.3')
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+end
