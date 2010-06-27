@@ -12,18 +12,18 @@ Feature: Virtual Machine HW Virtualization
     And the "hw_virt" relationship
 
   Scenario: Reading
-    Then the HW virt properties should match
+    Then the "HW virt" properties should match
 
   @unsafe
   Scenario: Updating
     When I set the relationship property "enabled" to "false"
     And I save the relationship
     And I reload the VM info
-    Then the HW virt properties should match
+    Then the "HW virt" properties should match
 
   @unsafe
   Scenario: Updating and saving via VM
     When I set the relationship property "nested_paging" to "false"
     And I save the model
     And I reload the VM info
-    Then the HW virt properties should match
+    Then the "HW virt" properties should match

@@ -12,18 +12,18 @@ Feature: Virtual Machine BIOS Settings
     And the "bios" relationship
 
   Scenario: Reading BIOS
-    Then the BIOS properties should match
+    Then the "BIOS" properties should match
 
   @unsafe
   Scenario: Updating the BIOS
     When I set the relationship property "acpi_enabled" to "true"
     And I save the relationship
     And I reload the VM info
-    Then the BIOS properties should match
+    Then the "BIOS" properties should match
 
   @unsafe
   Scenario: Updating the BIOS via the VM
     When I set the relationship property "io_apic_enabled" to "true"
     And I save the model
     And I reload the VM info
-    Then the BIOS properties should match
+    Then the "BIOS" properties should match

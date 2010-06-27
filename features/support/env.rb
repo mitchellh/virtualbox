@@ -35,3 +35,8 @@ HWVIRT_MAPPINGS = {
   :nested_paging => "nestedpaging",
   :vpid => "vtxvpid"
 }
+
+CPU_MAPPINGS = {
+  :pae => "pae",
+  :synthetic => "synthcpu"
+}

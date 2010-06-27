@@ -32,14 +32,14 @@ Then /the VM should exist/ do
   @model.should_not be_nil
 end
 
-Then /the BIOS properties should match/ do
-  test_mappings(BIOS_MAPPINGS, @relationship, @output)
-end
+Then /the "(.+?)" properties should match/ do |type|
+  map = {
+    "BIOS" => BIOS_MAPPINGS,
+    "CPU" => CPU_MAPPINGS,
+    "HW virt" => HWVIRT_MAPPINGS,
+    "VM" => VM_MAPPINGS
+  }
 
-Then /the HW virt properties should match/ do
-  test_mappings(HWVIRT_MAPPINGS, @relationship, @output)
-end
-
-Then /the VM properties should match/ do
-  test_mappings(VM_MAPPINGS, @model, @output)
+  object = type == "VM" ? @model : @relationship
+  test_mappings(map[type], object, @output)
 end
