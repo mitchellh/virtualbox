@@ -5,9 +5,7 @@ When /I try to read the virtualbox "(.+?)"/ do |item|
 end
 
 Then /the result should match version output/ do
-  When %Q[I run "#{vboxmanage("-v")}"]
-
-  data = vboxmanage_output.split("r")
+  data = VBoxManage.execute("-v").split("r")
   results = {
     :version => data[0],
     :revision => data[1],

@@ -16,7 +16,7 @@ When /I read the media "(.+?)"/ do |property|
 end
 
 Then /I should get a matching length for "vms"/ do
-  output = vboxmanage_execute("list", "vms")
+  output = VBoxManage.execute("list", "vms")
   @value.length.should == output.split("\n").length
 end
 
@@ -27,7 +27,7 @@ Then /I should get a matching length of media items/ do
     :floppies => "floppies"
   }
 
-  output = vboxmanage_execute("list", mapping[@media])
+  output = VBoxManage.execute("list", mapping[@media])
   count = output.split("\n").inject(0) do |acc, line|
     acc += 1 if line =~ /^UUID:/
     acc
