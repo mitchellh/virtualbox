@@ -1,12 +1,16 @@
-Given /the extra data of "(.+?)"/ do |name|
+When /I get the extra data of "(.+?)"/ do |name|
   @extra_data = VBoxManage.extra_data(name)
 end
 
-Given /I set the extra data "(.+?)" to "(.+?)"/ do |key, value|
+When /I set the extra data "(.+?)" to "(.+?)"/ do |key, value|
   @relationship[key] = value
 end
 
-Given /the extra data is saved/ do
+When /I delete the extra data "(.+?)"/ do |key|
+  @relationship.delete(key)
+end
+
+When /I save the relationship/ do
   @relationship.save
 end
 
@@ -19,4 +23,8 @@ end
 
 Then /the extra data should include "(.+?)" as "(.+?)"/ do |key, value|
   @extra_data[key].should == value
+end
+
+Then /the extra data should not include "(.+?)"/ do |key|
+  @extra_data.should_not have_key(key)
 end
