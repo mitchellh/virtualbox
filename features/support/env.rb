@@ -45,3 +45,7 @@ STORAGE_MAPPINGS = {
   :port_count => "portcount",
   :controller_type => "type"
 }
+
+SHARED_FOLDER_MAPPINGS = {
+  :host_path => "path"
+}

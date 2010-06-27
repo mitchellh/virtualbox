@@ -15,6 +15,10 @@ When /I set the relationship property "(.+?)" to "(.+?)"/ do |key, value|
   @relationship.send("#{key}=", value)
 end
 
+When /I add the new record to the relationship/ do
+  @relationship << @new_record
+end
+
 When /I save the relationship/ do
   @relationship.save
 end

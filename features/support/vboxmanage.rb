@@ -65,5 +65,27 @@ class VBoxManage
         acc
       end
     end
+
+    # Parses the shared folders out of the VM info output and returns
+    # it in a programmer-friendly hash.
+    def shared_folders(info)
+      raw = info.inject({}) do |acc, data|
+        k,v = data
+
+        if k =~ /^SharedFolder(.+?)MachineMapping(\d+)$/
+          subkey = $2.to_s
+          acc[subkey] ||= {}
+          acc[subkey][$1.to_s.downcase.to_sym] = v
+        end
+
+        acc
+      end
+
+      raw.inject({}) do |acc, data|
+        k,v = data
+        acc[v.delete(:name)] = v
+        acc
+      end
+    end
   end
 end
