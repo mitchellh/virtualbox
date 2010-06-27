@@ -4,8 +4,10 @@ Feature: Virtual Machine BIOS Settings
 
   Background:
     Given I find a VM identified by "test_vm_A"
-    And I set the VM "acpi" to "off"
-    And I set the VM "ioapic" to "off"
+    And I set the VM properties:
+      | name   | value |
+      | acpi   | off   |
+      | ioapic | off   |
     And I reload the VM
     And the "bios" relationship
 

@@ -2,6 +2,12 @@ Given /I set the VM "(.+?)" to "(.+?)"/ do |key, value|
   VBoxManage.execute("modifyvm", @name, "--#{key}", value)
 end
 
+Given /I set the VM properties:/ do |properties|
+  properties.hashes.each do |hash|
+    Given %Q[I set the VM "#{hash["name"]}" to "#{hash["value"]}"]
+  end
+end
+
 Given /I reload the VM$/ do
   Given %Q[I find a VM identified by "#{@name}"]
 end
