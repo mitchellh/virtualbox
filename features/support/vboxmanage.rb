@@ -26,7 +26,11 @@ class VBoxManage
 
     # Gets the info for a VM and returns it in hash format.
     def vm_info(name)
-      output = execute("showvminfo", name, "--machinereadable")
+      output = begin
+        execute("showvminfo", name, "--machinereadable")
+      rescue Exception
+        ""
+      end
 
       output.split("\n").inject({}) do |acc, line|
         if line =~ /^"?(.+?)"?=(.+?)$/
