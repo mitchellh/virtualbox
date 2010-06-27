@@ -1,10 +1,16 @@
-# Before everything, load virtualbox, of course
-require 'spec'
-require 'aruba'
+#------------------------------------------------------------
+# Hooks
+#------------------------------------------------------------
+# Unsafe tags specify that a test modifies (writes or deletes)
+# actual data in VirtualBox.
+Around('@unsafe') do |scenario, block|
+  block.call if IntegrationInfo[:test_unsafe]
+end
 
-require File.join(File.dirname(__FILE__), %W[.. .. lib virtualbox])
-
-if !ENV["TEST_UNSAFE"]
+#------------------------------------------------------------
+# Warning/Info messages about settings.
+#------------------------------------------------------------
+if !IntegrationInfo[:test_unsafe]
   puts <<-MSG
 ========================================================================
 
@@ -18,6 +24,3 @@ set. To enable unsafe tests, the easiest way is to do the following:
 MSG
 end
 
-Around('@unsafe') do |scenario, block|
-  block.call if ENV["TEST_UNSAFE"]
-end
