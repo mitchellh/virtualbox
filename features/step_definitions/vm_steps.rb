@@ -1,6 +1,19 @@
+Given /I set the VM "(.+?)" to "(.+?)"/ do |key, value|
+  VBoxManage.execute("modifyvm", @name, "--#{key}", value)
+end
+
+Given /I reload the VM$/ do
+  Given %Q[I find a VM identified by "#{@name}"]
+end
+
 When /I find a VM identified by "(.+?)"/ do |name|
+  @name = name
   @output = VBoxManage.vm_info(name)
   @model = VirtualBox::VM.find(name)
+end
+
+When /I reload the VM info$/ do
+  @output = VBoxManage.vm_info(@name)
 end
 
 Then /the VM should not exist/ do
@@ -13,15 +26,10 @@ Then /the VM should exist/ do
   @model.should_not be_nil
 end
 
-Then /the properties should match/ do
-  VM_MAPPINGS.each do |model_key, output_key|
-    value = @model.send(model_key)
+Then /the BIOS properties should match/ do
+  test_mappings(BIOS_MAPPINGS, @relationship, @output)
+end
 
-    if [TrueClass, FalseClass].include?(value.class)
-      # Convert true/false to VirtualBox-style string boolean values
-      value = value ? "on" : "off"
-    end
-
-    value.to_s.should == @output[output_key]
-  end
+Then /the VM properties should match/ do
+  test_mappings(VM_MAPPINGS, @model, @output)
 end

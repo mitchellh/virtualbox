@@ -10,4 +10,4 @@ Feature: Virtual Machine
   Scenario: Finding a VM
     When I find a VM identified by "test_vm_A"
     Then the VM should exist
-    And the properties should match
+    And the VM properties should match

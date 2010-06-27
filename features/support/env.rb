@@ -23,3 +23,10 @@ VM_MAPPINGS = {
   :clipboard_mode => "clipboard",
   :monitor_count => "monitorcount"
 }
+
+BIOS_MAPPINGS = {
+  :acpi_enabled => "acpi",
+  :io_apic_enabled => "ioapic"
+}
+
+MERGED_MAPPINGS = VM_MAPPINGS.merge(BIOS_MAPPINGS)

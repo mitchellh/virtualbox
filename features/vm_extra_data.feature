@@ -28,6 +28,6 @@ Feature: VM Extra Data
   @unsafe
   Scenario: Writing extra data and saving VM
     When I set the extra data "VirtualBoxGemTest/Key" to "Value"
-    And I save the object
+    And I save the model
     And I get the extra data of "test_vm_A"
     Then the extra data should include "VirtualBoxGemTest/Key" as "Value"

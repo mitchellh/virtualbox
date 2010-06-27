@@ -7,7 +7,10 @@ class VBoxManage
     end
 
     def execute(*args)
-      `#{command(*args)}`.chomp
+      cmd = command(*args)
+      result = `#{cmd}`.chomp
+      raise Exception.new("Failed command: #{cmd}") if $?.exitstatus != 0
+      result
     end
 
     # Gets the extra data for a VM of the given ID and returns it in
