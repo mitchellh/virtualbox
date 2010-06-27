@@ -43,5 +43,27 @@ class VBoxManage
         acc
       end
     end
+
+    # Parses the storage controllers out of VM info output and returns
+    # it in a programmer-friendly hash.
+    def storage_controllers(info)
+      raw = info.inject({}) do |acc, data|
+        k,v = data
+
+        if k =~ /^storagecontroller(.+?)(\d+)$/
+          subkey = $2.to_s
+          acc[subkey] ||= {}
+          acc[subkey][$1.to_s.to_sym] = v
+        end
+
+        acc
+      end
+
+      raw.inject({}) do |acc, data|
+        k,v = data
+        acc[v.delete(:name)] = v
+        acc
+      end
+    end
   end
 end

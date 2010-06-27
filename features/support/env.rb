@@ -40,3 +40,8 @@ CPU_MAPPINGS = {
   :pae => "pae",
   :synthetic => "synthcpu"
 }
+
+STORAGE_MAPPINGS = {
+  :port_count => "portcount",
+  :controller_type => "type"
+}
