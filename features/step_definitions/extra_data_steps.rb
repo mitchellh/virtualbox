@@ -10,10 +10,6 @@ When /I delete the extra data "(.+?)"/ do |key|
   @relationship.delete(key)
 end
 
-When /I save the relationship/ do
-  @relationship.save
-end
-
 Then /all the extra data should match/ do
   @relationship.length.should == @extra_data.length
   @extra_data.each do |k,v|

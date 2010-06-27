@@ -7,6 +7,10 @@ Around('@unsafe') do |scenario, block|
   block.call if IntegrationInfo[:test_unsafe]
 end
 
+Around('@pending') do |scenario, block|
+  # Don't run the block
+end
+
 #------------------------------------------------------------
 # Warning/Info messages about settings.
 #------------------------------------------------------------

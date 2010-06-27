@@ -1,18 +1,10 @@
 Given /the global object/ do
-  @object = VirtualBox::Global.global(true)
-end
-
-Given /the "(.+?)" relationship/ do |relationship|
-  @relationship = @object.send(relationship)
-end
-
-When /I read the "(.+?)"/ do |property|
-  @value = @object.send(property)
+  @model = VirtualBox::Global.global(true)
 end
 
 When /I read the media "(.+?)"/ do |property|
   @media = property.gsub(" ", "_").to_sym
-  @value = @object.media.send(@media)
+  @value = @model.media.send(@media)
 end
 
 Then /I should get a matching length for "vms"/ do
