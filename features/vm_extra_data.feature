@@ -4,6 +4,8 @@ Feature: VM Extra Data
 
   Background:
     Given I find a VM identified by "test_vm_A"
+    And I delete the VM extra data "VirtualBoxGemTest/Key"
+    And I reload the VM
     And the "extra_data" relationship
 
   Scenario: Reading extra data

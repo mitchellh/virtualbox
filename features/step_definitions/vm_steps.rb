@@ -2,6 +2,15 @@ Given /I set the VM "(.+?)" to "(.+?)"/ do |key, value|
   VBoxManage.execute("modifyvm", @name, "--#{key}", value)
 end
 
+Given /I set the VM extra data "(.+?)" to "(.*?)"/ do |key, value|
+  VBoxManage.execute("setextradata", @name, key, value)
+end
+
+Given /I delete the VM extra data "(.+?)"/ do |key|
+  # Same as setting to empty
+  Given %Q[I set the VM extra data "#{key}" to ""]
+end
+
 Given /I reload the VM$/ do
   Given %Q[I find a VM identified by "#{@name}"]
 end
