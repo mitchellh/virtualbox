@@ -4,6 +4,7 @@ Feature: Global Extra Data
 
   Background:
     Given the global object
+    And I delete the "global" extra data "VirtualBoxGemTest/Key"
     And the "extra_data" relationship
 
   Scenario: Reading extra data

@@ -1,3 +1,13 @@
+Given /I set the "(.+?)" extra data "(.+?)" to "(.*?)"/ do |name, key, value|
+  name = @name if name == "VM"
+  VBoxManage.execute("setextradata", name, key, value)
+end
+
+Given /I delete the "(.+?)" extra data "(.+?)"/ do |name, key|
+  # Same as setting to empty
+  Given %Q[I set the "#{name}" extra data "#{key}" to ""]
+end
+
 When /I get the extra data of "(.+?)"/ do |name|
   @extra_data = VBoxManage.extra_data(name)
 end
