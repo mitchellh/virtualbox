@@ -29,4 +29,9 @@ BIOS_MAPPINGS = {
   :io_apic_enabled => "ioapic"
 }
 
-MERGED_MAPPINGS = VM_MAPPINGS.merge(BIOS_MAPPINGS)
+HWVIRT_MAPPINGS = {
+  :enabled => "hwvirtex",
+  :exclusive => "hwvirtexexcl",
+  :nested_paging => "nestedpaging",
+  :vpid => "vtxvpid"
+}
