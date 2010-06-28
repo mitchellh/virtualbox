@@ -87,5 +87,24 @@ class VBoxManage
         acc
       end
     end
+
+    # Parses the network adapters out of the VM info output and
+    # returns it in a hash.
+    def network_adapters(info)
+      valid_keys = %W[natnet macaddress cableconnected hostonlyadapter]
+
+      info.inject({}) do |acc, data|
+        k,v = data
+        if k =~ /^nic(\d+)$/
+          acc[$1.to_i] ||= {}
+          acc[$1.to_i][:type] = v
+        elsif k=~ /^(.+?)(\d+)$/ && valid_keys.include?($1.to_s)
+          acc[$2.to_i] ||= {}
+          acc[$2.to_i][$1.to_s.to_sym] = v
+        end
+
+        acc
+      end
+    end
   end
 end

@@ -12,7 +12,9 @@ module VirtualBox
           value = value ? "on" : "off"
         end
 
-        value.to_s.should == output[output_key]
+        output_value = output[output_key.to_sym] || output[output_key]
+        value, output_value = yield value, output_value if block_given?
+        value.to_s.should == output_value
       end
     end
   end

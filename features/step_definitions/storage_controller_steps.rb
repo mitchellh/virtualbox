@@ -9,9 +9,8 @@ Then /the storage controller properties should match/ do
     controller = controllers[sc.name]
     controller.should_not be_nil
 
-    STORAGE_MAPPINGS.each do |k,v|
-      value = sc.send(k).to_s.downcase.gsub("_", "")
-      value.should == controller[v.to_sym].downcase
+    test_mappings(STORAGE_MAPPINGS, sc, controller) do |value, output|
+      [value.to_s.downcase.gsub("_",""), output.downcase]
     end
   end
 end

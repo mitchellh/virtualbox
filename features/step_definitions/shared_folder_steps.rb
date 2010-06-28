@@ -52,10 +52,6 @@ Then /the shared folder properties should match/ do
 
   @relationship.each do |sf|
     folder = folders[sf.name]
-
-    SHARED_FOLDER_MAPPINGS.each do |k,v|
-      value = sf.send(k)
-      value.should == folder[v.to_sym]
-    end
+    test_mappings(SHARED_FOLDER_MAPPINGS, sf, folder)
   end
 end

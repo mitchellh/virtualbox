@@ -49,3 +49,8 @@ STORAGE_MAPPINGS = {
 SHARED_FOLDER_MAPPINGS = {
   :host_path => "path"
 }
+
+NETWORK_ADAPTER_MAPPINGS = {
+  :mac_address => "macaddress",
+  :cable_connected => "cableconnected"
+}
