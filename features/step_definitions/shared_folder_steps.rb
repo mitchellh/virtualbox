@@ -9,6 +9,16 @@ Given /I delete the shared folder "(.+?)" via VBoxManage/ do |name|
                      "--name", name)
 end
 
+Given /a shared folder "(.+?)" exists/ do |name|
+  folders = VBoxManage.shared_folders(@output)
+
+  if !folders.keys.include?(name)
+    Given %Q[I add a shared folder "#{name}" with path "/#{name}" via VBoxManage]
+    Given %Q[I reload the VM]
+    Given %Q[the "shared_folders" relationship]
+  end
+end
+
 Given /no shared folder "(.+?)" exists/ do |name|
   folders = VBoxManage.shared_folders(@output)
 

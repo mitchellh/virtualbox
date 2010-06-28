@@ -4,11 +4,11 @@ Feature: Virtual Machine Shared Folders
 
   Background:
     Given I find a VM identified by "test_vm_A"
-    And I add a shared folder "foo" with path "/" via VBoxManage
-    And I reload the VM
     And the "shared_folders" relationship
 
+  @unsafe
   Scenario: Reading Shared Folders
+    Given a shared folder "foo" exists
     Then the shared folder properties should match
 
   @unsafe
@@ -22,6 +22,7 @@ Feature: Virtual Machine Shared Folders
 
   @unsafe
   Scenario: Deleting Shared Folders
+    Given a shared folder "foo" exists
     When I delete the shared folder "foo"
     And I reload the VM info
     Then the shared folder "foo" should not exist
