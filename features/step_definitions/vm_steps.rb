@@ -15,21 +15,26 @@ end
 When /I find a VM identified by "(.+?)"/ do |name|
   @name = name
   @output = VBoxManage.vm_info(name)
-  @model = VirtualBox::VM.find(name)
+  @vm = VirtualBox::VM.find(name)
+  @model = @vm
 end
 
 When /I reload the VM info$/ do
   @output = VBoxManage.vm_info(@name)
 end
 
+When /I save the VM/ do
+  @vm.save
+end
+
 Then /the VM should not exist/ do
   @output.should be_empty
-  @model.should be_nil
+  @vm.should be_nil
 end
 
 Then /the VM should exist/ do
   @output.should have_key("UUID")
-  @model.should_not be_nil
+  @vm.should_not be_nil
 end
 
 Then /the "(.+?)" properties should match/ do |type|
@@ -40,6 +45,6 @@ Then /the "(.+?)" properties should match/ do |type|
     "VM" => VM_MAPPINGS
   }
 
-  object = type == "VM" ? @model : @relationship
+  object = type == "VM" ? @vm : @relationship
   test_mappings(map[type], object, @output)
 end

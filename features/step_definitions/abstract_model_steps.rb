@@ -10,9 +10,16 @@ When /I read the "(.+?)"/ do |property|
   @value = @model.send(property)
 end
 
-When /I set the relationship property "(.+?)" to "(.+?)"/ do |key, value|
+When /I set the property "(.+?)" to "(.+?)"/ do |key, value|
   value = value == "true" if %W[true false].include?(value)
-  @relationship.send("#{key}=", value)
+  @model.send("#{key}=", value)
+end
+
+When /I set the relationship property "(.+?)" to "(.+?)"/ do |key, value|
+  old = @model
+  @model = @relationship
+  When %Q[I set the property "#{key}" to "#{value}"]
+  @model = old
 end
 
 When /I add the new record to the relationship/ do
