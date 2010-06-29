@@ -32,7 +32,7 @@ class VBoxManage
         ""
       end
 
-      output.split("\n").inject({}) do |acc, line|
+      output.split("\n").inject(OrderedHash.new) do |acc, line|
         if line =~ /^"?(.+?)"?=(.+?)$/
           key = $1.to_s
           value = $2.to_s
@@ -101,6 +101,30 @@ class VBoxManage
         elsif k=~ /^(.+?)(\d+)$/ && valid_keys.include?($1.to_s)
           acc[$2.to_i] ||= {}
           acc[$2.to_i][$1.to_s.to_sym] = v
+        end
+
+        acc
+      end
+    end
+
+    # Parses the forwarded ports out of the VM info output and returns
+    # it in a hash.
+    def forwarded_ports(info, slot)
+      seen = false
+      info.inject({}) do |acc, data|
+        k,v = data
+
+        seen = true if k == "nic#{slot}"
+        if seen && k =~ /^Forwarding\((\d+)\)$/
+          keys = [:name, :protocol, :hostip, :hostport, :guestip, :guestport]
+          v = v.split(",")
+
+          temp = {}
+          keys.each_with_index do |key, i|
+            temp[key] = v[i]
+          end
+
+          acc[temp.delete(:name)] = temp
         end
 
         acc

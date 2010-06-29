@@ -54,3 +54,9 @@ NETWORK_ADAPTER_MAPPINGS = {
   :mac_address => "macaddress",
   :cable_connected => "cableconnected"
 }
+
+FORWARDED_PORT_MAPPINGS = {
+  :protocol => "protocol",
+  :hostport => "hostport",
+  :guestport => "guestport"
+}

@@ -3,7 +3,7 @@ module VirtualBox
     # Tests that given a mappings hash (see `VM_MAPPINGS` in env.rb),
     # a model, and an output hash (string to string), that all the
     # mappings from model match output.
-    def test_mappings(mappings, model, output, match=true)
+    def test_mappings(mappings, model, output)
       mappings.each do |model_key, output_key|
         value = model.send(model_key)
 
