@@ -28,6 +28,15 @@ When /I create a forwarded port named "(.+?)" from "(.+?)" to "(.+?)"$/ do |name
   @relationship.forwarded_ports << @object
 end
 
+When /I delete the forwarded port named "(.+?)"/ do |name|
+  @relationship.forwarded_ports.each do |fp|
+    if fp.name == name
+      fp.destroy
+      break
+    end
+  end
+end
+
 Then /the NAT network should exist/ do
   # Temporary until we find something to really test
   @relationship.should_not be_nil
@@ -36,6 +45,11 @@ end
 Then /the forwarded port "(.+?)" should exist/ do |name|
   ports = VBoxManage.forwarded_ports(@output, @slot)
   ports.should have_key(name)
+end
+
+Then /the forwarded port "(.+?)" should not exist/ do |name|
+  ports = VBoxManage.forwarded_ports(@output, @slot)
+  ports.should_not have_key(name)
 end
 
 Then /the forwarded ports should match/ do
