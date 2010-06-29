@@ -209,11 +209,11 @@ class RelatableTest < Test::Unit::TestCase
     end
 
     should "call save_relationship for all relationships" do
-      @model.expects(:save_relationship).with(:foos)
-      @model.expects(:save_relationship).with(:bars)
-      @model.expects(:save_relationship).with(:bazs)
-      @model.expects(:save_relationship).with(:vers)
-      @model.save_relationships
+      @model.expects(:save_relationship).with(:foos).returns(true)
+      @model.expects(:save_relationship).with(:bars).returns(true)
+      @model.expects(:save_relationship).with(:bazs).returns(true)
+      @model.expects(:save_relationship).with(:vers).returns(true)
+      assert @model.save_relationships
     end
 
     should "not call save_relationship on non-loaded relations" do
@@ -234,8 +234,8 @@ class RelatableTest < Test::Unit::TestCase
     end
 
     should "call save_relationship on the related class" do
-      Relatee.expects(:save_relationship).with(@model, @model.foos).once
-      @model.save_relationship(:foos)
+      Relatee.expects(:save_relationship).with(@model, @model.foos).once.returns(:r)
+      assert_equal :r, @model.save_relationship(:foos)
     end
 
     should "forward parameters through" do

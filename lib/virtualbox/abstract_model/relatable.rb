@@ -206,9 +206,13 @@ module VirtualBox
       # In addition to those two args, any arbitrary args may be tacked on to the
       # end and they'll be pushed through to the `save_relationship` method.
       def save_relationships(*args)
-        self.class.relationships.each do |name, options|
-          save_relationship(name, *args)
+        # Can't use `all?` here since it short circuits
+        results = self.class.relationships.collect do |data|
+          name, options = data
+          !!save_relationship(name, *args)
         end
+
+        !results.include?(false)
       end
 
       # Saves a single relationship. It is up to the relationship class to
