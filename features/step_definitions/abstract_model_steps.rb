@@ -1,5 +1,9 @@
-Given /the "(.+?)" relationship/ do |relationship|
+Given /the "(.+?)" relationship$/ do |relationship|
   @relationship = @model.send(relationship)
+end
+
+Given /the "(.+?)" relationship on collection item "(.+?)"/ do |key, index|
+  @relationship = @relationship[index.to_i - 1].send(key)
 end
 
 Given /I reload the model/ do
