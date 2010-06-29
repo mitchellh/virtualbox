@@ -168,7 +168,7 @@ module VirtualBox
       if !new_record?
         # If its not a new record, any changes will require a new shared
         # folder to be created, so we first destroy it then recreate it.
-        destroy
+        destroy(false)
       end
 
       create
@@ -204,14 +204,14 @@ module VirtualBox
     # from the host system. Instead, it simply removes the mapping to the
     # virtual machine, meaning it will no longer be possible to mount it
     # from within the virtual machine.
-    def destroy
+    def destroy(update_collection=true)
       parent.with_open_session do |session|
         machine = session.machine
         machine.remove_shared_folder(name)
       end
 
       # Remove it from it's parent collection
-      parent_collection.delete(self, true) if parent_collection
+      parent_collection.delete(self, true) if parent_collection && update_collection
 
       # Mark as a new record so if it is saved again, it will create it
       new_record!

@@ -4,6 +4,12 @@ Given /I add a shared folder "(.+?)" with path "(.+?)" via VBoxManage/ do |name,
                      "--hostpath", hostpath)
 end
 
+Given /I remove all shared folders/ do
+  VBoxManage.shared_folders(@output).each do |name, folder|
+    Given %Q[I delete the shared folder "#{name}" via VBoxManage]
+  end
+end
+
 Given /I delete the shared folder "(.+?)" via VBoxManage/ do |name|
   VBoxManage.execute("sharedfolder", "remove", @name,
                      "--name", name)
@@ -35,10 +41,23 @@ When /I create a new shared folder "(.+?)" with path "(.+?)"/ do |name,hostpath|
   @new_record.host_path = hostpath
 end
 
+When /I update the shared folder named "(.+?)":/ do |name, table|
+  object = @relationship.find { |o| o.name == name }
+  object.should_not be_nil
+
+  table.hashes.each do |hash|
+    object.send("#{hash["attribute"]}=", hash["value"])
+  end
+end
+
 When /I delete the shared folder "(.+?)"$/ do |name|
   @relationship.each do |sf|
     sf.destroy if sf.name == name
   end
+end
+
+Then /the shared folder "(.+?)" should exist/ do |name|
+  VBoxManage.shared_folders(@output).keys.should include(name)
 end
 
 Then /the shared folder "(.+?)" should not exist/ do |name|

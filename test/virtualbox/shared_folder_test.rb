@@ -130,7 +130,7 @@ class SharedFolderTest < Test::Unit::TestCase
         assert !@instance.new_record? # sanity
 
         save_seq = sequence("save_seq")
-        @instance.expects(:destroy).once.in_sequence(save_seq)
+        @instance.expects(:destroy).with(false).once.in_sequence(save_seq)
         @instance.expects(:create).once.in_sequence(save_seq)
 
         @instance.save
@@ -193,6 +193,12 @@ class SharedFolderTest < Test::Unit::TestCase
         assert @collection.include?(@instance)
         @instance.destroy
         assert !@collection.include?(@instance)
+      end
+
+      should "not remove itself from it's collection if specified" do
+        assert @collection.include?(@instance)
+        @instance.destroy(false)
+        assert @collection.include?(@instance)
       end
 
       should "destroy the shared folder on the parent" do
