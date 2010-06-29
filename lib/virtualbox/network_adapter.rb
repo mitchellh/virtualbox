@@ -1,18 +1,29 @@
 module VirtualBox
   # Represents a single NIC (Network Interface Card) of a virtual machine.
   #
-  # **Currently, new NICs can't be created, so the only way to get this
-  # object is through a {VM}'s `nics` relationship.**
+  # # Create a Network Adapter
   #
-  # # Editing a NIC
+  # There is no need to have the ability to create a network adapter,
+  # since when creating a VM from scratch, all eight network adapter
+  # slots are created, but set to `attachment_type` `nil`. Simply
+  # modify the adapter you're interested in and save.
   #
-  # Nics can be modified directly in their relationship to other
+  #
+  # # Editing a Network Adapter
+  #
+  # Network adapters can be modified directly in their relationship to other
   # virtual machines. When {VM#save} is called, it will also save any
-  # changes to its relationships.
+  # changes to its relationships. Additionally, you may call {#save}
+  # on the relationship itself.
   #
   #     vm = VirtualBox::VM.find("foo")
-  #     vm.nics[0].macaddress = @new_mac_address
+  #     vm.network_adapters[0].macaddress = @new_mac_address
   #     vm.save
+  #
+  # # Destroying a Network Adapter
+  #
+  # Network adapters can not actually be "destroyed" but can be
+  # removed by setting the `attachment_type` to `nil` and saving.
   #
   # # Attributes
   #
@@ -25,12 +36,16 @@ module VirtualBox
   # listed below. If you aren't sure what this means or you can't understand
   # why the below is listed, please read {Attributable}.
   #
-  #     attribute :parent, :readonly => :readonly
-  #     attribute :nic
-  #     attribute :nictype
-  #     attribute :macaddress
-  #     attribute :cableconnected
-  #     attribute :bridgeadapter
+  #     attribute :slot, :readonly => true
+  #     attribute :enabled, :boolean => true
+  #     attribute :attachment_type
+  #     attribute :adapter_type
+  #     attribute :mac_address
+  #     attribute :cable_connected, :boolean => true
+  #     attribute :nat_network
+  #     attribute :internal_network
+  #     attribute :host_interface
+  #     attribute :interface, :readonly => true, :property => false
   #
   class NetworkAdapter < AbstractModel
     attribute :parent, :readonly => true, :property => false
