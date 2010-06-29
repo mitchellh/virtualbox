@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-06-26}
+  s.date = %q{2010-06-28}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -25,6 +25,30 @@ Gem::Specification.new do |s|
      "VERSION",
      "docs/GettingStarted.md",
      "docs/WhatsNew.md",
+     "features/README.md",
+     "features/global.feature",
+     "features/global_extra_data.feature",
+     "features/step_definitions/abstract_model_steps.rb",
+     "features/step_definitions/extra_data_steps.rb",
+     "features/step_definitions/global_steps.rb",
+     "features/step_definitions/network_adapter_steps.rb",
+     "features/step_definitions/shared_folder_steps.rb",
+     "features/step_definitions/storage_controller_steps.rb",
+     "features/step_definitions/virtualbox_steps.rb",
+     "features/step_definitions/vm_steps.rb",
+     "features/support/env.rb",
+     "features/support/helpers.rb",
+     "features/support/hooks.rb",
+     "features/support/vboxmanage.rb",
+     "features/version.feature",
+     "features/vm.feature",
+     "features/vm_bios.feature",
+     "features/vm_cpu.feature",
+     "features/vm_extra_data.feature",
+     "features/vm_hw_virt.feature",
+     "features/vm_network_adapters.feature",
+     "features/vm_shared_folders.feature",
+     "features/vm_storage_controllers.feature",
      "lib/virtualbox.rb",
      "lib/virtualbox/abstract_model.rb",
      "lib/virtualbox/abstract_model/attributable.rb",
@@ -211,6 +235,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/virtual_system_description.rb",
      "lib/virtualbox/vm.rb",
      "lib/virtualbox/vrdp_server.rb",
+     "tasks/cucumber.task",
      "tasks/jeweler.task",
      "tasks/rcov.task",
      "tasks/test.task",

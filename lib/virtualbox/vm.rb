@@ -295,8 +295,6 @@ module VirtualBox
       validates_numericality_of :memory_balloon_size, :monitor_count
       validates_inclusion_of :accelerate_3d_enabled, :accelerate_2d_video_enabled, :teleporter_enabled, :in => [true, false]
 
-      validates_format_of :name, :with => /^[\w\d\s-]+$/, :message => 'must only contain letters, numbers, spaces, underscores, and dashes.'
-
       if !errors_on(:name)
         # Only validate the name if the name has no errors already
         vms_of_same_name = self.class.find(name)
