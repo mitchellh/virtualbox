@@ -14,9 +14,18 @@ Given /I read the adapter in slot "(.+?)"$/ do |slot|
   @relationship = @model.network_adapters[slot.to_i - 1].nat_driver
 end
 
-Given /I create a forwarded port named "(.+?)" from "(.+?)" to "(.+?)"/ do |name, guest, host|
+Given /I create a forwarded port named "(.+?)" from "(.+?)" to "(.+?)" via VBoxManage/ do |name, guest, host|
   fp_string = "#{name},tcp,,#{host},,#{guest}"
   VBoxManage.execute("modifyvm", @name, "--natpf#{@slot}", fp_string)
+end
+
+When /I create a forwarded port named "(.+?)" from "(.+?)" to "(.+?)"$/ do |name, guest, host|
+  @object = VirtualBox::NATForwardedPort.new
+  @object.name = name
+  @object.guestport = guest.to_i
+  @object.hostport = host.to_i
+
+  @relationship.forwarded_ports << @object
 end
 
 Then /the NAT network should exist/ do

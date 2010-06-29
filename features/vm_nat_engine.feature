@@ -15,10 +15,20 @@ Feature: Virtual Machine NAT Engine
   Scenario: Reading the NAT engine
     Then the NAT network should exist
 
+  @unsafe
   Scenario: Reading Forwarded Ports
     Given I read the adapter in slot "1"
-    And I create a forwarded port named "ssh" from "22" to "2222"
+    And I create a forwarded port named "ssh" from "22" to "2222" via VBoxManage
     And I reload the VM
     And I read the adapter in slot "1"
+    Then the forwarded port "ssh" should exist
+    And the forwarded ports should match
+
+  @unsafe
+  Scenario: Creating Forwarded Ports
+    Given I read the adapter in slot "1"
+    When I create a forwarded port named "ssh" from "22" to "2222"
+    And I save the relationship
+    And I reload the VM info
     Then the forwarded port "ssh" should exist
     And the forwarded ports should match
