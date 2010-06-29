@@ -285,6 +285,29 @@ class AbstractModelTest < Test::Unit::TestCase
       @model.foo = "foo2"
       @model.save("YES")
     end
+
+    should "return true if succeeds" do
+      assert @model.save
+    end
+  end
+
+  context "save!" do
+    setup do
+      @model = FakeModel.new
+    end
+
+    should "raise an exception if save failed" do
+      args = %W[foo bar baz]
+      @model.expects(:save).with(*args).returns(false)
+      assert_raises(VirtualBox::Exceptions::ValidationFailedException) {
+        @model.save!(*args)
+      }
+    end
+
+    should "not raise an exception if save succeeds" do
+      @model.expects(:save).returns(true)
+      assert_nothing_raised { @model.save! }
+    end
   end
 
   context "populating relationships and attributes" do

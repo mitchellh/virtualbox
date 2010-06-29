@@ -116,6 +116,15 @@ module VirtualBox
 
       # No longer a new record
       @new_record = false
+
+      true
+    end
+
+    # Saves the model and raises an {Exceptions::ValidationFailedException}
+    # if the model is invalid, instead of returning false.
+    def save!(*args)
+      raise Exceptions::ValidationFailedException.new(errors.inspect) if !save(*args)
+      true
     end
 
     # Saves a single attribute of the model. This method on the abstract
