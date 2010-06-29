@@ -68,6 +68,23 @@ class AbstractModelTest < Test::Unit::TestCase
     end
   end
 
+  context "errors for relationship default implementation" do
+    setup do
+      @klass = FakeModel
+    end
+
+    should "return the errors on the item" do
+      errors = mock("errors")
+      item = mock("item")
+      item.stubs(:errors).returns(errors)
+      assert_equal errors, @klass.errors_for_relationship(nil, item)
+    end
+
+    should "return nil if the item doesn't respond to errors" do
+      assert_nil @klass.errors_for_relationship(nil, 7)
+    end
+  end
+
   context "lazy attributes and relationships" do
     class LazyModel < VirtualBox::AbstractModel
       attribute :foo, :lazy => true

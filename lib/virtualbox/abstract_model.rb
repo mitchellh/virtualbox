@@ -35,6 +35,13 @@ module VirtualBox
       def reloaded!
         @_reload = false
       end
+
+      # Default errors for relationship implementation, since this is
+      # a pretty stable method.
+      def errors_for_relationship(caller, data)
+        return data.errors if data.respond_to?(:errors)
+        nil
+      end
     end
 
     # Signals to the class that it should be reloaded. This simply toggles
@@ -70,16 +77,16 @@ module VirtualBox
 
     # Returns the errors for a model.
     def errors
-      error_hash = super
+      self.class.relationships.inject(super) do |acc, data|
+        name, options = data
 
-      self.class.relationships.each do |name, options|
-        next unless options && options[:klass].respond_to?(:errors_for_relationship)
-        relationship_errors = options[:klass].errors_for_relationship(self, relationship_data[name])
+        if options && options[:klass].respond_to?(:errors_for_relationship)
+          errors = options[:klass].errors_for_relationship(self, relationship_data[name])
+          acc.merge!(name => errors) if errors && !errors.empty?
+        end
 
-        error_hash.merge!({ :foos => relationship_errors }) if relationship_errors.length > 0
+        acc
       end
-
-      error_hash
     end
 
     # Validates the model and relationships.

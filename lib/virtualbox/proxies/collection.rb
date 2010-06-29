@@ -29,6 +29,14 @@ module VirtualBox
         item
       end
 
+      # Returns the errors associated with all the items in this
+      # collection
+      def errors
+        collect do |item|
+          item.respond_to?(:errors) ? item.errors : {}
+        end
+      end
+
       def <<(item)
         item.added_to_relationship(self) if item.respond_to?(:added_to_relationship)
         push(item)

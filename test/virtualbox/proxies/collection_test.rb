@@ -40,6 +40,21 @@ class CollectionTest < Test::Unit::TestCase
     end
   end
 
+  context "errors" do
+    should "return the errors of all the elements" do
+      errors = []
+      3.times do |i|
+        error = "error#{i}"
+        item = mock("item")
+        item.stubs(:errors).returns(error)
+        errors << error
+        @collection << item
+      end
+
+      assert_equal errors, @collection.errors
+    end
+  end
+
   context "element callbacks" do
     setup do
       @item = mock("item")
