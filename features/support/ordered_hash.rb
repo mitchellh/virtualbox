@@ -34,4 +34,16 @@ class OrderedHash
   def each(&block)
     @items.each(&block)
   end
+
+  def empty?
+    @items.empty?
+  end
+
+  def has_key?(key)
+    @items.each do |k,v|
+      return true if k == key
+    end
+
+    false
+  end
 end
