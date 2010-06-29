@@ -91,8 +91,8 @@ module VirtualBox
             :parent_collection => relation,
             :name => parts[0],
             :protocol => COM::Util.versioned_interface(:NATProtocol).index(parts[1]),
-            :guestport => parts[5],
-            :hostport => parts[3]
+            :guestport => parts[5].to_i,
+            :hostport => parts[3].to_i
           })
 
           port.existing_record!
@@ -136,7 +136,7 @@ module VirtualBox
     def save
       return true if !new_record? && !changed?
       raise Exceptions::ValidationFailedException.new(errors) if !valid?
-      destroy if !new_record?
+      destroy(false) if !new_record?
 
       parent.modify_engine do |nat|
         nat.add_redirect(name, protocol, "", hostport, "", guestport)
@@ -150,13 +150,13 @@ module VirtualBox
     # Destroys the port forwarding mapping.
     #
     # @return [Boolean] True if command was successful, false otherwise.
-    def destroy
+    def destroy(update_collection=true)
       return if new_record?
       previous_name = name_changed? ? name_was : name
       parent.modify_engine do |nat|
         nat.remove_redirect(previous_name)
       end
-      parent_collection.delete(self, true) if parent_collection
+      parent_collection.delete(self, true) if parent_collection && update_collection
       new_record!
       true
     end

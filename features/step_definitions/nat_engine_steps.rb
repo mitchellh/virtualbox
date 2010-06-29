@@ -28,6 +28,17 @@ When /I create a forwarded port named "(.+?)" from "(.+?)" to "(.+?)"$/ do |name
   @relationship.forwarded_ports << @object
 end
 
+When /I update the forwarded port named "(.+?)":/ do |name, table|
+  fp = @relationship.forwarded_ports.find { |fp| fp.name == name }
+  fp.should_not be_nil
+
+  table.hashes.each do |hash|
+    value = hash["value"]
+    value = value.to_i if %W[hostport guestport].include?(hash["attribute"])
+    fp.send("#{hash["attribute"]}=", value)
+  end
+end
+
 When /I delete the forwarded port named "(.+?)"/ do |name|
   @relationship.forwarded_ports.each do |fp|
     if fp.name == name

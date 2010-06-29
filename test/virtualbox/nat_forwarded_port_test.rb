@@ -98,7 +98,7 @@ class NATForwardedPortTest < Test::Unit::TestCase
 
         should "call destroy if not a new record" do
           @port.name = "diff"
-          @port.expects(:destroy).once
+          @port.expects(:destroy).with(false).once
           @port.save
         end
       end
@@ -155,6 +155,12 @@ class NATForwardedPortTest < Test::Unit::TestCase
         assert !@collection.include?(@port)
       end
 
+      should "not remove itself from collection if specified" do
+        assert @collection.include?(@port)
+        @port.destroy(false)
+        assert @collection.include?(@port)
+      end
+
       should "remove the redirect from the nat engine interface" do
         @nat.expects(:remove_redirect).with(@port.name).once
         @port.destroy
@@ -202,8 +208,8 @@ class NATForwardedPortTest < Test::Unit::TestCase
 
       should "have the proper data" do
         object = @objects.first
-        assert_equal "22", object.guestport
-        assert_equal "2222", object.hostport
+        assert_equal 22, object.guestport
+        assert_equal 2222, object.hostport
         assert_equal :tcp, object.protocol
         assert_equal @objects, object.parent_collection
       end

@@ -34,6 +34,19 @@ Feature: Virtual Machine NAT Engine
     And the forwarded ports should match
 
   @unsafe
+  Scenario: Updating Forwarded Ports
+    Given I read the adapter in slot "1"
+    And I create a forwarded port named "ssh" from "22" to "2222" via VBoxManage
+    And I reload the VM
+    And I read the adapter in slot "1"
+    When I update the forwarded port named "ssh":
+      | attribute | value |
+      | hostport  | 3333  |
+    And I save the relationship
+    And I reload the VM info
+    Then the forwarded ports should match
+
+  @unsafe
   Scenario: Deleting Forwarded Ports
     Given I read the adapter in slot "1"
     And I create a forwarded port named "ssh" from "22" to "2222" via VBoxManage
