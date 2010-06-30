@@ -130,5 +130,62 @@ class VBoxManage
         acc
       end
     end
+
+    # Parses the snapshots out of the VM info output and returns it in
+    # a hash.
+    def snapshots(info)
+      info.inject({}) do |acc, data|
+        k,v = data
+
+        if k =~ /^Snapshot(.+?)(-(.+?))?$/
+          current = { $1.to_s.downcase.to_sym => v }
+
+          if $3
+            # This is a child snapshot
+            keys = $3.to_s.split("-").map do |key|
+              key.to_i - 1
+            end
+            final = keys.pop
+
+            location = acc
+            keys.each { |index| location = location[:children][index.to_i] }
+
+            parent = location
+            location = location[:children]
+            location[final] ||= {}
+            location[final].merge!(current)
+            location[final][:parent] = parent
+            location[final][:children] ||= []
+          else
+            acc ||= {}
+            acc.merge!(current)
+            acc[:children] ||= []
+          end
+        end
+
+        acc
+      end
+    end
+
+    # Gets the current snapshot.
+    def current_snapshot(info)
+      seen = false
+      uuid = nil
+      VBoxManage.execute("showvminfo", info["UUID"]).split("\n").each do |line|
+        seen = true if line =~ /^Snapshots:/
+        uuid = $2.to_s if seen && line =~ /Name:\s+(.+?)\s+\(UUID:\s+(.+?)\)\s+\*/
+      end
+
+      # The recursive sub-method which finds a snapshot by UUID
+      finder = lambda do |snapshot|
+        return snapshot if snapshot[:uuid] == uuid
+
+        snapshot[:children].find do |child|
+          finder.call(child)
+        end
+      end
+
+      finder.call(snapshots(info))
+    end
   end
 end

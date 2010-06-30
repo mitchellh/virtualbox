@@ -17,6 +17,21 @@ module VirtualBox
         value.to_s.should == output_value
       end
     end
+
+    # Applies a function to every snapshot.
+    def snapshot_map(snapshots, &block)
+      applier = lambda do |snapshot|
+        return if !snapshot || snapshot.empty?
+
+        snapshot[:children].each do |child|
+          applier.call(child)
+        end
+
+        block.call(snapshot)
+      end
+
+      applier.call(snapshots)
+    end
   end
 end
 
