@@ -18,7 +18,6 @@ module VirtualBox
 
         interface_dir = File.expand_path(File.join(File.dirname(__FILE__), "interface"))
         Dir[File.join(interface_dir, "*")].each do |f|
-          p "Checking: #{f}"
           return if File.directory?(f) && initialize_for_version(File.basename(f))
         end
       end
@@ -34,7 +33,6 @@ module VirtualBox
         # Check if they match or not.
         return false if vb_version.length == version.length
         (0...(version.length)).each do |i|
-          p "Checking: #{version[i,1]} to #{vb_version[i,1]}"
           next if version[i,1] == "x"
           return false if version[i,1] != vb_version[i,1]
         end
