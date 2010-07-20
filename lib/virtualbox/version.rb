@@ -12,8 +12,12 @@ module VirtualBox
     end
 
     # Returns the version string of the VirtualBox installed, ex. "3.1.6"
-    def version
-      Lib.lib.virtualbox.version
+    # This string is cached since the version typically doesn't change
+    # during runtime. If you must refresh the version, send the boolean
+    # `true` as the first parameter.
+    def version(refresh=false)
+      @_version = Lib.lib.virtualbox.version if @_version.nil? || refresh
+      @_version
     rescue Exception
       nil
     end
