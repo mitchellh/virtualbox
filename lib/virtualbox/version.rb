@@ -23,8 +23,12 @@ module VirtualBox
     end
 
     # Returns the revision string of the VirtualBox installed, ex. "51742"
-    def revision
-      Lib.lib.virtualbox.revision.to_s
+    # This string is cached since the revision doesn't typically change during
+    # runtime. If you must refresh the version, send the boolean `true` as the
+    # first parameter.
+    def revision(refresh=false)
+      @_revision = Lib.lib.virtualbox.revision.to_s if @_revision.nil? || refresh
+      @_revision
     end
   end
 end

@@ -47,6 +47,13 @@ class VersionTest < Test::Unit::TestCase
 
   should "return the revision" do
     @vbox.expects(:revision).returns(7)
+    assert_equal "7", @module.revision(true)
+  end
+
+  should "cache the revision" do
+    @vbox.expects(:revision).once.returns(7)
+    assert_equal "7", @module.revision(true)
+    assert_equal "7", @module.revision
     assert_equal "7", @module.revision
   end
 end
