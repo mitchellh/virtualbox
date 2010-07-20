@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-06-28}
+  s.date = %q{2010-07-19}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -31,14 +31,17 @@ Gem::Specification.new do |s|
      "features/step_definitions/abstract_model_steps.rb",
      "features/step_definitions/extra_data_steps.rb",
      "features/step_definitions/global_steps.rb",
+     "features/step_definitions/nat_engine_steps.rb",
      "features/step_definitions/network_adapter_steps.rb",
      "features/step_definitions/shared_folder_steps.rb",
+     "features/step_definitions/snapshot_steps.rb",
      "features/step_definitions/storage_controller_steps.rb",
      "features/step_definitions/virtualbox_steps.rb",
      "features/step_definitions/vm_steps.rb",
      "features/support/env.rb",
      "features/support/helpers.rb",
      "features/support/hooks.rb",
+     "features/support/ordered_hash.rb",
      "features/support/vboxmanage.rb",
      "features/version.feature",
      "features/vm.feature",
@@ -46,8 +49,10 @@ Gem::Specification.new do |s|
      "features/vm_cpu.feature",
      "features/vm_extra_data.feature",
      "features/vm_hw_virt.feature",
+     "features/vm_nat_engine.feature",
      "features/vm_network_adapters.feature",
      "features/vm_shared_folders.feature",
+     "features/vm_snapshots.feature",
      "features/vm_storage_controllers.feature",
      "lib/virtualbox.rb",
      "lib/virtualbox/abstract_model.rb",
@@ -298,69 +303,69 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/mitchellh/virtualbox}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.test_files = [
-    "test/virtualbox_test.rb",
-     "test/test_helper.rb",
-     "test/virtualbox/network_adapter_test.rb",
-     "test/virtualbox/storage_controller_test.rb",
-     "test/virtualbox/host_test.rb",
-     "test/virtualbox/vm_test.rb",
-     "test/virtualbox/virtual_system_description_test.rb",
-     "test/virtualbox/vrdp_server_test.rb",
-     "test/virtualbox/nat_forwarded_port_test.rb",
-     "test/virtualbox/appliance_test.rb",
-     "test/virtualbox/medium_attachment_test.rb",
-     "test/virtualbox/audio_adapter_test.rb",
-     "test/virtualbox/cpu_test.rb",
-     "test/virtualbox/abstract_model/version_matcher_test.rb",
-     "test/virtualbox/abstract_model/validatable_test.rb",
+    "test/test_helper.rb",
      "test/virtualbox/abstract_model/attributable_test.rb",
-     "test/virtualbox/abstract_model/relatable_test.rb",
      "test/virtualbox/abstract_model/dirty_test.rb",
      "test/virtualbox/abstract_model/interface_attributes_test.rb",
-     "test/virtualbox/host_network_interface_test.rb",
-     "test/virtualbox/lib_test.rb",
-     "test/virtualbox/system_properties_test.rb",
-     "test/virtualbox/snapshot_test.rb",
-     "test/virtualbox/usb_controller_test.rb",
-     "test/virtualbox/forwarded_port_test.rb",
-     "test/virtualbox/dvd_test.rb",
-     "test/virtualbox/hard_drive_test.rb",
+     "test/virtualbox/abstract_model/relatable_test.rb",
+     "test/virtualbox/abstract_model/validatable_test.rb",
+     "test/virtualbox/abstract_model/version_matcher_test.rb",
      "test/virtualbox/abstract_model_test.rb",
-     "test/virtualbox/dhcp_server_test.rb",
-     "test/virtualbox/proxies/collection_test.rb",
-     "test/virtualbox/com/implementer/base_test.rb",
-     "test/virtualbox/com/implementer/mscom_test.rb",
-     "test/virtualbox/com/implementer/ffi_test.rb",
-     "test/virtualbox/com/ffi/util_test.rb",
-     "test/virtualbox/com/ffi/interface_test.rb",
-     "test/virtualbox/com/ffi_interface_test.rb",
-     "test/virtualbox/com/util_test.rb",
-     "test/virtualbox/com/abstract_interface_test.rb",
-     "test/virtualbox/com/mscom_interface_test.rb",
+     "test/virtualbox/appliance_test.rb",
+     "test/virtualbox/audio_adapter_test.rb",
+     "test/virtualbox/bios_test.rb",
      "test/virtualbox/com/abstract_enum_test.rb",
      "test/virtualbox/com/abstract_implementer_test.rb",
-     "test/virtualbox/shared_folder_test.rb",
-     "test/virtualbox/global_test.rb",
-     "test/virtualbox/extra_data_test.rb",
-     "test/virtualbox/bios_test.rb",
-     "test/virtualbox/hw_virtualization_test.rb",
-     "test/virtualbox/medium_test.rb",
-     "test/virtualbox/usb_device_filter_test.rb",
+     "test/virtualbox/com/abstract_interface_test.rb",
+     "test/virtualbox/com/ffi/interface_test.rb",
+     "test/virtualbox/com/ffi/util_test.rb",
+     "test/virtualbox/com/ffi_interface_test.rb",
+     "test/virtualbox/com/implementer/base_test.rb",
+     "test/virtualbox/com/implementer/ffi_test.rb",
+     "test/virtualbox/com/implementer/mscom_test.rb",
+     "test/virtualbox/com/mscom_interface_test.rb",
+     "test/virtualbox/com/util_test.rb",
+     "test/virtualbox/cpu_test.rb",
+     "test/virtualbox/dhcp_server_test.rb",
+     "test/virtualbox/dvd_test.rb",
      "test/virtualbox/ext/byte_normalizer_test.rb",
-     "test/virtualbox/ext/subclass_listing_test.rb",
      "test/virtualbox/ext/platform_test.rb",
+     "test/virtualbox/ext/subclass_listing_test.rb",
+     "test/virtualbox/extra_data_test.rb",
+     "test/virtualbox/forwarded_port_test.rb",
+     "test/virtualbox/global_test.rb",
+     "test/virtualbox/hard_drive_test.rb",
+     "test/virtualbox/host_network_interface_test.rb",
+     "test/virtualbox/host_test.rb",
+     "test/virtualbox/hw_virtualization_test.rb",
+     "test/virtualbox/lib_test.rb",
+     "test/virtualbox/medium_attachment_test.rb",
+     "test/virtualbox/medium_test.rb",
+     "test/virtualbox/nat_engine_test.rb",
+     "test/virtualbox/nat_forwarded_port_test.rb",
+     "test/virtualbox/network_adapter_test.rb",
+     "test/virtualbox/proxies/collection_test.rb",
+     "test/virtualbox/shared_folder_test.rb",
+     "test/virtualbox/snapshot_test.rb",
+     "test/virtualbox/storage_controller_test.rb",
+     "test/virtualbox/system_properties_test.rb",
+     "test/virtualbox/usb_controller_test.rb",
+     "test/virtualbox/usb_device_filter_test.rb",
      "test/virtualbox/version_test.rb",
-     "test/virtualbox/nat_engine_test.rb"
+     "test/virtualbox/virtual_system_description_test.rb",
+     "test/virtualbox/vm_test.rb",
+     "test/virtualbox/vrdp_server_test.rb",
+     "test/virtualbox_test.rb"
   ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<ffi>, [">= 0.6.3"])
     else
       s.add_dependency(%q<ffi>, [">= 0.6.3"])
