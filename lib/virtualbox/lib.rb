@@ -57,6 +57,8 @@ module VirtualBox
             @@lib_path = ["/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"]
           elsif Platform.linux?
             @@lib_path = ["/opt/VirtualBox/VBoxXPCOMC.so", "/usr/lib/virtualbox/VBoxXPCOMC.so"]
+          elsif Platform.solaris?
+            @@lib_path = ["/opt/VirtualBox/amd64/VBoxXPCOMC.so", "/opt/VirtualBox/i386/VBoxXPCOMC.so"]
           elsif Platform.windows?
             @@lib_path = "Unknown"
           else

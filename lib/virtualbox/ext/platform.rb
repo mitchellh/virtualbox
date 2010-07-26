@@ -13,6 +13,10 @@ module VirtualBox
         platform.include?("linux")
       end
 
+      def solaris?
+        platform.include?("solaris")
+      end
+
       def platform
         RUBY_PLATFORM.downcase
       end
