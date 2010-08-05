@@ -5,7 +5,7 @@ module VirtualBox
       callback :pfnGetVersion, [], :uint
       callback :pfnComInitialize, [:string, :pointer, :string, :pointer], :void
       callback :pfnComUninitialize, [], :void
-      callback :pfnComUnallocMem, [:void], :void
+      callback :pfnComUnallocMem, [:pointer], :void
       callback :pfnUtf16Free, [:pointer], :void
       callback :pfnUtf8Free, [:string], :void
       callback :pfnUtf16ToUtf8, [:pointer, :pointer], :int
