@@ -1,7 +1,6 @@
 source "http://rubygems.org"
 
-# External Dependencies
-gem "ffi"
+gem "virtualbox", :path => "."
 
 # Gems required for development only.
 group :development do
@@ -18,8 +17,4 @@ group :development do
   gem "cucumber", "~> 0.8.0"
   gem "aruba", "~> 0.1.9"
   gem "rspec"
-
-  # Generally good to have
-  gem "ruby-debug", ">= 0.10.3" if RUBY_VERSION < '1.9'
-  gem "ruby-debug19", ">= 0.11.6" if RUBY_VERSION >= '1.9'
 end
