@@ -31,7 +31,7 @@ module VirtualBox
           function :unregister_machine, :Machine, [WSTRING]
           function :create_appliance, :Appliance, []
           function :create_hard_disk, :Medium, [WSTRING, WSTRING]
-          function :open_hard_disk, :Medium, [WSTRING, T_UINT32, T_BOOL, WSTRING, T_BOOL, WSTRING]
+          function :open_hard_disk, :Medium, [WSTRING, :AccessMode, T_BOOL, WSTRING, T_BOOL, WSTRING]
           function :get_hard_disk, :Medium, [WSTRING]
           function :find_hard_disk, :Medium, [WSTRING]
           function :open_dvd_image, :Medium, [WSTRING, WSTRING]

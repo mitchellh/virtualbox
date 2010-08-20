@@ -68,7 +68,7 @@ module VirtualBox
           function :get_medium_attachments_of_controller, [:MediumAttachments], [WSTRING]
           function :get_medium_attachment, :MediumAttachment, [WSTRING, T_INT32, T_INT32]
           function :get_network_adapter, :NetworkAdapter, [T_UINT32]
-          function :add_storage_controller, :StorageController, [WSTRING, T_UINT32]
+          function :add_storage_controller, :StorageController, [WSTRING, :StorageBus]
           function :get_storage_controller_by_name, :StorageController, [WSTRING]
           function :get_storage_controller_by_instance, :StorageController, [T_UINT32]
           function :remove_storage_controller, nil, [WSTRING]
