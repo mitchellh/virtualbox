@@ -3,11 +3,11 @@ require File.expand_path("../../../../test_helper", __FILE__)
 class COMImplementerFFITest < Test::Unit::TestCase
   setup do
     @klass = VirtualBox::COM::Implementer::FFI
+    @interface = mock("interface")
   end
 
   context "initializing" do
     setup do
-      @interface = mock("interface")
       @interface.stubs(:class).returns(VirtualBox::COM::Util.versioned_interface(:Session))
 
       @ffi = mock("ffi")

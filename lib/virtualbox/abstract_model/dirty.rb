@@ -125,7 +125,7 @@ module VirtualBox
       # Guarantees the dirty state will be the same before and after
       # the method call, but not within the block itself.
       def ignore_dirty(&block)
-        current_changes = @changed_attributes.dup rescue nil
+        current_changes = changes.dup
         yield self
         @changed_attributes = current_changes
       end

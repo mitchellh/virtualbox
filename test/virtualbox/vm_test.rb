@@ -4,6 +4,7 @@ class VMTest < Test::Unit::TestCase
   setup do
     @klass = VirtualBox::VM
     @interface = mock("interface")
+    @parent = mock("parent")
   end
 
   context "class methods" do

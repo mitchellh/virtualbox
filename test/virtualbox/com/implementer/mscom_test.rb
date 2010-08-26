@@ -3,15 +3,12 @@ require File.expand_path("../../../../test_helper", __FILE__)
 class COMImplementerMSCOMTest < Test::Unit::TestCase
   setup do
     @klass = VirtualBox::COM::Implementer::MSCOM
+    @interface = mock("interface")
+    @lib = mock("lib")
+    @object = mock("object")
   end
 
   context "initializing" do
-    setup do
-      @interface = mock("interface")
-      @lib = mock("lib")
-      @object = mock("object")
-    end
-
     should "make the lib base and object accessible" do
       instance = @klass.new(@interface, @lib, @object)
       assert_equal @lib, instance.lib
@@ -21,8 +18,6 @@ class COMImplementerMSCOMTest < Test::Unit::TestCase
 
   context "with an instance" do
     setup do
-      @lib = mock("lib")
-      @object = mock("object")
       @instance = @klass.new(@interface, @lib, @object)
     end
 

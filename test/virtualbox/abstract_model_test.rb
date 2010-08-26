@@ -406,6 +406,7 @@ class AbstractModelTest < Test::Unit::TestCase
 
     context "saving all changed interface attributes" do
       setup do
+        @interface = mock("interface")
         @changes = [[:a, []], [:b, []], [:c, []]]
         @model.stubs(:changes).returns(@changes)
       end

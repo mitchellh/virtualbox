@@ -4,6 +4,7 @@ class USBControllerTest < Test::Unit::TestCase
   setup do
     @klass = VirtualBox::USBController
     @interface = mock("interface")
+    @parent = mock("parent")
   end
 
   context "initializing" do
@@ -68,7 +69,7 @@ class USBControllerTest < Test::Unit::TestCase
 
       should "call new with the interface" do
         @klass.expects(:new).with(@parent, @controller_interface).returns(@instance)
-        result = @klass.populate_relationship(nil, @interface)
+        result = @klass.populate_relationship(@parent, @interface)
         assert_equal @instance, result
       end
     end

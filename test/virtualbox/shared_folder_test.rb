@@ -96,6 +96,7 @@ class SharedFolderTest < Test::Unit::TestCase
       @parent_interface = mock("interface")
       @parent.stubs(:interface).returns(@parent_interface)
 
+      @name = "foo"
       @machine = mock("machine")
       @machine.stubs(:remove_shared_folder).with(@name)
 
