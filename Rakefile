@@ -1,5 +1,6 @@
 require "rubygems"
 require "bundler/setup"
+Bundler::GemHelper.install_tasks
 
 # Tests are placed into *.task files in the tasks/ directory since
 # the Rakefile was getting quite large and intimidating to approach.

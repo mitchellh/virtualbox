@@ -1,4 +1,6 @@
 module VirtualBox
+  VERSION = "0.7.6.dev"
+
   module Version
     # Returns a boolean denoting whether the current VirtualBox
     # version is supported or not. This will return `false` if the
