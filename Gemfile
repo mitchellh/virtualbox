@@ -15,6 +15,5 @@ group :development do
 
   # Integration tests
   gem "cucumber", "~> 0.8.0"
-  gem "aruba", "~> 0.1.9"
   gem "rspec"
 end
