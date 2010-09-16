@@ -4,7 +4,6 @@ task :default => "test:units"
 
 namespace :test do
   Rake::TestTask.new(:units) do |t|
-    t.warning = true
     t.libs << "test"
     t.pattern = 'test/**/*_test.rb'
   end
