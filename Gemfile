@@ -1,16 +1,13 @@
 source "http://rubygems.org"
 
-gem "virtualbox", :path => "."
+gemspec
 
 # Gems required for development only.
 group :development do
-  # Gem and docs
-  gem "jeweler"
+  # Docs
   gem "yard"
 
   # Unit tests
-  gem "contest", ">= 0.1.2"
-  gem "mocha"
   gem "rcov"
 
   # Integration tests
