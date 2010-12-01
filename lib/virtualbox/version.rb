@@ -1,5 +1,5 @@
 module VirtualBox
-  VERSION = "0.7.6"
+  VERSION = "0.7.7.dev"
 
   module Version
     # Returns a boolean denoting whether the current VirtualBox
