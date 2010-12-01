@@ -1,7 +1,7 @@
 require "rubygems"
 require "bundler/setup"
 require "rake/testtask"
-require "rcov/rcovtask"
+
 require "cucumber"
 require "cucumber/rake/task"
 require "yard"
@@ -19,12 +19,16 @@ namespace :test do
     t.cucumber_opts = "features --format pretty"
   end
 
-  Rcov::RcovTask.new do |t|
-    t.libs << "test"
-    t.test_files = FileList["test/**/*_test.rb"]
-    t.output_dir = "test/coverage"
-    t.verbose = true
-  end
+  begin
+    require "rcov/rcovtask"
+
+    Rcov::RcovTask.new do |t|
+      t.libs << "test"
+      t.test_files = FileList["test/**/*_test.rb"]
+      t.output_dir = "test/coverage"
+      t.verbose = true
+    end
+  rescue LoadError; end
 end
 
 YARD::Rake::YardocTask.new do |t|

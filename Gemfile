@@ -8,7 +8,7 @@ group :development do
   gem "yard"
 
   # Unit tests
-  gem "rcov"
+  # gem "rcov"
 
   # Integration tests
   gem "cucumber", "~> 0.8.0"
