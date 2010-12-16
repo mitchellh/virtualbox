@@ -1,3 +1,5 @@
+require "rbconfig"
+
 module VirtualBox
   class Platform
     class << self
@@ -18,7 +20,7 @@ module VirtualBox
       end
 
       def platform
-        RUBY_PLATFORM.downcase
+        Config::CONFIG["host_os"].downcase
       end
     end
   end
