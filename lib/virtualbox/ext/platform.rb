@@ -20,7 +20,7 @@ module VirtualBox
       end
 
       def platform
-        Config::CONFIG["host_os"].downcase
+        RbConfig::CONFIG["host_os"].downcase
       end
     end
   end
