@@ -9,13 +9,17 @@ module VirtualBox
     # @param [Array<String>] initial_files Initial files (relative to `dir`)
     #   to load
     def self.glob_require(dir, initial_files=[])
+      # Note: The paths below both are "downcased" because on Windows, some
+      # expand to "c:\" and some expand to "C:\" and cause the same file to
+      # be loaded twice. Uck.
+
       initial_files.each do |file|
-        require File.expand_path(file, dir)
+        require File.expand_path(file, dir).downcase
       end
 
       # Glob require the rest
       Dir[File.join(dir, "**", "*.rb")].each do |f|
-        require File.expand_path(f)
+        require File.expand_path(f).downcase
       end
     end
   end
