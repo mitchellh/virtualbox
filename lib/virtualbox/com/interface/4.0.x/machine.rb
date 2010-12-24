@@ -63,8 +63,8 @@ module VirtualBox
           property :rtc_use_utc, T_BOOL
           property :io_cache_enabled, T_BOOL
           property :io_cache_size, T_UINT32
-          property :bandwidth_control, :BandwidthControl
-          property :pci_device_assignments, [:PciDeviceAttachment]
+          property :bandwidth_control, :BandwidthControl, :readonly => true
+          property :pci_device_assignments, [:PciDeviceAttachment], :readonly => true
 
           function :lock_machine, nil, [:Session, :LockType]
           function :launch_vm_process, :Progress, [:Session, WSTRING, WSTRING]
