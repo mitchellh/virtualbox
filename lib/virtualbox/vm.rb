@@ -384,7 +384,7 @@ module VirtualBox
 
       if session.state != :open
         # Open up a session for this virtual machine
-        interface.parent.open_session(session, uuid)
+        interface.lock_machine(session, :write)
 
         # Mark the session to be closed
         close_session = true
@@ -400,7 +400,7 @@ module VirtualBox
         session.machine.save_settings if session.machine.state != :saved
 
         # Close the session
-        session.close
+        session.unlock_machine
       end
     rescue Exception
       # Close the session so we don't get locked out. We use a rescue block
@@ -408,7 +408,7 @@ module VirtualBox
       # exception is raised. Otherwise, we may or may not close the session,
       # depending how deeply nested this call to `with_open_session` is.
       # (see close_session boolean above)
-      session.close if session.state == :open
+      session.unlock_machine if session.state == :open
 
       # Reraise the exception, we're not actually catching it to handle it
       raise
