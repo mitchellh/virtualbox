@@ -38,14 +38,23 @@ module VirtualBox
           create_interface(:USBDeviceFilter, :NSISupports)
           create_interface(:VirtualBoxErrorInfo, :NSIException)
           create_interface(:VirtualSystemDescription, :NSISupports)
-          create_interface(:VRDPServer, :NSISupports)
 
           create_interface(:HostUSBDevice, :USBDevice)
           create_interface(:HostUSBDeviceFilter, :USBDeviceFilter)
 
+          # 3.1.x, 3.2.x
+          if ["3.1.x", "3.2.x"].include?(version)
+            create_interface(:VRDPServer, :NSISupports)
+          end
+
           # 3.2.x interfaces
           if version == "3.2.x"
             create_interface(:NATEngine, :NSISupports)
+          end
+
+          # 4.0.x interfaces
+          if version == "4.0.x"
+            create_interface(:VRDEServer, :NSISupports)
           end
         end
       end
