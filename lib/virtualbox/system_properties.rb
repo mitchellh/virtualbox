@@ -12,16 +12,15 @@ module VirtualBox
     attribute :max_guest_vram, :readonly => true
     attribute :min_guest_cpu_count, :readonly => true
     attribute :max_guest_cpu_count, :readonly => true
-    attribute :max_vdi_size, :readonly => true
+    attribute :info_vd_size, :readonly => true
     attribute :network_adapter_count, :readonly => true
     attribute :serial_port_count, :readonly => true
     attribute :parallel_port_count, :readonly => true
     attribute :max_boot_position, :readonly => true
     attribute :default_machine_folder
-    attribute :default_hard_disk_folder
     attribute :medium_formats, :readonly => true
     attribute :default_hard_disk_format
-    attribute :remote_display_auth_library
+    attribute :vrde_auth_library
     attribute :web_service_auth_library
     attribute :log_history_count
     attribute :default_audio_driver, :readonly => true
