@@ -217,16 +217,20 @@ class VMTest < Test::Unit::TestCase
         @interface.stubs(:parent).returns(@interface_parent)
       end
 
-      should "destroy snapshots, relationships, then the machine" do
+      should "do a full destroy and destroy the media" do
         destroy_seq = sequence("destroy_seq")
-        snapshot = mock("snapshot")
-        snapshot.stubs(:children).returns([])
-        @instance.stubs(:root_snapshot).returns(snapshot)
-        snapshot.expects(:destroy).once.in_sequence(destroy_seq)
-        @instance.expects(:reload).once.in_sequence(destroy_seq)
-        VirtualBox::StorageController.expects(:destroy_relationship).in_sequence(destroy_seq)
-        @interface_parent.expects(:unregister_machine).with(@instance.uuid).in_sequence(destroy_seq)
-        @interface.expects(:delete_settings).once.in_sequence(destroy_seq)
+        media = [1,2,3]
+        progress = mock("progress")
+        @interface.expects(:unregister).with(:full).once.returns(media).in_sequence(destroy_seq)
+        @interface.expects(:delete).with(media).once.returns(progress).in_sequence(destroy_seq)
+        progress.expects(:wait).once.in_sequence(destroy_seq)
+
+        @instance.destroy
+      end
+
+      should "not destroy media if there aren't any" do
+        @interface.expects(:unregister).with(:full).once.returns([])
+        @interface.expects(:delete).never
 
         @instance.destroy
       end
@@ -394,12 +398,12 @@ class VMTest < Test::Unit::TestCase
         @locked_interface.stubs(:state).returns(:powered_off)
         @session.stubs(:machine).returns(@locked_interface)
         @session.stubs(:state).returns(:closed)
-        @parent.stubs(:open_session)
+        @interface.stubs(:lock_machine)
       end
 
       should "close the session if an exception is raised" do
         @locked_interface.expects(:save_settings).raises(Exception)
-        @session.expects(:close).once
+        @session.expects(:unlock_machine).once
 
         assert_raises(Exception) do
           @instance.with_open_session do
@@ -413,10 +417,10 @@ class VMTest < Test::Unit::TestCase
         save_seq = sequence("save_seq")
         @proc = Proc.new {}
 
-        @parent.expects(:open_session).with(@session, @uuid).in_sequence(save_seq)
+        @interface.expects(:lock_machine).with(@session, :write).in_sequence(save_seq)
         @proc.expects(:call).with(@session).once.in_sequence(save_seq)
         @locked_interface.expects(:save_settings).once.in_sequence(save_seq)
-        @session.expects(:close).in_sequence(save_seq)
+        @session.expects(:unlock_machine).in_sequence(save_seq)
 
         @instance.with_open_session do |session|
           @proc.call(session)
@@ -427,9 +431,9 @@ class VMTest < Test::Unit::TestCase
         @locked_interface.stubs(:state).returns(:saved)
 
         save_seq = sequence("save_seq")
-        @parent.expects(:open_session).with(@session, @uuid).in_sequence(save_seq)
+        @interface.expects(:lock_machine).with(@session, :write).in_sequence(save_seq)
         @locked_interface.expects(:save_settings).never
-        @session.expects(:close).in_sequence(save_seq)
+        @session.expects(:unlock_machine).in_sequence(save_seq)
 
         @instance.with_open_session { |session| }
       end
@@ -437,9 +441,9 @@ class VMTest < Test::Unit::TestCase
       should "only open the session and close once" do
         open_seq = sequence("open_seq")
 
-        @parent.expects(:open_session).with(@session, @uuid).in_sequence(open_seq)
+        @interface.expects(:lock_machine).with(@session, :write).in_sequence(open_seq)
         @locked_interface.expects(:save_settings).once.in_sequence(open_seq)
-        @session.expects(:close).once.in_sequence(open_seq)
+        @session.expects(:unlock_machine).once.in_sequence(open_seq)
 
         @instance.with_open_session do |session|
           session.stubs(:state).returns(:open)

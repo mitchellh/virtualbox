@@ -13,12 +13,12 @@ class VRDEServerTest < Test::Unit::TestCase
         @instance = mock("instance")
         @klass.stubs(:new).returns(@instance)
 
-        @vrdp_server = mock("vrdp_server")
-        @interface.stubs(:vrdp_server).returns(@vrdp_server)
+        @vrde_server = mock("vrde_server")
+        @interface.stubs(:vrde_server).returns(@vrde_server)
       end
 
       should "call new for the interface" do
-        @klass.expects(:new).with(nil, @vrdp_server).once.returns(@instance)
+        @klass.expects(:new).with(nil, @vrde_server).once.returns(@instance)
         assert_equal @instance, @klass.populate_relationship(nil, @interface)
       end
     end
@@ -65,17 +65,17 @@ class VRDEServerTest < Test::Unit::TestCase
 
     context "saving" do
       setup do
-        @vrdp_server = mock("vrdp_server")
+        @vrde_server = mock("vrde_server")
         @session = mock("session")
         @machine = mock("machine")
-        @machine.stubs(:vrdp_server).returns(@vrdp_server)
+        @machine.stubs(:vrde_server).returns(@vrde_server)
         @session.stubs(:machine).returns(@machine)
         @parent.stubs(:with_open_session).yields(@session)
       end
 
       should "save the interface settings with the new bios settings" do
         save_seq = sequence("save_seq")
-        @instance.expects(:save_changed_interface_attributes).with(@vrdp_server).once.in_sequence(save_seq)
+        @instance.expects(:save_changed_interface_attributes).with(@vrde_server).once.in_sequence(save_seq)
         @instance.save
       end
     end
