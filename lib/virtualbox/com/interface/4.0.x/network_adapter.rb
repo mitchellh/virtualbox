@@ -20,6 +20,7 @@ module VirtualBox
           property :trace_file, WSTRING
           property :nat_driver, :NATEngine, :readonly => true
           property :boot_priority, T_UINT32
+          property :bandwidth_limit, T_UINT32
 
           function :attach_to_nat, nil, []
           function :attach_to_bridged_interface, nil, []

@@ -52,6 +52,11 @@ module VirtualBox
             create_interface(:NATEngine, :NSISupports)
           end
 
+          # 3.2.x, 4.0.x
+          if ["3.2.x", "4.0.x"].include?(version)
+            create_interface(:NATEngine, :NSISupports)
+          end
+
           # 4.0.x interfaces
           if version == "4.0.x"
             create_interface(:VRDEServer, :NSISupports)

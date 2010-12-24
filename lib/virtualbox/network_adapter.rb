@@ -59,7 +59,7 @@ module VirtualBox
     attribute :internal_network
     attribute :host_interface
     attribute :interface, :readonly => true, :property => false
-    relationship :nat_driver, :NATEngine, :version => "3.2", :lazy => true
+    relationship :nat_driver, :NATEngine, :lazy => true
 
     class << self
       # Populates the nic relationship for anything which is related to it.
