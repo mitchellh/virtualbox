@@ -3,7 +3,8 @@ module VirtualBox
     module Interface
       module Version_4_0_X
         class HWVirtExPropertyType < AbstractEnum
-          map [:null, :enabled, :exclusive, :vpid, :nested_paging, :large_pages]
+          map [:null, :enabled, :exclusive, :vpid, :nested_paging, :large_pages,
+              :force]
         end
       end
     end

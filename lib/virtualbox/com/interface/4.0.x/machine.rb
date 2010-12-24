@@ -69,7 +69,7 @@ module VirtualBox
           function :lock_machine, nil, [:Session, :LockType]
           function :launch_vm_process, :Progress, [:Session, WSTRING, WSTRING]
           function :set_boot_order, nil, [T_UINT32, :DeviceType]
-          function :get_boot_order, :DeviceType, [T_UINT32]
+          function :get_boot_order, :DeviceType, [T_UINT64]
           function :attach_device, nil, [WSTRING, T_INT32, T_INT32, :DeviceType, :Medium]
           function :detach_device, nil, [WSTRING, T_INT32, T_INT32]
           function :passthrough_device, nil, [WSTRING, T_INT32, T_INT32, T_BOOL]

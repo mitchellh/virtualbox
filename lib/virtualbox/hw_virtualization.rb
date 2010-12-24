@@ -8,6 +8,7 @@ module VirtualBox
       attribute :exclusive, :boolean => true
       attribute :vpid, :boolean => true
       attribute :nested_paging, :boolean => true
+      attribute :force, :boolean => true
     end
 
     class << self

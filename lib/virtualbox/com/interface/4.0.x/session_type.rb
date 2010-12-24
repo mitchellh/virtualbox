@@ -3,7 +3,7 @@ module VirtualBox
     module Interface
       module Version_4_0_X
         class SessionType < AbstractEnum
-          map [:null, :direct, :remote, :existing]
+          map [:null, :write_lock, :remote, :shared]
         end
       end
     end
