@@ -17,7 +17,7 @@ module VirtualBox
       #
       # @return [VRDEServer]
       def populate_relationship(caller, imachine)
-        data = new(caller, imachine.vrdp_server)
+        data = new(caller, imachine.vrde_server)
       end
 
       # Saves the relationship.
@@ -28,11 +28,11 @@ module VirtualBox
       end
     end
 
-    def initialize(parent, vrdp_settings)
+    def initialize(parent, vrde_settings)
       write_attribute(:parent, parent)
 
       # Load the attributes and mark the whole thing as existing
-      load_interface_attributes(vrdp_settings)
+      load_interface_attributes(vrde_settings)
       clear_dirty!
       existing_record!
     end
@@ -50,7 +50,7 @@ module VirtualBox
         machine = session.machine
 
         # Save them
-        save_changed_interface_attributes(machine.vrdp_server)
+        save_changed_interface_attributes(machine.vrde_server)
       end
     end
   end
