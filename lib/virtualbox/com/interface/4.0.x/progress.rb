@@ -19,6 +19,7 @@ module VirtualBox
           property :operation, T_UINT32, :readonly => true
           property :operation_description, WSTRING, :readonly => true
           property :operation_percent, T_UINT32, :readonly => true
+          property :operation_weight, T_UINT32, :readonly => true
           property :timeout, T_UINT32
 
           function :set_current_operation_progress, nil, [T_UINT32]
