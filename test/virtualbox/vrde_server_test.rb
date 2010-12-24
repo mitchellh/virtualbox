@@ -1,8 +1,8 @@
 require File.expand_path("../../test_helper", __FILE__)
 
-class VRDPServerTest < Test::Unit::TestCase
+class VRDEServerTest < Test::Unit::TestCase
   setup do
-    @klass = VirtualBox::VRDPServer
+    @klass = VirtualBox::VRDEServer
     @interface = mock("interface")
     @parent = mock("parent")
   end

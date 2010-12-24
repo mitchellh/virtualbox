@@ -1,21 +1,21 @@
 module VirtualBox
   # Represents the VRDP Server settings of a {VM}.
-  class VRDPServer < AbstractModel
+  class VRDEServer < AbstractModel
     attribute :parent, :readonly => true, :property => false
     attribute :enabled, :boolean => true
-    attribute :ports
-    attribute :net_address
     attribute :auth_type
     attribute :auth_timeout
     attribute :allow_multi_connection, :boolean => true
     attribute :reuse_single_connection, :boolean => true
+    attribute :vrde_ext_pack
+    attribute :auth_library
 
     class << self
       # Populates a relationship with another model.
       #
       # **This method typically won't be used except internally.**
       #
-      # @return [VRDPServer]
+      # @return [VRDEServer]
       def populate_relationship(caller, imachine)
         data = new(caller, imachine.vrdp_server)
       end
@@ -41,9 +41,7 @@ module VirtualBox
       super
 
       validates_inclusion_of :enabled, :allow_multi_connection, :reuse_single_connection, :in => [true, false]
-      validates_format_of :ports, :with => /^[\d\s\-\.]+$/, :message => "must only contain numbers, spaces, dashes or periods."
-      validates_format_of :net_address, :with => /^[\w\d\-\.]+$/, :message => "must only contain latters, numbers, dashes or periods."
-      validates_inclusion_of :auth_type, :in => COM::Util.versioned_interface(:VRDPAuthType).map
+      validates_inclusion_of :auth_type, :in => COM::Util.versioned_interface(:AuthType).map
       validates_numericality_of :auth_timeout
     end
 
