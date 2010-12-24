@@ -8,6 +8,7 @@ module VirtualBox
           property :id, WSTRING, :readonly => true
           property :description, WSTRING
           property :state, :MediumState, :readonly => true
+          property :variant, T_UINT64, :readonly => true
           property :location, WSTRING
           property :name, WSTRING, :readonly => true
           property :device_type, :DeviceType, :readonly => true
@@ -25,6 +26,7 @@ module VirtualBox
           property :last_access_error, WSTRING, :readonly => true
           property :machine_ids, [WSTRING], :readonly => true
 
+          function :set_ids, nil, [T_BOOL, WSTRING, T_BOOL, WSTRING]
           function :refresh_state, :MediumState, []
           function :get_snapshot_ids, [WSTRING], [WSTRING]
           function :lock_read, :MediumState, []
