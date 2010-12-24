@@ -10,7 +10,7 @@ module VirtualBox
           property :machine, :Machine, :readonly => true
           property :console, :Console, :readonly => true
 
-          function :close, nil, []
+          function :unlock_machine, nil, []
         end
       end
     end
