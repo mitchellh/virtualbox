@@ -471,11 +471,8 @@ module VirtualBox
       # Open a new remote session, this will automatically start the machine
       # as well
       session = Lib.lib.session
-      interface.parent.open_remote_session(session, uuid, mode.to_s, "").wait_for_completion(-1)
+      interface.launch_vm_process(session, mode.to_s, "").wait
       true
-    ensure
-      # Be sure to close that session!
-      session.close if session && session.state == :open
     end
 
     # Shuts down the VM by directly calling "acpipowerbutton". Depending on the

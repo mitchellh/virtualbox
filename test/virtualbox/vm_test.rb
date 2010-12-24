@@ -263,12 +263,11 @@ class VMTest < Test::Unit::TestCase
         @session.stubs(:state).returns(:open)
       end
 
-      should "open remote session using the given mode, wait for completion, then close" do
+      should "launch the VM with the given mode" do
         start_seq = sequence('start_seq')
         mode = "foo"
-        @parent.expects(:open_remote_session).with(@session, @uuid, mode, "").once.returns(@progress).in_sequence(start_seq)
-        @progress.expects(:wait_for_completion).with(-1).in_sequence(start_seq)
-        @session.expects(:close).in_sequence(start_seq)
+        @interface.expects(:launch_vm_process).with(@session, mode, "").once.returns(@progress).in_sequence(start_seq)
+        @progress.expects(:wait).in_sequence(start_seq)
         assert @instance.start(mode)
       end
 
