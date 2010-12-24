@@ -538,16 +538,10 @@ module VirtualBox
     # @param [String] command The command to run on controlvm
     # @return [Boolean] True if command was successful, false otherwise.
     def control(command, *args)
-      # Grab the session using an existing session
-      session = Lib.lib.session
-      interface.parent.open_existing_session(session, uuid)
-
-      # Send the proper command, waiting if we have to
-      result = session.console.send(command, *args)
-      result.wait_for_completion(-1) if result.is_a?(COM::Util.versioned_interface(:Progress))
-    ensure
-      # Close the session
-      session.close if session && session.state == :open
+      with_open_session do |session|
+        result = session.console.send(command, *args)
+        result.wait if result.is_a?(COM::Util.versioned_interface(:Progress))
+      end
     end
 
     # Destroys the virtual machine. This method also removes all attached

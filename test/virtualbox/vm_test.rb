@@ -281,12 +281,12 @@ class VMTest < Test::Unit::TestCase
       setup do
         setup_session_mocks
 
-        @parent.stubs(:open_existing_session)
-
         @console = mock("console")
         @console.stubs(:send)
         @session.stubs(:console).returns(@console)
         @session.stubs(:state).returns(:open)
+
+        @instance.stubs(:with_open_session).yields(@session)
 
         @method = :foo
       end
@@ -294,9 +294,8 @@ class VMTest < Test::Unit::TestCase
       should "get an existing, session, send the command, and close" do
         method = :foo
         control_seq = sequence("control_seq")
-        @parent.expects(:open_existing_session).with(@session, @uuid).once.in_sequence(control_seq)
+        @instance.expects(:with_open_session).yields(@session).in_sequence(control_seq)
         @console.expects(:send).with(@method).once.in_sequence(control_seq)
-        @session.expects(:close).in_sequence(control_seq)
 
         @instance.control(@method)
       end
@@ -304,7 +303,7 @@ class VMTest < Test::Unit::TestCase
       should "wait for completion if an IProgress is returned" do
         progress = mock("IProgress")
         progress.stubs(:is_a?).with(VirtualBox::COM::Util.versioned_interface(:Progress)).returns(true)
-        progress.expects(:wait_for_completion).with(-1).once
+        progress.expects(:wait).once
         @console.expects(:send).with(@method).returns(progress)
         @instance.control(@method)
       end
