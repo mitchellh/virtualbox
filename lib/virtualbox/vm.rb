@@ -376,7 +376,7 @@ module VirtualBox
     # be modified with an open session on a machine. An open session is similar
     # to a write-lock. Once the session is completed, it must be closed, which
     # this method does as well.
-    def with_open_session
+    def with_open_session(mode=:write)
       # Set the session up
       session = Lib.lib.session
 
@@ -384,20 +384,20 @@ module VirtualBox
 
       if session.state != :open
         # Open up a session for this virtual machine
-        interface.lock_machine(session, :write)
+        interface.lock_machine(session, mode)
 
         # Mark the session to be closed
         close_session = true
       end
 
       # Yield the block with the session
-      yield session
+      yield session if block_given?
 
       # Close the session
       if close_session
         # Save these settings only if we're closing and only if the state
         # is not saved, since that doesn't allow the machine to be saved.
-        session.machine.save_settings if session.machine.state != :saved
+        session.machine.save_settings if mode == :write && session.machine.state != :saved
 
         # Close the session
         session.unlock_machine
@@ -538,7 +538,7 @@ module VirtualBox
     # @param [String] command The command to run on controlvm
     # @return [Boolean] True if command was successful, false otherwise.
     def control(command, *args)
-      with_open_session do |session|
+      with_open_session(:shared) do |session|
         result = session.console.send(command, *args)
         result.wait if result.is_a?(COM::Util.versioned_interface(:Progress))
       end

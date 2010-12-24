@@ -294,7 +294,7 @@ class VMTest < Test::Unit::TestCase
       should "get an existing, session, send the command, and close" do
         method = :foo
         control_seq = sequence("control_seq")
-        @instance.expects(:with_open_session).yields(@session).in_sequence(control_seq)
+        @instance.expects(:with_open_session).with(:shared).yields(@session).in_sequence(control_seq)
         @console.expects(:send).with(@method).once.in_sequence(control_seq)
 
         @instance.control(@method)
@@ -423,6 +423,14 @@ class VMTest < Test::Unit::TestCase
         @instance.with_open_session do |session|
           @proc.call(session)
         end
+      end
+
+      should "open the session with the shared type and NOT save settings" do
+        @interface.expects(:lock_machine).with(@session, :shared)
+        @session.expects(:unlock_machine)
+        @locked_interface.expects(:save_settings).never
+
+        @instance.with_open_session(:shared)
       end
 
       should "not save settings when the state is saved" do
