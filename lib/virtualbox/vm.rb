@@ -565,30 +565,9 @@ module VirtualBox
     #     not only unregister attached media, but will also physically
     #     remove their respective data.
     def destroy(*args)
-      # Destroy all snapshots first (by destroying the root, all children
-      # are automatically destroyed)
-      if root_snapshot
-        destroy_snapshot = lambda do |snapshot|
-          return if snapshot.nil?
-
-          snapshot.children.each { |c| destroy_snapshot.call(c) }
-          snapshot.destroy
-        end
-
-        destroy_snapshot.call(root_snapshot)
-
-        # Reload ourselves before continuing since snapshots do some
-        # crazy things.
-        reload
-      end
-
-      # Call super first so destroy is propogated through to relationships
-      # first
-      super
-
-      # Finally, destroy this machine and remove the settings file
-      interface.parent.unregister_machine(uuid)
-      interface.delete_settings
+      # Do a full cleanup on the machine, then delete all the media attached
+      media = interface.unregister(:full)
+      interface.delete(media).wait if !media.empty?
     end
 
     # Returns true if the virtual machine state is starting
