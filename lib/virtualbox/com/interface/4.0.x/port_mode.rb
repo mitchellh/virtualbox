@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class PortMode < AbstractEnum
           map [:disconnected, :host_pipe, :host_device, :raw_file]
         end

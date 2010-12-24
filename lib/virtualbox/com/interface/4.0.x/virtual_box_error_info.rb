@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class VirtualBoxErrorInfo < AbstractInterface
           IID = "4b86d186-407e-4f9e-8be8-e50061be8725"
 

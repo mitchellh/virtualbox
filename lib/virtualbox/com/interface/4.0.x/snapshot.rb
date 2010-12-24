@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class Snapshot < AbstractInterface
           IID = "1a2d0551-58a4-4107-857e-ef414fc42ffc"
 

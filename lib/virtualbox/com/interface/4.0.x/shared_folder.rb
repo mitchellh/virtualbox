@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class SharedFolder < AbstractInterface
           IID = "64637bb2-9e17-471c-b8f3-f8968dd9884e"
 

@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class VirtualBox < AbstractInterface
           IID_STR = "3f36e024-7fed-4f20-a02c-9158a82b44e6"
 
@@ -21,41 +21,24 @@ module VirtualBox
           property :shared_folders, [:SharedFolder], :readonly => true
           property :performance_collector, :PerformanceCollector, :readonly => true
           property :dhcp_servers, [:DHCPServer], :readonly => true
+          property :event_source, :EventSource, :readonly => true
+          property :extension_pack_manager, :ExtPackManager, :readonly => true
 
+          function :compose_machine_filename, WSTRING, [WSTRING, WSTRING]
           function :create_machine, :Machine, [WSTRING, WSTRING, WSTRING, WSTRING, T_BOOL]
-          function :create_legacy_machine, :Machine, [WSTRING, WSTRING, WSTRING, WSTRING]
           function :open_machine, :Machine, [WSTRING]
-          function :register_machine, :Machine, [:Machine]
-          function :get_machine, :Machine, [WSTRING]
+          function :register_machine, nil, [:Machine]
           function :find_machine, :Machine, [WSTRING]
-          function :unregister_machine, :Machine, [WSTRING]
           function :create_appliance, :Appliance, []
           function :create_hard_disk, :Medium, [WSTRING, WSTRING]
-          function :open_hard_disk, :Medium, [WSTRING, :AccessMode, T_BOOL, WSTRING, T_BOOL, WSTRING]
-          function :get_hard_disk, :Medium, [WSTRING]
-          function :find_hard_disk, :Medium, [WSTRING]
-          function :open_dvd_image, :Medium, [WSTRING, WSTRING]
-          function :get_dvd_image, :Medium, [WSTRING]
-          function :find_dvd_image, :Medium, [WSTRING]
-          function :open_floppy_image, :Medium, [WSTRING, WSTRING]
-          function :get_floppy_image, :Medium, [WSTRING]
-          function :find_floppy_image, :Medium, [WSTRING]
+          function :open_medium, :Medium, [WSTRING, :DeviceType, :AccessMode]
+          function :find_medium, :Medium, [WSTRING, :DeviceType]
           function :get_guest_os_type, :GuestOSType, [WSTRING]
-          function :create_shared_folder, nil, [WSTRING, WSTRING, T_BOOL]
+          function :create_shared_folder, nil, [WSTRING, WSTRING, T_BOOL, T_BOOL]
           function :remove_shared_folder, nil, [WSTRING]
           function :get_extra_data_keys, [WSTRING], []
           function :get_extra_data, WSTRING, [WSTRING]
           function :set_extra_data, nil, [WSTRING, WSTRING]
-          function :open_session, nil, [:Session, WSTRING]
-          function :open_remote_session, :Progress, [:Session, WSTRING, WSTRING, WSTRING]
-          function :open_existing_session, nil, [:Session, WSTRING]
-
-          # TODO: The following two are wrong, they don't take a
-          # string as input
-          function :register_callback, nil, [WSTRING]
-          function :unregister_callback, nil, [WSTRING]
-
-          function :wait_for_property_change, nil, [WSTRING, T_UINT32, [:out, WSTRING], [:out, WSTRING]]
           function :create_dhcp_server, :DHCPServer, [WSTRING]
           function :find_dhcp_server_by_network_name, :DHCPServer, [WSTRING]
           function :remove_dhcp_server, nil, [:DHCPServer]

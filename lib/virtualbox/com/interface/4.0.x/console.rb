@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class Console < AbstractInterface
           IID = "6375231a-c17c-464b-92cb-ae9e128d71c3"
 

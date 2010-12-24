@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class AudioAdapter < AbstractInterface
           IID = "921873db-5f3f-4b69-91f9-7be9e535a2cb"
 

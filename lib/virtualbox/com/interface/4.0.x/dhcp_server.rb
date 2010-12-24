@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class DHCPServer < AbstractInterface
           IID = "6cfe387c-74fb-4ca7-bff6-973bec8af7a3"
 

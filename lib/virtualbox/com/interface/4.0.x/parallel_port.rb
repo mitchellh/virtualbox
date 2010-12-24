@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class ParallelPort < AbstractInterface
           IID = "0c925f06-dd10-4b77-8de8-294d738c3214"
 

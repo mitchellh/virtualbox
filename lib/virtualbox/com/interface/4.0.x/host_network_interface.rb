@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class HostNetworkInterface < AbstractInterface
           IID = "ce6fae58-7642-4102-b5db-c9005c2320a8"
 

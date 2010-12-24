@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class VRDPServer < AbstractInterface
           IID = "72e671bc-1712-4052-ad6b-e45e76d9d3e4"
 

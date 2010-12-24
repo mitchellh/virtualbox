@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class NSIException < AbstractInterface
           IID = "f3a8d3b4-c424-4edc-8bf6-8974c983ba78"
 

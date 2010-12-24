@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class VirtualSystemDescriptionType < AbstractEnum
           map [:null, :ignore, :os, :name, :product, :vendor, :version, :product_url, :vendor_url,
                 :description, :license, :misc, :cpu, :memory, :hard_disk_controller_ide,

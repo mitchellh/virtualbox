@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class MachineState < AbstractEnum
           map [:null, :powered_off, :saved, :teleported, :aborted, :running, :paused, :stuck,
                 :teleporting, :live_snapshotting, :starting, :stopping, :saving, :restoring,

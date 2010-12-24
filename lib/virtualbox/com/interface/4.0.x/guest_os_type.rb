@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_3_2_X
+      module Version_4_0_X
         class GuestOSType < AbstractInterface
           IID = "cfe9e64c-4430-435b-9e7c-e3d8e417bd58"
 
