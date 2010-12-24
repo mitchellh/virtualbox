@@ -8,12 +8,13 @@ module VirtualBox
           property :path, WSTRING, :readonly => true
           property :disks, [WSTRING], :readonly => true
           property :virtual_system_descriptions, [:VirtualSystemDescription], :readonly => true
+          property :machines, [WSTRING], :readonly => true
 
           function :read, :Progress, [WSTRING]
           function :interpret, nil, []
           function :import_machines, :Progress, []
           function :create_vfs_explorer, :VFSExplorer, [WSTRING]
-          function :write, :Progress, [WSTRING, WSTRING]
+          function :write, :Progress, [WSTRING, T_BOOL, WSTRING]
           function :get_warnings, [WSTRING], []
         end
       end
