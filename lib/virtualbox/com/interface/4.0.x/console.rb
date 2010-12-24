@@ -15,7 +15,9 @@ module VirtualBox
           property :usb_devices, [:USBDevice], :readonly => true
           property :remote_usb_devices, [:HostUSBDevice], :readonly => true
           property :shared_folders, [:SharedFolder], :readonly => true
-          property :remote_display_info, :RemoteDisplayInfo, :readonly => true
+          property :vrde_server_info, :VRDEServerInfo, :readonly => true
+          property :event_source, :EventSource, :readonly => true
+          property :attached_pci_devices, [:PciDeviceAttachment], :readonly => true
 
           function :power_up, :Progress, []
           function :power_up_paused, :Progress, []
@@ -29,20 +31,18 @@ module VirtualBox
           function :get_guest_entered_acpi_mode, T_BOOL, []
           function :save_state, :Progress, []
           function :adopt_saved_state, nil, [WSTRING]
-          function :forget_saved_state, nil, [T_BOOL]
+          function :discard_saved_state, nil, [T_BOOL]
           function :get_device_activity, :DeviceActivity, [:DeviceType]
           function :attach_usb_device, nil, [WSTRING]
           function :detach_usb_device, :USBDevice, [WSTRING]
           function :find_usb_device_by_address, :USBDevice, [WSTRING]
           function :find_usb_device_by_id, :USBDevice, [WSTRING]
-          function :create_shared_folder, nil, [WSTRING, WSTRING, T_BOOL]
+          function :create_shared_folder, nil, [WSTRING, WSTRING, T_BOOL, T_BOOL]
           function :remove_shared_folder, nil, [WSTRING]
           function :take_snapshot, :Progress, [WSTRING, WSTRING]
           function :delete_snapshot, :Progress, [WSTRING]
           function :restore_snapshot, :Progress, [:Snapshot]
           function :teleport, :Progress, [WSTRING, T_UINT32, WSTRING, T_UINT32]
-          function :register_callback, nil, [:ConsoleCallback]
-          function :unregister_callback, nil, [:ConsoleCallback]
         end
       end
     end
