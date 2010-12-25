@@ -144,11 +144,31 @@ module VirtualBox
               results << pointer_for_type(item[1])
             end
           elsif item.is_a?(Array) && item.length == 1
-            # Convert the array to a size, then array parameter
+            # Array argument
             data = args.shift
+
+            # First add the length of the array
             results << data.length
-            results << data.inject([]) do |converted_data, single|
-              single_type_to_arg([single], item[0], converted_data)
+
+            # Create the array
+            c_type, type = infer_type(item.first)
+
+            # If its a regular type (int, bool, etc.) then just make it an
+            # array of that
+            if type != :interface
+              results << data.inject([]) do |converted_data, single|
+                single_type_to_arg([single], item[0], converted_data)
+              end
+            else
+              # Then convert the rest into a raw MemoryPointer
+              array = ::FFI::MemoryPointer.new(:pointer, data.length)
+              data.each_with_index do |datum, i|
+                converted = []
+                single_type_to_arg([datum], item.first, converted)
+                array[i].put_pointer(0, converted.first)
+              end
+
+              results << array
             end
           elsif item == WSTRING
             # We have to convert the arg to a unicode string
