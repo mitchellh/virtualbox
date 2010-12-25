@@ -223,7 +223,6 @@ class VMTest < Test::Unit::TestCase
         progress = mock("progress")
         @interface.expects(:unregister).with(:full).once.returns(media).in_sequence(destroy_seq)
         @interface.expects(:delete).with(media).once.returns(progress).in_sequence(destroy_seq)
-        progress.expects(:wait).once.in_sequence(destroy_seq)
 
         @instance.destroy
       end
