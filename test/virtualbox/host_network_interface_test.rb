@@ -109,6 +109,7 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
 
         interfaces.each do |name|
           adapter = mock("adapter")
+          adapter.stubs(:enabled?).returns(true)
           adapter.stubs(:host_interface).returns(name)
           adapters << adapter
         end

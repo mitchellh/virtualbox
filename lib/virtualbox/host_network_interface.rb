@@ -91,7 +91,7 @@ module VirtualBox
     def attached_vms
       parent.parent.vms.find_all do |vm|
         result = vm.network_adapters.find do |adapter|
-          adapter.host_interface == name
+          adapter.enabled? && adapter.host_interface == name
         end
 
         !result.nil?
