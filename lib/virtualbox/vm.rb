@@ -558,7 +558,15 @@ module VirtualBox
     def destroy(*args)
       # Do a full cleanup on the machine, then delete all the media attached
       media = interface.unregister(:full)
-      interface.delete(media).wait if !media.empty?
+
+      if !media.empty?
+        interface.delete(media)
+
+        # TODO: This sleep is silly. The progress object returned by the media
+        # delete always fails to "wait" for some reason, so I do this. I hope
+        # to solve this issue soon.
+        sleep 1
+      end
     end
 
     # Returns true if the virtual machine state is starting
