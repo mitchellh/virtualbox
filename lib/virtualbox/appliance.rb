@@ -48,12 +48,12 @@ module VirtualBox
     # every percent that the operation progresses. This can be done to check the progress
     # of the export in real-time.
     def export(&block)
-      interface.write("ovf-1.0", path).wait(&block)
+      interface.write("ovf-1.0", true, path).wait(&block)
     end
 
     # Adds a VM to the appliance
     def add_machine(vm, options = {})
-      sys_desc = vm.interface.export(interface)
+      sys_desc = vm.interface.export(interface, path)
       options.each do |key, value|
         sys_desc.add_description(key, value, value)
       end
