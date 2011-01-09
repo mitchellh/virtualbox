@@ -118,7 +118,7 @@ class ApplianceTest < Test::Unit::TestCase
       end
 
       should "call write on interface and wait for completion" do
-        @interface.expects(:write).with("ovf-1.0", @instance.path).once.returns(@progress)
+        @interface.expects(:write).with("ovf-1.0", true, @instance.path).once.returns(@progress)
         @progress.expects(:wait)
 
         @instance.export
@@ -144,13 +144,13 @@ class ApplianceTest < Test::Unit::TestCase
       end
 
       should "call export on the VM interface with the appliance" do
-        @machine_interface.expects(:export).with(@interface).once
+        @machine_interface.expects(:export).with(@interface, @instance.path).once
         @instance.add_machine(@machine)
       end
 
       should "add to the description for each option given" do
         sys = mock("sys")
-        @machine_interface.expects(:export).with(@interface).once.returns(sys)
+        @machine_interface.expects(:export).with(@interface, @instance.path).once.returns(sys)
         sys.expects(:add_description).with(:foo, :bar, :bar)
         @instance.add_machine(@machine, { :foo => :bar })
       end
