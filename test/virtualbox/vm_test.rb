@@ -267,6 +267,7 @@ class VMTest < Test::Unit::TestCase
         mode = "foo"
         @interface.expects(:launch_vm_process).with(@session, mode, "").once.returns(@progress).in_sequence(start_seq)
         @progress.expects(:wait).in_sequence(start_seq)
+        @session.expects(:unlock_machine).in_sequence(start_seq)
         assert @instance.start(mode)
       end
 
