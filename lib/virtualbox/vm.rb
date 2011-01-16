@@ -472,7 +472,7 @@ module VirtualBox
       # as well
       session = Lib.lib.session
       interface.launch_vm_process(session, mode.to_s, "").wait
-      session.unlock_machine
+      session.unlock_machine if session.state == :open
       true
     end
 
