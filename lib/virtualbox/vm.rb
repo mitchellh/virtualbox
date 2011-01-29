@@ -523,12 +523,7 @@ module VirtualBox
     #
     # @return [Boolean] True if command was successful, false otherwise.
     def discard_state
-      # Since the VM should be saved as it is, we don't open an
-      # existing session like the other control methods. We open a new
-      # session.
-      with_open_session do |session|
-        session.console.forget_saved_state(true)
-      end
+      control(:discard_saved_state, true)
     end
 
     # Controls the virtual machine. This method is used by {#stop},
