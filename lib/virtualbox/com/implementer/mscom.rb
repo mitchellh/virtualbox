@@ -73,34 +73,48 @@ module VirtualBox
             end
           end.compact
 
-          spec = spec.collect do |item|
-            if item == T_BOOL
-              args.shift ? 1 : 0
-            elsif item.to_s[0,1] == item.to_s[0,1].upcase
-              # Try to get the class from the interfaces
-              interface = interface_klass(item.to_sym)
+          spec = spec.inject([]) do |results, item|
+            single_type_to_arg(args, item, results)
+          end
+        end
 
-              if interface.superclass == COM::AbstractInterface
-                # For interfaces, get the instance, then dig deep to get the pointer
-                # to the VtblParent, which is what the API expects
-                instance = args.shift
+        # Converts a single type and args list to the proper formal args list
+        def single_type_to_arg(args, item, results)
+          if item.is_a?(Array) && item.length == 1
+            # Array argument
+            data = args.shift
 
-                if !instance.nil?
-                  # Get the actual MSCOM object, rather than the AbstractInterface
-                  instance.implementer.object
-                else
-                  # If the argument was nil, just pass a nil pointer as the argument
-                  nil
-                end
-              elsif interface.superclass == COM::AbstractEnum
-                # For enums, we need the value of the enum
-                interface.index(args.shift.to_sym)
-              end
-            else
-              # Simply replace spec item with next item in args
-              # list
-              args.shift
+            # If its a regular type (int, bool, etc.) then just make it an
+            # array of that
+            results << data.inject([]) do |converted_data, single|
+              single_type_to_arg([single], item[0], converted_data)
             end
+          elsif item.to_s[0,1] == item.to_s[0,1].upcase
+            # Try to get the class from the interfaces
+            interface = interface_klass(item.to_sym)
+
+            if interface.superclass == COM::AbstractInterface
+              # For interfaces, get the instance, then dig deep to get the pointer
+              # to the VtblParent, which is what the API expects
+              instance = args.shift
+
+              results << if !instance.nil?
+                # Get the actual MSCOM object, rather than the AbstractInterface
+                instance.implementer.object
+              else
+                # If the argument was nil, just pass a nil pointer as the argument
+                nil
+              end
+            elsif interface.superclass == COM::AbstractEnum
+              # For enums, we need the value of the enum
+              results << interface.index(args.shift.to_sym)
+            end
+          elsif item == T_BOOL
+            results << (args.shift ? 1 : 0)
+          else
+            # Simply replace spec item with next item in args
+            # list
+            results << args.shift
           end
         end
 

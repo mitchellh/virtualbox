@@ -1,3 +1,6 @@
+require 'pathname'
+require 'virtualbox/ext/platform'
+
 module VirtualBox
   # Represents a single VirtualBox virtual machine. All attributes which are
   # not read-only can be modified and saved.
@@ -556,7 +559,19 @@ module VirtualBox
       media = interface.unregister(:full)
 
       if !media.empty?
-        interface.delete(media)
+        if Platform.windows? && !Platform.jruby?
+          # The MSCOM interface in CRuby to delete media is broken,
+          # so we do this ghettoness.
+          path = interface.settings_file_path
+
+          # A simple sanity check to make sure we don't attempt to delete
+          # the root or something
+          if path.length > 10
+            Pathname.new(path).parent.rmtree
+          end
+        else
+          interface.delete(media)
+        end
 
         # TODO: This sleep is silly. The progress object returned by the media
         # delete always fails to "wait" for some reason, so I do this. I hope

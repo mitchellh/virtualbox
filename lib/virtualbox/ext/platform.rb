@@ -19,6 +19,10 @@ module VirtualBox
         platform.include?("solaris")
       end
 
+      def jruby?
+        RbConfig::CONFIG["ruby_install_name"] == "jruby"
+      end
+
       def platform
         RbConfig::CONFIG["host_os"].downcase
       end
