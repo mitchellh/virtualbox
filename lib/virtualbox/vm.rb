@@ -571,12 +571,12 @@ module VirtualBox
           end
         else
           interface.delete(media)
-        end
 
-        # TODO: This sleep is silly. The progress object returned by the media
-        # delete always fails to "wait" for some reason, so I do this. I hope
-        # to solve this issue soon.
-        sleep 1
+          # TODO: This sleep is silly. The progress object returned by the media
+          # delete always fails to "wait" for some reason, so I do this. I hope
+          # to solve this issue soon.
+          sleep 1
+        end
       end
     end
 
