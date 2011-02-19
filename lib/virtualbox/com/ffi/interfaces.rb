@@ -54,6 +54,7 @@ module VirtualBox
 
           # 4.0.x interfaces
           if version == "4.0.x"
+            create_interface(:BandwidthControl, :NSISupports)
             create_interface(:VRDEServer, :NSISupports)
           end
         end
