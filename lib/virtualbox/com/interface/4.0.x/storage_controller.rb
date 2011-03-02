@@ -14,6 +14,7 @@ module VirtualBox
           property :bus, :StorageBus, :readonly => true
           property :controller_type, :StorageControllerType
           property :use_host_io_cache, T_BOOL
+          property :bootable, T_BOOL, :readonly => true
 
           function :get_ide_emulation_port, T_INT32, [T_INT32]
           function :set_ide_emulation_port, nil, [T_INT32, T_INT32]
