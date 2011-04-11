@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "virtualbox"
 
-  s.add_dependency "ffi", "~> 0.6.3"
+  s.add_dependency "ffi", "~> 1.0"
   s.add_development_dependency "contest", "~> 0.1.2"
   s.add_development_dependency "mocha", "~> 0.9.8"
 
