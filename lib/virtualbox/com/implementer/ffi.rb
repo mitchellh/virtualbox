@@ -302,8 +302,11 @@ module VirtualBox
         def string_to_utf16(string)
           return nil if string.nil?
 
+          # Note that the string below must be duplicated as of FFI 1.0.8
+          # since this modifies the string in-place and causes a memory leak
+          # otherwise.
           ptr = pointer_for_type(:pointer)
-          lib.xpcom[:pfnUtf8ToUtf16].call(string, ptr)
+          lib.xpcom[:pfnUtf8ToUtf16].call(string.dup, ptr)
           ptr.read_pointer()
         end
 
