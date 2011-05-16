@@ -29,7 +29,7 @@ class LibTest < Test::Unit::TestCase
     end
 
     should "return Linux-path if on linux" do
-      result = ["/opt/VirtualBox/VBoxXPCOMC.so", "/usr/lib/virtualbox/VBoxXPCOMC.so"]
+      result = ["/opt/VirtualBox/VBoxXPCOMC.so", "/usr/lib/virtualbox/VBoxXPCOMC.so", "/usr/lib64/virtualbox/VBoxXPCOMC.so"]
       VirtualBox::Platform.stubs(:mac?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(false)
       VirtualBox::Platform.stubs(:linux?).returns(true)
