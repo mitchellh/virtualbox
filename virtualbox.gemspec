@@ -14,9 +14,10 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "virtualbox"
 
-  s.add_dependency "ffi", "~> 1.0"
+  s.add_dependency "ffi", "~> 1.0.9"
   s.add_development_dependency "contest", "~> 0.1.2"
   s.add_development_dependency "mocha", "~> 0.9.8"
+  s.add_development_dependency "rake", "~> 0.9.2"
 
   s.files         = `git ls-files`.split("\n")
   s.executables   = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
