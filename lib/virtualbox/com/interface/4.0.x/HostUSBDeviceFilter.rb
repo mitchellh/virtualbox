@@ -5,6 +5,8 @@ module VirtualBox
         class HostUSBDeviceFilter < AbstractInterface
           IID = "4cc70246-d74a-400f-8222-3900489c0374"
 
+          parent :USBDeviceFilter
+
           property :action, :USBDeviceFilterAction
         end
       end

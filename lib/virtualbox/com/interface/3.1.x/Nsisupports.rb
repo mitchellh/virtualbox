@@ -5,6 +5,8 @@ module VirtualBox
         # This interface is actually only used with the FFI implementer but
         # is created here to allow easier usage with the FFI abstractions.
         class NSISupports < AbstractInterface
+          parent nil
+
           function :QueryInterface, :pointer, [:pointer]
           function :AddRef, nil, []
           function :Release, nil, []

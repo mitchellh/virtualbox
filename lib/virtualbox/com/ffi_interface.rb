@@ -75,7 +75,7 @@ module VirtualBox
         logger.debug("FFI init: Trying version #{version}")
 
         # Setup the FFI classes
-        VirtualBox::COM::FFI.setup(version)
+        COM::Util.set_interface_version(version)
         virtualbox_klass = COM::Util.versioned_interface(:VirtualBox)
         session_klass = COM::Util.versioned_interface(:Session)
 

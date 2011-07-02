@@ -36,6 +36,17 @@ module VirtualBox
       attr_reader :lib
 
       class << self
+        # This sets the parent class type. This defaults to NSISupports, but
+        # can be explicitly set to nil (no parent) if necessary.
+        def parent(type=nil)
+          @parent = type
+        end
+
+        # Returns the parent.
+        def get_parent
+          defined?(@parent) ? @parent : :NSISupports
+        end
+
         # Adds a function to the interface with the given name and function
         # spec. The spec determines the arguments required, the order they
         # are required in, and any out-arguments.

@@ -39,7 +39,7 @@ module VirtualBox
           klass_name = interface.class.to_s.split("::").last
 
           # Get the associated FFI class
-          COM::FFI.const_get(::VirtualBox::COM::Util.version_const).const_get(klass_name)
+          COM::FFI::Util.versioned_interface(klass_name)
         end
 
         # Reads a property from the interface with the given name.

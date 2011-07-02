@@ -5,6 +5,8 @@ module VirtualBox
         class HostUSBDevice < AbstractInterface
           IID = "173b4b44-d268-4334-a00d-b6521c9a740a"
 
+          parent :USBDevice
+
           property :state, :USBDeviceState, :readonly => true
         end
       end

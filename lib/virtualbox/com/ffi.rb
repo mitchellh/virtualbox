@@ -1,5 +1,4 @@
 require 'ffi'
-require 'virtualbox/com/ffi/interfaces'
 
 module VirtualBox
   module COM

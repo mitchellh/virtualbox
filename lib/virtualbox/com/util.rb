@@ -30,6 +30,11 @@ module VirtualBox
           Object.module_eval("::VirtualBox::COM::Interface::#{version_const}::#{interface}")
         end
 
+        # Returns the current version
+        def version
+          @__version
+        end
+
         # Returns a namespace representation for a version.
         def version_const
           "Version_" + @__version.upcase.gsub(".", "_")

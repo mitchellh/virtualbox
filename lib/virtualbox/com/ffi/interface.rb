@@ -26,11 +26,11 @@ module VirtualBox
           # XPCOM C structs are setup, the properties are first, in
           # `GetFoo` and `SetFoo` format. And the functions are next. They are
           # put into the struct in the order defined in the {AbstractInterface}.
-          def com_interface(interface, parent=nil)
+          def com_interface(interface)
             # Create the parent class and vtbl class
             interface = ::VirtualBox::COM::Util.versioned_interface(interface)
             define_vtbl_parent_for_interface(interface)
-            define_vtbl_for_interface(interface, parent)
+            define_vtbl_for_interface(interface)
           end
 
           # Creates the parent of the vtbl class associated with a given
@@ -44,7 +44,10 @@ module VirtualBox
           end
 
           # Creates the vtbl class associated with a given interface.
-          def define_vtbl_for_interface(interface, parent=nil)
+          def define_vtbl_for_interface(interface)
+            # Get the parent for the interface
+            parent = interface.get_parent
+
             # Define the properties, then the functions, since thats the order
             # the FFI structs are in
             layout_args.clear
@@ -68,7 +71,7 @@ module VirtualBox
           def define_interface_parent(parent)
             return if parent.nil?
 
-            parent_klass = Object.module_eval("::VirtualBox::COM::FFI::#{::VirtualBox::COM::Util.version_const}::#{parent}::Vtbl")
+            parent_klass = Util.versioned_interface(parent).const_get("Vtbl")
             layout_args << [:superklass, parent_klass]
           end
 

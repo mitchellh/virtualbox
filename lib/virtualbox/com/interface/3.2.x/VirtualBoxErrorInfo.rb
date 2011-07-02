@@ -5,6 +5,8 @@ module VirtualBox
         class VirtualBoxErrorInfo < AbstractInterface
           IID = "4b86d186-407e-4f9e-8be8-e50061be8725"
 
+          parent :NSIException
+
           property :result_code, T_UINT32, :readonly => true
           property :interface_i_d, WSTRING, :readonly => true
           property :component, WSTRING, :readonly => true

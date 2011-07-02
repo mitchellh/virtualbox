@@ -18,7 +18,36 @@ module VirtualBox
           #
           # @return [Class]
           def versioned_interface(interface)
-            ::VirtualBox::COM::FFI.const_get(::VirtualBox::COM::Util.version_const).const_get(interface)
+            version = ::VirtualBox::COM::Util.version
+            loaded_interfaces[version] ||= {}
+            loaded_interfaces[version][interface] ||= load_interface(interface)
+          end
+
+          # This keeps a hash of all the loaded interface classes by both
+          # version and name. Example:
+          #
+          #   loaded_interfaces["4.0.x"][:VirtualBox]
+          #
+          def loaded_interfaces
+            @loaded_interfaces ||= {}
+          end
+
+          # Loads an interface with the current version.
+          def load_interface(interface)
+            @current_constant ||= 1
+
+            # Create a new class that is an interface
+            klass = Class.new(Interface)
+
+            # Note that the klass must exist in a real constant path
+            # because FFI gem exists by climbing up the full path of the
+            # class. Dumb.
+            const_set("FFIClass#{@current_constant}", klass)
+            @current_constant += 1
+
+            # Create the actual interface on this empty class and return!
+            klass.com_interface(interface)
+            klass
           end
 
           # Converts a function spec from {AbstractInterface} to an FFI
