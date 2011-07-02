@@ -1,6 +1,37 @@
-# Load the glob loader, which will handle the loading of all the other files
-libdir = File.join(File.dirname(__FILE__), "virtualbox")
-require File.expand_path("ext/glob_loader", libdir)
+require 'virtualbox/version'
 
-# Load them up
-VirtualBox::GlobLoader.glob_require(libdir, %w{ext/logger ext/platform ext/subclass_listing ext/byte_normalizer com abstract_model medium})
+module VirtualBox
+  autoload :AbstractModel, 'virtualbox/abstract_model'
+  autoload :Appliance, 'virtualbox/appliance'
+  autoload :AudioAdapter, 'virtualbox/audio_adapter'
+  autoload :BIOS, 'virtualbox/bios'
+  autoload :COM, 'virtualbox/com'
+  autoload :CPU, 'virtualbox/cpu'
+  autoload :DHCPServer, 'virtualbox/dhcp_server'
+  autoload :DVD, 'virtualbox/dvd'
+  autoload :ExtraData, 'virtualbox/extra_data'
+  autoload :Exceptions, 'virtualbox/exceptions'
+  autoload :ForwardedPort, 'virtualbox/forwarded_port'
+  autoload :Global, 'virtualbox/global'
+  autoload :HardDrive, 'virtualbox/hard_drive'
+  autoload :Host, 'virtualbox/host'
+  autoload :HostNetworkInterface, 'virtualbox/host_network_interface'
+  autoload :HWVirtualization, 'virtualbox/hw_virtualization'
+  autoload :Lib, 'virtualbox/lib'
+  autoload :Media, 'virtualbox/media'
+  autoload :Medium, 'virtualbox/medium'
+  autoload :MediumAttachment, 'virtualbox/medium_attachment'
+  autoload :NATEngine, 'virtualbox/nat_engine'
+  autoload :NATForwardedPort, 'virtualbox/nat_forwarded_port'
+  autoload :NetworkAdapter, 'virtualbox/network_adapter'
+  autoload :Proxies, 'virtualbox/proxies'
+  autoload :SharedFolder, 'virtualbox/shared_folder'
+  autoload :Snapshot, 'virtualbox/snapshot'
+  autoload :StorageController, 'virtualbox/storage_controller'
+  autoload :SystemProperties, 'virtualbox/system_properties'
+  autoload :USBController, 'virtualbox/usb_controller'
+  autoload :USBDeviceFilter, 'virtualbox/usb_device_filter'
+  autoload :VirtualSystemDescription, 'virtualbox/virtual_system_description'
+  autoload :VM, 'virtualbox/vm'
+  autoload :VRDEServer, 'virtualbox/vrde_server'
+end

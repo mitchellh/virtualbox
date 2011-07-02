@@ -1,3 +1,5 @@
+require 'virtualbox/abstract_model/dirty'
+
 module VirtualBox
   # Represents "extra data" which can be set on a specific
   # virtual machine or on VirtualBox as a whole. Extra data is persistent

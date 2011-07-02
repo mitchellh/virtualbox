@@ -1,3 +1,5 @@
+require 'virtualbox/ext/logger'
+
 module VirtualBox
   module COM
     module Implementer

@@ -1,3 +1,5 @@
+require 'virtualbox/ext/platform'
+
 module VirtualBox
   # Used by the rest of the VirtualBox library to interface with
   # the VirtualBox XPCOM library (VBoxXPCOMC). Most users will never need

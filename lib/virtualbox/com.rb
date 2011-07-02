@@ -1,3 +1,5 @@
+require 'virtualbox/ext/glob_loader'
+
 module VirtualBox
   module COM
     WSTRING = :unicode_string

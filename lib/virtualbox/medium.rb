@@ -1,3 +1,5 @@
+require 'virtualbox/ext/subclass_listing'
+
 module VirtualBox
   # Represents a medium object part of VirtualBox. A medium is a
   # hard drive, DVD, floppy disk, etc. Each of these share common

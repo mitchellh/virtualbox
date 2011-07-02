@@ -1,10 +1,9 @@
-['abstract_model/attributable',
-  'abstract_model/interface_attributes',
-  'abstract_model/dirty',
-  'abstract_model/relatable',
-  'abstract_model/validatable'].each do |lib|
-  require File.expand_path(lib, File.dirname(__FILE__))
-end
+require 'virtualbox/abstract_model/attributable'
+require 'virtualbox/abstract_model/interface_attributes'
+require 'virtualbox/abstract_model/dirty'
+require 'virtualbox/abstract_model/relatable'
+require 'virtualbox/abstract_model/validatable'
+require 'virtualbox/ext/logger'
 
 module VirtualBox
   # AbstractModel is the base class used for most of virtualbox's classes.
