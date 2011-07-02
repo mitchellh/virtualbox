@@ -2,8 +2,6 @@ module VirtualBox
   module COM
     module Implementer
       class FFI < Base
-        attr_reader :ffi_interface
-
         # Initializes the FFI implementer which takes an {VirtualBox::COM::AbstractInterface AbstractInterface}
         # instant and FFI pointer and initializes everything required to
         # communicate with that interface via FFI.
@@ -13,7 +11,20 @@ module VirtualBox
         def initialize(interface, lib_base, pointer)
           super(interface, lib_base)
 
-          @ffi_interface = ffi_class.new(pointer)
+          # Store the pointer which is used later to instantiate the actual
+          # structure. We don't instantiate here to save some CPU cycles.
+          @pointer = pointer
+        end
+
+        # This checks if the interface pointer was valid.
+        def valid?
+          !ffi_interface.nil?
+        end
+
+        # Instantiates the FFI class with the given pointer and caches the
+        # result for later.
+        def ffi_interface
+          @ffi_interface ||= ffi_class.new(@pointer)
         end
 
         # Gets the FFI struct class associated with the interface. This works
