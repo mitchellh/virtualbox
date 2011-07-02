@@ -93,9 +93,9 @@ module VirtualBox
 
         logger.debug("    -- Valid version")
         true
-#      rescue Exception => e
-#        logger.debug("    -- Invalid version")
-#        false
+      rescue ::FFI::NullPointerError => e
+        logger.debug("    -- Invalid version")
+        false
       end
     end
   end
