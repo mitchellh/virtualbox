@@ -199,12 +199,12 @@ class COMFFIInterfaceTest < Test::Unit::TestCase
     should "append the return type to the spec" do
       expected = VirtualBox::COM::FFI::Util.spec_to_ffi(@spec.dup.push([:out, :int]))
 
-      @klass.expects(:callback).with(@name, expected, VirtualBox::COM::FFI::NSRESULT_TYPE)
+      @klass.expects(:callback).with(@name, expected, VirtualBox::COM::FFI::Interface::NSRESULT_TYPE)
       @klass.define_interface_function(@name, :int, @spec)
     end
 
     should "turn the spec into FFI parameters, and create the callback" do
-      @klass.expects(:callback).with(@name, @ffi_spec, VirtualBox::COM::FFI::NSRESULT_TYPE)
+      @klass.expects(:callback).with(@name, @ffi_spec, VirtualBox::COM::FFI::Interface::NSRESULT_TYPE)
       @klass.define_interface_function(@name, nil, @spec)
     end
 
