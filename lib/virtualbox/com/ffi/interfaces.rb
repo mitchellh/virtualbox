@@ -1,6 +1,24 @@
 module VirtualBox
   module COM
     module FFI
+      # Creates all the FFI classes for a given version.
+      def self.for_version(version, &block)
+        @__module = Module.new
+        ::VirtualBox::COM::Util.set_interface_version(version)
+        const_set(::VirtualBox::COM::Util.version_const, @__module)
+        instance_eval(&block)
+        @__module = Kernel
+      end
+
+      # Returns a Class which creates an FFI interface to the specified
+      # com interface and potentially a parent class as well.
+      def self.create_interface(interface, parent=nil)
+        klass = Class.new(Interface)
+        @__module.const_set(interface, klass)
+        klass.com_interface(interface, parent)
+        klass
+      end
+
       # Creates all the interfaces for the FFI implementation. Eventually this
       # file should be conditionally loaded based on OS, so that Windows users
       # don't have to wait for all this translation to occur.

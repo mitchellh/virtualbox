@@ -1,3 +1,6 @@
+require 'ffi'
+require 'virtualbox/ext/logger'
+
 module VirtualBox
   module COM
     class FFIInterface < BaseInterface

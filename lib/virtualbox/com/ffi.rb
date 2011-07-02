@@ -1,6 +1,14 @@
+require 'ffi'
+require 'virtualbox/com/ffi/interfaces'
+
 module VirtualBox
   module COM
     module FFI
+      autoload :Interface, 'virtualbox/com/ffi/interface'
+      autoload :Util, 'virtualbox/com/ffi/util'
+
+      extend ::FFI::Library
+
       # Callback types for VBOXXPCOMC
       callback :pfnGetVersion, [], :uint
       callback :pfnComInitialize, [:string, :pointer, :string, :pointer], :void
