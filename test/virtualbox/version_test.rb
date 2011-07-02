@@ -1,10 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 class VersionTest < Test::Unit::TestCase
-  module VersionTestMod
-    extend VirtualBox::Version
-  end
-
   setup do
     @lib = mock("lib")
     @vbox = mock("vbox")
@@ -12,7 +8,7 @@ class VersionTest < Test::Unit::TestCase
     VirtualBox::Lib.stubs(:lib).returns(@lib)
     @lib.stubs(:virtualbox).returns(@vbox)
 
-    @module = VersionTestMod
+    @module = VirtualBox
   end
 
   context "checking if supported version of VirtualBox" do
