@@ -48,7 +48,7 @@ module VirtualBox
               type = :interface if interface.superclass == COM::AbstractInterface
               type = :enum if interface.superclass == COM::AbstractEnum
             end
-          rescue NameError
+          rescue NameError,LoadError
             # Do nothing
           end
 

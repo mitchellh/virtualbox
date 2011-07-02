@@ -89,13 +89,13 @@ module VirtualBox
         @session = session_klass.new(Implementer::FFI, self, session_ptr.get_pointer(0))
 
         # Make a call to version to verify no exceptions are raised
-        @virtualbox.valid? && @session.valid?
+        @virtualbox.implementer.valid? && @session.implementer.valid?
 
         logger.debug("    -- Valid version")
         true
-      rescue Exception => e
-        logger.debug("    -- Invalid version")
-        false
+#      rescue Exception => e
+#        logger.debug("    -- Invalid version")
+#        false
       end
     end
   end

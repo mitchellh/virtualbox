@@ -55,7 +55,7 @@ module VirtualBox
                   elsif interface.superclass == COM::AbstractEnum
                     T_UINT32
                   end
-                rescue NameError
+                rescue NameError,LoadError
                   # Default to a pointer, since not all interfaces are implemented
                   :pointer
                 end
