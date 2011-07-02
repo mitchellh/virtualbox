@@ -1,5 +1,3 @@
-require 'virtualbox/ext/glob_loader'
-
 module VirtualBox
   module COM
     WSTRING = :unicode_string
@@ -24,16 +22,3 @@ module VirtualBox
     autoload :Util, 'virtualbox/com/util'
   end
 end
-
-# The com directory of the gem
-comdir = File.join(File.dirname(__FILE__), 'com')
-
-# Require the abstract interface first then glob load all
-# of the interfaces
-=begin
-puts "SLOW"
-require "benchmark"
-puts Benchmark.measure {
-VirtualBox::GlobLoader.glob_require(File.join(comdir, "interface"))
-}
-=end
