@@ -193,7 +193,9 @@ module VirtualBox
       #
       # @return [VM]
       def find(name)
-        all.detect { |o| o.name == name || o.uuid == name }
+        new(Lib.lib.virtualbox.find_machine(name))
+      rescue Exceptions::ObjectNotFoundException
+        nil
       end
 
       # Imports a VM, blocking the entire thread during this time.
