@@ -264,7 +264,7 @@ module VirtualBox
     end
 
     def load_attribute(key)
-      puts load_interface_attribute(key, interface)
+      load_interface_attribute(key, interface)
     end
 
     def load_relationship(name)
