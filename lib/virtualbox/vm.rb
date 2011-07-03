@@ -166,19 +166,19 @@ module VirtualBox
       :property_getter => Proc.new { |instance, *args| instance.get_boot_order(*args) },
       :property_setter => Proc.new { |instance, *args| instance.set_boot_order(*args) }
     attribute :interface, :readonly => true, :property => false
-    relationship :audio_adapter, :AudioAdapter
-    relationship :bios, :BIOS
-    relationship :hw_virt, :HWVirtualization
-    relationship :cpu, :CPU
-    relationship :vrde_server, :VRDEServer
-    relationship :storage_controllers, :StorageController, :dependent => :destroy
-    relationship :medium_attachments, :MediumAttachment
-    relationship :shared_folders, :SharedFolder
-    relationship :extra_data, :ExtraData
-    relationship :forwarded_ports, :ForwardedPort, :version => "3.1"
-    relationship :network_adapters, :NetworkAdapter
-    relationship :usb_controller, :USBController
-    relationship :current_snapshot, :Snapshot
+    relationship :audio_adapter, :AudioAdapter, :lazy => true
+    relationship :bios, :BIOS, :lazy => true
+    relationship :hw_virt, :HWVirtualization, :lazy => true
+    relationship :cpu, :CPU, :lazy => true
+    relationship :vrde_server, :VRDEServer, :lazy => true
+    relationship :storage_controllers, :StorageController, :dependent => :destroy, :lazy => true
+    relationship :medium_attachments, :MediumAttachment, :lazy => true
+    relationship :shared_folders, :SharedFolder, :lazy => true
+    relationship :extra_data, :ExtraData, :lazy => true
+    relationship :forwarded_ports, :ForwardedPort, :version => "3.1", :lazy => true
+    relationship :network_adapters, :NetworkAdapter, :lazy => true
+    relationship :usb_controller, :USBController, :lazy => true
+    relationship :current_snapshot, :Snapshot, :lazy => true
 
     class << self
       # Returns an array of all available VMs.
@@ -255,15 +255,17 @@ module VirtualBox
       # Load the interface attributes
       load_interface_attributes(machine)
 
-      # Setup the relationships
-      populate_relationships(machine)
-
       # Clear dirtiness, since this should only be called initially and
       # therefore shouldn't affect dirtiness
       clear_dirty!
 
       # But this is an existing record
       existing_record!
+    end
+
+    def load_relationship(name)
+      # Load only the requested relationship
+      populate_relationship(name, interface)
     end
 
     # Reload the model so that all the attributes and relationships are
