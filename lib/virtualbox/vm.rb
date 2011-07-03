@@ -142,6 +142,8 @@ module VirtualBox
       attribute :memory_balloon_size
       attribute :vram_size
       attribute :cpu_count
+      attribute :cpu_hot_plug_enabled, :boolean => true
+      attribute :cpu_execution_cap
       attribute :accelerate_3d_enabled, :boolean => true
       attribute :accelerate_2d_video_enabled, :boolean => true
       attribute :clipboard_mode
