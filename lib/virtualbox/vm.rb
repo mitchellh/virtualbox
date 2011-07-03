@@ -133,38 +133,41 @@ module VirtualBox
   #     relationship :current_snapshot, :Snapshot
   #
   class VM < AbstractModel
-    attribute :uuid, :readonly => true, :property => :id
-    attribute :name
-    attribute :os_type_id
-    attribute :description
-    attribute :memory_size
-    attribute :memory_balloon_size
-    attribute :vram_size
-    attribute :cpu_count
-    attribute :accelerate_3d_enabled, :boolean => true
-    attribute :accelerate_2d_video_enabled, :boolean => true
-    attribute :clipboard_mode
-    attribute :monitor_count
-    attribute :state, :readonly => true
-    attribute :accessible, :readonly => true, :boolean => true
-    attribute :hardware_version
-    attribute :hardware_uuid
-    attribute :firmware_type
-    attribute :snapshot_folder
-    attribute :settings_file_path, :readonly => true
-    attribute :last_state_change, :readonly => true
-    attribute :state_file_path, :readonly => true
-    attribute :log_folder, :readonly => true
-    attribute :snapshot_count, :readonly => true
-    attribute :current_state_modified, :readonly => true
-    attribute :guest_property_notification_patterns
-    attribute :teleporter_enabled, :boolean => true
-    attribute :teleporter_port
-    attribute :teleporter_address
-    attribute :teleporter_password
-    attribute :boot_order,
-      :property_getter => Proc.new { |instance, *args| instance.get_boot_order(*args) },
-      :property_setter => Proc.new { |instance, *args| instance.set_boot_order(*args) }
+    attribute_scope :lazy => true do
+      attribute :uuid, :readonly => true, :property => :id
+      attribute :name
+      attribute :os_type_id
+      attribute :description
+      attribute :memory_size
+      attribute :memory_balloon_size
+      attribute :vram_size
+      attribute :cpu_count
+      attribute :accelerate_3d_enabled, :boolean => true
+      attribute :accelerate_2d_video_enabled, :boolean => true
+      attribute :clipboard_mode
+      attribute :monitor_count
+      attribute :state, :readonly => true
+      attribute :accessible, :readonly => true, :boolean => true
+      attribute :hardware_version
+      attribute :hardware_uuid
+      attribute :firmware_type
+      attribute :snapshot_folder
+      attribute :settings_file_path, :readonly => true
+      attribute :last_state_change, :readonly => true
+      attribute :state_file_path, :readonly => true
+      attribute :log_folder, :readonly => true
+      attribute :snapshot_count, :readonly => true
+      attribute :current_state_modified, :readonly => true
+      attribute :guest_property_notification_patterns
+      attribute :teleporter_enabled, :boolean => true
+      attribute :teleporter_port
+      attribute :teleporter_address
+      attribute :teleporter_password
+      attribute :boot_order,
+        :property_getter => Proc.new { |instance, *args| instance.get_boot_order(*args) },
+        :property_setter => Proc.new { |instance, *args| instance.set_boot_order(*args) }
+    end
+
     attribute :interface, :readonly => true, :property => false
     relationship :audio_adapter, :AudioAdapter, :lazy => true
     relationship :bios, :BIOS, :lazy => true
@@ -252,15 +255,16 @@ module VirtualBox
     end
 
     def initialize_attributes(machine)
-      # Load the interface attributes
-      load_interface_attributes(machine)
-
       # Clear dirtiness, since this should only be called initially and
       # therefore shouldn't affect dirtiness
       clear_dirty!
 
       # But this is an existing record
       existing_record!
+    end
+
+    def load_attribute(name)
+      load_interface_attribute(name, interface)
     end
 
     def load_relationship(name)
