@@ -153,7 +153,7 @@ module VirtualBox
         #   a custom populate key to use for {Attributable#populate_attributes}
         def attribute(name, options = {})
           name = name.to_sym
-          attributes[name] = defined?(@__attribute_scope) ? @__attribute_scope : {}
+          attributes[name] = defined?(@__attribute_scope) ? @__attribute_scope.dup : {}
           attributes[name].merge!(options)
 
           # Create the method for reading this attribute

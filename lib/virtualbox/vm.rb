@@ -263,8 +263,8 @@ module VirtualBox
       existing_record!
     end
 
-    def load_attribute(name)
-      load_interface_attribute(name, interface)
+    def load_attribute(key)
+      puts load_interface_attribute(key, interface)
     end
 
     def load_relationship(name)
