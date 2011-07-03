@@ -14,17 +14,6 @@ class COMFFIUtilTest < Test::Unit::TestCase
     end
   end
 
-  context "versioned interface" do
-    should "get the current FFI interface associated with the current version" do
-      result = mock("result")
-      version_module = mock("vmod")
-      interface = mock("interface")
-      VirtualBox::COM::FFI.expects(:const_get).with(::VirtualBox::COM::Util.version_const).returns(version_module)
-      version_module.expects(:const_get).with(interface).returns(result)
-      assert_equal result, @klass.versioned_interface(interface)
-    end
-  end
-
   context "converting function specs to FFI parameter lists" do
     def assert_spec(spec, expected)
       result = @klass.spec_to_ffi(spec)

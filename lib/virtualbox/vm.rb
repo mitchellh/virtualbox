@@ -564,7 +564,7 @@ module VirtualBox
     #     also unregister attached media. If set to `:delete`, it will
     #     not only unregister attached media, but will also physically
     #     remove their respective data.
-    def destroy(*args)
+    def destroy
       # Do a full cleanup on the machine, then delete all the media attached
       media = interface.unregister(:full)
 

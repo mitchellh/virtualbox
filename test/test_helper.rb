@@ -11,8 +11,5 @@ require 'virtualbox'
 class Test::Unit::TestCase
 end
 
-# Initialize the FFI stuff. This is typically done dynamically when
-# FFI is initialized (on non-windows machines). Since the tests test
-# the FFI classes, we force initialize a specific version here. It
-# doesn't matter what version, since no actual FFI calls are made.
-VirtualBox::COM::FFI.setup("3.2.x") unless defined?(VirtualBox::COM::FFI::Version_3_2_X)
+# Set the interface version manually since we don't do detection in tests
+VirtualBox::COM::Util.set_interface_version("4.0.x")

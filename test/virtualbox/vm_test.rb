@@ -20,8 +20,10 @@ class VMTest < Test::Unit::TestCase
 
     context "finding a VM" do
       setup do
-        @all = []
-        @klass.stubs(:all).returns(@all)
+        @lib = mock("lib")
+        @virtualbox = mock("virtualbox")
+        VirtualBox::Lib.stubs(:lib).returns(@lib)
+        @lib.stubs(:virtualbox).returns(@virtualbox)
       end
 
       def mock_vm(uuid, name=nil)
@@ -32,21 +34,13 @@ class VMTest < Test::Unit::TestCase
       end
 
       should "return nil if it doesn't exist" do
-        @all << mock_vm("foo")
+        @virtualbox.expects(:find_machine).raises(VirtualBox::Exceptions::ObjectNotFoundException)
         assert_nil @klass.find("bar")
       end
 
       should "return the matching vm if it is found" do
-        vm = mock_vm("foo")
-        @all << mock_vm("bar")
-        @all << vm
-        assert_equal vm, @klass.find("foo")
-      end
-
-      should "return if matching name is found" do
-        vm = mock_vm(nil, "foo")
-        @all << vm
-        assert_equal vm, @klass.find("foo")
+        @virtualbox.expects(:find_machine).returns(mock_vm("foo"))
+        assert !@klass.find("foo").nil?
       end
     end
 
@@ -149,13 +143,13 @@ class VMTest < Test::Unit::TestCase
       @klass.any_instance.stubs(:populate_relationships)
     end
 
-    should "load interface attribtues" do
-      @klass.any_instance.expects(:load_interface_attributes).with(@interface).once
+    should "not load interface attribtues" do
+      @klass.any_instance.expects(:load_interface_attributes).with(@interface).never
       @klass.new(@interface)
     end
 
-    should "populate relationships" do
-      @klass.any_instance.expects(:populate_relationships).with(@interface).once
+    should "not populate relationships" do
+      @klass.any_instance.expects(:populate_relationships).with(@interface).never
       @klass.new(@interface)
     end
 
