@@ -19,6 +19,15 @@ module VirtualBox
       # @param [Symbol] key The attribute to load
       # @param [VirtualBox::COM::Interface] interface The interface
       def load_interface_attribute(key, interface)
+        value = read_interface_attribute(key, interface)
+        return if !value
+
+        write_attribute(key, value)
+      end
+
+      # Reads a single interface attribute without loading it into the
+      # given key.
+      def read_interface_attribute(key, interface)
         # Return unless we have a valid interface attribute with a getter
         return unless has_attribute?(key)
         options = self.class.attributes[key.to_sym]
@@ -29,7 +38,7 @@ module VirtualBox
 
         # Convert the getter to a proc and call it
         getter = spec_to_proc(getter)
-        write_attribute(key, getter.call(self, interface, key))
+        getter.call(self, interface, key)
       end
 
       # Saves all the attributes which have an interface setter.

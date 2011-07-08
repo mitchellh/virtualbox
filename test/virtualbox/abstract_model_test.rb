@@ -451,12 +451,5 @@ class AbstractModelTest < Test::Unit::TestCase
       assert @model.foo_changed?
       assert_equal "foo2", @model.foo
     end
-
-    should "not mark dirtiness on write_attribute if the attribute is lazy and not yet loaded" do
-      @model.expects(:lazy_attribute?).with(:foo).returns(true)
-      @model.expects(:loaded_attribute?).with(:foo).returns(false)
-      @model.expects(:set_dirty!).never
-      @model.write_attribute(:foo, "foo2")
-    end
   end
 end

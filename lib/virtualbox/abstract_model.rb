@@ -217,8 +217,8 @@ module VirtualBox
     # Overwrites {Attributable#write_attribute} to set the dirty state of
     # the written attribute. See {Dirty#set_dirty!} as well.
     def write_attribute(name, value)
-      super
       set_dirty!(name, read_attribute(name), value)
+      super
     end
 
     # Overwrites {Relatable#set_relationship} to set the dirty state of the

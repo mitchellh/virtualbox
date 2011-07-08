@@ -259,7 +259,7 @@ module VirtualBox
           assert_version_match(options[:version], VirtualBox.version) if options[:version]
           if lazy_attribute?(name) && !loaded_attribute?(name)
             # Load the lazy attribute
-            load_attribute(name.to_sym)
+            attributes[name] = load_attribute(name.to_sym)
           end
 
           if attributes[name].nil?
