@@ -152,6 +152,27 @@ class RelatableTest < Test::Unit::TestCase
     end
   end
 
+  context "resetting relationships" do
+    class ResetRelatableModel < EmptyRelatableModel
+      relationship :foos, RelatableTest::Relatee
+      relationship :bars, RelatableTest::BarRelatee, :lazy => true
+    end
+
+    setup do
+      @model = ResetRelatableModel.new
+    end
+
+    should "reset only the lazy relationship" do
+      @model.relationship_data[:foos] = "YES"
+      @model.relationship_data[:bars] = "YES"
+
+      assert @model.loaded_relationship?(:bars)
+      @model.reset_relationship
+      assert !@model.loaded_relationship?(:bars)
+      assert_equal "YES", @model.foos
+    end
+  end
+
   context "lazy relationships" do
     class LazyRelatableModel < EmptyRelatableModel
       relationship :foos, RelatableTest::Relatee, :lazy => true

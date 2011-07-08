@@ -194,6 +194,28 @@ class AttributableTest < Test::Unit::TestCase
     end
   end
 
+  context "resetting attributes" do
+    class ResetAttributeModel < AttributeModel
+      attribute :normal
+      attribute :lazy, :lazy => true
+    end
+
+    setup do
+      @model = ResetAttributeModel.new
+      @model.populate_attributes({
+        :normal => "normal",
+        :lazy   => "lazy"
+      })
+    end
+
+    should "only reset the lazy attributes" do
+      assert @model.loaded_attribute?(:lazy)
+      @model.reset_attributes
+      assert !@model.loaded_attribute?(:lazy)
+      assert_equal "normal", @model.normal
+    end
+  end
+
   context "reading and writing attributes" do
     class VersionedAttributeModel < AttributeModel
       attribute :ver, :version => "3.1"

@@ -225,6 +225,20 @@ module VirtualBox
         end
       end
 
+      # Reset attributes which basically causes all lazy attributes to
+      # be reset. This forces them to reload when they're accessed.
+      def reset_attributes
+        # Find the lazy attributes
+        to_delete = []
+        attributes.each do |name, value|
+          to_delete << name if lazy_attribute?(name)
+        end
+
+        # Delete them!
+        to_delete.each { |key| attributes.delete(key) }
+      end
+
+
       # Writes an attribute. This method ignores the `readonly` option
       # on attribute definitions. This method is mostly meant for
       # internal use on setting attributes (including readonly

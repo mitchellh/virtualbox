@@ -182,6 +182,17 @@ module VirtualBox
         end
       end
 
+      # Resets a relationship. This resets all lazy relationships.
+      def reset_relationship
+        to_delete = []
+        relationship_data.each do |key, value|
+          to_delete << key if lazy_relationship?(key)
+        end
+
+        # Delete them!
+        to_delete.each { |key| relationship_data.delete(key) }
+      end
+
       # Reads a relationship. This is equivalent to {Attributable#read_attribute},
       # but for relationships.
       def read_relationship(name)
