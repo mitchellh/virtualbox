@@ -183,7 +183,7 @@ module VirtualBox
       end
 
       # Resets a relationship. This resets all lazy relationships.
-      def reset_relationship
+      def reset_relationships
         to_delete = []
         relationship_data.each do |key, value|
           to_delete << key if lazy_relationship?(key)

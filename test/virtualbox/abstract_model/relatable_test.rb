@@ -167,7 +167,7 @@ class RelatableTest < Test::Unit::TestCase
       @model.relationship_data[:bars] = "YES"
 
       assert @model.loaded_relationship?(:bars)
-      @model.reset_relationship
+      @model.reset_relationships
       assert !@model.loaded_relationship?(:bars)
       assert_equal "YES", @model.foos
     end

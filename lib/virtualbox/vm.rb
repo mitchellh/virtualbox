@@ -278,7 +278,13 @@ module VirtualBox
     # up to date. This method will automatically discard any changes to
     # the VM and any of its relationships.
     def reload
+      # Reset relationships and attributes
+      reset_attributes
+      reset_relationships
+
+      # Initialize again
       initialize_attributes(interface)
+
       self
     end
 
