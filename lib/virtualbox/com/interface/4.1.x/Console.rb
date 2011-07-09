@@ -18,6 +18,7 @@ module VirtualBox
           property :vrde_server_info, :VRDEServerInfo, :readonly => true
           property :event_source, :EventSource, :readonly => true
           property :attached_pci_devices, [:PciDeviceAttachment], :readonly => true
+          property :use_host_clipboard, T_BOOL
 
           function :power_up, :Progress, []
           function :power_up_paused, :Progress, []
@@ -41,6 +42,7 @@ module VirtualBox
           function :remove_shared_folder, nil, [WSTRING]
           function :take_snapshot, :Progress, [WSTRING, WSTRING]
           function :delete_snapshot, :Progress, [WSTRING]
+          function :delete_snapshot_and_all_children, :Progress, [WSTRING]
           function :restore_snapshot, :Progress, [:Snapshot]
           function :teleport, :Progress, [WSTRING, T_UINT32, WSTRING, T_UINT32]
         end
