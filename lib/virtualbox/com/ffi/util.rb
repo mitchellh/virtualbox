@@ -108,6 +108,7 @@ module VirtualBox
           # @return [String]
           def camelize(string)
             special_cases = {
+              "api" => "API",
               "os" => "OS",
               "dhcp" => "DHCP",
               "dvd" => "DVD",

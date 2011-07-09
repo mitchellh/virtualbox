@@ -8,6 +8,7 @@ module VirtualBox
           property :version, WSTRING, :readonly => true
           property :revision, T_ULONG, :readonly => true
           property :package_type, WSTRING, :readonly => true
+          property :api_version, WSTRING, :readonly => true
           property :home_folder, WSTRING, :readonly => true
           property :settings_file_path, WSTRING, :readonly => true
           property :host, :Host, :readonly => true
@@ -31,7 +32,7 @@ module VirtualBox
           function :find_machine, :Machine, [WSTRING]
           function :create_appliance, :Appliance, []
           function :create_hard_disk, :Medium, [WSTRING, WSTRING]
-          function :open_medium, :Medium, [WSTRING, :DeviceType, :AccessMode]
+          function :open_medium, :Medium, [WSTRING, :DeviceType, :AccessMode, T_BOOL]
           function :find_medium, :Medium, [WSTRING, :DeviceType]
           function :get_guest_os_type, :GuestOSType, [WSTRING]
           function :create_shared_folder, nil, [WSTRING, WSTRING, T_BOOL, T_BOOL]
