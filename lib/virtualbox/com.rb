@@ -5,8 +5,6 @@ module VirtualBox
     T_UINT8 = :uint8
     T_INT32 = :int
     T_INT64 = :long
-    T_ULONG = :ulong
-    T_UINT8 = :uchar
     T_UINT16 = :ushort
     T_UINT32 = :uint
     T_UINT64 = :ulong

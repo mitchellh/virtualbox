@@ -6,7 +6,7 @@ module VirtualBox
           IID_STR = "D2DE270C-1D4B-4C9E-843F-BBB9B47269FF"
 
           property :version, WSTRING, :readonly => true
-          property :revision, T_ULONG, :readonly => true
+          property :revision, T_UINT64, :readonly => true
           property :package_type, WSTRING, :readonly => true
           property :api_version, WSTRING, :readonly => true
           property :home_folder, WSTRING, :readonly => true

@@ -10,17 +10,17 @@ module VirtualBox
           property :usb_devices, [:HostUSBDevice], :readonly => true
           property :usb_device_filters, [:HostUSBDeviceFilter], :readonly => true
           property :network_interfaces, [:HostNetworkInterface], :readonly => true
-          property :processor_count, T_ULONG, :readonly => true
-          property :processor_online_count, T_ULONG, :readonly => true
-          property :processor_core_count, T_ULONG, :readonly => true
-          property :memory_size, T_ULONG, :readonly => true
-          property :memory_available, T_ULONG, :readonly => true
+          property :processor_count, T_UINT64, :readonly => true
+          property :processor_online_count, T_UINT64, :readonly => true
+          property :processor_core_count, T_UINT64, :readonly => true
+          property :memory_size, T_UINT64, :readonly => true
+          property :memory_available, T_UINT64, :readonly => true
           property :operating_system, WSTRING, :readonly => true
           property :os_version, WSTRING, :readonly => true
           property :utc_time, T_INT64, :readonly => true
           property :acceleration_3d_available, T_BOOL, :readonly => true
 
-          function :get_processor_speed, T_ULONG, [T_UINT32]
+          function :get_processor_speed, T_UINT64, [T_UINT32]
           function :get_processor_feature, T_BOOL, [T_UINT32] # TODO ENUM
           function :get_processor_description, WSTRING, [T_UINT32]
           function :get_processor_cpu_id_leaf, nil, [T_UINT32, T_UINT32, T_UINT32, [:out, T_UINT32], [:out, T_UINT32], [:out, T_UINT32], [:out, T_UINT32]]
