@@ -36,6 +36,7 @@ module VirtualBox
           function :find_host_network_interfaces_of_type, [:HostNetworkInterface], [:HostNetworkInterfaceType]
           function :find_usb_device_by_id, :HostUSBDevice, [WSTRING]
           function :find_usb_device_by_address, :HostUSBDevice, [WSTRING]
+          function :generate_mac_address, WSTRING, []
         end
       end
     end
