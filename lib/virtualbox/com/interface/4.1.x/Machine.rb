@@ -32,6 +32,8 @@ module VirtualBox
           property :chipset_type, :ChipsetType
           property :snapshot_folder, WSTRING
           property :vrde_server, :VRDEServer, :readonly => true
+          property :emulated_usb_web_camera_enabled, T_BOOL
+          property :emulated_usb_card_reader_enabled, T_BOOL
           property :medium_attachments, [:MediumAttachment], :readonly => true
           property :usb_controller, :USBController, :readonly => true
           property :audio_adapter, :AudioAdapter, :readonly => true
@@ -73,6 +75,7 @@ module VirtualBox
           function :attach_device, nil, [WSTRING, T_INT32, T_INT32, :DeviceType, :Medium]
           function :detach_device, nil, [WSTRING, T_INT32, T_INT32]
           function :passthrough_device, nil, [WSTRING, T_INT32, T_INT32, T_BOOL]
+          function :temporary_eject_device, nil, [WSTRING, T_INT32, T_INT32, T_BOOL]
           function :set_bandwidth_group_for_device, nil, [WSTRING, T_INT64, T_INT64, :BandwidthGroup]
           function :mount_medium, nil, [WSTRING, T_INT32, T_INT32, :Medium, T_BOOL]
           function :get_medium, :Medium, [WSTRING, T_INT32, T_INT32]
@@ -125,6 +128,7 @@ module VirtualBox
           function :get_cpu_status, T_BOOL, [T_UINT32]
           function :query_log_filename, WSTRING, [T_UINT32]
           function :read_log, [T_UINT8], [T_UINT32, T_UINT64, T_UINT64]
+          function :clone_to, :Progress, [:Machine, :CloneMode, [:CloneOptions]]
         end
       end
     end
