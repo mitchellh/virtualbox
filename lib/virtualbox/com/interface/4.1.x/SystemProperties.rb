@@ -13,7 +13,6 @@ module VirtualBox
           property :max_guest_cpu_count, T_UINT32, :readonly => true
           property :max_guest_monitors, T_UINT32, :readonly => true
           property :info_vd_size, T_INT64, :readonly => true
-          property :network_adapter_count, T_UINT32, :readonly => true
           property :serial_port_count, T_UINT32, :readonly => true
           property :parallel_port_count, T_UINT32, :readonly => true
           property :max_boot_position, T_UINT32, :readonly => true
@@ -29,6 +28,8 @@ module VirtualBox
           property :log_history_count, T_UINT32
           property :default_audio_driver, :AudioDriverType, :readonly => true
 
+          function :get_max_network_adapters, T_UINT32, [:ChipsetType]
+          function :get_max_network_adapters_of_type, T_UINT32, [:ChipsetType, :NetworkAttachmentType]
           function :get_max_devices_per_port_for_storage_bus, T_UINT32, [:StorageBus]
           function :get_min_port_count_for_storage_bus, T_UINT32, [:StorageBus]
           function :get_max_port_count_for_storage_bus, T_UINT32, [:StorageBus]
