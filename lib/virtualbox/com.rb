@@ -1,6 +1,8 @@
 module VirtualBox
   module COM
     WSTRING = :unicode_string
+    T_INT8 = :int8
+    T_UINT8 = :uint8
     T_INT32 = :int
     T_INT64 = :long
     T_ULONG = :ulong
