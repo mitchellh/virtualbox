@@ -26,6 +26,7 @@ module VirtualBox
           function :set_next_operation, nil, [WSTRING, T_UINT32]
           function :wait_for_completion, nil, [T_INT32]
           function :wait_for_operation_completion, nil, [T_UINT32, T_INT32]
+          function :wait_for_async_progress_completion, nil, [:Progress]
           function :cancel, nil, []
 
           # This method blocks the execution while the operations represented

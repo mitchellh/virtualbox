@@ -13,6 +13,7 @@ module VirtualBox
           property :machine, :Machine, :readonly => true
           property :parent, :Snapshot, :readonly => true
           property :children, [:Snapshot], :readonly => true
+          property :children_count, T_UINT32, :readonly => true
         end
       end
     end
