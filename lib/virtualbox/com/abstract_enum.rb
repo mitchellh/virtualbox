@@ -11,23 +11,36 @@ module VirtualBox
         # can be indexed with `[]` and an integer and returns a value of
         # some sort. If value is left nil, it will return the current mapping
         def map(value = nil)
-          @map = value if value
+          if value
+            # Convert the array to a hash of equal structure
+            if value.is_a?(Array)
+              result = {}
+              value.each_index do |i|
+                result[value[i]] = i
+              end
+
+              value = result
+            end
+
+            @map = value if value
+          end
+
           @map
         end
 
         # Returns the symbol associatd with the given key
-        def [](key)
-          @map[key]
+        def [](index)
+          @map.key(index)
         end
 
         # Returns the index associated with a value
         def index(key)
-          @map.index(key)
+          @map[key]
         end
 
         # Iterate over the enum, yielding each item to a block.
         def each
-          @map.each do |key|
+          @map.each do |key, value|
             yield key
           end
         end
