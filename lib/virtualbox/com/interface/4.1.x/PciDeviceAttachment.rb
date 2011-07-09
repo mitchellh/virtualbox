@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class PciDeviceAttachment < AbstractInterface
           IID_STR = "91F33D6F-E621-4F70-A77E-15F0E3C714D5"
 

@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class BandwidthControl < AbstractInterface
           IID_STR = "D0A24DB0-F756-11DF-98CF-0800200C9A66"
 

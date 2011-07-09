@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class Progress < AbstractInterface
           IID = "856aa038-853f-42e2-acf7-6e7b02dbe294"
 

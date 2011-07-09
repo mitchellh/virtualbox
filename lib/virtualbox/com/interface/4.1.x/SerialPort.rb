@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class SerialPort < AbstractInterface
           IID = "937f6970-5103-4745-b78e-d28dcf1479a8"
 

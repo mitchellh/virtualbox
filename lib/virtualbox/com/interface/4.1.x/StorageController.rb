@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class StorageController < AbstractInterface
           IID = "6bf8335b-d14a-44a5-9b45-ddc49ce7d5b2"
 

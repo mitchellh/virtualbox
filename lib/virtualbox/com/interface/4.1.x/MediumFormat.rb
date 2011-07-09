@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class MediumFormat < AbstractInterface
           IID = "89f52554-d469-4799-9fad-1705e86a08b1"
 

@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class NATEngine < AbstractInterface
           IID = "4b286616-eb03-11de-b0fb-1701eca42246"
 

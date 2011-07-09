@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class HWVirtExPropertyType < AbstractEnum
           map [:null, :enabled, :exclusive, :vpid, :nested_paging, :large_pages,
               :force]

@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class FirmwareType < AbstractEnum
           map [:bios, :efi, :efi32, :efi64, :efidual]
         end

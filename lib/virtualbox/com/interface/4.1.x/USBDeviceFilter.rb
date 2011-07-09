@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class USBDeviceFilter < AbstractInterface
           IID = "d6831fb4-1a94-4c2c-96ef-8d0d6192066d"
 

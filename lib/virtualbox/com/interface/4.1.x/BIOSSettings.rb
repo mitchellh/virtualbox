@@ -1,7 +1,7 @@
 module VirtualBox
   module COM
     module Interface
-      module Version_4_0_X
+      module Version_4_1_X
         class BIOSSettings < AbstractInterface
           IID = "38b54279-dc35-4f5e-a431-835b867c6b5e"
 
