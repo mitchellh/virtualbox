@@ -578,9 +578,10 @@ module VirtualBox
       media = interface.unregister(:full)
 
       if !media.empty?
-        if Platform.windows? && !Platform.jruby?
+        if Platform.windows?
           # The MSCOM interface in CRuby to delete media is broken,
-          # so we do this ghettoness.
+          # so we do this ghettoness. Also, in JRuby, passing an array
+          # to objects is broken. So once again, we do this.
           path = interface.settings_file_path
 
           # A simple sanity check to make sure we don't attempt to delete
@@ -589,8 +590,6 @@ module VirtualBox
             Pathname.new(path).parent.rmtree
           end
         else
-          # NOTE: This doesn't work on JRuby because passing an array as
-          # an argument to a method doesn't work...
           interface.delete(media)
 
           # TODO: This sleep is silly. The progress object returned by the media
