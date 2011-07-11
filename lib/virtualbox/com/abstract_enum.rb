@@ -22,7 +22,10 @@ module VirtualBox
               value = result
             end
 
-            @map = value if value
+            # Store both the map and the reverse map since both lookups
+            # are frequently used.
+            @map = value
+            @reverse_map = @map.invert
           end
 
           @map
@@ -30,11 +33,7 @@ module VirtualBox
 
         # Returns the symbol associatd with the given key
         def [](index)
-          @map.each do |key, value|
-            return key if value == index
-          end
-
-          nil
+          @reverse_map[index]
         end
 
         # Returns the index associated with a value
