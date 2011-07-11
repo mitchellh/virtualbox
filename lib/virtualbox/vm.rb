@@ -589,6 +589,8 @@ module VirtualBox
             Pathname.new(path).parent.rmtree
           end
         else
+          # NOTE: This doesn't work on JRuby because passing an array as
+          # an argument to a method doesn't work...
           interface.delete(media)
 
           # TODO: This sleep is silly. The progress object returned by the media
