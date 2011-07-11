@@ -12,7 +12,7 @@ module VirtualBox
     class ReadonlyVMStateException < Exception; end
     class UnsupportedVersionException < Exception; end
 
-    class FFIException < Exception
+    class COMException < Exception
       attr_accessor :data
 
       def initialize(data={})
@@ -23,17 +23,17 @@ module VirtualBox
 
     # FFI Exceptions, these exceptions are only raised on *nix machines
     # when some error occurs in the foreign function interface.
-    class ObjectNotFoundException < FFIException; end
-    class InvalidVMStateException < FFIException; end
-    class VMErrorException < FFIException; end
-    class FileErrorException < FFIException; end
-    class SubsystemException < FFIException; end
-    class PDMException < FFIException; end
-    class InvalidObjectStateException < FFIException; end
-    class HostErrorException < FFIException; end
-    class NotSupportedException < FFIException; end
-    class XMLErrorException < FFIException; end
-    class InvalidSessionStateException < FFIException; end
-    class ObjectInUseException < FFIException; end
+    class ObjectNotFoundException < COMException; end
+    class InvalidVMStateException < COMException; end
+    class VMErrorException < COMException; end
+    class FileErrorException < COMException; end
+    class SubsystemException < COMException; end
+    class PDMException < COMException; end
+    class InvalidObjectStateException < COMException; end
+    class HostErrorException < COMException; end
+    class NotSupportedException < COMException; end
+    class XMLErrorException < COMException; end
+    class InvalidSessionStateException < COMException; end
+    class ObjectInUseException < COMException; end
   end
 end

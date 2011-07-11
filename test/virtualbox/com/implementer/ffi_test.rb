@@ -80,7 +80,7 @@ class COMImplementerFFITest < Test::Unit::TestCase
 
       should "raise an exception if an error occurred" do
         @function.expects(:call).returns(0x8000_4002)
-        assert_raises(VirtualBox::Exceptions::FFIException) {
+        assert_raises(VirtualBox::Exceptions::COMException) {
           @instance.call_and_check(@name)
         }
       end
@@ -112,8 +112,8 @@ class COMImplementerFFITest < Test::Unit::TestCase
         assert_equal VirtualBox::Exceptions::ObjectNotFoundException, @instance.exception_map(0x80BB_0001)
       end
 
-      should "return FFIException if no mapping is found" do
-        assert_equal VirtualBox::Exceptions::FFIException, @instance.exception_map(-5)
+      should "return COMException if no mapping is found" do
+        assert_equal VirtualBox::Exceptions::COMException, @instance.exception_map(-5)
       end
     end
 

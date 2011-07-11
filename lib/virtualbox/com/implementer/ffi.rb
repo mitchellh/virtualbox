@@ -128,7 +128,7 @@ module VirtualBox
             0x80BB_000C => Exceptions::ObjectInUseException
           }
 
-          map[code] || Exceptions::FFIException
+          map[code] || Exceptions::COMException
         end
 
         # Converts a function spec to a proper argument list with the given

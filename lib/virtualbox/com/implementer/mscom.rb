@@ -12,6 +12,14 @@ module VirtualBox
           super(interface, lib_base)
 
           @object = object
+
+          @jruby = false
+          begin
+            require 'java'
+            @jruby = true
+          rescue LoadError
+            @jruby = false
+          end
         end
 
         # Reads a property from the interface with the given name.
@@ -45,9 +53,22 @@ module VirtualBox
 
         # Calls a function from the interface with the given name
         def call_function(name, args, opts)
+          # This is a special exception only if we're on JRuby
+          jruby_exception = nil
+          jruby_exception = org.racob.com.ComFailException if @jruby
+
           # Convert args to proper values to send and send em!
           args = spec_to_args(opts[:spec], args)
-          value = @object.send(COM::FFI::Util.camelize(name.to_s), *args)
+
+          value = nil
+          begin
+            value = @object.send(COM::FFI::Util.camelize(name.to_s), *args)
+          rescue jruby_exception
+            # JRuby exception is screwed up. We just throw a generic
+            # COMException and call it good.
+            raise Exceptions::COMException.new(:function => name,
+                                               :result_code => 0)
+          end
 
           # TODO: Multiple return values
           returnable_value(value, opts[:value_type])

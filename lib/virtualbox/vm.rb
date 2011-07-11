@@ -201,6 +201,9 @@ module VirtualBox
         new(Lib.lib.virtualbox.find_machine(name))
       rescue Exceptions::ObjectNotFoundException
         nil
+      rescue Exceptions::COMException
+        # NOTE: This only happens on JRuby/Windows
+        nil
       end
 
       # Imports a VM, blocking the entire thread during this time.
