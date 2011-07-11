@@ -30,7 +30,11 @@ module VirtualBox
 
         # Returns the symbol associatd with the given key
         def [](index)
-          @map.key(index)
+          @map.each do |key, value|
+            return key if value == index
+          end
+
+          nil
         end
 
         # Returns the index associated with a value
