@@ -1,3 +1,5 @@
+require 'virtualbox/ext/platform'
+
 module VirtualBox
   module COM
     module Implementer
@@ -13,13 +15,7 @@ module VirtualBox
 
           @object = object
 
-          @jruby = false
-          begin
-            require 'java'
-            @jruby = true
-          rescue LoadError
-            @jruby = false
-          end
+          require 'java' if Platform.jruby?
         end
 
         # Reads a property from the interface with the given name.
@@ -55,7 +51,7 @@ module VirtualBox
         def call_function(name, args, opts)
           # This is a special exception only if we're on JRuby
           jruby_exception = nil
-          jruby_exception = org.racob.com.ComFailException if @jruby
+          jruby_exception = org.racob.com.ComFailException if Platform.jruby?
 
           # Convert args to proper values to send and send em!
           args = spec_to_args(opts[:spec], args)
