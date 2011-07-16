@@ -43,6 +43,7 @@ module VirtualBox
           function :take_snapshot, :Progress, [WSTRING, WSTRING]
           function :delete_snapshot, :Progress, [WSTRING]
           function :delete_snapshot_and_all_children, :Progress, [WSTRING]
+          function :delete_snapshot_range, :Progress, [WSTRING, WSTRING]
           function :restore_snapshot, :Progress, [:Snapshot]
           function :teleport, :Progress, [WSTRING, T_UINT32, WSTRING, T_UINT32]
         end

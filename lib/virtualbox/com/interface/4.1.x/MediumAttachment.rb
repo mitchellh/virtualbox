@@ -13,6 +13,7 @@ module VirtualBox
           property :passthrough, T_BOOL, :readonly => true
           property :temporary_eject, T_BOOL, :readonly => true
           property :is_ejected, T_BOOL, :readonly => true
+          property :non_rotational, T_BOOL, :readonly => true
           property :bandwidth_group, :BandwidthGroup, :readonly => true
         end
       end

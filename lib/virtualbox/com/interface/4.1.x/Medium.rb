@@ -17,6 +17,7 @@ module VirtualBox
           property :format, WSTRING, :readonly => true
           property :medium_format, :MediumFormat, :readonly => true
           property :type, :MediumType
+          property :allowed_types, [:MediumType], :readonly => true
           property :parent, :Medium, :readonly => true
           property :children, [:Medium], :readonly => true
           property :base, :Medium, :readonly => true

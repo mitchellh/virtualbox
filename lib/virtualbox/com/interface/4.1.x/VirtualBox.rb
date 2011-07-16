@@ -24,6 +24,8 @@ module VirtualBox
           property :dhcp_servers, [:DHCPServer], :readonly => true
           property :event_source, :EventSource, :readonly => true
           property :extension_pack_manager, :ExtPackManager, :readonly => true
+          property :internal_networks, [WSTRING], :readonly => true
+          property :generic_network_drivers, [WSTRING], :readonly => true
 
           function :compose_machine_filename, WSTRING, [WSTRING, WSTRING]
           function :create_machine, :Machine, [WSTRING, WSTRING, WSTRING, WSTRING, T_BOOL]

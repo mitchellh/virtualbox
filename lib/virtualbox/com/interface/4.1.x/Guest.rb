@@ -26,6 +26,7 @@ module VirtualBox
           function :directory_open, T_UINT32, [WSTRING, WSTRING, T_UINT32, WSTRING, WSTRING]
           function :directory_read, :GuestDirEntry, [T_UINT32]
           function :file_exists, T_BOOL, [WSTRING, WSTRING, WSTRING]
+          function :file_query_size, T_INT64, [WSTRING, WSTRING, WSTRING]
           function :set_process_input, T_UINT32, [T_UINT32, T_UINT32, T_UINT32, [T_UINT8]]
           function :update_guest_additions, :Progress, [WSTRING, T_UINT32]
         end

@@ -12,7 +12,7 @@ module VirtualBox
 
           function :read, :Progress, [WSTRING]
           function :interpret, nil, []
-          function :import_machines, :Progress, []
+          function :import_machines, :Progress, [[:ImportOptions]]
           function :create_vfs_explorer, :VFSExplorer, [WSTRING]
           function :write, :Progress, [WSTRING, T_BOOL, WSTRING]
           function :get_warnings, [WSTRING], []
