@@ -25,6 +25,7 @@ module VirtualBox
           property :free_disk_space_percent_error, T_UINT64
           property :vrde_auth_library, WSTRING
           property :web_service_auth_library, WSTRING
+          property :default_vrde_ext_pack, WSTRING
           property :log_history_count, T_UINT32
           property :default_audio_driver, :AudioDriverType, :readonly => true
 
