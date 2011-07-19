@@ -44,7 +44,7 @@ module VirtualBox
   #     attribute :cable_connected, :boolean => true
   #     attribute :nat_network
   #     attribute :internal_network
-  #     attribute :host_interface
+  #     attribute :host_only_interface
   #     attribute :interface, :readonly => true, :property => false
   #
   class NetworkAdapter < AbstractModel
@@ -57,7 +57,7 @@ module VirtualBox
     attribute :cable_connected, :boolean => true
     attribute :nat_network
     attribute :internal_network
-    attribute :host_interface
+    attribute :host_only_interface
     attribute :interface, :readonly => true, :property => false
     relationship :nat_driver, :NATEngine, :lazy => true
 
@@ -126,7 +126,7 @@ module VirtualBox
     # exists.
     def host_interface_object
       VirtualBox::Global.global.host.network_interfaces.find do |ni|
-        ni.name == host_interface
+        ni.name == host_only_interface
       end
     end
 
