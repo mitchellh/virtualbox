@@ -125,7 +125,8 @@ module VirtualBox
             0x80BB_0009 => Exceptions::NotSupportedException,
             0x80BB_000A => Exceptions::XMLErrorException,
             0x80BB_000B => Exceptions::InvalidSessionStateException,
-            0x80BB_000C => Exceptions::ObjectInUseException
+            0x80BB_000C => Exceptions::ObjectInUseException,
+            0x8007_0057 => Exceptions::InvalidArgException
           }
 
           map[code] || Exceptions::COMException
@@ -167,14 +168,14 @@ module VirtualBox
             # If its a regular type (int, bool, etc.) then just make it an
             # array of that
             if type != :interface
-              result = ::FFI::MemoryPointer.new(c_type, data.length)
-              adder = result.method("put_#{c_type}")
-              data.each_with_index do |single, index|
+              array = data.map do |single, index|
                 value = []
                 single_type_to_arg([single], item[0], value)
-                adder.call(index, value.first)
+                value.first
               end
 
+              result = ::FFI::MemoryPointer.new(c_type, data.length)
+              result.send("write_array_of_#{c_type}", array)
               results << result
             else
               # Then convert the rest into a raw MemoryPointer
@@ -239,9 +240,14 @@ module VirtualBox
               else
                 return_values << dereference_pointer(formal[i], spec[1])
               end
+            elsif spec.is_a?(Array) && spec.length == 1
+              # This is an array argument, meaning it takes two arguments:
+              # one for size and one is a pointer to the array items. Therefore,
+              # skip two items.
+              i += 2
+            else
+              i += 1
             end
-
-            i += 1
           end
 
           if return_values.empty?
@@ -352,6 +358,7 @@ module VirtualBox
           return nil if ptr.null?
 
           klass = interface_klass(original_type)
+          puts "#{klass.inspect}: #{ptr.inspect}"
           klass.new(self.class, lib, ptr)
         end
 

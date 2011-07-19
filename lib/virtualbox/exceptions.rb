@@ -35,5 +35,6 @@ module VirtualBox
     class XMLErrorException < COMException; end
     class InvalidSessionStateException < COMException; end
     class ObjectInUseException < COMException; end
+    class InvalidArgException < COMException; end
   end
 end
