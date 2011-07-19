@@ -41,7 +41,7 @@ module VirtualBox
     # it will be yielded every percent that the operation progresses. This can be
     # done to check the progress of the import.
     def import(&block)
-      interface.import_machines.wait(&block)
+      interface.import_machines([:keep_all_macs, :keep_all_nats]).wait(&block)
     end
 
     # Exports the machines to the given path. If a block is given, it will be yielded

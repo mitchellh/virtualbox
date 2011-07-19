@@ -76,7 +76,7 @@ module VirtualBox
           formal_args = spec_to_args(spec, args)
 
           # Call the function.
-          logger.debug("FFI call: #{name} #{args.inspect} #{formal_args.inspect}")
+          logger.debug("FFI call: #{name} #{spec.inspect} #{args.inspect} #{formal_args.inspect}")
           call_and_check(name, ffi_interface.vtbl_parent, *formal_args)
 
           # Extract the values from the formal args array, again based on the
@@ -167,9 +167,15 @@ module VirtualBox
             # If its a regular type (int, bool, etc.) then just make it an
             # array of that
             if type != :interface
-              results << data.inject([]) do |converted_data, single|
-                single_type_to_arg([single], item[0], converted_data)
+              result = ::FFI::MemoryPointer.new(c_type, data.length)
+              adder = result.method("put_#{c_type}")
+              data.each_with_index do |single, index|
+                value = []
+                single_type_to_arg([single], item[0], value)
+                adder.call(index, value.first)
               end
+
+              results << result
             else
               # Then convert the rest into a raw MemoryPointer
               array = ::FFI::MemoryPointer.new(:pointer, data.length)

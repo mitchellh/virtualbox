@@ -45,8 +45,13 @@ module VirtualBox
 
               # Depending on the class type, we're either dealing with an interface
               # or an enum
-              type = :interface if interface.superclass == COM::AbstractInterface
-              type = :enum if interface.superclass == COM::AbstractEnum
+              if interface.superclass == COM::AbstractInterface
+                type = :interface
+                c_type = :pointer
+              elsif interface.superclass == COM::AbstractEnum
+                type = :enum
+                c_type = :uint32
+              end
             end
           rescue NameError,LoadError
             # Do nothing
