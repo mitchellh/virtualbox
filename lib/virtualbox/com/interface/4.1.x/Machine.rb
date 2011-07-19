@@ -76,6 +76,7 @@ module VirtualBox
           function :detach_device, nil, [WSTRING, T_INT32, T_INT32]
           function :passthrough_device, nil, [WSTRING, T_INT32, T_INT32, T_BOOL]
           function :temporary_eject_device, nil, [WSTRING, T_INT32, T_INT32, T_BOOL]
+          function :non_rational_device, nil, [WSTRING, T_INT32, T_INT32, T_BOOL]
           function :set_bandwidth_group_for_device, nil, [WSTRING, T_INT64, T_INT64, :BandwidthGroup]
           function :mount_medium, nil, [WSTRING, T_INT32, T_INT32, :Medium, T_BOOL]
           function :get_medium, :Medium, [WSTRING, T_INT32, T_INT32]
