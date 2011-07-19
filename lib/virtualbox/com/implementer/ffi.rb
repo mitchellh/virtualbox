@@ -236,10 +236,13 @@ module VirtualBox
                 # the first has the size and the second has the contents
                 return_values << dereference_pointer_array(formal[i+1], spec[1][0], dereference_pointer(formal[i], T_UINT32))
 
-                # Increment once more to skip the size param
-                i += 1
+                # Skip 2: size param + pointer
+                i += 2
               else
                 return_values << dereference_pointer(formal[i], spec[1])
+
+                # Skip 1: Pointer
+                i += 1
               end
             elsif spec.is_a?(Array) && spec.length == 1
               # This is an array argument, meaning it takes two arguments:

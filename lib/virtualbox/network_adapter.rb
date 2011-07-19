@@ -133,26 +133,9 @@ module VirtualBox
     # Save a network adapter.
     def save
       modify_adapter do |adapter|
-        save_attachment_type(adapter)
         save_changed_interface_attributes(adapter)
         save_relationships
       end
-    end
-
-    # Saves the attachment type. This should never be called directly. Instead,
-    # {save} should be called, which will call this method if appropriate.
-    def save_attachment_type(adapter)
-      return unless attachment_type_changed?
-
-      mapping = {
-        :nat => :attach_to_nat,
-        :bridged => :attach_to_bridged_interface,
-        :internal => :attach_to_internal_network,
-        :host_only => :attach_to_host_only_interface
-      }
-
-      adapter.send(mapping[attachment_type])
-      clear_dirty!(:attachment_type)
     end
 
     # Opens a session, yields the adapter and then saves the machine at
