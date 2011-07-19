@@ -168,14 +168,15 @@ module VirtualBox
             # If its a regular type (int, bool, etc.) then just make it an
             # array of that
             if type != :interface
-              array = data.map do |single, index|
+              # Build a pointer to an array of values
+              result = ::FFI::MemoryPointer.new(c_type, data.length)
+              adder = result.method("put_#{c_type}")
+              data.each_with_index do |single, index|
                 value = []
                 single_type_to_arg([single], item[0], value)
-                value.first
+                adder.call(index, value.first)
               end
 
-              result = ::FFI::MemoryPointer.new(c_type, data.length)
-              result.send("write_array_of_#{c_type}", array)
               results << result
             else
               # Then convert the rest into a raw MemoryPointer
