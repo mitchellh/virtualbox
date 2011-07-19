@@ -70,8 +70,9 @@ module VirtualBox
       def populate_relationship(caller, imachine)
         relation = Proxies::Collection.new(caller)
 
-        # Get the count of network adapters
-        count = imachine.parent.system_properties.network_adapter_count
+        # Get the count of network adapters for a chipset of the type
+        # that is our machine.
+        count = imachine.parent.system_properties.get_max_network_adapters(imachine.chipset_type)
 
         count.times do |i|
           relation << new(caller, imachine.get_network_adapter(i))

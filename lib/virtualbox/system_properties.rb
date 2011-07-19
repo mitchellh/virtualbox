@@ -13,7 +13,6 @@ module VirtualBox
     attribute :min_guest_cpu_count, :readonly => true
     attribute :max_guest_cpu_count, :readonly => true
     attribute :info_vd_size, :readonly => true
-    attribute :network_adapter_count, :readonly => true
     attribute :serial_port_count, :readonly => true
     attribute :parallel_port_count, :readonly => true
     attribute :max_boot_position, :readonly => true
