@@ -359,7 +359,6 @@ module VirtualBox
           return nil if ptr.null?
 
           klass = interface_klass(original_type)
-          puts "#{klass.inspect}: #{ptr.inspect}"
           klass.new(self.class, lib, ptr)
         end
 
