@@ -3,7 +3,7 @@ module VirtualBox
     module Interface
       module Version_4_1_X
         class VirtualBox < AbstractInterface
-          IID_STR = "D2DE270C-1D4B-4C9E-843F-BBB9B47269FF"
+          IID_STR = "c28be65f-1a8f-43b4-81f1-eb60cb516e66"
 
           property :version, WSTRING, :readonly => true
           property :revision, T_UINT64, :readonly => true
