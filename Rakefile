@@ -1,11 +1,13 @@
+require "rbconfig"
 require "rubygems"
 require "bundler/setup"
 require "rake/testtask"
 
 require "cucumber"
 require "cucumber/rake/task"
-require "yard"
 Bundler::GemHelper.install_tasks
+
+include Rake::DSL
 
 task :default => "test:units"
 
@@ -31,7 +33,11 @@ namespace :test do
   rescue LoadError; end
 end
 
-YARD::Rake::YardocTask.new do |t|
-  t.options = ['--main', 'Readme.md', '--markup', 'markdown']
-  t.options += ['--title', 'VirtualBox Ruby Library Documentation']
+if RbConfig::CONFIG["host_os"] !~ /^darwin11/
+  # YARD is broken on Lion
+  require "yard"
+  YARD::Rake::YardocTask.new do |t|
+    t.options = ['--main', 'Readme.md', '--markup', 'markdown']
+    t.options += ['--title', 'VirtualBox Ruby Library Documentation']
+  end
 end
