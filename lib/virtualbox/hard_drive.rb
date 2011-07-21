@@ -1,3 +1,5 @@
+require 'virtualbox/ext/byte_normalizer'
+
 module VirtualBox
   # Represents a hard disk which is registered with VirtualBox.
   #

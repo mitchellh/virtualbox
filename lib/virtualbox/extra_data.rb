@@ -1,3 +1,4 @@
+require 'virtualbox/abstract_model'
 require 'virtualbox/abstract_model/dirty'
 
 module VirtualBox
