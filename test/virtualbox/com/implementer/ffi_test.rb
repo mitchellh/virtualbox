@@ -161,7 +161,10 @@ class COMImplementerFFITest < Test::Unit::TestCase
 
       should "replace in array types with two parameters" do
         @array = [true, false, false]
-        assert_equal [@array.length, [1, 0, 0]], @instance.spec_to_args([[VirtualBox::COM::T_BOOL]], [@array])
+        result = @instance.spec_to_args([[VirtualBox::COM::T_BOOL]], [@array])
+        assert_equal 2, result.length
+        assert_equal @array.length, result[0]
+        assert result[1].kind_of?(::FFI::MemoryPointer)
       end
 
       should "replace out array types with two parameters" do

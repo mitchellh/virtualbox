@@ -54,12 +54,13 @@ class NetworkAdapterTest < Test::Unit::TestCase
         @vbox = mock("vbox")
         @system_properties = mock("sys_props")
         @interface.stubs(:parent).returns(@vbox)
+        @interface.stubs(:chipset_type).returns(:piix3)
         @vbox.stubs(:system_properties).returns(@system_properties)
-        @system_properties.stubs(:network_adapter_count).returns(@count)
+        @system_properties.stubs(:get_max_network_adapters).returns(@count)
       end
 
       should "return a proxied collection" do
-        @system_properties.stubs(:network_adapter_count).returns(0)
+        @system_properties.expects(:get_max_network_adapters).with(@interface.chipset_type).returns(0)
         result = @klass.populate_relationship(nil, @interface)
         assert result.is_a?(VirtualBox::Proxies::Collection)
       end
@@ -116,13 +117,13 @@ class NetworkAdapterTest < Test::Unit::TestCase
       should "return the network interface associated with the adapter" do
         name = "foo"
         result = stub_interface(name)
-        @instance.host_interface = name
+        @instance.host_only_interface = name
         assert_equal result, @instance.host_interface_object
       end
 
       should "return nil if the interface is not found" do
         stub_interface("foo")
-        @instance.host_interface = "bar"
+        @instance.host_only_interface = "bar"
         assert_nil @instance.host_interface_object
       end
     end
@@ -133,37 +134,10 @@ class NetworkAdapterTest < Test::Unit::TestCase
         @instance.stubs(:modify_adapter).yields(@adapter)
       end
 
-      should "save the attachment type and interface attributes on the open adapter" do
-        @instance.expects(:save_attachment_type).with(@adapter).once
+      should "save the interface attributes on the open adapter" do
         @instance.expects(:save_changed_interface_attributes).with(@adapter).once
         @instance.expects(:save_relationships).once
         @instance.save
-      end
-    end
-
-    context "saving attachment type" do
-      setup do
-        @adapter = mock("adapter")
-        @instance.attachment_type = :nat
-      end
-
-      should "do nothing if attachment type is not changed" do
-        @instance.clear_dirty!
-        assert !@instance.attachment_type_changed?
-        @instance.expects(:attach_to_nat).never
-
-        @instance.save_attachment_type(@adapter)
-      end
-
-      should "run the proper method if it has changed" do
-        @adapter.expects(:attach_to_nat).once
-        @instance.save_attachment_type(@adapter)
-      end
-
-      should "clear the dirty state" do
-        @adapter.stubs(:attach_to_nat)
-        @instance.save_attachment_type(@adapter)
-        assert !@instance.attachment_type_changed?
       end
     end
 
