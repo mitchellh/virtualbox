@@ -58,6 +58,7 @@ module VirtualBox
     attribute :nat_network
     attribute :internal_network
     attribute :host_only_interface
+    attribute :bridged_interface
     attribute :interface, :readonly => true, :property => false
     relationship :nat_driver, :NATEngine, :lazy => true
 
@@ -127,6 +128,14 @@ module VirtualBox
     def host_interface_object
       VirtualBox::Global.global.host.network_interfaces.find do |ni|
         ni.name == host_only_interface
+      end
+    end
+
+    # Gets the bridged interface object associated with the class if it
+    # exists.
+    def bridged_interface_object
+      VirtualBox::Global.global.host.network_interfaces.find do |ni|
+        ni.name == bridged_interface
       end
     end
 
