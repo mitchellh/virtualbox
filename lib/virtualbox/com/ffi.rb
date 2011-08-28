@@ -1,4 +1,4 @@
-require 'ffi'
+require 'virtualbox/com/ffi/load_ffi'
 
 module VirtualBox
   module COM
