@@ -59,11 +59,16 @@ module VirtualBox
           value = nil
           begin
             value = @object.send(COM::FFI::Util.camelize(name.to_s), *args)
-          rescue jruby_exception
-            # JRuby exception is screwed up. We just throw a generic
-            # COMException and call it good.
-            raise Exceptions::COMException.new(:function => name,
-                                               :result_code => 0)
+          rescue Exception => e
+            if jruby_exception && e.instance_of?(jruby_exception)
+              # JRuby exception is screwed up. We just throw a generic
+              # COMException and call it good.
+              raise Exceptions::COMException.new(:function => name,
+                                                 :result_code => 0)
+            else
+              # Reraise the exception since we're not interested in it
+              raise
+            end
           end
 
           # TODO: Multiple return values
