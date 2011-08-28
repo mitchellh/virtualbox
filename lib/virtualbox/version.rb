@@ -1,5 +1,5 @@
 module VirtualBox
-  VERSION = "0.9.2"
+  VERSION = "0.9.3.dev"
 
   # Returns a boolean denoting whether the current VirtualBox
   # version is supported or not. This will return `false` if the
