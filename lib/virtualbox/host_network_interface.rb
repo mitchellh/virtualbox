@@ -90,6 +90,8 @@ module VirtualBox
     # network interface.
     def attached_vms
       parent.parent.vms.find_all do |vm|
+        next if !vm.accessible?
+
         result = vm.network_adapters.find do |adapter|
           adapter.enabled? && adapter.host_only_interface == name
         end
