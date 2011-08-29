@@ -85,17 +85,21 @@ module VirtualBox
 
         # Call the initialization functions
         @xpcom[:pfnComInitialize].call(virtualbox_klass::IID_STR, virtualbox_ptr, session_klass::IID_STR, session_ptr)
-        @virtualbox = virtualbox_klass.new(Implementer::FFI, self, virtualbox_ptr.get_pointer(0))
-        @session = session_klass.new(Implementer::FFI, self, session_ptr.get_pointer(0))
+
+        # Read the pointers from the results and fail if either are null,
+        # meaning that the initialization was not successful
+        virtualbox_ptr = virtualbox_ptr.read_pointer
+        session_ptr = session_ptr.read_pointer
+        return false if virtualbox_ptr.null? || session_ptr.null?
+
+        @virtualbox = virtualbox_klass.new(Implementer::FFI, self, virtualbox_ptr)
+        @session = session_klass.new(Implementer::FFI, self, session_ptr)
 
         # Make a call to version to verify no exceptions are raised
         @virtualbox.implementer.valid? && @session.implementer.valid?
 
         logger.debug("    -- Valid version")
         true
-      rescue ::FFI::NullPointerError => e
-        logger.debug("    -- Invalid version")
-        false
       end
     end
   end
