@@ -274,9 +274,9 @@ module VirtualBox
         def dereference_pointer(pointer, type)
           c_type, inferred_type = infer_type(type)
 
-          if pointer.respond_to?("get_#{inferred_type}".to_sym)
+          if pointer.respond_to?("read_#{inferred_type}".to_sym)
             # This handles reading the typical times such as :uint, :int, etc.
-            result = pointer.send("get_#{inferred_type}".to_sym, 0)
+            result = pointer.send("read_#{inferred_type}".to_sym)
             result = !(result == 0) if type == T_BOOL
             result
           else
@@ -349,7 +349,7 @@ module VirtualBox
         #
         # @return [String]
         def read_unicode_string(ptr, original_type=nil)
-          address = ptr.get_pointer(0)
+          address = ptr.read_pointer
           return "" if address.null?
           utf16_to_string(address)
         end
@@ -358,7 +358,7 @@ module VirtualBox
         #
         # @return [::FFI::Struct]
         def read_interface(ptr, original_type)
-          ptr = ptr.get_pointer(0)
+          ptr = ptr.read_pointer
           return nil if ptr.null?
 
           klass = interface_klass(original_type)
