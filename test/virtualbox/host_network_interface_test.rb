@@ -105,6 +105,7 @@ class HostNetworkInterfaceTest < Test::Unit::TestCase
       def stub_vm(*interfaces)
         adapters = []
         vm = mock("vm")
+        vm.stubs(:accessible?).returns(true)
         vm.stubs(:network_adapters).returns(adapters)
 
         interfaces.each do |name|
