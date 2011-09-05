@@ -56,7 +56,7 @@ module VirtualBox
       def lib_path
         if @@lib_path.nil?
           if Platform.mac?
-            @@lib_path = ["/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"]
+            @@lib_path = Dir.glob("/Applications/{,MacPorts/}VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib")
           elsif Platform.linux?
             @@lib_path = ["/opt/VirtualBox/VBoxXPCOMC.so", "/usr/lib/virtualbox/VBoxXPCOMC.so",
                           "/usr/lib64/virtualbox/VBoxXPCOMC.so"]
