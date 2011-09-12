@@ -250,7 +250,7 @@ class COMImplementerFFITest < Test::Unit::TestCase
       setup do
         @pointer = mock('pointer')
         @pointer.stubs(:respond_to?).returns(true)
-        @pointer.stubs(:get_bar).returns("foo")
+        @pointer.stubs(:read_bar).returns("foo")
 
         @type = :zoo
 
@@ -266,26 +266,26 @@ class COMImplementerFFITest < Test::Unit::TestCase
 
       should "call get_* method on pointer if it exists" do
         result = mock("result")
-        @pointer.expects(:respond_to?).with("get_#{@inferred_type}".to_sym).returns(true)
-        @pointer.expects("get_#{@inferred_type}".to_sym).with(0).returns(result)
+        @pointer.expects(:respond_to?).with("read_#{@inferred_type}".to_sym).returns(true)
+        @pointer.expects("read_#{@inferred_type}".to_sym).returns(result)
         assert_equal result, @instance.dereference_pointer(@pointer, @type)
       end
 
       should "return a false bool if type is bool and failure" do
-        @pointer.expects(:get_bar).returns(0)
+        @pointer.expects(:read_bar).returns(0)
         result = @instance.dereference_pointer(@pointer, VirtualBox::COM::T_BOOL)
         assert_equal false, result
       end
 
       should "return a true bool if type is bool and success" do
-        @pointer.expects(:get_bar).returns(1)
+        @pointer.expects(:read_bar).returns(1)
         result = @instance.dereference_pointer(@pointer, VirtualBox::COM::T_BOOL)
         assert_equal true, result
       end
 
       should "call read_* on Util if pointer doesn't support it" do
         result = mock("result")
-        @pointer.expects(:respond_to?).with("get_#{@inferred_type}".to_sym).returns(false)
+        @pointer.expects(:respond_to?).with("read_#{@inferred_type}".to_sym).returns(false)
         @instance.expects("read_#{@inferred_type}".to_sym).with(@pointer, @type).returns(result)
         assert_equal result, @instance.dereference_pointer(@pointer, @type)
       end
@@ -339,7 +339,7 @@ class COMImplementerFFITest < Test::Unit::TestCase
           @sub_ptr.stubs(:null?).returns(false)
 
           @ptr = mock("pointer")
-          @ptr.stubs(:get_pointer).returns(@sub_ptr)
+          @ptr.stubs(:read_pointer).returns(@sub_ptr)
         end
 
         should "return empty string for null pointer" do
@@ -350,7 +350,7 @@ class COMImplementerFFITest < Test::Unit::TestCase
 
         should "call utf16_to_string on the dereferenced pointer" do
           result = mock("result")
-          @ptr.expects(:get_pointer).with(0).returns(@sub_ptr)
+          @ptr.expects(:read_pointer).returns(@sub_ptr)
           @instance.expects(:utf16_to_string).with(@sub_ptr).returns(result)
           assert_equal result, @instance.read_unicode_string(@ptr)
         end
@@ -365,12 +365,12 @@ class COMImplementerFFITest < Test::Unit::TestCase
           @sub_ptr.stubs(:null?).returns(false)
 
           @ptr = mock("pointer")
-          @ptr.stubs(:get_pointer).with(0).returns(@sub_ptr)
+          @ptr.stubs(:read_pointer).returns(@sub_ptr)
         end
 
         should "convert type to a const and return instance" do
           @instance.expects(:interface_klass).with(@original_type).returns(@interface_klass)
-          @interface_klass.expects(:new).with(@klass, @instance.lib, @ptr.get_pointer(0)).returns(@instance)
+          @interface_klass.expects(:new).with(@klass, @instance.lib, @ptr.read_pointer).returns(@instance)
           assert_equal @instance, @instance.read_interface(@ptr, @original_type)
         end
 
