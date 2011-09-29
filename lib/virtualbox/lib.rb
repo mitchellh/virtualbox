@@ -62,6 +62,8 @@ module VirtualBox
                           "/usr/lib64/virtualbox/VBoxXPCOMC.so"]
           elsif Platform.solaris?
             @@lib_path = ["/opt/VirtualBox/amd64/VBoxXPCOMC.so", "/opt/VirtualBox/i386/VBoxXPCOMC.so"]
+          elsif Platform.freebsd?
+            @@lib_path = ["/usr/local/lib/virtualbox/VBoxXPCOMC.so"]
           elsif Platform.windows?
             @@lib_path = "Unknown"
           else
