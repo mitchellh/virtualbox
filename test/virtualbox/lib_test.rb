@@ -15,6 +15,7 @@ class LibTest < Test::Unit::TestCase
     should "return Mac-path if on mac" do
       result = ["/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"]
       VirtualBox::Platform.stubs(:mac?).returns(true)
+      VirtualBox::Platform.stubs(:freebsd?).returns(false)
 
       assert_equal result, VirtualBox::Lib.lib_path
     end
@@ -24,6 +25,7 @@ class LibTest < Test::Unit::TestCase
       VirtualBox::Platform.stubs(:mac?).returns(false)
       VirtualBox::Platform.stubs(:linux?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(true)
+      VirtualBox::Platform.stubs(:freebsd?).returns(false)
 
       assert_equal result, VirtualBox::Lib.lib_path
     end
@@ -33,6 +35,17 @@ class LibTest < Test::Unit::TestCase
       VirtualBox::Platform.stubs(:mac?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(false)
       VirtualBox::Platform.stubs(:linux?).returns(true)
+      VirtualBox::Platform.stubs(:freebsd?).returns(false)
+
+      assert_equal result, VirtualBox::Lib.lib_path
+    end
+
+    should "return FreeBSD-path if on freebsd" do
+      result = ["/usr/local/lib/virtualbox/VBoxXPCOMC.so"]
+      VirtualBox::Platform.stubs(:mac?).returns(false)
+      VirtualBox::Platform.stubs(:windows?).returns(false)
+      VirtualBox::Platform.stubs(:linux?).returns(false)
+      VirtualBox::Platform.stubs(:freebsd?).returns(true)
 
       assert_equal result, VirtualBox::Lib.lib_path
     end
@@ -42,6 +55,7 @@ class LibTest < Test::Unit::TestCase
       VirtualBox::Platform.stubs(:mac?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(false)
       VirtualBox::Platform.stubs(:linux?).returns(false)
+      VirtualBox::Platform.stubs(:freebsd?).returns(false)
 
       assert_equal result, VirtualBox::Lib.lib_path
     end
