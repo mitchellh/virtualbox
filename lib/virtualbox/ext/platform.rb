@@ -19,6 +19,10 @@ module VirtualBox
         platform.include?("solaris")
       end
 
+      def freebsd?
+        platform.include?("freebsd")
+      end
+
       def jruby?
         RbConfig::CONFIG["ruby_install_name"] == "jruby"
       end
