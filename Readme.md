@@ -1,3 +1,13 @@
+**This gem is no longer under active development. Please do not use it.**
+
+I've decided to stop developing this library since the main user of the library
+and the purpose it was created (Vagrant) no longer makes use of it. The reasoning
+behind this is because the `win32ole` support on Windows is simply painful and
+doesn't support all the features necessary to fully support the VirtualBox
+API.
+
+If you're interested in maintaining this gem, please contact me (mitchellh).
+
 # VirtualBox Ruby Gem
 
 The VirtualBox ruby gem is a library which allows anyone to control VirtualBox
